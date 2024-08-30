@@ -26,7 +26,6 @@ void	_exit_gracefully(mlx_t *mlx)
 	ft_printf("byebye!\n");
 	mlx_close_window(mlx);
 	mlx_terminate(mlx);
-	//free_data(data)
 	exit(0);
 }
 
@@ -41,44 +40,8 @@ void	_hook(void *param)
 		_exit_gracefully(mlx);
 }
 
-void	_mouse_cbk(mouse_key_t btn, action_t actn, modifier_key_t md, void *p)
-{
-	t_mrt	*mrt;
 
-	mrt = (t_mrt *)p;
-	if (btn == MLX_MOUSE_BUTTON_LEFT && actn == MLX_PRESS)
-	{
-		debug("Mouse left button pressed");
-	}
-}
 
-/*
-I get the mouse position and do a check if inside my window
-*/
-void	_get_mouse_pos(t_mrt *mrt, int *x, int *y)
-{
-	mlx_get_mouse_pos(mrt->mlx, x, y);
-	if (*x > WINDOW_WIDTH)
-		*x = WINDOW_WIDTH;
-	else if (*x < 0)
-		*x = 0;
-	if (*y > WINDOW_HEIGHT)
-		*y = WINDOW_HEIGHT;
-	else if (*y < 0)
-		*y = 0;
-}
-
-void	_scroll_hook(double dx, double dy, void *param)
-{
-	int		x;
-	int		y;
-	t_mrt	*mrt;
-
-	mrt = (t_mrt *)param;
-	_get_mouse_pos(mrt, &x, &y);
-	debug("Position x: %d y: %d", x, y);
-	debug("Mouse scroll dx: %f dy: %f", dx, dy);
-}
 
 /*
 this is my draw pixel function. I write directly to the buffer 
@@ -154,8 +117,10 @@ int init_window(t_mrt *data)
 		mlx_close_window(data->mlx);
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
     }
+	debug("Window initialized");
     return (0);
 }
+
 void    draw_background(t_mrt *data)
 {
     int             x;
@@ -174,6 +139,7 @@ void    draw_background(t_mrt *data)
 		x++;
     }
 }
+
 int main(int argc, char **argv)
 {
     t_mrt data;
@@ -182,7 +148,7 @@ int main(int argc, char **argv)
     if (!init_data(&data))
         return (1);
     debug("Start of minirt");
-    if (argc == 2)
+    if (argc >= 0)
     {
         // open scenes
         // parse scenes
@@ -198,12 +164,12 @@ int main(int argc, char **argv)
         return (1);
 
     mlx_loop_hook(data.mlx, &_hook, (void *)&data);
-    mlx_mouse_hook(data.mlx, &_mouse_cbk, (void *)&data);
-    mlx_scroll_hook(data.mlx, &_scroll_hook, (void *)&data);
+
+    
     mlx_loop(data.mlx);
     ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
-    //free_data(data);
+
 
     return (0);
 }
