@@ -155,10 +155,8 @@ int main(int argc, char **argv)
         //hardcoded_parsing(&data);
         if (init_window(&data))
             return (1);
-
-        //draw_with_mlx(&data);
         draw_background(&data);
-        //draw_gradient(&data);
+        draw_gradient(&data);
     }
     else
         return (1);
