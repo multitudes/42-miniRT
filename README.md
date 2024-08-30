@@ -15,13 +15,7 @@ Therefore bonuses can be :
 • One other 2nd degree object: Cone, Hyperboloid, Paraboloid..
 • Handle bump map textures.
 
-## Examples
-tbd
 
-## Usage
-tbd
-
-## Features and Requirements
 ## Allowed functions
 
 Here at 42 we are allowed to use the following functions for this project:
@@ -43,56 +37,37 @@ Here at 42 we are allowed to use the following functions for this project:
 
 Also we follow the NORM, a series of rules about linting and formatting of the code. Examples: functions cannot have more than 25 lines; we are not allowed to use "for"-loops, but while loops are allowed; declaring and defining variables in one line is not allowed. etc.
 
-
-### Features
-
-
-Scene Description: Reads scenes from a file with .rt extension and renders the image as described.<br />
-Basic Objects: Supports rendering of planes, spheres, and cylinders.<br />
-Transformations: Objects, lights, and cameras can be translated and rotated (except spheres and lights for rotation).<br />
-Lighting: Implements ambient and diffuse lighting, including spot brightness and hard shadows.<br />
-Window Management: Fluid window management with seamless transitions and closures via ESC key or window frame red cross.<br />
-
-Basic Objects: Supports rendering of planes, spheres, and cylinders.  
-Transformations: Objects, lights, and cameras can be translated and rotated (except spheres and lights for rotation).  
-Lighting: Implements ambient and diffuse lighting, including spot brightness and hard shadows.  
-Window Management: Fluid window management with seamless transitions and closures via ESC key or window frame red cross.  
-Scene Description: Reads scenes from a file with .rt extension and renders the image as described.  
- 
 ### Requirements
-
 Programming Language: Must be written in C.  
-Libraries: Utilizes miniLibX, math library functions, and standard C libraries (open, close, read, write, printf, malloc, free, perror, strerror, exit).	Memory Management: Proper handling and freeing of heap-allocated memory to prevent leaks.  
+Libraries: Utilizes miniLibX or MLX42, math library functions, and standard C libraries (open, close, read, write, printf, malloc, free, perror, strerror, exit)  
+Memory Management: Proper handling and freeing of heap-allocated memory to prevent leaks.  
 Makefile: Includes rules for all, clean, fclean, re, and bonus. Compilation with -Wall, -Wextra, and -Werror flags using cc.  
 Error Handling: Must exit properly with "Error\n" and an explicit message on encountering any misconfiguration in the scene file.  
 File Structure: Accepts scene description files in a specific format, handling elements like Ambient light, Camera, Light, Sphere, Plane, and Cylinder with precise properties.  
 
+### Features
+- Scene Description: Reads scenes from a file with .rt extension and renders the image as described.  
+- Basic Objects: Supports rendering of planes, spheres, and cylinders.
+- Transformations: Objects, lights, and cameras can be translated and rotated (except spheres and lights for rotation).  
+- Lighting: Implements ambient and diffuse lighting, including spot brightness and hard shadows.
+- Window Management: Fluid window management with seamless transitions and closures via ESC key or window frame red cross.
+ 
 ## Team
 It is a group project. The team is composed of two students.
 
 
-## Lights
-
-Early simple raytracers used abstract light sources, like points in space, or directions. Modern approaches have more physically based lights, which have position and size. To create such light sources, we need to be able to take any regular object and turn it into something that emits light into our scene. 
-
-We have two different types of ambient lighting models that simulate how light interacts with surfaces.
-
-- Ambient Light is a simplified model to represent light that has been scattered so much by the environment that its direction is impossible to determine. It's an approximation of indirect light.  
-Characteristics: Ambient light is uniform and omnidirectional, meaning it illuminates all objects equally, regardless of their position or orientation in the scene.  
-It provides a base level of light so that all objects are minimally visible, preventing any part of the scene from being completely black in the absence of direct or diffuse light.
-
-- Diffuse Light is the light that comes from a specific direction and reflects off surfaces in many directions. It is the result of light hitting a rough or matte surface, causing the light to scatter.
-Characteristics: This type of lighting is characterized by its uniform scattering, meaning the light is reflected equally in all directions from the point of contact. It does not produce a shiny reflection or glare.  
-Objects illuminated by diffuse light show variations in brightness based on their orientation to the light source and the light's intensity. The parts of the object facing the light source are brighter than those facing away.  
-It is often calculated using the Lambertian reflectance model, which considers the angle between the light source and the surface normal to determine the intensity of the reflected light.  
 
 
 
 
-## Craeate Random function in C
+
+
+
+<hr>
+## Create Random function in C
 
 Since we are not allowed to use the rand() function, we have to create our own random function.
-One of the simplest and most commonly used algorithms is the Linear Congruential Generator (LCG).
+One of the simplest and most commonly used algorithms is the "Linear Congruential Generator (LCG).
 
 1. Define constants `a`, `c`, and `m`.
 2. Define a variable `seed` to store the current state.
@@ -143,17 +118,13 @@ int main() {
 - the `rand_custom` function generates the next random number using the LCG formula and updates the seed.
 
 ## Phong Reflection
+Bui Tuong Phong was a Vietnamese-born computer graphics researcher. He developed the Phong reflection model while working on his Ph.D. at the University of Utah.  
 Phong specular reflection is a component of the Phong reflection model, which is used in computer graphics to simulate the way light interacts with surfaces. The model was introduced by Bui Tuong Phong in his 1975 paper "Illumination for Computer Generated Pictures."
 
-### Phong Reflection Model Components
+Components:  
 - Ambient Reflection: Simulates the constant light that is present in the environment.
 - Diffuse Reflection: Simulates the light scattered in many directions from a rough surface.
-- Specular Reflection: Simulates the light that reflects in a specific direction from a shiny surface, creating highlights.
-
-### Specular Reflection
-- Specular reflection is the mirror-like reflection of light off a surface.
-- It depends on the viewer's position, the light source position, and the surface normal.
-- The intensity of the specular reflection is calculated using the angle between the viewer direction and the reflection direction of the light.
+- Specular Reflection: Simulates the light that reflects in a specific direction from a shiny surface, creating highlights. It depends on the viewer's position, the light source position, and the surface normal. The intensity of the specular reflection is calculated using the angle between the viewer direction and the reflection direction of the light.
 
 ### Phong Specular Reflection Formula
 The specular reflection component is calculated using the following formula:
@@ -163,21 +134,7 @@ Where:
 - $ R $: Reflection vector.
 - $ V $: View vector (direction from the surface point to the viewer).
 - $ \alpha $: Shininess coefficient (controls the size of the highlight).
-### Bui Tuong Phong
-- Bui Tuong Phong was a Vietnamese-born computer graphics researcher.
-- He developed the Phong reflection model while working on his Ph.D. at the University of Utah.
-- His work significantly advanced the field of computer graphics, particularly in realistic rendering techniques.
 
-
-
-### Requirements
-
-Programming Language: Must be written in C.<br />
-Libraries: Utilizes miniLibX or MLX42, math library functions, and standard C libraries (open, close, read, write, printf, malloc, free, perror, strerror, exit).<br />
-Memory Management: Proper handling and freeing of heap-allocated memory to prevent leaks.<br />
-Makefile: Includes rules for all, clean, fclean, re, and bonus. Compilation with -Wall, -Wextra, and -Werror flags using cc.<br />
-Error Handling: Must exit properly with "Error\n" and an explicit message on encountering any misconfiguration in the scene file.<br />
-File Structure: Accepts scene description files in a specific format, handling elements like Ambient light, Camera, Light, Sphere, Plane, and Cylinder with precise properties.<br />
 
 ## Links
 - [Raytracing in one weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
