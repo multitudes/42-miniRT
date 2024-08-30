@@ -55,6 +55,14 @@ File Structure: Accepts scene description files in a specific format, handling e
 ## Team
 It is a group project. The team is composed of two students.
 
+## A ray 
+A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same considering a Point A
+and a Direction b.
+$$ P(t) = A + tb $$  
+Where:
+t is a scalar param tipically representing time.  So I have on my line a point A and a direction b, I can move along the line by changing the value of t and get P.
+If A and P are points in 3D space, then I have automatially a 3D line which can also be expressed like this:  
+$$ (x,y,z)=(x0,y0,z0)+t(a,b,c) $$
 
 
 
@@ -63,59 +71,7 @@ It is a group project. The team is composed of two students.
 
 
 
-<hr>
-## Create Random function in C
-
-Since we are not allowed to use the rand() function, we have to create our own random function.
-One of the simplest and most commonly used algorithms is the "Linear Congruential Generator (LCG).
-
-1. Define constants `a`, `c`, and `m`.
-2. Define a variable `seed` to store the current state.
-3. Implement a function to set the seed.
-4. Implement a function to generate the next random number using the formula: `seed = (a * seed + c) % m`.
-
-Like:
-
-```c
-#include <stdio.h>
-#include <time.h>
-
-// Define constants for the LCG
-#define A 1664525
-#define C 1013904223
-#define M 4294967296 // 2^32
-
-// Seed value
-unsigned int seed = 1;
-
-// Function to set the seed
-void srand_custom(unsigned int new_seed) {
-    seed = new_seed;
-}
-
-// Function to generate the next random number
-unsigned int rand_custom() {
-    seed = (A * seed + C) % M;
-    return seed;
-}
-
-int main() {
-    // Set the seed using the current time
-    srand_custom((unsigned int)time(NULL));
-
-    // Generate and print 10 random numbers
-    for (int i = 0; i < 10; i++) {
-        printf("%u\n", rand_custom());
-    }
-
-    return 0;
-}
-```
-
-- The constants `A`, `C`, and `M` are chosen based on common values used in LCGs. These values ensure a good distribution of random numbers.
-- The `seed` variable stores the current state of the RNG. It is initialized with a default value but can be set using the `srand_custom` function.
-- the `srand_custom` function sets the seed value, allowing you to initialize the RNG with a specific starting point.
-- the `rand_custom` function generates the next random number using the LCG formula and updates the seed.
+<hr></hr>
 
 ## Phong Reflection
 Bui Tuong Phong was a Vietnamese-born computer graphics researcher. He developed the Phong reflection model while working on his Ph.D. at the University of Utah.  
@@ -126,14 +82,6 @@ Components:
 - Diffuse Reflection: Simulates the light scattered in many directions from a rough surface.
 - Specular Reflection: Simulates the light that reflects in a specific direction from a shiny surface, creating highlights. It depends on the viewer's position, the light source position, and the surface normal. The intensity of the specular reflection is calculated using the angle between the viewer direction and the reflection direction of the light.
 
-### Phong Specular Reflection Formula
-The specular reflection component is calculated using the following formula:
-$$ I_{specular} = k_s \cdot (R \cdot V)^{\alpha} $$
-Where:
-- $ k_s $: Specular reflection coefficient (material property).
-- $ R $: Reflection vector.
-- $ V $: View vector (direction from the surface point to the viewer).
-- $ \alpha $: Shininess coefficient (controls the size of the highlight).
 
 
 ## Links
@@ -155,8 +103,24 @@ Where:
 - dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 
 
-
 ## Links
 
 The Graphical library allowed for this project are either the Minilibx or the MLX42 Codam. We used the second one:  
 https://github.com/codam-coding-college/MLX42  
+
+I used the following resources:  
+- [Raytracing in one weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)  
+- [Raytracing the next week](https://raytracing.github.io/books/RayTracingTheNextWeek.html)  
+- [Raytracing the rest of your life](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html)  
+- https://www.desmos.com/3d
+- stb_image.h, a header-only image library available on GitHub at https://github.com/nothings/stb.
+- [https://gabrielgambetta.com/computer-graphics-from-scratch/](https://gabrielgambetta.com/computer-graphics-from-scratch/)  
+- A raytracer on the back of a business card. [https://fabiensanglard.net/rayTracing_back_of_business_card/](https://fabiensanglard.net/rayTracing_back_of_business_card/)
+
+Here are a few really good resources by [Fabien Sanglard](https://fabiensanglard.net/about/index.html):
+- scratchapixel.com : Great raytracer lessons written by professionals that have worked on Toy Story, Avatar, Lord of the Rings, Harry Potter, Pirates of the Caribbean and many other movies.  
+- An Introduction to Ray Tracing : An old book but a Classic.  
+- Physically Based Rendering : Heavy on maths but really good and well explained.  
+
+References:
+https://graphicscodex.com/app/app.html  
