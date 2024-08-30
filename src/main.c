@@ -163,11 +163,9 @@ int main(int argc, char **argv)
 
     mlx_loop_hook(data.mlx, &_hook, (void *)&data);
 
-    
     mlx_loop(data.mlx);
     ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
-
 
     return (0);
 }
