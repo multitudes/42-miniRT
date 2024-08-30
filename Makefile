@@ -21,7 +21,7 @@ SRC_DIR			= 	src/
 LIBFTDIR 		= 	./lib/libft
 LIBMLX			= 	./lib/MLX42
 
-LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -L/opt/homebrew/lib -lglfw -pthread -lm #-L/opt/homebrew/lib for mac
+LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 LIBS 			+= 	$(LIBFTDIR)/libft.a
 
 INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
@@ -41,7 +41,7 @@ UNAME 			= 	$(shell uname -s)
 ifeq ($(UNAME), Linux)
 	LIBS 		+=  -lbsd
 else ifeq ($(UNAME), Darwin)
-
+	LIBS 		+=  -L/opt/homebrew/lib
 endif
 
 all: libmlx $(LIBFT) $(NAME)
@@ -88,6 +88,10 @@ fclean: clean
 	@# rm -rf $(LIBMLX)/build
 
 re: fclean all
+
+run: all
+	@echo
+	@PATH=".$${PATH:+:$${PATH}}" && $(NAME) $(ARGS)
 
 .PHONY: all clean fclean re libmlx $(LIBFT)
 

@@ -4,15 +4,11 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define ASPECT_RATIO (double)WINDOW_WIDTH / (double)WINDOW_HEIGHT
-#define VIEWPORT_HEIGHT 2
-#define FOCAL_LENGTH 1
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
 
 typedef struct 	s_mrt 
 {
-
 	void		*mlx;
 	void		*win_ptr;
 	mlx_image_t	*image;
@@ -92,13 +88,6 @@ void    draw_gradient(t_mrt *data)
     }
 }
 
-bool init_data(t_mrt *mrt)
-{
-    mrt->mlx = NULL;
-    mrt->win_ptr = NULL;
-    mrt->image = NULL;
-    return (true);
-}
 
 int init_window(t_mrt *data)
 {
@@ -140,6 +129,14 @@ void    draw_background(t_mrt *data)
     }
 }
 
+bool init_data(t_mrt *data)
+{
+    data->mlx = NULL;
+    data->win_ptr = NULL;
+    data->image = NULL;
+    return (true);
+}
+
 int main(int argc, char **argv)
 {
     t_mrt data;
@@ -148,16 +145,10 @@ int main(int argc, char **argv)
     if (!init_data(&data))
         return (1);
     debug("Start of minirt");
-    if (argc >= 0)
-    {
-        if (init_window(&data))
-            return (1);
-        draw_background(&data);
-        draw_gradient(&data);
-    }
-    else
-        return (1);
-
+	if (init_window(&data))
+		return (1);
+	// draw_background(&data);
+	draw_gradient(&data);
     mlx_loop_hook(data.mlx, &_hook, (void *)&data);
 
     mlx_loop(data.mlx);
