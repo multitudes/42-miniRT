@@ -56,9 +56,11 @@ File Structure: Accepts scene description files in a specific format, handling e
 It is a group project. The team is composed of two students.
 
 ## A ray 
-A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same considering a Point A
-and a Direction b.
-$$ P(t) = A + tb $$  
+A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same.  
+considering a Point A and a Direction b the line is a typical stepping function.
+$$ 
+P(t) = A + tb 
+$$  
 Where:
 t is a scalar param tipically representing time.  So I have on my line a point A and a direction b, I can move along the line by changing the value of t and get P.
 If A and P are points in 3D space, then I have automatially a 3D line which can also be expressed like this:  
