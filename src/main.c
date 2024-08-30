@@ -150,9 +150,6 @@ int main(int argc, char **argv)
     debug("Start of minirt");
     if (argc >= 0)
     {
-        // open scenes
-        // parse scenes
-        //hardcoded_parsing(&data);
         if (init_window(&data))
             return (1);
         draw_background(&data);
