@@ -27,9 +27,9 @@ LIBS 			+= 	$(LIBFTDIR)/libft.a
 INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
-SRCS 			= $(addprefix $(SRC_DIR), main.c error.c hooks.c window.c draw.c init.c vec3.c vec3_2.c vec3_3.c ray.c)
+SRCS 			= $(addprefix $(SRC_DIR), main.c )
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
-HDRS 			= $(addprefix include/, minirt.h error.h hooks.h debug.h vec3.h ray.h)
+HDRS 			= $(addprefix include/, debug.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
@@ -59,6 +59,7 @@ libmlx:
 		fi \
 	fi
 	@if [ ! -d "lib/MLX42" ]; then \
+		mkdir -p lib/MLX42; \
 		git clone https://github.com/codam-coding-college/MLX42.git lib/MLX42; \
 	fi
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
