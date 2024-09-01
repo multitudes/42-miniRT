@@ -58,13 +58,15 @@ It is a group project. The team is composed of two students.
 ## A ray 
 A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same.  
 considering a Point A and a Direction b the line is a typical stepping function.
-$$ 
-P(t) = A + tb 
 $$  
+P(t) = A + tb  
+$$    
 Where:
 t is a scalar param tipically representing time.  So I have on my line a point A and a direction b, I can move along the line by changing the value of t and get P.
 If A and P are points in 3D space, then I have automatially a 3D line which can also be expressed like this:  
-$$ (x,y,z)=(x0,y0,z0)+t(a,b,c) $$
+$$  
+(x,y,z)=(x0,y0,z0)+t(a,b,c)  
+$$  
 
 
 
@@ -126,3 +128,6 @@ Here are a few really good resources by [Fabien Sanglard](https://fabiensanglard
 
 References:
 https://graphicscodex.com/app/app.html  
+
+Nice visualizing website:  
+https://www.desmos.com/calculator  
