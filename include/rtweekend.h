@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/06/25 10:59:47 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/03 17:39:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <limits.h>
 #include <stdlib.h>
+#include "rtweekend.h"
 
 #define PI 3.1415926535897932385
 

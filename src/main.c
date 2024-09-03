@@ -1,9 +1,13 @@
 #include "debug.h"
 #include <MLX42/MLX42.h>
 #include "libft.h"
+#include "camera.h"
+#include "vec3.h"
+#include "ray.h"
+#include "color.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define IMAGE_WIDTH 800
+#define IMAGE_HEIGHT 600
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
 #define TRUE 1
@@ -14,7 +18,7 @@ typedef struct 	s_mrt
 	void		*mlx;
 	void		*win_ptr;
 	mlx_image_t	*image;
-	// t_camera	camera;
+	t_camera cam;
 	// t_viewport	viewport;
 	// t_pixel		pixel;
 }				t_mrt;
@@ -49,7 +53,7 @@ void draw_(t_mrt *data, int x, int y, int color)
     uint8_t *pixel;
 
     image = data->image;
-    offset = y * WINDOW_WIDTH + x;
+    offset = y * IMAGE_WIDTH + x;
     pixel = &image->pixels[offset * 4];
     *(pixel++) = (uint8_t)(color >> 24);
     *(pixel++) = (uint8_t)(color >> 16);
@@ -57,29 +61,39 @@ void draw_(t_mrt *data, int x, int y, int color)
     *(pixel++) = (uint8_t)(color & 0xFF);
 }
 
-unsigned int    pix_color(int r, int g, int b)
+unsigned int    pix_color(t_color color)
 {
+	int r = color.r * 255;
+	int g = color.g * 255;
+	int b = color.b *255;
     return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
 }
 
-void    draw_gradient(t_mrt *data)
+void    draw_scene(t_mrt *data)
 {
     int             x;
 	int             y;
     unsigned int    color;
-    int             r, g, b;
+
     
     y = 0;
     x = 0;
-    while (y < WINDOW_HEIGHT)
+    while (y < IMAGE_HEIGHT)
     {	
 		x = 0;
-        while (x < WINDOW_WIDTH)
+        while (x < IMAGE_WIDTH)
         {
-            r = (x * 255) / (WINDOW_WIDTH - 1);
-            g = (y * 255) / (WINDOW_HEIGHT - 1);
-            b = 0;
-            color = pix_color(r, g, b);
+			t_vec3 iu = vec3multscalar(data->cam.pixel_delta_u, x);
+			t_vec3 ju = vec3multscalar(data->cam.pixel_delta_v, y);
+			t_vec3 partial = vec3add(iu, ju); 
+			t_point3 pixel_center = vec3add(data->cam.pixel00_loc, partial);
+
+			t_vec3 ray_direction = vec3substr(pixel_center, data->cam.center); 
+			t_ray r = ray(data->cam.center, ray_direction);
+
+			t_color pixel_color = ray_color(&r);
+
+            color = pix_color(pixel_color);
             draw_(data, x, y, color);
 			x++;
 			// add bar progress
@@ -92,10 +106,10 @@ void    draw_gradient(t_mrt *data)
 
 int init_window(t_mrt *data)
 {
-    data->mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, false);
+    data->mlx = mlx_init(IMAGE_WIDTH, IMAGE_HEIGHT, WINDOW_TITLE, false);
 	if (data->mlx == NULL)
 		return (FALSE);
-	data->image = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
+	data->image = mlx_new_image(data->mlx, IMAGE_WIDTH, IMAGE_HEIGHT);
 	if (!(data->image))
 	{
 		mlx_close_window(data->mlx);
@@ -111,24 +125,7 @@ int init_window(t_mrt *data)
     return (TRUE);
 }
 
-void    draw_background(t_mrt *data)
-{
-    int             x;
-	int             y;
-    
-	x = 0;
-	y = 0;
-    while (x < WINDOW_WIDTH)
-    {	
-		y = 0;
-        while (y < WINDOW_HEIGHT)
-        {
-            draw_(data, x, y, 0xFF0000FF); // Drawing red color rgba
-			y++;
-        }
-		x++;
-    }
-}
+
 
 bool init_data(t_mrt *data)
 {
@@ -138,18 +135,51 @@ bool init_data(t_mrt *data)
     return (true);
 }
 
+double	deg_to_radians(double degrees)
+{
+	return (degrees / (180.0 / PI));
+}
+
 int main(int argc, char **argv)
 {
     t_mrt data;
     (void)argv;
-
-    if (!init_data(&data))
+	(void)argc;
+	if (!init_data(&data))
         return (1);
+
+	t_camera cam;
+
+	cam.center = point3(0.0, 0.0, 0.0);
+	cam.hfov = 70;
+	cam.image_width = IMAGE_WIDTH;
+	cam.aspect_ratio = (double)16/9;
+	cam.image_height = (int)(IMAGE_WIDTH/cam.aspect_ratio);
+	double viewport_height = 2.0;
+	double viewport_width = viewport_height * ((double)IMAGE_WIDTH / IMAGE_HEIGHT);
+
+	t_vec3 viewport_u = vec3(viewport_width, 0, 0);
+	t_vec3 viewport_v = vec3(0, -viewport_height, 0);
+
+	cam.pixel_delta_u = vec3divscalar(viewport_u, IMAGE_WIDTH);
+	cam.pixel_delta_v = vec3divscalar(viewport_v, IMAGE_HEIGHT);
+
+	double focal_lenght = cos(degrees_to_radians(cam.hfov / 2)) * viewport_width / 2;
+	t_point3 part1 = vec3substr(cam.center, vec3(0, 0, focal_lenght));
+	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
+	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
+
+	cam.pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam.pixel_delta_u, cam.pixel_delta_v), 2));
+    data.cam = cam;
+
+	
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
-	// draw_background(&data);
-	draw_gradient(&data);
+	
+	draw_scene(&data);
+	
+
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
     mlx_loop(data.mlx);
@@ -158,3 +188,24 @@ int main(int argc, char **argv)
 
     return (EXIT_SUCCESS);
 }
+
+
+
+// void    draw_background(t_mrt *data)
+// {
+//     int             x;
+// 	int             y;
+    
+// 	x = 0;
+// 	y = 0;
+//     while (x < WINDOW_WIDTH)
+//     {	
+// 		y = 0;
+//         while (y < WINDOW_HEIGHT)
+//         {
+//             draw_(data, x, y, 0xFF0000FF); // Drawing red color rgba
+// 			y++;
+//         }
+// 		x++;
+//     }
+// }

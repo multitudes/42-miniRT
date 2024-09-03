@@ -11,7 +11,7 @@ NAME 			= 	miniRT
 
 CC 				= 	cc
 
-CCFLAGS 		= 	-Wextra -Wall -Werror
+CFLAGS 			= 	-Wextra -Wall -Werror -g
 CFLAGS 			+= 	-Iinclude -Isrc -O3 -Wunreachable-code -Ofast
 # CFLAGS += -DDEBUG=1
 
@@ -27,9 +27,9 @@ LIBS 			+= 	$(LIBFTDIR)/libft.a
 INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
-SRCS 			= $(addprefix $(SRC_DIR), main.c )
+SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c color.c ray.c vec3.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
-HDRS 			= $(addprefix include/, debug.h)
+HDRS 			= $(addprefix include/, debug.h vec3.h ray.h rtweekend.h color.h camera.h )
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
