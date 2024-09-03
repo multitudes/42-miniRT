@@ -33,15 +33,13 @@ HDRS 			= $(addprefix include/, debug.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
-#LDFLAGS 		= -L/opt/homebrew/opt/glfw/lib #for glfw
-
 
 # OS specific flags
 UNAME 			= 	$(shell uname -s)
 ifeq ($(UNAME), Linux)
 	LIBS 		+=  -lbsd
 else ifeq ($(UNAME), Darwin)
-	LIBS 		+=  -L/opt/homebrew/lib
+	# LIBS 		+=  -L/opt/homebrew/lib
 endif
 
 all: libmlx $(LIBFT) $(NAME)
@@ -84,8 +82,8 @@ clean:
 
 fclean: clean
 	@rm -rf $(NAME)
-	$(MAKE) -C $(LIBFTDIR) fclean
-	@# rm -rf $(LIBMLX)/build
+#$(MAKE) -C $(LIBFTDIR) fclean
+#@rm -rf $(LIBMLX)/build
 
 re: fclean all
 

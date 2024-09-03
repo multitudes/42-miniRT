@@ -6,6 +6,8 @@
 #define WINDOW_HEIGHT 600
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
+#define TRUE 1
+#define FALSE 0
 
 typedef struct 	s_mrt 
 {
@@ -17,15 +19,15 @@ typedef struct 	s_mrt
 	// t_pixel		pixel;
 }				t_mrt;
 
-void	_exit_gracefully(mlx_t *mlx)
+void	exit_gracefully(mlx_t *mlx)
 {
 	ft_printf("byebye!\n");
 	mlx_close_window(mlx);
 	mlx_terminate(mlx);
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
-void	_hook(void *param)
+void	hook(void *param)
 {
 	mlx_t		*mlx;
 	t_mrt		*mrt;
@@ -33,11 +35,8 @@ void	_hook(void *param)
 	mrt = (t_mrt *)param;
 	mlx = mrt->mlx;
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		_exit_gracefully(mlx);
+		exit_gracefully(mlx);
 }
-
-
-
 
 /*
 this is my draw pixel function. I write directly to the buffer 
@@ -83,7 +82,9 @@ void    draw_gradient(t_mrt *data)
             color = pix_color(r, g, b);
             draw_(data, x, y, color);
 			x++;
+			// add bar progress
         }
+		
 		y++;
     }
 }
@@ -93,7 +94,7 @@ int init_window(t_mrt *data)
 {
     data->mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, false);
 	if (data->mlx == NULL)
-		return (1);
+		return (FALSE);
 	data->image = mlx_new_image(data->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!(data->image))
 	{
@@ -107,7 +108,7 @@ int init_window(t_mrt *data)
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
     }
 	debug("Window initialized");
-    return (0);
+    return (TRUE);
 }
 
 void    draw_background(t_mrt *data)
@@ -144,16 +145,16 @@ int main(int argc, char **argv)
 
     if (!init_data(&data))
         return (1);
-    debug("Start of minirt");
-	if (init_window(&data))
-		return (1);
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
 	// draw_background(&data);
 	draw_gradient(&data);
-    mlx_loop_hook(data.mlx, &_hook, (void *)&data);
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
     mlx_loop(data.mlx);
     ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
 
-    return (0);
+    return (EXIT_SUCCESS);
 }
