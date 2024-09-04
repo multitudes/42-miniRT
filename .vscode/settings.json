@@ -3,6 +3,7 @@
 	"files.associations": {
 		"vec3.h": "c",
 		"color.h": "c",
-		"ray.h": "c"
+		"ray.h": "c",
+		"hittable.h": "c"
 	}
 }
