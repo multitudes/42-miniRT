@@ -5,6 +5,9 @@
 #include "vec3.h"
 #include "ray.h"
 #include "color.h"
+#include "hittable.h"
+#include "hittable_list.h"
+#include "sphere.h"
 
 #define IMAGE_WIDTH 800
 #define IMAGE_HEIGHT 600
@@ -69,7 +72,7 @@ unsigned int    pix_color(t_color color)
     return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
 }
 
-void    draw_scene(t_mrt *data)
+void    draw_scene(t_mrt *data, const t_hittablelist* world)
 {
     int             x;
 	int             y;
@@ -91,7 +94,7 @@ void    draw_scene(t_mrt *data)
 			t_vec3 ray_direction = vec3substr(pixel_center, data->cam.center); 
 			t_ray r = ray(data->cam.center, ray_direction);
 
-			t_color pixel_color = ray_color(&r);
+			t_color pixel_color = ray_color(&r, world);
 
             color = pix_color(pixel_color);
             draw_(data, x, y, color);
@@ -166,6 +169,14 @@ void init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double fov)
     
 }
 
+
+/*
+
+// World
+hittable_list world;
+world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
+world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
+*/
 		
 
 int main(int argc, char **argv)
@@ -181,16 +192,33 @@ int main(int argc, char **argv)
 	t_vec3 direction = vec3(0,0,0);
 	init_cam(&cam, center, direction, 70);
 
-	
 
 	data.cam = cam;
+
+
+	// world
+	t_hittable *list[2];
+
+	
+	t_sphere s1 = sphere(vec3(0, 0, -1), 0.5);
+	t_sphere s2 = sphere(vec3(0, -100.5, -1), 100);
+	list[0] = (t_hittable*)(&s1);
+	list[1] = (t_hittable*)(&s2);
+
+
+
+	const t_hittablelist world = hittablelist(list, 2);
+
+
+
+
 
 	
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 	
-	draw_scene(&data);
+	draw_scene(&data, &world);
 	
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);

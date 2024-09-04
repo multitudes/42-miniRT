@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
-#include "rtweekend.h"
+#include "minirt.h"
 
 /*
  * This is the C equivalent of a C++ initializer

@@ -6,30 +6,29 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 15:29:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/04 17:25:10 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <limits.h>
 #include "camera.h"
 #include "vec3.h"
 #include "color.h"
 #include "ray.h"
-// #include "hittable.h"
-// #include "hittable_list.h"
-#include <limits.h>
-#include "rtweekend.h"
+#include "minirt.h"
 #include <stdio.h>
 #include "sphere.h"
+#include "hittable_list.h"
+#include "interval.h"
+#include "hittable.h"
 
 
-t_color ray_color(t_ray *r)
+t_color	ray_color(t_ray *r, const t_hittablelist *world)
 {
-	t_sphere s = sphere(point3(0,0,-1), 0.5);
 	t_hit_record rec;
-	if (hit_sphere((void*)&s, r, 0.0, 1200.0, &rec))
+	if (hit_world(world, r, interval(0.001, INFINITY), &rec))
 	{
-		t_vec3 N = unit_vector(vec3substr(point_at(r, rec.t), vec3(0,0,-1)));
-	 	return vec3multscalar(color(N.x + 1, N.y + 1, N.z + 1), 0.5);
+		return vec3multscalar(vec3add(rec.normal, color(1,1,1)), 0.5);
 	}
 
 	

@@ -27,9 +27,10 @@ LIBS 			+= 	$(LIBFTDIR)/libft.a
 INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
-SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c vec3.c)
+SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c vec3.c hittable.c interval.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
-HDRS 			= $(addprefix include/, debug.h vec3.h sphere.h ray.h rtweekend.h color.h camera.h )
+HDRS 			= $(addprefix include/, debug.h vec3.h sphere.h ray.h interval.h \
+									hittable.h hittable_list.h minirt.h color.h camera.h )
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft

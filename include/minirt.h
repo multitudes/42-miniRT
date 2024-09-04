@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rtweekend.h                                        :+:      :+:    :+:   */
+/*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/03 17:39:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/04 16:02:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RTWEEKEND_H
-# define RTWEEKEND_H
+#ifndef MINIRT_H
+# define MINIRT_H
 
 #include <limits.h>
 #include <stdlib.h>
-#include "rtweekend.h"
 
 #define PI 3.1415926535897932385
 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:47:37 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/03 17:32:34 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/04 16:48:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@
 # include <stdio.h>
 # include <math.h>
 #include "ray.h"
+#include "hittable_list.h"
 
 t_color color(double, double, double);
 
 // for now
-t_color 	ray_color(t_ray *r);
+t_color 	ray_color(t_ray *r, const t_hittablelist* world);
 
 
 //t_color		color(double r, double g, double b);

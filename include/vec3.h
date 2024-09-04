@@ -16,7 +16,7 @@
 
 #include <stdbool.h>
 #include <math.h>
-#include "rtweekend.h"
+#include "minirt.h"
 
 typedef struct 	s_vec3
 {
