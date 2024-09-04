@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:49:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/03 17:29:32 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/04 12:05:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,10 @@ t_color color(double r, double g, double b)
 // 	fprintf(file, "%d %d %d\n", rbyte, gbyte, bbyte);
 // }
 
+/**
+ * Utility function to create a gradient color used mostly in the 
+ * background color function
+ */
 t_color creategradient(t_vec3 dir, t_color white, t_color blue)
 {
 	double a = 0.5 * (dir.y + 1.0);
@@ -58,6 +62,10 @@ t_color creategradient(t_vec3 dir, t_color white, t_color blue)
 	return raycolor;
 }
 
+/**
+ * Create a background color gradient
+ * It uses the function creategradient 
+ */
 t_color	backgroundcolor(t_vec3 dir)
 {
 	t_color blue;
@@ -71,7 +79,7 @@ t_color	backgroundcolor(t_vec3 dir)
 	return raycolor;
 }
 
-/*
+/**
  * Generate a random color
  */
 t_color		color_random()
@@ -79,7 +87,7 @@ t_color		color_random()
 	return color(random_double(0, 1), random_double(0, 1), random_double(0, 1));
 }
 
-/*
+/**
  * Generate a random color with components between min and max
  */
 t_color		color_random_min_max(double min, double max)

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/03 17:30:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/04 13:37:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,30 @@
 #include "rtweekend.h"
 #include <stdio.h>
 
+double hit_sphere(t_point3 center, double radius, t_ray *r)
+{
+	t_vec3 oc = vec3substr(center, r->orig);
+	double a = dot(r->dir, r->dir);
+	double b = -2.0 * dot(r->dir, oc);
+	double c = dot(oc, oc) - (radius * radius);
+	double discriminant = b * b - 4 * a * c;
+
+	if (discriminant < 0)
+		return -1.0;
+	else 
+		return (-b - sqrt(discriminant) / (2.0*a));
+
+	
+}
+
 t_color ray_color(t_ray *r)
 {
+	double t = hit_sphere(point3(0,0,-1), 0.5, r);
+	if (t > 0.0)
+	{
+		t_vec3 N = unit_vector(vec3substr(point_at(r, t), vec3(0,0,-1)));
+	 	return vec3multscalar(color(N.x + 1, N.y + 1, N.z + 1), 0.5);
+	}
 	t_vec3 unit_direction = unit_vector(r->dir);
 	double a = 0.5 * unit_direction.y + 1.0;
 	t_color white = color(1.0, 1.0, 1.0);
@@ -119,7 +141,6 @@ t_color ray_color(t_ray *r)
 // 	sprintf(filepath, "assets/%s", "test2.ppm");
 // 	file = fopen(filepath, "w");
 // 	fprintf(file, "P3\n%d %d\n255\n", c.image_width, c.image_height);
-
 // 	for (int j = 0; j < c.image_height; j++) 
 // 	{
 // 		// write to std err

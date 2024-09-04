@@ -68,12 +68,27 @@ $$
 (x,y,z)=(x0,y0,z0)+t(a,b,c)  
 $$  
 
+## The Viewport
+The viewport is a virtual rectangle in the 3D world that contains the grid of image pixel locations. If pixels are spaced the same distance horizontally as they are vertically, the viewport that bounds them will have the same aspect ratio as the rendered image. The distance between two adjacent pixels is called the pixel spacing, and square pixels is the standard. 
+We'll initially set the distance between the viewport and the camera center point to be one unit. This distance is often referred to as the focal length.  
+While our 3D space has the conventions above, this conflicts with our image coordinates, where we want to have the zeroth pixel in the top-left and work our way down to the last pixel at the bottom right. This means that our image coordinate Y-axis is inverted: Y increases going down the image. 
+ We'll also have the y-axis go up, the x-axis to the right, and the negative z-axis pointing in the viewing direction. (This is commonly referred to as right-handed coordinates.)
 
+## right hand vsleft hand coordinate system
+In a right-handed coordinate system, the x-axis points to the right, the y-axis points up, and the z-axis points out of the screen towards the viewer. The book and tutorials raytracing in one weekend and the next week use a right-handed coordinate system while the raytracer challenge uses a left-handed coordinate system. As does pixar for instance. There is no right or wrong. it is just a convention. We will use the right-handed coordinate system in this project. 
 
+On your right hand, the thumb is the x-axis, the index is the y-axis and the middle finger is the z-axis pointing to you. This is the right-handed coordinate system.
 
+## what are radians
+One radian is the angle subtended at the center of a circle by an arc that is equal in length to the radius of the circle. So a full circle is $2π$ radians.
+$$
+radians(deg) = deg/180 * \pi
+$$
 
-
-
+Since our input is in degrees and the `cos` and `sin` functions in C use radians, we need to convert the degrees to radians.
+$$
+degrees(radians) = radians * 180 / \pi
+$$
 
 <hr></hr>
 
@@ -131,3 +146,15 @@ https://graphicscodex.com/app/app.html
 
 Nice visualizing website:  
 https://www.desmos.com/calculator  
+
+## GBD - GNU Debugger
+debug with 
+```bash
+gdb -tui ./miniRT 
+```
+if the interface is scrambled ctrl-l to refresh the screen.  
+```bash
+b main
+r
+p *variable
+``` 

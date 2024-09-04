@@ -2,6 +2,7 @@
 	"makefile.configureOnOpen": false,
 	"files.associations": {
 		"vec3.h": "c",
-		"color.h": "c"
+		"color.h": "c",
+		"ray.h": "c"
 	}
 }

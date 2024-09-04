@@ -140,6 +140,34 @@ double	deg_to_radians(double degrees)
 	return (degrees / (180.0 / PI));
 }
 
+void init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double fov) 
+{
+	(void)direction;
+	cam->center = center;
+	cam->hfov = fov;
+	cam->image_width = IMAGE_WIDTH;
+	cam->aspect_ratio = (double)16/9;
+	cam->image_height = (int)(IMAGE_WIDTH/cam->aspect_ratio);
+	double viewport_height = 2.0;
+	double viewport_width = viewport_height * ((double)IMAGE_WIDTH / IMAGE_HEIGHT);
+
+	t_vec3 viewport_u = vec3(viewport_width, 0, 0);
+	t_vec3 viewport_v = vec3(0, -viewport_height, 0);
+
+	cam->pixel_delta_u = vec3divscalar(viewport_u, IMAGE_WIDTH);
+	cam->pixel_delta_v = vec3divscalar(viewport_v, IMAGE_HEIGHT);
+
+	double focal_lenght = cos(degrees_to_radians(cam->hfov / 2)) * viewport_width / 2;
+	t_point3 part1 = vec3substr(cam->center, vec3(0, 0, focal_lenght));
+	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
+	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
+
+	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
+    
+}
+
+		
+
 int main(int argc, char **argv)
 {
     t_mrt data;
@@ -149,28 +177,13 @@ int main(int argc, char **argv)
         return (1);
 
 	t_camera cam;
+	t_point3 center = point3(0,0,0);
+	t_vec3 direction = vec3(0,0,0);
+	init_cam(&cam, center, direction, 70);
 
-	cam.center = point3(0.0, 0.0, 0.0);
-	cam.hfov = 70;
-	cam.image_width = IMAGE_WIDTH;
-	cam.aspect_ratio = (double)16/9;
-	cam.image_height = (int)(IMAGE_WIDTH/cam.aspect_ratio);
-	double viewport_height = 2.0;
-	double viewport_width = viewport_height * ((double)IMAGE_WIDTH / IMAGE_HEIGHT);
+	
 
-	t_vec3 viewport_u = vec3(viewport_width, 0, 0);
-	t_vec3 viewport_v = vec3(0, -viewport_height, 0);
-
-	cam.pixel_delta_u = vec3divscalar(viewport_u, IMAGE_WIDTH);
-	cam.pixel_delta_v = vec3divscalar(viewport_v, IMAGE_HEIGHT);
-
-	double focal_lenght = cos(degrees_to_radians(cam.hfov / 2)) * viewport_width / 2;
-	t_point3 part1 = vec3substr(cam.center, vec3(0, 0, focal_lenght));
-	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
-	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
-
-	cam.pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam.pixel_delta_u, cam.pixel_delta_v), 2));
-    data.cam = cam;
+	data.cam = cam;
 
 	
     debug("Start of minirt %s", "helllo !! ");
