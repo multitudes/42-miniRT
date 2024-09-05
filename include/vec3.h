@@ -41,7 +41,7 @@ t_vec3		vec3substr(const t_vec3 a, const t_vec3 b);
 t_vec3		vec3mult(const t_vec3 a, const t_vec3 b);
 t_vec3		vec3multscalar(const t_vec3 a, double t);
 t_vec3		vec3divscalar(const t_vec3 a, double t);
-	
+t_vec3		cross(const t_vec3 a, const t_vec3 b);
 double		length_squared(const t_vec3 v);
 double		length(const t_vec3 v);
 void		print_vec3(const t_vec3 *v);
@@ -57,7 +57,7 @@ t_vec3 		random_in_unit_sphere();
 t_vec3 		random_on_hemisphere(const t_vec3 normal);
 t_vec3 		random_unit_vector();
 t_vec3		reflect(const t_vec3 v, const t_vec3 n);
-t_vec3 refract(const t_vec3 uv, const t_vec3 n, double etai_over_etat);
-double reflectance(double cosine, double refraction_index);
+t_vec3 		refract(const t_vec3 uv, const t_vec3 n, double etai_over_etat);
+double 		reflectance(double cosine, double refraction_index);
 
 #endif

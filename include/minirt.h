@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 19:29:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 21:14:17 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@
 #include <MLX42/MLX42.h>
 #include "camera.h"
 
-#define IMAGE_WIDTH 800
-#define IMAGE_HEIGHT 600
+#define IMAGE_WIDTH 400
 # define TRUE 1
 # define FALSE 0
 

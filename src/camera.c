@@ -6,13 +6,12 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 19:43:21 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 21:18:26 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
 #include "minirt.h"
-#include "camera.h"
 #include "vec3.h"
 #include "color.h"
 #include "ray.h"
@@ -22,8 +21,59 @@
 #include "hittable.h"
 #include <MLX42/MLX42.h>
 #include "debug.h"
+#include "utils.h"
+#include "camera.h"
+
+t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
+{
+	t_camera cam;
+
+	cam.aspect_ratio = (double)16.0/9.0;
+	// cam.aspect_ratio = (double)16.0/16.0;
+	
+	cam.samples_per_pixel = 10;
+	cam.max_depth = 10;
+	cam.image_width = IMAGE_WIDTH;
+	cam.image_height = IMAGE_WIDTH / cam.aspect_ratio;
+	cam.image_height = (cam.image_height < 1) ? 1 : cam.image_height;
+	cam.center = center;
+	cam.hfov = hfov;
+	cam.vup = vec3(0,1,0);					// Camera-relative "up" direction
+	
+    // Calculate lookat from lookdir
+    t_point3 lookat = vec3add(cam.lookfrom, direction);
+
+	double focal_length = length(vec3substr(center, lookat));
+	
+	double theta = degrees_to_radians(hfov);
+    double h = tan(theta/2);
+	double viewport_width = 2 * h * focal_length;
+    double viewport_height = viewport_width * ((double)cam.image_height/cam.image_width);
+	
 
 
+	// Calculate the u,v,w unit basis vectors for the camera coordinate frame.
+    cam.w = unit_vector(vec3substr(cam.lookfrom, lookat));
+    cam.u = unit_vector(cross(cam.vup, cam.w));
+    cam.v = cross(cam.w, cam.u);
+
+	// t_vec3 viewport_u = vec3(viewport_width, 0, 0);
+	// t_vec3 viewport_v = vec3(0, -viewport_height, 0);
+
+	// Calculate the vectors across the horizontal and down the vertical viewport edges.
+    t_vec3 viewport_u = vec3multscalar(cam.u, viewport_width);    // Vector across viewport horizontal edge
+	t_vec3 viewport_v = vec3multscalar(vec3negate(cam.v), viewport_height);  // Vector down viewport vertical edge
+
+	cam.pixel_delta_u = vec3divscalar(viewport_u, cam.image_width);
+	cam.pixel_delta_v = vec3divscalar(viewport_v, cam.image_height);
+
+	t_point3 part1 = vec3substr(cam.center, vec3(0, 0, focal_length));
+	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
+	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
+
+	cam.pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam.pixel_delta_u, cam.pixel_delta_v), 2));
+    return cam;
+}
 
 t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
 {
@@ -36,7 +86,6 @@ t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
 		t_vec3 direction = vec3add(rec.normal, random_unit_vector());
 		t_ray new_ray = ray(rec.p, direction);
 		return vec3multscalar(ray_color(&new_ray, depth - 1, world), 0.3);
-
 	}
 	
 	t_vec3 unit_direction = unit_vector(r->dir);
@@ -47,7 +96,6 @@ t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
 
 
 }
-
 
 unsigned int    color_gamma_corrected(t_color color)
 {
@@ -70,7 +118,7 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
     uint8_t *pixel;
 
     image = data->image;
-    offset = y * IMAGE_WIDTH + x;
+    offset = y * data->cam.image_width + x;
     pixel = &image->pixels[offset * 4];
     *(pixel++) = (uint8_t)(color >> 24);
     *(pixel++) = (uint8_t)(color >> 16);
@@ -103,10 +151,11 @@ void    render(t_mrt *data, const t_hittablelist* world)
     y = 0;
     x = 0;
 	i = 0;
-    while (y < IMAGE_HEIGHT)
+
+    while (y < data->cam.image_height)
     {	
 		x = 0;
-        while (x < IMAGE_WIDTH)
+        while (x < data->cam.image_width)
         {
 			t_color pixel_color = color(0,0,0);
 			i = 0;
@@ -123,7 +172,7 @@ void    render(t_mrt *data, const t_hittablelist* world)
 			x++;
 			// add bar progress
         }
-		debug("%.3d of %.3d\r", y, IMAGE_HEIGHT);
+		debug("%.3d of %.3d\r", y, data->cam.image_height);
 		y++;
     }
 	debug("\nDONE!\n");
