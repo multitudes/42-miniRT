@@ -87,7 +87,6 @@ t_ray get_ray(t_camera cam, int i, int j)
 {
 	t_vec3 offset = sample_square();
 	
-
 	t_vec3 iu = vec3multscalar(cam.pixel_delta_u, i + offset.x);
 	t_vec3 ju = vec3multscalar(cam.pixel_delta_v, j + offset.y);
 	t_vec3 partial = vec3add(iu, ju); 
@@ -115,7 +114,7 @@ void    render(t_mrt *data, const t_hittablelist* world)
         while (x < IMAGE_WIDTH)
         {
 			t_color pixel_color = color(0,0,0);
-
+			i = 0;
 			while (i < data->cam.samples_per_pixel)
 			{
 
