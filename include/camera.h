@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 13:15:21 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 15:30:30 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "vec3.h"
 #include "ray.h"
-// #include "hittable_list.h"
+#include "hittable_list.h"
 
 
 typedef struct	t_camera 
@@ -29,7 +29,7 @@ typedef struct	t_camera
 	double		hfov;			   // hotizontal Field of view
 
 	int 		samples_per_pixel;
-	// int			max_depth;		   // Maximum number of ray bounces into scene
+	int			max_depth;		   // Maximum number of ray bounces into scene
 	// double		vfov;			   // Field of view
 	// t_point3 	lookfrom;   		// Point camera is looking from
     // t_point3 	lookat;  			// Point camera is looking at
@@ -48,7 +48,7 @@ typedef struct	t_camera
 
 // t_camera	camera();
 // void		render(t_camera cam, const t_hittablelist world);
-// t_color		ray_color(t_ray *r, int max_deph, const t_hittablelist *world);
+t_color		ray_color(t_ray *r, int depth, const t_hittablelist *world);
 // t_ray		get_ray(t_camera *c, int u, int v);
 // t_vec3		sample_square();
 // t_point3	defocus_disk_sample(t_camera *c);

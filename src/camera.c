@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 17:25:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 15:54:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,19 @@
 #include "hittable.h"
 
 
-t_color	ray_color(t_ray *r, const t_hittablelist *world)
+t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
 {
 	t_hit_record rec;
+
+	if (depth <= 0)
+		return color(0, 0, 0);
 	if (hit_world(world, r, interval(0.001, INFINITY), &rec))
 	{
-		return vec3multscalar(vec3add(rec.normal, color(1,1,1)), 0.5);
-	}
+		t_vec3 direction = vec3add(rec.normal, random_unit_vector());
+		t_ray new_ray = ray(rec.p, direction);
+		return vec3multscalar(ray_color(&new_ray, depth - 1, world), 0.3);
 
+	}
 	
 	t_vec3 unit_direction = unit_vector(r->dir);
 	double a = 0.5 * unit_direction.y + 1.0;

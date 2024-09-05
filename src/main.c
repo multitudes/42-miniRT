@@ -48,10 +48,12 @@ void	hook(void *param)
 
 unsigned int    pix_color(t_color color)
 {
+
+
 	t_interval intensity = interval(0.0,0.999);
-	int r = clamp(intensity, color.r) * 255;
-	int g = clamp(intensity, color.g) * 255;
-	int b = clamp(intensity, color.b) * 255;
+	int r = clamp(intensity, linear_to_gamma(color.r)) * 255;
+	int g = clamp(intensity, linear_to_gamma(color.g)) * 255;
+	int b = clamp(intensity, linear_to_gamma(color.b)) * 255;
     return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
 }
 
@@ -59,7 +61,7 @@ unsigned int    pix_color(t_color color)
 this is my draw pixel function. I write directly to the buffer 
 and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib!
 */
-void draw_(t_mrt *data, int x, int y, t_color colorvector)
+void write_color(t_mrt *data, int x, int y, t_color colorvector)
 {
     int color = pix_color(colorvector);
     int offset;
@@ -117,25 +119,21 @@ void    render(t_mrt *data, const t_hittablelist* world)
 			i = 0;
 			while (i < data->cam.samples_per_pixel)
 			{
-
-
-
-				// t_ray r = ray(data->cam.center, ray_direction);
-
 				t_ray r = get_ray(data->cam, x, y);
 
-				pixel_color = vec3add(pixel_color, ray_color(&r, world));
+				pixel_color = vec3add(pixel_color, ray_color(&r, data->cam.max_depth ,world));
 				
 				i++;
 			}
 
-            draw_(data, x, y, vec3divscalar(pixel_color, data->cam.samples_per_pixel));
+            write_color(data, x, y, vec3divscalar(pixel_color, data->cam.samples_per_pixel));
 			x++;
 			// add bar progress
         }
-		
+		debug("%.3d of %.3d\r", y, IMAGE_HEIGHT);
 		y++;
     }
+	debug("\nDONE!\n");
 }
 
 
@@ -180,6 +178,7 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	(void)direction;
 	t_camera cam;
 	cam.samples_per_pixel = 10;
+	cam.max_depth = 10;
 	cam.aspect_ratio = (double)16.0/9.0;
 	cam.image_width = IMAGE_WIDTH;
 	cam.image_height = (int)(IMAGE_WIDTH/cam.aspect_ratio);
@@ -222,7 +221,7 @@ int main(int argc, char **argv)
 	if (!init_data(&data))
         return (1);
 
-	t_point3 center = point3(0,0,10);
+	t_point3 center = point3(0,0,1);
 	t_vec3 direction = vec3(0,0,-1);
 	data.cam = init_cam(center, direction, 70);
 
@@ -231,17 +230,16 @@ int main(int argc, char **argv)
 	t_hittable *list[3];
 
 	
-	t_sphere s1 = sphere(vec3(0, -.5, -1), 0.5);
+	t_sphere s1 = sphere(vec3(0, 0, -1), 0.5);
 	t_sphere s2 = sphere(vec3(0, -100.5, -1), 100);
-	t_sphere s3 = sphere(vec3(0, 0.1, -1.2), 0.5);
+	// t_sphere s3 = sphere(vec3(0, 0.1, -1.2), 0.5);
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s2);
-	list[2] = (t_hittable*)(&s3);
+	// list[2] = (t_hittable*)(&s3);
 
 
 
-	const t_hittablelist world = hittablelist(list, 3);
-
+	const t_hittablelist world = hittablelist(list, 2);
 
 
 
@@ -265,7 +263,7 @@ int main(int argc, char **argv)
 
 
 
-// void    draw_background(t_mrt *data)
+// void    write_colorbackground(t_mrt *data)
 // {
 //     int             x;
 // 	int             y;
@@ -277,7 +275,7 @@ int main(int argc, char **argv)
 // 		y = 0;
 //         while (y < WINDOW_HEIGHT)
 //         {
-//             draw_(data, x, y, 0xFF0000FF); // Drawing red color rgba
+//             write_color(data, x, y, 0xFF0000FF); // Drawing red color rgba
 // 			y++;
 //         }
 // 		x++;
