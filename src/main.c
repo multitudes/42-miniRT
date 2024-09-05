@@ -73,8 +73,8 @@ int main(int argc, char **argv)
         return (1);
 
 	t_point3 center = point3(-2,2,1);
-	t_point3 lookat = point3(0, 0, -1);
-	t_vec3 direction = vec3substr(lookat, center);
+	t_point3 lookat = point3(0, 0, -1); // this was a scene from the book
+	t_vec3 direction = vec3substr(lookat, center); // to debug i calc the direction
 	data.cam = init_cam(center, direction, 90);
 
 	// world
@@ -84,15 +84,14 @@ int main(int argc, char **argv)
 	t_sphere s2 = sphere(vec3(0, -100.5, -1), 100);
 	t_sphere s3 = sphere(vec3(-1, 0.0, -1.0), 0.5);
 	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 0.5);
+
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s2);
 	list[2] = (t_hittable*)(&s3);
 	list[3] = (t_hittable*)(&s4);
 
-
 	const t_hittablelist world = hittablelist(list, 4);
 
-	
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
