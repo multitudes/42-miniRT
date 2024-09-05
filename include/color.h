@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:47:37 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 15:31:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 18:59:21 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,7 @@
 
 t_color color(double, double, double);
 
-// for now
-// t_color 	ray_color(t_ray *r, const t_hittablelist* world);
 
-
-//t_color		color(double r, double g, double b);
-// void		write_color(FILE *file, t_color pixel_color);
-// t_color 	creategradient(t_vec3 dir, t_color white, t_color blue);
-// t_color		backgroundcolor(t_vec3 dir);
-// t_color		color_random();
-// t_color		color_random_min_max(double min, double max);
 
 inline double linear_to_gamma(double linear_component)
 {

@@ -27,10 +27,12 @@ LIBS 			+= 	$(LIBFTDIR)/libft.a
 INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
-SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c vec3.c hittable.c interval.c)
+SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c \
+											vec3.c hittable.c interval.c utils.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
-HDRS 			= $(addprefix include/, debug.h vec3.h sphere.h ray.h interval.h \
-									hittable.h hittable_list.h minirt.h color.h camera.h )
+HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
+									hittable.h hittable_list.h minirt.h color.h \
+									utils.h )
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
@@ -74,12 +76,11 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 
 $(NAME): $(OBJS) $(HDRS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) -o $(NAME)
-#$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LDFLAGS) $(LIBS) -o $(NAME)
 
 clean:
 	rm -f $(OBJS)
 	rm -rf $(OBJ_DIR)
-	$(MAKE) -C $(LIBFTDIR) clean
+#$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
 	@rm -rf $(NAME)

@@ -6,21 +6,23 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 15:54:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 19:00:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <limits.h>
+#include "minirt.h"
 #include "camera.h"
 #include "vec3.h"
 #include "color.h"
 #include "ray.h"
-#include "minirt.h"
 #include <stdio.h>
 #include "sphere.h"
 #include "hittable_list.h"
 #include "interval.h"
 #include "hittable.h"
+#include <MLX42/MLX42.h>
+
 
 
 t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
@@ -45,6 +47,88 @@ t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
 
 
 }
+
+
+unsigned int    color_gamma_corrected(t_color color)
+{
+	t_interval intensity = interval(0.0,0.999);
+	int r = clamp(intensity, linear_to_gamma(color.r)) * 255;
+	int g = clamp(intensity, linear_to_gamma(color.g)) * 255;
+	int b = clamp(intensity, linear_to_gamma(color.b)) * 255;
+    return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
+}
+
+/*
+this is my draw pixel function. I write directly to the buffer 
+and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib!
+*/
+void write_color(t_mrt *data, int x, int y, t_color colorvector)
+{
+    int color = color_gamma_corrected(colorvector);
+    int offset;
+    mlx_image_t *image;
+    uint8_t *pixel;
+
+    image = data->image;
+    offset = y * IMAGE_WIDTH + x;
+    pixel = &image->pixels[offset * 4];
+    *(pixel++) = (uint8_t)(color >> 24);
+    *(pixel++) = (uint8_t)(color >> 16);
+    *(pixel++) = (uint8_t)(color >> 8);
+    *(pixel++) = (uint8_t)(color & 0xFF);
+}
+
+
+t_ray get_ray(t_camera cam, int i, int j)
+{
+	t_vec3 offset = sample_square();
+	
+	t_vec3 iu = vec3multscalar(cam.pixel_delta_u, i + offset.x);
+	t_vec3 ju = vec3multscalar(cam.pixel_delta_v, j + offset.y);
+	t_vec3 partial = vec3add(iu, ju); 
+	t_point3 pixel_sample = vec3add(cam.pixel00_loc, partial);
+
+	t_point3 ray_origin = cam.center;
+	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin); 
+	return ray(ray_origin, ray_direction);
+
+}
+
+void    render(t_mrt *data, const t_hittablelist* world)
+{
+    int             x;
+	int             y;
+	int 			i;
+    
+    y = 0;
+    x = 0;
+	i = 0;
+    while (y < IMAGE_HEIGHT)
+    {	
+		x = 0;
+        while (x < IMAGE_WIDTH)
+        {
+			t_color pixel_color = color(0,0,0);
+			i = 0;
+			while (i < data->cam.samples_per_pixel)
+			{
+				t_ray r = get_ray(data->cam, x, y);
+
+				pixel_color = vec3add(pixel_color, ray_color(&r, data->cam.max_depth ,world));
+				
+				i++;
+			}
+
+            write_color(data, x, y, vec3divscalar(pixel_color, data->cam.samples_per_pixel));
+			x++;
+			// add bar progress
+        }
+		debug("%.3d of %.3d\r", y, IMAGE_HEIGHT);
+		y++;
+    }
+	debug("\nDONE!\n");
+}
+
 
 // /*
 //  * camera

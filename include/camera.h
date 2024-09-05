@@ -6,19 +6,22 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 17:16:56 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 19:08:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CAMERA_H
 # define CAMERA_H
 
-#include "vec3.h"
+#include "minirt.h"
+#include "color.h"
 #include "ray.h"
+#include "vec3.h"
 #include "hittable_list.h"
+#include "debug.h"
 
-
-typedef struct	t_camera 
+typedef struct s_mrt t_mrt;
+typedef struct	s_camera
 {
 	// considered "public" 
     t_point3 	center;         // Camera center
@@ -43,11 +46,15 @@ typedef struct	t_camera
 
 } 				t_camera;
 
-// t_camera	camera();
-// void		render(t_camera cam, const t_hittablelist world);
+
+void    	render(t_mrt *data, const t_hittablelist* world);
 t_color		ray_color(t_ray *r, int depth, const t_hittablelist *world);
+void 		write_color(t_mrt *data, int x, int y, t_color colorvector);
+
+unsigned int    color_gamma_corrected(t_color color);
+
 // t_ray		get_ray(t_camera *c, int u, int v);
 // t_vec3		sample_square();
-// t_point3	defocus_disk_sample(t_camera *c);
+
 
 #endif

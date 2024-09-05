@@ -160,3 +160,72 @@ bool near_zero(t_vec3 e)
 	const double s = 1e-8;
 	return (fabs(e.x) < s) && (fabs(e.y) < s) && (fabs(e.z) < s);
 }
+
+t_vec3 sample_square() 
+{
+	t_vec3 random_vec = vec3(random_d() - 0.5, random_d() - 0.5, 0);
+	return random_vec; 
+}
+
+t_vec3 unit_vector(t_vec3 v)
+{
+	return vec3divscalar(v, length(v));
+}
+
+t_vec3 random_in_unit_disk() 
+{
+    while (1) 
+	{
+        t_vec3 p = vec3(random_double(-1,1), random_double(-1,1), 0);
+        if (length_squared(p) < 1)
+            return p;
+    }
+}
+
+/*
+ * Random vector in unit sphere
+ */
+t_vec3 random_in_unit_sphere() 
+{
+    while (1) {
+        t_vec3 p = random_vec3_min_max(-1,1);
+        if (length_squared(p) < 1)
+            return p;
+    }
+}
+
+t_vec3 random_on_hemisphere(const t_vec3 normal) 
+{
+    t_vec3 on_unit_sphere = random_unit_vector();
+    if (dot(on_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
+        return on_unit_sphere;
+    else
+        return vec3negate(on_unit_sphere);
+}
+
+t_vec3 random_unit_vector() 
+{
+    return unit_vector(random_in_unit_sphere());
+}
+
+t_vec3	reflect(const t_vec3 v, const t_vec3 n) 
+{
+    return vec3substr(v, vec3multscalar(n, dot(v, n) * 2));
+}
+
+t_vec3 refract(const t_vec3 uv, const t_vec3 n, double etai_over_etat) 
+{
+    double cos_theta = fmin(dot(vec3negate(uv), n), 1.0);
+    t_vec3 r_out_perp =  vec3multscalar(vec3add(uv, vec3multscalar(n, cos_theta)), etai_over_etat);
+    t_vec3 r_out_parallel = vec3multscalar(n, -sqrt(fabs(1.0 - length_squared(r_out_perp))));
+    return vec3add(r_out_perp, r_out_parallel);
+}
+
+double reflectance(double cosine, double refraction_index) 
+{
+	// Use Schlick's approximation for reflectance.
+	double r0 = (1 - refraction_index) / (1 + refraction_index);
+	r0 = r0*r0;
+	return r0 + (1-r0)*pow((1 - cosine),5);
+}
+

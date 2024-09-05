@@ -6,17 +6,17 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 18:16:53 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 19:15:40 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sphere.h"
-#include "ray.h"
 #include <stdbool.h>
 #include <math.h>
 #include "vec3.h"
+#include "ray.h"
 #include "hittable.h"
 #include "interval.h"
+#include "sphere.h"
 
 /*
  * a sort of initializer for a sphere

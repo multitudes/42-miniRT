@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 16:02:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 19:29:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,24 @@
 
 #include <limits.h>
 #include <stdlib.h>
+#include <MLX42/MLX42.h>
+#include "camera.h"
 
-#define PI 3.1415926535897932385
+#define IMAGE_WIDTH 800
+#define IMAGE_HEIGHT 600
+# define TRUE 1
+# define FALSE 0
 
-/*
- * Comverts degrees to radians.
- */
-inline double degrees_to_radians(double degrees) {
-    return degrees * PI / 180.0;
-}
+typedef struct 	s_mrt 
+{
+	void		*mlx;
+	void		*win_ptr;
+	mlx_image_t	*image;
+	t_camera cam;
+	// t_viewport	viewport;
+	// t_pixel		pixel;
+}				t_mrt;
 
-/*
- * Returns a random real in [0,1).
- */
-inline double random_d() {
-    return rand() / (RAND_MAX + 1.0);
-}
 
-/*
- * Returns a random real in [min,max).
- */
-inline double random_double(double min, double max) {
-    return min + (max-min)*random_d();
-}
 
 #endif
