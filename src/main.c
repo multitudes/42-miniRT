@@ -8,6 +8,7 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "interval.h"
 
 #define IMAGE_WIDTH 800
 #define IMAGE_HEIGHT 600
@@ -45,12 +46,22 @@ void	hook(void *param)
 		exit_gracefully(mlx);
 }
 
+unsigned int    pix_color(t_color color)
+{
+	t_interval intensity = interval(0.0,0.999);
+	int r = clamp(intensity, color.r) * 255;
+	int g = clamp(intensity, color.g) * 255;
+	int b = clamp(intensity, color.b) * 255;
+    return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
+}
+
 /*
 this is my draw pixel function. I write directly to the buffer 
 and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib!
 */
-void draw_(t_mrt *data, int x, int y, int color)
+void draw_(t_mrt *data, int x, int y, t_color colorvector)
 {
+    int color = pix_color(colorvector);
     int offset;
     mlx_image_t *image;
     uint8_t *pixel;
@@ -64,40 +75,62 @@ void draw_(t_mrt *data, int x, int y, int color)
     *(pixel++) = (uint8_t)(color & 0xFF);
 }
 
-unsigned int    pix_color(t_color color)
+
+t_vec3 sample_square() 
 {
-	int r = color.r * 255;
-	int g = color.g * 255;
-	int b = color.b *255;
-    return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
+	t_vec3 random_vec = vec3(random_d() - 0.5, random_d() - 0.5, 0);
+	return random_vec; 
+}
+
+
+t_ray get_ray(t_camera cam, int i, int j)
+{
+	t_vec3 offset = sample_square();
+	
+
+	t_vec3 iu = vec3multscalar(cam.pixel_delta_u, i + offset.x);
+	t_vec3 ju = vec3multscalar(cam.pixel_delta_v, j + offset.y);
+	t_vec3 partial = vec3add(iu, ju); 
+	t_point3 pixel_sample = vec3add(cam.pixel00_loc, partial);
+
+	t_point3 ray_origin = cam.center;
+	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin); 
+	return ray(ray_origin, ray_direction);
+
+
 }
 
 void    render(t_mrt *data, const t_hittablelist* world)
 {
     int             x;
 	int             y;
-    unsigned int    color;
-
+	int 			i;
     
     y = 0;
     x = 0;
+	i = 0;
     while (y < IMAGE_HEIGHT)
     {	
 		x = 0;
         while (x < IMAGE_WIDTH)
         {
-			t_vec3 iu = vec3multscalar(data->cam.pixel_delta_u, x);
-			t_vec3 ju = vec3multscalar(data->cam.pixel_delta_v, y);
-			t_vec3 partial = vec3add(iu, ju); 
-			t_point3 pixel_center = vec3add(data->cam.pixel00_loc, partial);
+			t_color pixel_color = color(0,0,0);
 
-			t_vec3 ray_direction = vec3substr(pixel_center, data->cam.center); 
-			t_ray r = ray(data->cam.center, ray_direction);
+			while (i < data->cam.samples_per_pixel)
+			{
 
-			t_color pixel_color = ray_color(&r, world);
 
-            color = pix_color(pixel_color);
-            draw_(data, x, y, color);
+
+				// t_ray r = ray(data->cam.center, ray_direction);
+
+				t_ray r = get_ray(data->cam, x, y);
+
+				pixel_color = vec3add(pixel_color, ray_color(&r, world));
+				
+				i++;
+			}
+
+            draw_(data, x, y, vec3divscalar(pixel_color, data->cam.samples_per_pixel));
 			x++;
 			// add bar progress
         }
@@ -143,32 +176,33 @@ double	deg_to_radians(double degrees)
 	return (degrees / (180.0 / PI));
 }
 
-void init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov) 
+t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
 {
 	(void)direction;
-
-	cam->aspect_ratio = (double)16.0/9.0;
-	cam->image_width = IMAGE_WIDTH;
-	cam->image_height = (int)(IMAGE_WIDTH/cam->aspect_ratio);
-	cam->image_height = (cam->image_height < 1) ? 1 : cam->image_height;
-	cam->center = center;
-	cam->hfov = hfov;
+	t_camera cam;
+	cam.samples_per_pixel = 10;
+	cam.aspect_ratio = (double)16.0/9.0;
+	cam.image_width = IMAGE_WIDTH;
+	cam.image_height = (int)(IMAGE_WIDTH/cam.aspect_ratio);
+	cam.image_height = (cam.image_height < 1) ? 1 : cam.image_height;
+	cam.center = center;
+	cam.hfov = hfov;
 	double viewport_height = 2.0;
 	double viewport_width = viewport_height * ((double)IMAGE_WIDTH / IMAGE_HEIGHT);
-	double focal_lenght = (1 / tan(degrees_to_radians(cam->hfov / 2))) * viewport_width / 2;
+	double focal_lenght = (1 / tan(degrees_to_radians(cam.hfov / 2))) * viewport_width / 2;
 
 	t_vec3 viewport_u = vec3(viewport_width, 0, 0);
 	t_vec3 viewport_v = vec3(0, -viewport_height, 0);
 
-	cam->pixel_delta_u = vec3divscalar(viewport_u, IMAGE_WIDTH);
-	cam->pixel_delta_v = vec3divscalar(viewport_v, IMAGE_HEIGHT);
+	cam.pixel_delta_u = vec3divscalar(viewport_u, IMAGE_WIDTH);
+	cam.pixel_delta_v = vec3divscalar(viewport_v, IMAGE_HEIGHT);
 
-	t_point3 part1 = vec3substr(cam->center, vec3(0, 0, focal_lenght));
+	t_point3 part1 = vec3substr(cam.center, vec3(0, 0, focal_lenght));
 	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
 	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
 
-	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
-    
+	cam.pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam.pixel_delta_u, cam.pixel_delta_v), 2));
+    return cam;
 }
 
 
@@ -189,13 +223,9 @@ int main(int argc, char **argv)
 	if (!init_data(&data))
         return (1);
 
-	t_camera cam;
 	t_point3 center = point3(0,0,10);
 	t_vec3 direction = vec3(0,0,-1);
-	init_cam(&cam, center, direction, 70);
-
-
-	data.cam = cam;
+	data.cam = init_cam(center, direction, 70);
 
 
 	// world

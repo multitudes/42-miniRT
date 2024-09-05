@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/03 16:04:32 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 13:15:21 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct	t_camera
 	t_vec3   	u, v, w;              // Camera frame basis vectors
 	double		hfov;			   // hotizontal Field of view
 
-	// int 		samples_per_pixel;
+	int 		samples_per_pixel;
 	// int			max_depth;		   // Maximum number of ray bounces into scene
 	// double		vfov;			   // Field of view
 	// t_point3 	lookfrom;   		// Point camera is looking from
@@ -51,6 +51,6 @@ typedef struct	t_camera
 // t_color		ray_color(t_ray *r, int max_deph, const t_hittablelist *world);
 // t_ray		get_ray(t_camera *c, int u, int v);
 // t_vec3		sample_square();
-t_point3	defocus_disk_sample(t_camera *c);
+// t_point3	defocus_disk_sample(t_camera *c);
 
 #endif

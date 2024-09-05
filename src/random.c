@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   interval.c                                         :+:      :+:    :+:   */
+/*   random.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/23 09:59:43 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 13:11:44 by lbrusa           ###   ########.fr       */
+/*   Created: 2024/09/05 12:25:08 by lbrusa            #+#    #+#             */
+/*   Updated: 2024/09/05 12:26:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "interval.h"
 
-/*
- * initializer
- */
-t_interval interval(double min, double max)
+// Define constants for the LCG
+#define A 1664525
+#define C 1013904223
+#define M 4294967296 // 2^32
+
+// Function to generate the next random number
+unsigned int rand_rt() 
 {
-	t_interval i;
-
-	i.min = min;
-	i.max = max;
-	return (i);
+	unsigned int seed = 1;
+    seed = (A * seed + C) % M;
+    return seed;
 }
