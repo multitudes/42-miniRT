@@ -190,7 +190,7 @@ int main(int argc, char **argv)
         return (1);
 
 	t_camera cam;
-	t_point3 center = point3(0,0,1);
+	t_point3 center = point3(0,0,10);
 	t_vec3 direction = vec3(0,0,-1);
 	init_cam(&cam, center, direction, 70);
 

@@ -90,16 +90,41 @@ $$
 degrees(radians) = radians * 180 / \pi
 $$
 
-<hr></hr>
+## viewports are virtual
+Really the size of the viewport is arbitrary. It will have the same aspect ratio of the image we want to render.  
+the idea is that we know the amount of pixel to render which is in the image width and height. Taking a camera "eye" at a certain point and looking at a certain direction, we can imagine the viewport as a window in front of the camera. The center of the viewport is a point and viewport is orthogonal to the ray from the camera center to the middle of the viewport. 
+There are two ways to create the viewport:
+- With the field of view, the angle from the cam to the viewport width (horizontal fov) or height (vertical fov). having one of this angles and the aspect ratio we can calculate the other. 
+- With the width and height of the viewport if we are given a depth of view, the distance beteween the camera eye and the viewport. 
 
-## Phong Reflection
+The viewport size doesnt matter unless you want to use the focal length to calculate the depth of field and what will be in focus.  The viewport can be very close to the eyw and so very small, still we will send a ray per pixel out and going through the viewport. 
+
+
+## Which side of the plane is the normal
+In the literature there are two versions. When we calculate the normal for a sphere (and each geometrical obj will have its own formula for the normal...) we have two possible interpretations.  
+In this book we consider the normal to always pointing out of the sphere. The formula is a normalized vector: The point of intersection - the center of the sphere divided by the radius.
+If my ray is in opposite direction of the normal, then I am outside the sphere. If the ray is in the same direction as the normal, then I am inside the sphere. 
+The boolean to know if I am inside or outside the sphere is the dot product of the ray and the normal. If the dot product is positive, then I am outside the sphere.  
+I will use this information to calculate the color of the pixel and reflections. 
+
+## Lambertian Reflection Model
+
+- Diffuse reflection: Light is scattered uniformly in all directions.
+- No specular component: There's no shiny or mirror-like reflection.
+- Idealized surface: Assumes a perfectly rough surface that scatters light equally in all directions.
+- Mathematical representation: The reflected light intensity is proportional to the cosine of the angle between the incoming light direction and the surface normal.
+
+# Phong
+## Phong Reflection Model
 Bui Tuong Phong was a Vietnamese-born computer graphics researcher. He developed the Phong reflection model while working on his Ph.D. at the University of Utah.  
-Phong specular reflection is a component of the Phong reflection model, which is used in computer graphics to simulate the way light interacts with surfaces. The model was introduced by Bui Tuong Phong in his 1975 paper "Illumination for Computer Generated Pictures."
+Phong specular reflection is a component of the Phong reflection model, which is used in computer graphics to simulate the way light interacts with surfaces. The model was introduced by Bui Tuong Phong in his 1975 paper "Illumination for Computer Generated Pictures."  
 
-Components:  
-- Ambient Reflection: Simulates the constant light that is present in the environment.
-- Diffuse Reflection: Simulates the light scattered in many directions from a rough surface.
-- Specular Reflection: Simulates the light that reflects in a specific direction from a shiny surface, creating highlights. It depends on the viewer's position, the light source position, and the surface normal. The intensity of the specular reflection is calculated using the angle between the viewer direction and the reflection direction of the light.
+It accounts for both diffuse and specular components simulating a shiny or mirror-like reflection, where light is reflected in a specific direction. It has a roughness parameter to control the degree of roughness of the surface. A smaller roughness value results in a shinier surface. The reflected light intensity is a combination of a diffuse component (similar to Lambertian) and a specular component based on the angle between the reflected light direction and the viewer's direction.  
+
+So the components are:  
+- Ambient Reflection: Simulates the constant light that is present in the environment.  
+- Diffuse Reflection: Simulates the light scattered in many directions from a rough surface.  
+- Specular Reflection: Simulates the light that reflects in a specific direction from a shiny surface, creating highlights. It depends on the viewer's position, the light source position, and the surface normal. The intensity of the specular reflection is calculated using the angle between the viewer direction and the reflection direction of the light.  
 
 
 
@@ -158,3 +183,6 @@ b main
 r
 p *variable
 ``` 
+
+## trivia  
+Phong and Crow (1975) first introduced the idea of interpolating per-vertex shading normals to give the appearance of smooth surfaces from polygonal meshes.   
