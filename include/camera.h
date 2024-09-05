@@ -14,11 +14,9 @@
 # define CAMERA_H
 
 #include "minirt.h"
-#include "color.h"
 #include "ray.h"
 #include "vec3.h"
 #include "hittable_list.h"
-#include "debug.h"
 
 typedef struct s_mrt t_mrt;
 typedef struct	s_camera

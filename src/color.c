@@ -6,14 +6,13 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:49:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 12:05:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 19:43:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "color.h"
-#include <stdio.h>
 #include <limits.h>
-// #include "interval.h"
+#include "color.h"
+#include "utils.h"
 
 
 t_color color(double r, double g, double b)

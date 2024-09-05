@@ -15,8 +15,6 @@
 # define VECTOR_H
 
 #include <stdbool.h>
-#include <math.h>
-#include "utils.h"
 
 typedef struct 	s_vec3
 {

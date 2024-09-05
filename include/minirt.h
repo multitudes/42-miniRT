@@ -14,7 +14,6 @@
 # define MINIRT_H
 
 #include <limits.h>
-#include <stdlib.h>
 #include <MLX42/MLX42.h>
 #include "camera.h"
 

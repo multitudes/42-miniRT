@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 19:00:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/05 19:43:21 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 #include "vec3.h"
 #include "color.h"
 #include "ray.h"
-#include <stdio.h>
 #include "sphere.h"
 #include "hittable_list.h"
 #include "interval.h"
 #include "hittable.h"
 #include <MLX42/MLX42.h>
+#include "debug.h"
 
 
 

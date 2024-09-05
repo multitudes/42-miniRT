@@ -3,12 +3,9 @@
 #include "minirt.h"
 #include "camera.h"
 #include "vec3.h"
-#include "ray.h"
-#include "color.h"
 #include "hittable.h"
 #include "hittable_list.h"
 #include "sphere.h"
-#include "interval.h"
 #include <MLX42/MLX42.h>
 #include "utils.h"
 
