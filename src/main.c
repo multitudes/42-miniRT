@@ -72,7 +72,7 @@ unsigned int    pix_color(t_color color)
     return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
 }
 
-void    draw_scene(t_mrt *data, const t_hittablelist* world)
+void    render(t_mrt *data, const t_hittablelist* world)
 {
     int             x;
 	int             y;
@@ -143,16 +143,19 @@ double	deg_to_radians(double degrees)
 	return (degrees / (180.0 / PI));
 }
 
-void init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double fov) 
+void init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov) 
 {
 	(void)direction;
-	cam->center = center;
-	cam->hfov = fov;
+
+	cam->aspect_ratio = (double)16.0/9.0;
 	cam->image_width = IMAGE_WIDTH;
-	cam->aspect_ratio = (double)16/9;
 	cam->image_height = (int)(IMAGE_WIDTH/cam->aspect_ratio);
+	cam->image_height = (cam->image_height < 1) ? 1 : cam->image_height;
+	cam->center = center;
+	cam->hfov = hfov;
 	double viewport_height = 2.0;
 	double viewport_width = viewport_height * ((double)IMAGE_WIDTH / IMAGE_HEIGHT);
+	double focal_lenght = (1 / tan(degrees_to_radians(cam->hfov / 2))) * viewport_width / 2;
 
 	t_vec3 viewport_u = vec3(viewport_width, 0, 0);
 	t_vec3 viewport_v = vec3(0, -viewport_height, 0);
@@ -160,7 +163,6 @@ void init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double fov)
 	cam->pixel_delta_u = vec3divscalar(viewport_u, IMAGE_WIDTH);
 	cam->pixel_delta_v = vec3divscalar(viewport_v, IMAGE_HEIGHT);
 
-	double focal_lenght = cos(degrees_to_radians(cam->hfov / 2)) * viewport_width / 2;
 	t_point3 part1 = vec3substr(cam->center, vec3(0, 0, focal_lenght));
 	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
 	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
@@ -188,8 +190,8 @@ int main(int argc, char **argv)
         return (1);
 
 	t_camera cam;
-	t_point3 center = point3(0,0,0);
-	t_vec3 direction = vec3(0,0,0);
+	t_point3 center = point3(0,0,1);
+	t_vec3 direction = vec3(0,0,-1);
 	init_cam(&cam, center, direction, 70);
 
 
@@ -197,17 +199,19 @@ int main(int argc, char **argv)
 
 
 	// world
-	t_hittable *list[2];
+	t_hittable *list[3];
 
 	
-	t_sphere s1 = sphere(vec3(0, 0, -1), 0.5);
+	t_sphere s1 = sphere(vec3(0, -.5, -1), 0.5);
 	t_sphere s2 = sphere(vec3(0, -100.5, -1), 100);
+	t_sphere s3 = sphere(vec3(0, 0.1, -1.2), 0.5);
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s2);
+	list[2] = (t_hittable*)(&s3);
 
 
 
-	const t_hittablelist world = hittablelist(list, 2);
+	const t_hittablelist world = hittablelist(list, 3);
 
 
 
@@ -218,7 +222,7 @@ int main(int argc, char **argv)
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 	
-	draw_scene(&data, &world);
+	render(&data, &world);
 	
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);

@@ -4,6 +4,8 @@
 		"vec3.h": "c",
 		"color.h": "c",
 		"ray.h": "c",
-		"hittable.h": "c"
+		"hittable.h": "c",
+		"interval.h": "c",
+		"stdbool.h": "c"
 	}
 }

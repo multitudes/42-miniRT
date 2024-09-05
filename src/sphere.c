@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 15:30:44 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/04 18:16:53 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <math.h>
 #include "vec3.h"
 #include "hittable.h"
+#include "interval.h"
 
 /*
  * a sort of initializer for a sphere
@@ -29,7 +30,7 @@ t_sphere sphere(t_point3 center, double radius)
 	return s;
 }
 
-bool hit_sphere(const void* self, const t_ray* r, double ray_tmin, double ray_tmax, t_hit_record* rec)
+bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record* rec)
 {
 	const t_sphere* s = (t_sphere*)self;
 
@@ -47,10 +48,10 @@ bool hit_sphere(const void* self, const t_ray* r, double ray_tmin, double ray_tm
 
 	double root = (h - squared ) / a;
 
-	if (root <= ray_tmin || ray_tmax <= root)
+	if (!surrounds(&ray_t, root))
 	{
 		root = (h + squared ) / a;
-		if (root <= ray_tmin || ray_tmax <= root)
+		if (!surrounds(&ray_t, root))
 			return false;
 	}
 

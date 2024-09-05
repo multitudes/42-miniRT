@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 10:49:28 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 17:26:17 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/04 18:12:17 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ bool hit_world(const t_hittablelist *hittablelist, const t_ray* r, t_interval ra
 	int i = 0;
 
 	while (i < hittablelist->size)
-	{
-		if (hittablelist->list[i]->hit(hittablelist->list[i], r, ray_t.min, closest_so_far, &temp_rec))
+	{	
+		t_interval closest = interval(ray_t.min, closest_so_far);
+		if (hittablelist->list[i]->hit(hittablelist->list[i], r, closest, &temp_rec))
 		{
 			hit_anything = true;
 			closest_so_far = temp_rec.t;
