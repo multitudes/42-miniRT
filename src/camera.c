@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 21:55:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 11:16:15 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,23 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	t_camera cam;
 
 	// ratio is not a given from the subject. we can try different values
-	// cam.aspect_ratio = (double)16.0/9.0;
-	cam.aspect_ratio = (double)16.0/16.0;
+	cam.aspect_ratio = (double)16.0/9.0;
+	// cam.aspect_ratio = (double)16.0/16.0;
 	
 	// this is for the antialiasing
 	cam.samples_per_pixel = 10;
-	cam.max_depth = 10; // bouncing ray
+	cam.max_depth = 5; // bouncing ray
 	cam.image_width = IMAGE_WIDTH; // also not given in the subject or file, smaller is faster - defined in minirt.h
 	cam.image_height = IMAGE_WIDTH / cam.aspect_ratio;
 	cam.image_height = (cam.image_height < 1) ? 1 : cam.image_height;
 	cam.center = center;  // refactor later
+	cam.direction = direction;
 	cam.lookfrom = center;
 	cam.hfov = hfov; // the book has vfow, but we use hfov
-	
 	cam.vup = vec3(0,1,0);					// Camera-relative "up" direction
 	
+	cam.print = print_camera;
+
     // Calculate lookat from lookdir
     t_point3 lookat = vec3add(cam.lookfrom, direction);
 
@@ -175,3 +177,16 @@ void    render(t_mrt *data, const t_hittablelist* world)
 	debug("\nDONE!\n");
 }
 
+/** 
+ * @brief print the camera information
+ * in the rt file format
+ * like C -50,0,20 		0,0,1	 70
+ */
+void			print_camera(const void* self)
+{
+	const t_camera *c = (const t_camera *)self;
+	printf("C\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\n", 
+	c->center.x, c->center.y, c->center.z, 
+	c->direction.x, c->direction.y, c->direction.z, 
+	c->hfov);
+}

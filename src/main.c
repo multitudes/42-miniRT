@@ -73,9 +73,9 @@ int main(int argc, char **argv)
         return (1);
 
 	t_point3 center = point3(-2,2,1);
-	t_point3 lookat = point3(0, 0, -1); // this was a scene from the book
-	t_vec3 direction = vec3substr(lookat, center); // to debug i calc the direction
+	t_vec3 direction = vec3(2,-2,-2);
 	data.cam = init_cam(center, direction, 90);
+	data.cam.print((void*)&data.cam);
 
 	// world
 	t_hittable *list[4];
@@ -107,24 +107,3 @@ int main(int argc, char **argv)
 
     return (EXIT_SUCCESS);
 }
-
-
-
-// void    write_colorbackground(t_mrt *data)
-// {
-//     int             x;
-// 	int             y;
-    
-// 	x = 0;
-// 	y = 0;
-//     while (x < WINDOW_WIDTH)
-//     {	
-// 		y = 0;
-//         while (y < WINDOW_HEIGHT)
-//         {
-//             write_color(data, x, y, 0xFF0000FF); // Drawing red color rgba
-// 			y++;
-//         }
-// 		x++;
-//     }
-// }
