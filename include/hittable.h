@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 16:59:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:42:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 17:05:45 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "interval.h"
 #include "material.h"
 
+typedef struct s_material t_material;
 
 typedef struct 	s_hit_record {
 	t_material 	*mat;
@@ -25,6 +26,9 @@ typedef struct 	s_hit_record {
     t_vec3 		normal;
     double 		t;
 	bool 		front_face;
+	double		u;
+	double		v;
+	
 } 				t_hit_record;
 
 typedef struct 	s_hittable{

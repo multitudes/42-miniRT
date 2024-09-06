@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:48:55 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 16:54:04 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "interval.h"
 #include "color.h"
 #include <stdio.h>
+#include "material.h"
 
 /*
  * a sort of initializer for a sphere
@@ -31,7 +32,10 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 	s.radius = diameter / 2;
 	s.print = print_sphere;
 	s.rgb = rgbcolor;
-	s.mat = NULL; // todo
+	s.color = rgb_to_color(rgbcolor);
+	solid_color_init(&(s.texture), s.color);
+	lambertian_init_tex(&(s.lambertian_mat), (t_texture*)&(s.texture));
+	s.mat = (t_material*)&(s.lambertian_mat); // todo
 	return s;
 }
 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:49:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 11:49:38 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 16:45:03 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ t_rgb rgb(int r, int g, int b)
 	rgbcolor.g = g;
 	rgbcolor.b = b;
 	return rgbcolor;
+}
+
+t_color 	rgb_to_color(t_rgb rgbcolor)
+{
+	return color(rgbcolor.r / 255, rgbcolor.g / 255, rgbcolor.b / 255);
 }
 
 /**

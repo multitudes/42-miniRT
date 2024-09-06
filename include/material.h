@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:57:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 16:55:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,24 @@ typedef struct 		s_diffuse_light
 	t_texture		*texture;
 	
 }					t_diffuse_light;
+
+
+
+void		set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);
+
+void		lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex);
+// void		metal_init(t_metal *metal, t_color albedo, double fuzz);
+// void		dielectric_init(t_dielectric *dielectric, double refraction_index);
+void		diffuse_light_init(t_diffuse_light *diffuse_light, t_texture *tex);
+
+bool		lambertian_scatter(void* self, const t_ray *r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf); ;
+double 		lambertian_scatter_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
+bool		metal_scatter(void *self, const t_ray* r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
+bool		dielectric_scatter(void *self, const t_ray *r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
+bool 		noscatter(void *self, const t_ray *r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
+
+t_color		emitlight(void *self, const t_hit_record *rec, double u, double v, t_point3 p);
+t_color		emitzero(void *self, const t_hit_record *rec, double u, double v, t_point3 p);
 
 
 #endif

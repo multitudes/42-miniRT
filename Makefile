@@ -29,11 +29,12 @@ INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
 
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
 											vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
-											texture.c)
+											texture.c material.c onb.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
-									utils.h ambient.h plane.h cylinder.h texture.h rtw_stb_image.h)
+									utils.h ambient.h plane.h cylinder.h texture.h \
+									rtw_stb_image.h material.h onb.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
