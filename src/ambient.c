@@ -1,44 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minirt.h                                           :+:      :+:    :+:   */
+/*   ambient.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 13:30:28 by lbrusa           ###   ########.fr       */
+/*   Created: 2024/09/06 11:53:45 by lbrusa            #+#    #+#             */
+/*   Updated: 2024/09/06 13:31:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINIRT_H
-# define MINIRT_H
-
-#include <limits.h>
-#include <MLX42/MLX42.h>
-#include "camera.h"
+#include <stdio.h>
 #include "ambient.h"
-#include "sphere.h"
+#include "color.h"
 
-#define IMAGE_WIDTH 400
-# define TRUE 1
-# define FALSE 0
-
-typedef struct 	s_mrt 
+t_ambient ambient(double ratio, t_rgb rgb)
 {
-	void		*mlx;
-	void		*win_ptr;
-	mlx_image_t	*image;
+	t_ambient result;
 
-	t_camera cam;
-	t_ambient ambient_light;
+	result.ratio = ratio;
+	result.rgbcolor = rgb;
+	result.color = color(0,0,0);
+	result.print = &print_ambient;
+	return result;
+}
 
-	t_sphere spheres[100];
-	// t_plane planes[100];
-
-	// t_viewport	viewport;
-	// t_pixel		pixel;
-}				t_mrt;
-
-
-
-#endif
+void		print_ambient(const void *self)
+{
+	const t_ambient *ambient = self;
+	printf("A\t%.f\t\t%d,%d,%d\n",ambient->ratio, 
+	ambient->rgbcolor.r, ambient->rgbcolor.g, ambient->rgbcolor.b);
+}

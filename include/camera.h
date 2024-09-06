@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 11:04:47 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 12:27:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct	s_camera
     t_vec3		pixel_delta_u;  // Offset to pixel to the right
     t_vec3		pixel_delta_v;  // Offset to pixel below
 
-//   C		-50,0,20 		0,0,1     70
+
 	void		(*print)(const void* self);
 	
 } 				t_camera;

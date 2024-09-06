@@ -9,6 +9,7 @@
 #include <MLX42/MLX42.h>
 #include "utils.h"
 #include "color.h"
+#include "ambient.h"
 
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
@@ -57,9 +58,28 @@ int init_window(t_mrt *data)
 
 bool init_data(t_mrt *data)
 {
+	/***************************** */
+	/* 			MLX42 			   */	
+	/***************************** */
     data->mlx = NULL;
     data->win_ptr = NULL;
     data->image = NULL;
+
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	t_point3 center = point3(-2,2,1);
+	t_vec3 direction = vec3(2,-2,-2);
+	data->cam = init_cam(center, direction, 30);
+	data->cam.print((void*)(&(*data).cam));
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	t_ambient ambient_light = ambient(0.2, rgb(255,255,255));
+	data->ambient_light = ambient_light;
+	ambient_light.print((void*)&ambient_light);
+
     return (true);
 }
 
@@ -72,12 +92,6 @@ int main(int argc, char **argv)
 	(void)argc;
 	if (!init_data(&data))
         return (1);
-
-	t_point3 center = point3(-2,2,1);
-	t_vec3 direction = vec3(2,-2,-2);
-	data.cam = init_cam(center, direction, 90);
-	data.cam.print((void*)&data.cam);
-
 
 	// world
 	t_hittable *list[4];

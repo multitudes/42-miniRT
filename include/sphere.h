@@ -6,9 +6,12 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 11:42:20 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 13:31:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#ifndef SPHERE_H
+# define SPHERE_H
 
 #include "vec3.h"
 #include "ray.h"
@@ -33,3 +36,5 @@ t_sphere	sphere(t_point3 center, double diameter, t_rgb color);
 void		print_sphere(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool		hit_sphere(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
+
+#endif
