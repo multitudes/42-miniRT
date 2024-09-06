@@ -8,6 +8,7 @@
 		"interval.h": "c",
 		"stdbool.h": "c",
 		"camera.h": "c",
-		"minirt.h": "c"
+		"minirt.h": "c",
+		"sphere.h": "c"
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 19:15:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 11:41:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,34 @@
 #include "hittable.h"
 #include "interval.h"
 #include "sphere.h"
+#include "color.h"
+#include <stdio.h>
 
 /*
  * a sort of initializer for a sphere
  */
-t_sphere sphere(t_point3 center, double radius)
+t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 {
 	t_sphere s;
 	s.base.hit = hit_sphere;
 	s.center = center;
-	s.radius = radius;
+	s.radius = diameter / 2;
+	s.print = print_sphere;
+	s.rgb = rgbcolor;
 	return s;
+}
+
+/** 
+ * @brief print the sphere information
+ * in the rt file format
+ * like sp 	0.0,0.020.6 	12.6	10,0,255
+ */
+void		print_sphere(const void *self)
+{
+	const t_sphere *s = (const t_sphere *)self;
+	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n", 
+	s->center.x, s->center.y, s->center.z, s->radius * 2,
+	s->rgb.r, s->rgb.g, s->rgb.b);
 }
 
 bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record* rec)
