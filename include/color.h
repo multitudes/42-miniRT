@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:47:37 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 16:44:20 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 17:48:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,5 @@ t_rgb 		rgb(int r, int g, int b);
 double 		linear_to_gamma(double linear_component);
 t_color		color_random();
 t_color		color_random_min_max(double min, double max);
-t_color 	rgb_to_color(t_rgb rgbcolor);
+void		rgb_to_color(t_color color,  t_rgb rgbcolor);
 #endif

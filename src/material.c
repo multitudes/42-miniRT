@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 17:05:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 17:35:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "texture.h"
 #include "onb.h"
 #include "utils.h"
+#include "debug.h"
 
 void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex) 
 {
@@ -69,15 +70,28 @@ bool noscatter(void *self, const t_ray *r_in, const t_hit_record *rec, t_color *
 bool lambertian_scatter(void* self, const t_ray *r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf)  
 {
 	(void)r_in;
-	t_onb uvw;
-	
-	onb_build_from_w(&uvw, &(rec->normal));
+	(void)pdf;
+
+	debug("lambertian_scatter\n");
+	(void)r_in;
 	t_lambertian *lamb = (t_lambertian *)self;
-	t_vec3 scatter_direction = onb_local_vec(&uvw, random_cosine_direction());
-    *scattered = ray(rec->p, unit_vector(scatter_direction));
-    *attenuation = lamb->texture->value(lamb->texture, rec->u, rec->v, &rec->p);
-	*pdf = dot(uvw.w, scattered->dir) / PI;
+	t_vec3 scatter_direction = vec3add(rec->normal, random_unit_vector());
+	if (near_zero(scatter_direction))
+		scatter_direction = rec->normal;
+    *scattered = ray(rec->p, scatter_direction);
+    *attenuation = lamb->albedo;
+
     return true; 
+
+	// t_onb uvw;
+	
+	// onb_build_from_w(&uvw, &(rec->normal));
+	// t_lambertian *lamb = (t_lambertian *)self;
+	// t_vec3 scatter_direction = onb_local_vec(&uvw, random_cosine_direction());
+    // *scattered = ray(rec->p, unit_vector(scatter_direction));
+    // *attenuation = lamb->texture->value(lamb->texture, rec->u, rec->v, &rec->p);
+	// *pdf = dot(uvw.w, scattered->dir) / PI;
+
 }
 
 /*
