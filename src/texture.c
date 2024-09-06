@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:56:52 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 20:38:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "color.h"
 #include "interval.h"
 #include "rtw_stb_image.h"
+#include <stdio.h>
 
 void	solid_color_init(t_solid_color *solid_color_texture, t_color albedo)
 {

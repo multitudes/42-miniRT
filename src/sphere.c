@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 20:13:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 20:45:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,15 @@
 #include "debug.h"
 
 /*
- * a sort of initializer for a sphere
+ * @brief: initializer for a sphere
+ * @param: center: the center of the sphere
+ * @param: diameter: the diameter of the sphere
+ * @param: rgbcolor: the color of the sphere
+ * @return: a t_sphere struct
+ *
+ * This is also contains the initialization of the lambertian material
+ * as hardcoded. Using textures allows to reuse this structure for other
+ * textures like checkers
  */
 t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 {
@@ -34,10 +42,14 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 	s.print = print_sphere;
 	s.rgb = rgbcolor;
 	s.color = rgb_to_color(rgbcolor);
-	debug("color: %f %f %f\n", s.color.r, s.color.g, s.color.b);
-	// solid_color_init(&(s.texture), s.color);
-	lambertian_init(&(s.lambertian_mat), s.color);
-	s.mat = (t_material*)&(s.lambertian_mat); 
+	// i use the color to create a texture
+	solid_color_init(&(s.texture), s.color);
+	// i init the lambertian material with the texture
+	lambertian_init_tex(&(s.lambertian_mat), (t_texture*)&(s.texture));
+	// i assign the material to the sphere as a pointer
+	// the pointer will contain the scatter function for the material
+	// which will be passed to the t_record struct when hit
+ 	s.mat = (t_material*)&(s.lambertian_mat); 
 	return s;
 }
 
@@ -81,12 +93,13 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 
 	rec->t = root;
 	rec->p = point_at(r, root);
+	// here if hit the sphere, the material is assigned to the hit record
+	// In this case the material is a lambertian material 
 	rec->mat = s->mat;
 	t_vec3 outward_normal = vec3divscalar(vec3substr(rec->p, s->center), s->radius);
 	set_face_normal(rec, r, outward_normal); 
 	
 	return true;
-
 	
 }
 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:17:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 20:36:55 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "vec3.h"
 #include "ray.h"
 #include "color.h"
+#include <stdio.h>
 
 t_cylinder		cylinder(t_point3 center, t_vec3 axis, double diameter, double height, t_rgb color)
 {
