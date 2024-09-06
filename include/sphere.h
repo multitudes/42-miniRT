@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 13:31:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 15:49:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdbool.h>
 #include "hittable.h"
 #include "color.h"
+#include "material.h"
 
 typedef struct	s_sphere
 {
@@ -26,8 +27,11 @@ typedef struct	s_sphere
 	double		radius;
 	t_color		color;
 	t_rgb		rgb;
+	t_material	*mat;
 	void		(*print)(const void* self);
 }				t_sphere;
+
+
 
 /*
  * a sort of initializer for a sphere

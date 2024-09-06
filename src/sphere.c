@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:40:41 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 15:48:55 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 	s.radius = diameter / 2;
 	s.print = print_sphere;
 	s.rgb = rgbcolor;
+	s.mat = NULL; // todo
 	return s;
 }
 
@@ -74,6 +75,7 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 
 	rec->t = root;
 	rec->p = point_at(r, root);
+	rec->mat = s->mat;
 	t_vec3 outward_normal = vec3divscalar(vec3substr(rec->p, s->center), s->radius);
 	set_face_normal(rec, r, outward_normal); 
 	
