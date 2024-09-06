@@ -172,3 +172,5 @@ obj/cylinder.o
 obj/cylinder.o
 obj/plane.o
 miniRT
+obj/plane.o
+obj/cylinder.o
