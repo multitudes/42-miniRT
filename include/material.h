@@ -6,20 +6,21 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:34:22 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 15:57:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MATERIAL_H
 # define MATERIAL_H
 
-#include "ray.h"
 #include "texture.h"
+#include "ray.h"
 #include "color.h"
 
 
 //forward declaration
 typedef struct 		s_hit_record t_hit_record;
+typedef struct 		s_texture t_texture;
 
 typedef struct 		s_material
 {
