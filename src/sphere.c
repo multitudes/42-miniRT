@@ -6,17 +6,17 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 11:41:56 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 15:40:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
 #include <math.h>
+#include "sphere.h"
+#include "hittable.h"
 #include "vec3.h"
 #include "ray.h"
-#include "hittable.h"
 #include "interval.h"
-#include "sphere.h"
 #include "color.h"
 #include <stdio.h>
 
