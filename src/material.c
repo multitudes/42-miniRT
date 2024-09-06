@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 17:35:38 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 20:31:22 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,18 @@
 #include "utils.h"
 #include "debug.h"
 
+void lambertian_init(t_lambertian *lambertian_material, t_color albedo) 
+{
+    lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
+    lambertian_material->albedo = albedo; // Set the albedo
+}
+
 void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex) 
 {
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
 	lambertian_material->base.emit = emitzero;
 	lambertian_material->base.scattering_pdf = lambertian_scatter_pdf;
-    lambertian_material->albedo = color(0,0,0); // Set the albedo to null
+    lambertian_material->albedo = tex->value(tex, 0 ,0,NULL ); // Set the albedo to null to experiment with lights
 	lambertian_material->texture = tex;
 }
 
@@ -54,7 +60,7 @@ void diffuse_light_init(t_diffuse_light *light, t_texture *texture)
 	light->texture = texture;
 }
 
-bool noscatter(void *self, const t_ray *r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf) 
+bool noscatter(void *self, t_ray *r_in, t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf) 
 {
 	(void)self;
 	(void)r_in;
@@ -67,12 +73,12 @@ bool noscatter(void *self, const t_ray *r_in, const t_hit_record *rec, t_color *
 /*
  * scatter function for a lambertian material
  */
-bool lambertian_scatter(void* self, const t_ray *r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf)  
+bool lambertian_scatter(void* self,  t_ray *r_in,  t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf)  
 {
 	(void)r_in;
 	(void)pdf;
 
-	debug("lambertian_scatter\n");
+	// debug("lambertian_scatter\n");
 	(void)r_in;
 	t_lambertian *lamb = (t_lambertian *)self;
 	t_vec3 scatter_direction = vec3add(rec->normal, random_unit_vector());
@@ -80,7 +86,7 @@ bool lambertian_scatter(void* self, const t_ray *r_in, const t_hit_record *rec, 
 		scatter_direction = rec->normal;
     *scattered = ray(rec->p, scatter_direction);
     *attenuation = lamb->albedo;
-
+	// debug("attenuation: %f %f %f\n", attenuation->r, attenuation->g, attenuation->b);
     return true; 
 
 	// t_onb uvw;
@@ -97,7 +103,7 @@ bool lambertian_scatter(void* self, const t_ray *r_in, const t_hit_record *rec, 
 /*
  * scatter function for a lambertian material
  */
-double lambertian_scatter_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered) 
+double lambertian_scatter_pdf(void* self,  t_ray *r_in,  t_hit_record *rec,  t_ray *scattered) 
 {
 	(void)r_in;
 	(void)self;
@@ -146,7 +152,7 @@ double lambertian_scatter_pdf(void* self, const t_ray *r_in, const t_hit_record 
 // 	return true;
 // }
 
-t_color		emitlight(void *self, const t_hit_record *rec, double u, double v, t_point3 p)
+t_color		emitlight(void *self,  t_hit_record *rec, double u, double v, t_point3 p)
 {
 	t_diffuse_light *light = (t_diffuse_light *)self;
 	if (!rec->front_face)
@@ -154,7 +160,7 @@ t_color		emitlight(void *self, const t_hit_record *rec, double u, double v, t_po
 	return light->texture->value(light->texture ,u, v, &p);
 }
 
-t_color		emitzero(void *self, const t_hit_record *rec, double u, double v, t_point3 p)
+t_color		emitzero(void *self,  t_hit_record *rec, double u, double v, t_point3 p)
 {
 	(void)self;
 	(void)rec;
