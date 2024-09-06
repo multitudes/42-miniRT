@@ -168,3 +168,6 @@ miniRT
 .cache/clangd/index/utilsflags2.c.5E211B574C4E4A7C.idx
 .cache/clangd/index/vec3.c.7239D393BA228853.idx
 .cache/clangd/index/vec3.h.461F1EB2F0B08BAE.idx
+obj/cylinder.o
+obj/cylinder.o
+obj/plane.o
