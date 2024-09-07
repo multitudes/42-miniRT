@@ -70,7 +70,7 @@ bool init_data(t_mrt *data)
 	/***************************** */
 	t_point3 center = point3(-2,2,1);
 	t_vec3 direction = vec3(2,-2,-2);
-	data->cam = init_cam(center, direction, 90);
+	data->cam = init_cam(center, direction, 10);
 	data->cam.print((void*)(&(*data).cam));
 
 	/***************************** */

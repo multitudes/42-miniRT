@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 19:57:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 14:43:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	cam.center = center;  // refactor later
 	cam.direction = direction;
 	cam.lookfrom = center;
-	cam.hfov = hfov; // the book has vfow, but we use hfov
+
+	cam.hfov = clamp(interval(1, 170), hfov); // the book has vfow, but we use hfov
 	cam.vup = vec3(0,1,0);					// Camera-relative "up" direction
 	
 	cam.print = print_camera;
