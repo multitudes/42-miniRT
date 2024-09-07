@@ -11,7 +11,7 @@ NAME 			= 	miniRT
 
 CC 				= 	cc
 
-CFLAGS 			= 	-Wextra -Wall -Werror -g
+CFLAGS 			= 	-Wextra -Wall -Werror
 CFLAGS 			+= 	-Iinclude -Isrc -O3 -Wunreachable-code -Ofast
 # CFLAGS += -DDEBUG=1
 
@@ -21,8 +21,11 @@ SRC_DIR			= 	src/
 LIBFTDIR 		= 	./lib/libft
 LIBMLX			= 	./lib/MLX42
 
-LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm 
 LIBS 			+= 	$(LIBFTDIR)/libft.a
+
+# this is used in production to optimize the linking and remove unnecessary code aking the binary smaller
+LDFLAGS			= 	-Wl,--gc-sections -Wl,-O2 -Wl,--as-needed -Wl,--strip-all
 
 INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
@@ -77,6 +80,7 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(NAME): $(OBJS) $(HDRS)
+	$(CFLAGS) += -g
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) -o $(NAME)
 
 clean:
@@ -91,8 +95,13 @@ fclean: clean
 
 re: fclean all
 
-run: all
+# The idea is for this project to use run for production with extra flags to speed it up
+# and optimize the binary size
+run:
 	@echo
+	@$(CFLAGS) += -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
+	@$(CFLAGS) += -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) $(LDFLAGS) -o $(NAME)
 	@PATH=".$${PATH:+:$${PATH}}" && $(NAME) $(ARGS)
 
 .PHONY: all clean fclean re libmlx $(LIBFT)
