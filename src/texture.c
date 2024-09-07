@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 17:08:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 19:12:30 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "interval.h"
 #include "rtw_stb_image.h"
 #include <stdio.h>
+#include "utils.h"
 
 void	solid_color_init(t_solid_color *solid_color_texture, t_color albedo)
 {
@@ -47,6 +48,42 @@ void	checker_texture_init(t_checker_texture *checker_texture, double scale, t_so
 	checker_texture->odd = odd;
 }
 
+#include <math.h>
+#include <stdbool.h>
+
+// Function to compute spherical coordinates (u, v) from point p
+void get_spherical_uv(const t_point3 *p, double *u, double *v) {
+    double phi = atan2(p->z, p->x);   // Azimuthal angle
+    double theta = acos(p->y);        // Polar angle
+
+    *u = (phi + PI) / (2 * PI);   // u is in the range [0, 1]
+    *v = theta / PI;                // v is in the range [0, 1]
+}
+
+// // Modified checker texture function
+// t_color checker_texture_value(const void *self, double u, double v, const t_point3 *p) {
+//     // Compute spherical coordinates (u, v) based on the point p
+//     get_spherical_uv(p, &u, &v);
+
+//     // Scale the texture coordinates
+//     double scaled_u = u * ((t_checker_texture*)self)->inv_scale;
+//     double scaled_v = v * ((t_checker_texture*)self)->inv_scale;
+
+//     // Determine if we are in an even or odd square of the checker pattern
+//     int u_int = (int)floor(scaled_u);
+//     int v_int = (int)floor(scaled_v);
+
+//     bool is_even = (u_int + v_int) % 2 == 0;
+
+//     // Return the corresponding color
+//     if (is_even)
+//         return ((t_checker_texture*)self)->even->color_albedo;
+//     else
+//         return ((t_checker_texture*)self)->odd->color_albedo;
+// }
+
+
+
 t_color checker_texture_value(const void *self, double u, double v, const t_point3 *p)
 {
 	(void)u;
@@ -54,6 +91,7 @@ t_color checker_texture_value(const void *self, double u, double v, const t_poin
 	int xint = (int)floor(p->x * ((t_checker_texture*)self)->inv_scale);	
 	int yint = (int)floor(p->y * ((t_checker_texture*)self)->inv_scale);
 	int zint = (int)floor(p->z * ((t_checker_texture*)self)->inv_scale);
+
 
 	bool is_even = (xint + yint + zint) % 2 == 0;
 	if (is_even)

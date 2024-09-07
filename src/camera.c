@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 17:32:21 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 19:38:20 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,58 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	cam.pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam.pixel_delta_u, cam.pixel_delta_v), 2));
     return cam;
 }
+#include <stdbool.h>
+#include <math.h>
+
+// Epsilon value for floating-point comparison
+#define EPSILON 1e-4
+
+// Check if two floating-point numbers are approximately equal
+bool is_near_zero(double value) {
+    return fabs(value) < EPSILON;
+}
+
+// Function to check if a ray intersects an axis-aligned line
+bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
+    // Check for intersection with x-axis (line along the x-axis)
+    if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
+        // The ray intersects the x-axis when y = 0 and z = 0
+        if (!is_near_zero(r->orig.y) || !is_near_zero(r->orig.z)) {
+            // Ray origin is not on the yz-plane, so calculate the intersection point
+            double t = -r->orig.y / r->dir.y; // Find where y = 0
+            double z_at_t = r->orig.z + t * r->dir.z;
+            return is_near_zero(z_at_t); // Check if z also equals 0
+        }
+        return true; // If the ray origin is on the yz-plane
+    }
+
+    // Check for intersection with y-axis (line along the y-axis)
+    if (axis->x == 0 && axis->y != 0 && axis->z == 0) {
+        // The ray intersects the y-axis when x = 0 and z = 0
+        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.z)) {
+            // Ray origin is not on the xz-plane, so calculate the intersection point
+            double t = -r->orig.x / r->dir.x; // Find where x = 0
+            double z_at_t = r->orig.z + t * r->dir.z;
+            return is_near_zero(z_at_t); // Check if z also equals 0
+        }
+        return true; // If the ray origin is on the xz-plane
+    }
+
+    // Check for intersection with z-axis (line along the z-axis)
+    if (axis->x == 0 && axis->y == 0 && axis->z != 0) {
+        // The ray intersects the z-axis when x = 0 and y = 0
+        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.y)) {
+            // Ray origin is not on the xy-plane, so calculate the intersection point
+            double t = -r->orig.x / r->dir.x; // Find where x = 0
+            double y_at_t = r->orig.y + t * r->dir.y;
+            return is_near_zero(y_at_t); // Check if y also equals 0
+        }
+        return true; // If the ray origin is on the xy-plane
+    }
+
+    // If none of the conditions match, the ray does not intersect the line
+    return false;
+}
 
 t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world)
 {
@@ -84,6 +136,17 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
         return color(0,0,0);
 	if (hit_world(world, r, interval(0.001, INFINITY), &rec))
 	{
+		t_vec3 x_axis = vec3(100,0,0);
+		t_vec3 y_axis = vec3(0,100,0);
+		t_vec3 z_axis = vec3(0,0,100);
+		 if (ray_intersects_line(r, &x_axis)) {
+            return color(1.0, 0.0, 0.0); // Red for x-axis
+        } else if (ray_intersects_line(r, &y_axis)) {
+            return color(0.0, 1.0, 0.0); // Green for y-axis
+        } else if (ray_intersects_line(r, &z_axis)) {
+            return color(0.0, 0.0, 1.0); // Blue for z-axis
+        }
+
 		t_ray scattered;
 		t_color attenuation;
 		if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
