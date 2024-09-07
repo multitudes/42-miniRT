@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 17:33:47 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 21:33:21 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,14 @@
 void lambertian_init(t_lambertian *lambertian_material, t_color albedo) 
 {
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
+	lambertian_material->base.emit = emitzero;
     lambertian_material->albedo = albedo; // Set the albedo
 }
 
 void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex) 
 {
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
-	// lambertian_material->base.emit = emitzero;
+	lambertian_material->base.emit = emitzero;
 	// lambertian_material->base.scattering_pdf = lambertian_scatter_pdf;
     lambertian_material->albedo = color(0,0,0); // Set the albedo to null to experiment with lights
 	lambertian_material->texture = tex;
@@ -55,6 +56,7 @@ void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex)
 
 void diffuse_light_init(t_diffuse_light *light, t_texture *texture)
 {
+	// debug("init diffuse light");
 	light->base.scatter = noscatter;
 	light->base.emit = emitlight;
 	light->texture = texture;
@@ -155,15 +157,20 @@ double lambertian_scatter_pdf(void* self,  t_ray *r_in,  t_hit_record *rec,  t_r
 // 	return true;
 // }
 
-t_color		emitlight(void *self,  t_hit_record *rec, double u, double v, t_point3 p)
+t_color		emitlight(void *self,  t_hit_record rec, double u, double v, t_point3 p)
 {
+	// debug("emitting light");
+	(void)rec;
 	t_diffuse_light *light = (t_diffuse_light *)self;
-	if (!rec->front_face)
-		return color(0, 0, 0);
 	return light->texture->value(light->texture ,u, v, &p);
+
+	// t_diffuse_light *light = (t_diffuse_light *)self;
+	// // if (!rec.front_face)
+	// // 	return color(0, 0, 0);
+	// return light->texture->value(light->texture ,u, v, &p);
 }
 
-t_color		emitzero(void *self,  t_hit_record *rec, double u, double v, t_point3 p)
+t_color		emitzero(void *self, t_hit_record rec, double u, double v, t_point3 p)
 {
 	(void)self;
 	(void)rec;

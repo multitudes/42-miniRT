@@ -118,9 +118,9 @@ bool init_data(t_mrt *data)
 	/***************************** */
 	/* 			camera 			   */	
 	/***************************** */
-	t_point3 center = point3(-2,2,1);
-	t_vec3 direction = vec3(2,-2,-2);
-	data->cam = init_cam(center, direction, 120);
+	t_point3 center = point3(0,4,4);
+	t_vec3 direction = vec3(0,-2,-2);
+	data->cam = init_cam(center, direction, 60);
 	data->cam.print((void*)(&(*data).cam));
 
 	/***************************** */
@@ -144,14 +144,16 @@ int main(int argc, char **argv)
         return (1);
 
 	// world
-	t_hittable *list[6];
+	t_hittable *list[7];
 
-	t_sphere s1 = sphere(vec3(0, 0, -1.2), 1, rgb(128,0,0));
+	// red sphere
+	t_sphere s1 = sphere(vec3(0, 0, -2.0), 1, rgb(128,0,0));
 	s1.print((void*)&s1);
 
 	// t_sphere s2 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
 	// s2.print((void*)&s2);
 	
+	// checker texture sphere
 	t_lambertian lambertian_material;
 	t_checker_texture checker_texture1;
 	t_solid_color even1;
@@ -160,14 +162,13 @@ int main(int argc, char **argv)
 	solid_color_init(&odd1, color(0.9, 0.9, 0.9));
 	checker_texture_init(&checker_texture1, 0.31, &even1, &odd1);
 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
-	t_sphere s2 = sphere_mat(point3(0, -100.5, -1), 200, rgb(0,0,0), (t_material*)&lambertian_material);
-
-
+	t_sphere s2 = sphere_mat(point3(0, -500.5, -1), 1000, rgb(0,0,0), (t_material*)&lambertian_material);
 	
-	
-	t_sphere s3 = sphere(vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+	// yellow sphere
+	t_sphere s3 = sphere(vec3(-1, 0.0, -2.0), 1, rgb(255,219,0));
 	s3.print((void*)&s3);
-	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
+	// white
+	t_sphere s4 = sphere(vec3(1, 0.0, -2.0), 1, rgb(255,255,254));
 	s4.print((void*)&s4);
 
 	/***********************************/
@@ -181,17 +182,17 @@ int main(int argc, char **argv)
 	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
 	t_sphere s5 = sphere_mat(point3(0.0, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&earth_surface);
 
-	/***********************************/
-	/* 			mars        		   */
-	/***********************************/
+	// /***********************************/
+	// /* 			mars        		   */
+	// /***********************************/
 
-	t_lambertian mars_surface;
-	t_rtw_image img2;
-	init_rtw_image(&img2,"rtw_image/jupiter.jpg");
-	t_img_texture img_texture2;
-	img_texture_init(&img_texture2, &img2);
-	lambertian_init_tex(&mars_surface, (t_texture*)&img_texture2);
-	t_sphere s6 = sphere_mat(point3(-1, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&mars_surface);
+	// t_lambertian mars_surface;
+	// t_rtw_image img2;
+	// init_rtw_image(&img2,"rtw_image/jupiter.jpg");
+	// t_img_texture img_texture2;
+	// img_texture_init(&img_texture2, &img2);
+	// lambertian_init_tex(&mars_surface, (t_texture*)&img_texture2);
+	// t_sphere s6 = sphere_mat(point3(-1, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&mars_surface);
 
 	/***********************************/
 	/* 			checker        		   */
@@ -205,6 +206,16 @@ int main(int argc, char **argv)
 	// checker_texture_init(&checker_texture1, 0.31, &even1, &odd1);
 	// lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
 	// t_sphere s6 = sphere_mat(point3(-1, 0, 0), 2.0, rgb(0,0,0), (t_material*)&lambertian_material);
+
+	/***********************************/
+	/* 			light        		   */
+	/***********************************/
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(8.0, 6.0, 0.533));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+	t_sphere s6 = sphere_mat(point3(5, 0, 0), 6.0, rgb(255,223 ,34 ), (t_material*)&difflight);
+
 
 
 	list[0] = (t_hittable*)(&s1);

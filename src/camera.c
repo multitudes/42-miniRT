@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 19:38:20 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 21:53:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,18 @@
 #include "utils.h"
 #include "camera.h"
 
+#define ASPECT_RATIO (double)16.0/16.0
+
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
 {
 	t_camera cam;
 	cam.background = color(10,10,10); // grey
 	// ratio is not a given from the subject. we can try different values
-	cam.aspect_ratio = (double)16.0/9.0;
-	// cam.aspect_ratio = (double)16.0/16.0;
+	// cam.aspect_ratio = (double)16.0/9.0;
+	cam.aspect_ratio = ASPECT_RATIO;
 	
 	// this is for the antialiasing
-	cam.samples_per_pixel = 10;
+	cam.samples_per_pixel = 6;
 	cam.max_depth = 5; // bouncing ray
 	cam.image_width = IMAGE_WIDTH; // also not given in the subject or file, smaller is faster - defined in minirt.h
 	cam.image_height = IMAGE_WIDTH / cam.aspect_ratio;
@@ -78,7 +80,7 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 #include <math.h>
 
 // Epsilon value for floating-point comparison
-#define EPSILON 1e-4
+#define EPSILON 1e-1
 
 // Check if two floating-point numbers are approximately equal
 bool is_near_zero(double value) {
@@ -132,27 +134,32 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	(void)cam;
 
 	t_hit_record rec;
+	
 	if (depth <= 0)
         return color(0,0,0);
 	if (hit_world(world, r, interval(0.001, INFINITY), &rec))
 	{
-		t_vec3 x_axis = vec3(100,0,0);
-		t_vec3 y_axis = vec3(0,100,0);
-		t_vec3 z_axis = vec3(0,0,100);
-		 if (ray_intersects_line(r, &x_axis)) {
-            return color(1.0, 0.0, 0.0); // Red for x-axis
-        } else if (ray_intersects_line(r, &y_axis)) {
-            return color(0.0, 1.0, 0.0); // Green for y-axis
-        } else if (ray_intersects_line(r, &z_axis)) {
-            return color(0.0, 0.0, 1.0); // Blue for z-axis
-        }
-
 		t_ray scattered;
-		t_color attenuation;
-		if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
-			return vec3mult(attenuation, ray_color(cam,&scattered, depth - 1, world));
-		return color(0,0,0);
+		t_color attenuation = color(0,0,0);
+		t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
+		if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
+		 	return color_from_emission;
+		t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world));
+		return vec3add(color_from_emission, color_from_scatter);
+
 	}
+
+	// t_vec3 x_axis = vec3(100,0,0);
+	// t_vec3 y_axis = vec3(0,100,0);
+	// t_vec3 z_axis = vec3(0,0,100);
+	// 	if (ray_intersects_line(r, &x_axis)) {
+	// 	return color(1.0, 0.0, 0.0); // Red for x-axis
+	// } else if (ray_intersects_line(r, &y_axis)) {
+	// 	return color(0.0, 1.0, 0.0); // Green for y-axis
+	// } else if (ray_intersects_line(r, &z_axis)) {
+	// 	return color(0.0, 0.0, 1.0); // Blue for z-axis
+	// }
+
 	t_vec3 unit_direction = unit_vector(r->dir);
 	double a = 0.5 * (unit_direction.y + 1.0);
 	t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);

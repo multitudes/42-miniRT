@@ -16,6 +16,7 @@
 		"material.h": "c",
 		"limits.h": "c",
 		"stdio.h": "c",
-		"utils.h": "c"
+		"utils.h": "c",
+		"texture.h": "c"
 	}
 }

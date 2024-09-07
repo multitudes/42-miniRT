@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 17:28:53 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 21:36:04 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material
 	s.rgb = rgbcolor;
 	s.color = rgb_to_color(rgbcolor);
  	s.mat = mat; 
+	debug("sphere_mat emit: %p", s.mat->emit);
 	return s;
 }
 
@@ -91,7 +92,7 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 	double h = dot(r->dir, oc);
 	double c = length_squared(oc) - (s->radius * s->radius);
 	double discriminant = h * h - a * c;
-	rec->mat = s->mat;
+
 	if (discriminant < 0)
 		return false;
 	double squared = sqrt(discriminant);
@@ -107,6 +108,7 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 	t_vec3 outward_normal = vec3divscalar(vec3substr(rec->p, s->center), s->radius);
 	set_face_normal(rec, r, outward_normal); 
 	get_sphere_uv(rec->normal, &rec->u, &rec->v);
+
 	rec->mat = s->mat;
 	return true;
 	
