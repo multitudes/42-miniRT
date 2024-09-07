@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:49:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 20:22:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 15:02:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ double linear_to_gamma(double linear_component)
 {
     if (linear_component > 0)
         return sqrt(linear_component);
-
     return 0;
 }
 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:47:37 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 20:23:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 15:01:45 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 /**
  * @brief A color is already an alias for a vec3
  * but I get rgb from the .rt file therefore i create a struct for it
+ * using uint8_t to save and dont have values of more than 255
  */
 typedef struct 	s_rgb 
 {

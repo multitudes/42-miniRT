@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 20:07:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 16:43:21 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,8 @@ typedef struct 		s_diffuse_light
 	
 }					t_diffuse_light;
 
-
-
 void		set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);
-void lambertian_init(t_lambertian *lambertian_material, t_color albedo);
+void 		lambertian_init(t_lambertian *lambertian_material, t_color albedo);
 void		lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex);
 // void		metal_init(t_metal *metal, t_color albedo, double fuzz);
 // void		dielectric_init(t_dielectric *dielectric, double refraction_index);

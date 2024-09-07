@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 20:31:22 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 17:33:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void lambertian_init(t_lambertian *lambertian_material, t_color albedo)
 void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex) 
 {
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
-	lambertian_material->base.emit = emitzero;
-	lambertian_material->base.scattering_pdf = lambertian_scatter_pdf;
-    lambertian_material->albedo = tex->value(tex, 0 ,0,NULL ); // Set the albedo to null to experiment with lights
+	// lambertian_material->base.emit = emitzero;
+	// lambertian_material->base.scattering_pdf = lambertian_scatter_pdf;
+    lambertian_material->albedo = color(0,0,0); // Set the albedo to null to experiment with lights
 	lambertian_material->texture = tex;
 }
 
@@ -78,15 +78,18 @@ bool lambertian_scatter(void* self,  t_ray *r_in,  t_hit_record *rec, t_color *a
 	(void)r_in;
 	(void)pdf;
 
-	// debug("lambertian_scatter\n");
-	(void)r_in;
 	t_lambertian *lamb = (t_lambertian *)self;
 	t_vec3 scatter_direction = vec3add(rec->normal, random_unit_vector());
 	if (near_zero(scatter_direction))
 		scatter_direction = rec->normal;
     *scattered = ray(rec->p, scatter_direction);
-    *attenuation = lamb->albedo;
-	// debug("attenuation: %f %f %f\n", attenuation->r, attenuation->g, attenuation->b);
+    if (lamb->texture && lamb->texture->value) {
+         *attenuation = lamb->texture->value(lamb->texture, rec->u, rec->v, &rec->p);
+   } else {
+        // Fallback or error handling if texture or value function is not set
+        *attenuation = lamb->albedo; // Example fallback color
+    }
+
     return true; 
 
 	// t_onb uvw;

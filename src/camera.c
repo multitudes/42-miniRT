@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 14:43:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 17:32:21 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
 {
 	t_camera cam;
-
+	cam.background = color(10,10,10); // grey
 	// ratio is not a given from the subject. we can try different values
 	cam.aspect_ratio = (double)16.0/9.0;
 	// cam.aspect_ratio = (double)16.0/16.0;
@@ -75,28 +75,66 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
     return cam;
 }
 
-t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
+t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world)
 {
-	if (depth <= 0)
-		return color(0, 0, 0);
+	(void)cam;
+
 	t_hit_record rec;
+	if (depth <= 0)
+        return color(0,0,0);
 	if (hit_world(world, r, interval(0.001, INFINITY), &rec))
 	{
-			t_ray scattered;
+		t_ray scattered;
 		t_color attenuation;
 		if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
-			return vec3mult(attenuation, ray_color(&scattered, depth - 1, world));
-		// t_vec3 direction = vec3add(rec.normal, random_unit_vector());
-		// t_ray scattered = ray(rec.p, direction);
-		// return vec3multscalar(ray_color(&scattered, depth - 1, world), 0.5);
+			return vec3mult(attenuation, ray_color(cam,&scattered, depth - 1, world));
 		return color(0,0,0);
 	}
-	
 	t_vec3 unit_direction = unit_vector(r->dir);
-	double a = 0.5 * unit_direction.y + 1.0;
-	t_color white = color(1.0, 1.0, 1.0);
-	t_color blue = color(0.5, 0.7, 1.0);
-	return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
+	double a = 0.5 * (unit_direction.y + 1.0);
+	t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
+	t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
+	return vec3add(start, end);
+	// if (depth <= 0)
+	// 	return color(0, 0, 0);
+
+	// t_hit_record rec;
+	// if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
+	// {
+	// 	// t_vec3 unit_direction = unit_vector(r->dir);
+	// 	// double a = 0.5 * unit_direction.y + 1.0;
+	// 	// t_color white = color(1.0, 1.0, 1.0);
+	// 	// t_color blue = color(0.5, 0.7, 1.0);
+	// 	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
+	// 	return cam->background; // it should be the cam beckground but since this is c and raycolor is not a member func i have no access to cam
+	// }
+
+
+	// t_ray scattered;
+	// t_color attenuation;
+	// t_color color_from_emission = rec.mat->emit(rec.mat, &rec, rec.u, rec.v, rec.p);
+	
+	// if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
+	// 	return color_from_emission;
+		
+	// t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth-1, world));
+	
+	// return vec3add(color_from_emission, color_from_scatter);
+
+	// t_ray scattered;
+	// t_color attenuation;
+	// if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
+	// 	return vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world));
+	// t_vec3 direction = vec3add(rec.normal, random_unit_vector());
+	// t_ray scattered = ray(rec.p, direction);
+	// return vec3multscalar(ray_color(&scattered, depth - 1, world), 0.5);
+	// return color(0,0,0);
+	
+	// t_vec3 unit_direction = unit_vector(r->dir);
+	// double a = 0.5 * unit_direction.y + 1.0;
+	// t_color white = color(1.0, 1.0, 1.0);
+	// t_color blue = color(0.5, 0.7, 1.0);
+	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
 
 
 }
@@ -167,7 +205,7 @@ void    render(t_mrt *data, const t_hittablelist* world)
 			{
 				t_ray r = get_ray(data->cam, x, y);
 
-				pixel_color = vec3add(pixel_color, ray_color(&r, data->cam.max_depth ,world));
+				pixel_color = vec3add(pixel_color, ray_color(&(data->cam), &r, data->cam.max_depth ,world));
 				
 				i++;
 			}

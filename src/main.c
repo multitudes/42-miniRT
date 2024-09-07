@@ -33,6 +33,15 @@ void	hook(void *param)
 	mlx = mrt->mlx;
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		exit_gracefully(mlx);
+	if (mlx_is_key_down(mlx, MLX_KEY_UP))
+		debug("UP key pressed");
+	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+		debug("DOWN key pressed");
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+		debug("LEFT key pressed");
+	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+		debug("RIGHT key pressed");
+	
 }
 
 int init_window(t_mrt *data)
@@ -70,7 +79,7 @@ bool init_data(t_mrt *data)
 	/***************************** */
 	t_point3 center = point3(-2,2,1);
 	t_vec3 direction = vec3(2,-2,-2);
-	data->cam = init_cam(center, direction, 10);
+	data->cam = init_cam(center, direction, 120);
 	data->cam.print((void*)(&(*data).cam));
 
 	/***************************** */
@@ -94,7 +103,7 @@ int main(int argc, char **argv)
         return (1);
 
 	// world
-	t_hittable *list[4];
+	t_hittable *list[5];
 
 	t_sphere s1 = sphere(vec3(0, 0, -1.2), 1, rgb(128,0,0));
 	s1.print((void*)&s1);
@@ -105,12 +114,24 @@ int main(int argc, char **argv)
 	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
 	s4.print((void*)&s4);
 
+	/***********************************/
+	/* 			earth       		   */
+	/***********************************/
+	t_lambertian earth_surface;
+	t_rtw_image img;
+	init_rtw_image(&img,"rtw_image/earthmap.jpg");
+	t_img_texture img_texture;
+	img_texture_init(&img_texture, &img);
+	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
+	t_sphere s5 = sphere_mat(point3(0.0, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&earth_surface);
+
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s2);
 	list[2] = (t_hittable*)(&s3);
 	list[3] = (t_hittable*)(&s4);
+	list[4] = (t_hittable*)(&s5);
 
-	const t_hittablelist world = hittablelist(list, 4);
+	const t_hittablelist world = hittablelist(list, 5);
 
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
