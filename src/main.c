@@ -69,13 +69,13 @@ void	hook(void *param)
 	{
 		mrt->cam.center = rotate_camera(mrt->cam.center, 5);
 		mrt->cam.direction = calculate_direction(mrt->cam.center);
-		mrt->renderscene(mrt, &(mrt->world));
+		mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("LEFT key pressed");
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
 		mrt->cam.center = rotate_camera(mrt->cam.center, -5);
 		mrt->cam.direction = calculate_direction(mrt->cam.center);
-		mrt->renderscene(mrt, &(mrt->world));
+		mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("RIGHT key pressed");
 	}
 	
@@ -227,12 +227,17 @@ int main(int argc, char **argv)
 
 	const t_hittablelist world = hittablelist(list, 6);
 
+
+	t_hittable *list_lights[1];
+	list_lights[0] = (t_hittable*)(&s6);
+	const t_hittablelist lights = hittablelist(list_lights, 1);
+
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 
 	data.world = world;
-	render(&data, &world);
+	render(&data, &world, &lights);
 	
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
@@ -277,7 +282,8 @@ int main_old(int argc, char **argv)
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 	
-	render(&data, &world);
+
+	render(&data, &world, NULL);
 	
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);

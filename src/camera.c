@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 11:14:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 12:45:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
     return false;
 }
 
-t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world)
+t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights)
 {
 	(void)cam;
 
@@ -144,7 +144,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 		t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 		if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
 		 	return color_from_emission;
-		t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world));
+		t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 		return vec3add(color_from_emission, color_from_scatter);
 
 	}
@@ -255,7 +255,7 @@ t_ray get_ray(t_camera cam, int i, int j)
 
 }
 
-void    render(t_mrt *data, const t_hittablelist* world)
+void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
 {
     int             x;
 	int             y;
@@ -276,7 +276,7 @@ void    render(t_mrt *data, const t_hittablelist* world)
 			{
 				t_ray r = get_ray(data->cam, x, y);
 
-				pixel_color = vec3add(pixel_color, ray_color(&(data->cam), &r, data->cam.max_depth ,world));
+				pixel_color = vec3add(pixel_color, ray_color(&(data->cam), &r, data->cam.max_depth ,world, lights));
 				
 				i++;
 			}

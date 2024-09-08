@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 15:34:09 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 12:41:40 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ typedef struct	s_camera
 } 				t_camera;
 
 t_camera 	init_cam(t_point3 center, t_vec3 direction, double hfov);
-void    	render(t_mrt *data, const t_hittablelist* world);
-t_color		ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world);
+void    	render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights);
+t_color		ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights);
 void 		write_color(t_mrt *data, int x, int y, t_color colorvector);
 void			print_camera(const void *self);
 unsigned int    color_gamma_corrected(t_color color);
