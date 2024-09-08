@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"  // get_next_line should be here
+#include <complex.h>
 #include <fcntl.h>  /* open() */
 #include <stdint.h>
 #include <stdio.h>  /* perror() */
@@ -19,7 +20,7 @@
 /* program will exit if there is an error */
 int print_error(char *msg)
 {
-	write(2, "ERROR: ", 7);
+	write(2, "MiniRT: ERROR: ", 15);
 	write(2, msg, ft_strlen(msg));
 
 	// TODO: may need to close open file first
@@ -84,16 +85,24 @@ double	ft_atod(char *str)
 t_ambient	get_ambient(char **tokens)
 {
 	t_ambient	data;
-	// int			rbg[3];
-	// int			i;
+	char		**rgb_tok;
+	int			rgb_val[3];
+	int			i;
 
 	// first check token len
 	if (count_tokens(tokens) != 3)
-		print_error("ambient: invalid token amount\n");
-
-	// TODO: need string to double conversion
+		print_error("ambient: invalid token amount\n");		// exit or return
 	data.ratio = ft_atod(tokens[1]);
-	printf("data.ratio: %f\n", data.ratio);
+	rgb_tok = ft_split(tokens[2], ',');
+	i = -1;
+	while (++i < 3)
+	{
+		rgb_val[i] = ft_atoi(rgb_tok[i]);
+		if (rgb_val[i] < 0 || rgb_val[i] > 255)
+			print_error("ambient: color not in rgb range");
+	}
+	data.rgbcolor = rgb(rgb_val[0], rgb_val[1], rgb_val[2]);
+	free(rgb_tok);
 	return (data);
 }
 
@@ -136,14 +145,12 @@ void	parse_input(char *filename, t_objects *obj)
     char    **tokens;
 
     // should check for extension
-    char	*nothing = &filename[ft_strlen(filename) - 4];
-    (void) nothing;
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
 		print_error("invalid file extension\n");
 
     fd = open(filename, O_RDONLY);
     if (fd == -1)
-    	perror("MiniRT: open()"), exit(1);
+    	perror(filename), exit(1);
     while ((line = get_next_line(fd)) != NULL)
     {
 		// so if there is just a newline
