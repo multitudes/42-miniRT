@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 16:59:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 17:05:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 16:39:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ typedef struct 	s_hit_record {
 	bool 		front_face;
 	double		u;
 	double		v;
-	
 } 				t_hit_record;
 
 typedef struct 	s_hittable{

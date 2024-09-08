@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 16:38:32 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 16:59:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,11 @@ typedef struct		s_sphere
  * a sort of initializer for a sphere
  */
 t_sphere	sphere(t_point3 center, double diameter, t_rgb color);
+t_sphere 	sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat);
 void		print_sphere(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool		hit_sphere(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
+void		get_sphere_uv(t_vec3 normal, double* u, double* v);
+
 
 #endif

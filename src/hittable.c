@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 10:49:28 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 18:12:17 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 20:54:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ bool hit_world(const t_hittablelist *hittablelist, const t_ray* r, t_interval ra
 	double closest_so_far = ray_t.max;
 	int i = 0;
 
+	if (!hittablelist)
+			return (false);
 	while (i < hittablelist->size)
 	{	
 		t_interval closest = interval(ray_t.min, closest_so_far);
@@ -43,5 +45,6 @@ t_hittablelist hittablelist(t_hittable **list, int size)
 
 	hittablelist.list = list;
 	hittablelist.size = size;
+		// hittablelist.hit = hit;
 	return (hittablelist);
 }

@@ -55,6 +55,12 @@ File Structure: Accepts scene description files in a specific format, handling e
 ## Team
 It is a group project. The team is composed of two students.
 
+## Problems encountered
+This project for 42 is a first introduction to raytracing. We are not meant to use libraries like OpenGL or Vulkan, but to create our own raytracer. So also we will not implement GPU optimisations. Our raytracer will be slow which will be a challenge for itself.
+
+### optimisations
+
+
 ## A ray 
 A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same.  
 considering a Point A and a Direction b the line is a typical stepping function.
@@ -74,7 +80,7 @@ We'll initially set the distance between the viewport and the camera center poin
 While our 3D space has the conventions above, this conflicts with our image coordinates, where we want to have the zeroth pixel in the top-left and work our way down to the last pixel at the bottom right. This means that our image coordinate Y-axis is inverted: Y increases going down the image. 
  We'll also have the y-axis go up, the x-axis to the right, and the negative z-axis pointing in the viewing direction. (This is commonly referred to as right-handed coordinates.)
 
-## right hand vsleft hand coordinate system
+## right hand vs left hand coordinate system
 In a right-handed coordinate system, the x-axis points to the right, the y-axis points up, and the z-axis points out of the screen towards the viewer. The book and tutorials raytracing in one weekend and the next week use a right-handed coordinate system while the raytracer challenge uses a left-handed coordinate system. As does pixar for instance. There is no right or wrong. it is just a convention. We will use the right-handed coordinate system in this project. 
 
 On your right hand, the thumb is the x-axis, the index is the y-axis and the middle finger is the z-axis pointing to you. This is the right-handed coordinate system.

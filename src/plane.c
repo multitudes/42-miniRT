@@ -6,12 +6,12 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:15:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/06 20:36:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "plane.h"
-
+#include <stdio.h>
 
 t_plane		plane(t_point3 center, t_vec3 normal, t_rgb color)
 {

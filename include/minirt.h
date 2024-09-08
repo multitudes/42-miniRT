@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:14:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 11:13:36 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,11 @@ typedef struct 	s_mrt
 	t_sphere spheres[100];
 	t_plane planes[100];
 	t_cylinder cylinders[100];
+
+	// hittable list
+	t_hittablelist world;
+	// render function
+	    void (*renderscene)(struct s_mrt *, const t_hittablelist *);
 
 	// t_viewport	viewport;
 	// t_pixel		pixel;
