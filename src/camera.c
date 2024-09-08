@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 21:53:38 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 11:14:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
 {
 	t_camera cam;
-	cam.background = color(10,10,10); // grey
+	cam.background = color(0.7,0.7,0.7); // grey
+	cam.samples_per_pixel = 50;
+	cam.max_depth = 50; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
 	cam.aspect_ratio = ASPECT_RATIO;
 	
 	// this is for the antialiasing
-	cam.samples_per_pixel = 6;
-	cam.max_depth = 5; // bouncing ray
 	cam.image_width = IMAGE_WIDTH; // also not given in the subject or file, smaller is faster - defined in minirt.h
 	cam.image_height = IMAGE_WIDTH / cam.aspect_ratio;
 	cam.image_height = (cam.image_height < 1) ? 1 : cam.image_height;
@@ -160,11 +160,12 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// 	return color(0.0, 0.0, 1.0); // Blue for z-axis
 	// }
 
-	t_vec3 unit_direction = unit_vector(r->dir);
-	double a = 0.5 * (unit_direction.y + 1.0);
-	t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
-	t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
-	return vec3add(start, end);
+	// t_vec3 unit_direction = unit_vector(r->dir);
+	// double a = 0.5 * (unit_direction.y + 1.0);
+	// t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
+	// t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
+	return cam->background;
+	// return vec3add(start, end);
 	// if (depth <= 0)
 	// 	return color(0, 0, 0);
 
