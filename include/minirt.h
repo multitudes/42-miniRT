@@ -15,17 +15,19 @@
 
 #include <limits.h>
 #include <MLX42/MLX42.h>
+#include <math.h>
 #include "camera.h"
 #include "ambient.h"
 #include "sphere.h"
 #include "plane.h"
 #include "cylinder.h"
+#include "vec3.h"
 
 #define IMAGE_WIDTH 400
 # define TRUE 1
 # define FALSE 0
 
-typedef struct 	s_mrt 
+typedef struct 	s_mrt
 {
 	void		*mlx;
 	void		*win_ptr;
@@ -42,6 +44,24 @@ typedef struct 	s_mrt
 	// t_pixel		pixel;
 }				t_mrt;
 
+typedef struct
+{
+	t_vec3	center;
+	double	brightness;
+	t_color	color;
+}			t_light;
 
+
+typedef struct
+{
+	t_ambient	ambient;
+	t_camera	camera;
+	t_light		light;
+	t_sphere	spheres[100];
+	t_plane		planes[100];
+	t_cylinder	cylinder[100];
+}			t_objects;
+
+void	parse_input(char *filename, t_objects *obj);
 
 #endif

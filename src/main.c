@@ -45,7 +45,7 @@ int init_window(t_mrt *data)
 	{
 		mlx_close_window(data->mlx);
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
-		
+
 	}
 	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
 	{
@@ -59,14 +59,14 @@ int init_window(t_mrt *data)
 bool init_data(t_mrt *data)
 {
 	/***************************** */
-	/* 			MLX42 			   */	
+	/* 			MLX42 			   */
 	/***************************** */
     data->mlx = NULL;
     data->win_ptr = NULL;
     data->image = NULL;
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(-2,2,1);
 	t_vec3 direction = vec3(2,-2,-2);
@@ -74,7 +74,7 @@ bool init_data(t_mrt *data)
 	data->cam.print((void*)(&(*data).cam));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	t_ambient ambient_light = ambient(0.2, rgb(255,255,255));
 	data->ambient_light = ambient_light;
@@ -90,6 +90,12 @@ int main(int argc, char **argv)
     t_mrt data;
     (void)argv;
 	(void)argc;
+
+	t_objects	objects;
+
+	parse_input("example_scene.rt", &objects);
+	return (0);
+
 	if (!init_data(&data))
         return (1);
 
@@ -115,9 +121,9 @@ int main(int argc, char **argv)
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
-	
+
 	render(&data, &world);
-	
+
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
