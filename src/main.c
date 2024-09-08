@@ -92,6 +92,7 @@ int main(int argc, char **argv)
 	(void)argc;
 
 	t_objects	objects;
+	ft_memset(&objects, 0, sizeof(t_objects));
 
 	parse_input("example_scene.rt", &objects);
 	return (0);

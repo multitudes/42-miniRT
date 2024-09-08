@@ -23,9 +23,10 @@
 #include "cylinder.h"
 #include "vec3.h"
 
-#define IMAGE_WIDTH 400
+# define IMAGE_WIDTH 400
 # define TRUE 1
 # define FALSE 0
+# define OBJECT_COUNT 100
 
 typedef struct 	s_mrt
 {
@@ -48,18 +49,17 @@ typedef struct
 {
 	t_vec3	center;
 	double	brightness;
-	t_color	color;
+	t_rgb	color;
 }			t_light;
-
 
 typedef struct
 {
 	t_ambient	ambient;
 	t_camera	camera;
 	t_light		light;
-	t_sphere	spheres[100];
-	t_plane		planes[100];
-	t_cylinder	cylinder[100];
+	t_sphere	spheres[OBJECT_COUNT];
+	t_plane		planes[OBJECT_COUNT];
+	t_cylinder	cylinder[OBJECT_COUNT];
 }			t_objects;
 
 void	parse_input(char *filename, t_objects *obj);
