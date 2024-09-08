@@ -128,6 +128,7 @@ bool init_data(t_mrt *data)
 	/***************************** */
 	t_ambient ambient_light = ambient(0.2, rgb(255,255,255));
 	data->ambient_light = ambient_light;
+	data->cam.background = ambient_light.color;
 	ambient_light.print((void*)&ambient_light);
 
     return (true);
@@ -135,50 +136,6 @@ bool init_data(t_mrt *data)
 
 
 int main(int argc, char **argv)
-{
-    t_mrt data;
-    (void)argv;
-	(void)argc;
-	if (!init_data(&data))
-        return (1);
-
-	// world
-	t_hittable *list[4];
-
-	t_sphere s1 = sphere(vec3(0, 0, -1.2), 1, rgb(128,0,0));
-	s1.print((void*)&s1);
-	t_sphere s2 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
-	s2.print((void*)&s2);
-	t_sphere s3 = sphere(vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
-	s3.print((void*)&s3);
-	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
-	s4.print((void*)&s4);
-
-	list[0] = (t_hittable*)(&s1);
-	list[1] = (t_hittable*)(&s2);
-	list[2] = (t_hittable*)(&s3);
-	list[3] = (t_hittable*)(&s4);
-
-	const t_hittablelist world = hittablelist(list, 4);
-
-    debug("Start of minirt %s", "helllo !! ");
-	if (!init_window(&data))
-		return (EXIT_FAILURE);
-	
-	render(&data, &world);
-	
-
-    mlx_loop_hook(data.mlx, &hook, (void *)&data);
-
-    mlx_loop(data.mlx);
-    ft_printf("\nbyebye!\n");
-    mlx_terminate(data.mlx);
-
-    return (EXIT_SUCCESS);
-}
-
-
-int main_new(int argc, char **argv)
 {
     t_mrt data;
     (void)argv;
@@ -275,6 +232,51 @@ int main_new(int argc, char **argv)
 		return (EXIT_FAILURE);
 
 	data.world = world;
+	render(&data, &world);
+	
+
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
+}
+
+
+
+int main_old(int argc, char **argv)
+{
+    t_mrt data;
+    (void)argv;
+	(void)argc;
+	if (!init_data(&data))
+        return (1);
+
+	// world
+	t_hittable *list[4];
+
+	t_sphere s1 = sphere(vec3(0, 0, -1.2), 1, rgb(128,0,0));
+	s1.print((void*)&s1);
+	t_sphere s2 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
+	s2.print((void*)&s2);
+	t_sphere s3 = sphere(vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+	s3.print((void*)&s3);
+	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
+	s4.print((void*)&s4);
+
+	list[0] = (t_hittable*)(&s1);
+	list[1] = (t_hittable*)(&s2);
+	list[2] = (t_hittable*)(&s3);
+	list[3] = (t_hittable*)(&s4);
+
+	const t_hittablelist world = hittablelist(list, 4);
+
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+	
 	render(&data, &world);
 	
 

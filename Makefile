@@ -12,7 +12,7 @@ NAME 			= 	miniRT
 CC 				= 	cc
 
 CFLAGS 			= 	-Wextra -Wall -Werror
-CFLAGS 			+= 	-Iinclude -Isrc -O3 -Wunreachable-code -Ofast
+CFLAGS 			+= 	-Iinclude -Isrc -Ilib/external -O3 -Wunreachable-code
 # CFLAGS += -DDEBUG=1
 
 # directories
@@ -27,7 +27,7 @@ LIBS 			+= 	$(LIBFTDIR)/libft.a
 # this is used in production to optimize the linking and remove unnecessary code aking the binary smaller
 LDFLAGS			= 	-Wl,--gc-sections -Wl,-O2 -Wl,--as-needed -Wl,--strip-all
 
-INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
+INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
@@ -37,7 +37,8 @@ OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
 									utils.h ambient.h plane.h cylinder.h texture.h \
-									rtw_stb_image.h material.h onb.h external/stb_image.h external/stb_image_write.h)
+									rtw_stb_image.h material.h onb.h)
+HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft

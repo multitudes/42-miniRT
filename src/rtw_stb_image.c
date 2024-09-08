@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:17:08 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/07/04 18:50:55 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 12:35:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-// need to include only oncd and not in the header file
+// need to include only once and not in the header file
 #define STB_IMAGE_IMPLEMENTATION
-#include "external/stb_image.h"
+#include "stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "external/stb_image_write.h"
+#include "stb_image_write.h"
 #include "rtw_stb_image.h"
 
 /*
