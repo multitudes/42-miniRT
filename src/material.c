@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 21:33:21 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 13:40:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void lambertian_init(t_lambertian *lambertian_material, t_color albedo)
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
 	lambertian_material->base.emit = emitzero;
     lambertian_material->albedo = albedo; // Set the albedo
+	lambertian_material->base.scattering_pdf = lambertian_scatter_pdf;
 }
 
 void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex) 
@@ -35,6 +36,7 @@ void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex)
 	// lambertian_material->base.scattering_pdf = lambertian_scatter_pdf;
     lambertian_material->albedo = color(0,0,0); // Set the albedo to null to experiment with lights
 	lambertian_material->texture = tex;
+	lambertian_material->base.scattering_pdf = lambertian_scatter_pdf;
 }
 
 
@@ -60,6 +62,7 @@ void diffuse_light_init(t_diffuse_light *light, t_texture *texture)
 	light->base.scatter = noscatter;
 	light->base.emit = emitlight;
 	light->texture = texture;
+	light->base.scattering_pdf = lambertian_scatter_pdf;
 }
 
 bool noscatter(void *self, t_ray *r_in, t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf) 
@@ -108,7 +111,7 @@ bool lambertian_scatter(void* self,  t_ray *r_in,  t_hit_record *rec, t_color *a
 /*
  * scatter function for a lambertian material
  */
-double lambertian_scatter_pdf(void* self,  t_ray *r_in,  t_hit_record *rec,  t_ray *scattered) 
+double lambertian_scatter_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered) 
 {
 	(void)r_in;
 	(void)self;

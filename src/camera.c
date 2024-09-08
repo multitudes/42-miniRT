@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 12:45:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 19:10:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,21 @@
 #include "hittable.h"
 #include "utils.h"
 #include "camera.h"
+#include "pdf.h"
+#include <stdbool.h>
+#include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
+#define IMAGE_WIDTH 800
+
+// Epsilon value for floating-point comparison
+#define EPSILON 1e-1
 
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
 {
 	t_camera cam;
 	cam.background = color(0.7,0.7,0.7); // grey
-	cam.samples_per_pixel = 50;
+	cam.samples_per_pixel = 100;
 	cam.max_depth = 50; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
@@ -76,11 +83,7 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	cam.pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam.pixel_delta_u, cam.pixel_delta_v), 2));
     return cam;
 }
-#include <stdbool.h>
-#include <math.h>
 
-// Epsilon value for floating-point comparison
-#define EPSILON 1e-1
 
 // Check if two floating-point numbers are approximately equal
 bool is_near_zero(double value) {
@@ -137,18 +140,43 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	
 	if (depth <= 0)
         return color(0,0,0);
-	if (hit_world(world, r, interval(0.001, INFINITY), &rec))
-	{
-		t_ray scattered;
-		t_color attenuation = color(0,0,0);
-		t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
-		if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
-		 	return color_from_emission;
-		t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-		return vec3add(color_from_emission, color_from_scatter);
+	if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
+		return cam->background;
 
-	}
 
+	t_ray scattered;
+	t_color attenuation;
+	double pdf_val;	
+	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
+	if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, &pdf_val))
+		return color_from_emission;
+
+
+	t_hittable_pdf light_pdf;
+	hittable_pdf_init(&light_pdf, lights->list[0], &rec.p);
+	
+	t_cosine_pdf surface_pdf;
+	cosine_pdf_init(&surface_pdf, &rec.normal);
+	if (random_d() < 0.5)
+		scattered = ray(rec.p, hittable_pdf_generate(&light_pdf));
+	else
+		scattered = ray(rec.p, cosine_pdf_generate(&surface_pdf));
+
+    // scattered = ray(rec.p, mixture_pdf_generate(&mix_pdf), r->tm);
+
+    pdf_val = 0.5 * cosine_pdf_value(&surface_pdf, &scattered.dir) + 0.5 * hittable_pdf_value(&light_pdf, &scattered.dir);
+
+	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
+
+	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
+
+	t_color attenuationxscattering_pdf = vec3multscalar(attenuation, scattering_pdf);
+	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, sample_color);
+	t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_val);
+
+	// t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+	
+	return vec3add(color_from_emission, color_from_scatter);
 	// t_vec3 x_axis = vec3(100,0,0);
 	// t_vec3 y_axis = vec3(0,100,0);
 	// t_vec3 z_axis = vec3(0,0,100);
@@ -164,7 +192,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// double a = 0.5 * (unit_direction.y + 1.0);
 	// t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
 	// t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
-	return cam->background;
+
 	// return vec3add(start, end);
 	// if (depth <= 0)
 	// 	return color(0, 0, 0);

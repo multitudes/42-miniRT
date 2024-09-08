@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 21:36:04 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 15:27:45 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include "material.h"
 #include "debug.h"
 #include "utils.h"
+#include "pdf.h"
 
 /*
  * @brief: initializer for a sphere
@@ -38,6 +39,8 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 {
 	t_sphere s;
 	s.base.hit = hit_sphere;
+	s.base.pdf_value = sphere_pdf_value;
+	s.base.random = sphere_random;
 	s.center = center;
 	s.radius = fmax(0, diameter / 2);
 	s.print = print_sphere;
@@ -58,9 +61,11 @@ t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material
 {
 	t_sphere s;
 	s.base.hit = hit_sphere;
+	s.base.pdf_value = sphere_pdf_value;
+	s.base.random = sphere_random;
 	s.center = center;
 	s.radius = fmax(0, diameter / 2);
-	s.print = print_sphere;
+	s.print = print_sphere_mat;
 	s.rgb = rgbcolor;
 	s.color = rgb_to_color(rgbcolor);
  	s.mat = mat; 
@@ -77,6 +82,15 @@ void		print_sphere(const void *self)
 {
 	const t_sphere *s = (const t_sphere *)self;
 	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n", 
+	s->center.x, s->center.y, s->center.z, s->radius * 2,
+	s->rgb.r, s->rgb.g, s->rgb.b);
+}
+
+// print_sphere_mat
+void		print_sphere_mat(const void *self)
+{
+	const t_sphere *s = (const t_sphere *)self;
+	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d mat\n", 
 	s->center.x, s->center.y, s->center.z, s->radius * 2,
 	s->rgb.r, s->rgb.g, s->rgb.b);
 }
@@ -180,4 +194,92 @@ void	get_sphere_uv(t_vec3 normal, double* u, double* v)
 	phi = atan2(-normal.z, normal.x) + PI;
     *u = phi / (2 * PI);
     *v = theta / PI;
+}
+
+/* in c++
+
+double pdf_value(const point3& origin, const vec3& direction) const override {
+	// This method only works for stationary spheres.
+
+	hit_record rec;
+	if (!this->hit(ray(origin, direction), interval(0.001, infinity), rec))
+		return 0;
+
+	auto dist_squared = (center.at(0) - origin).length_squared();
+	auto cos_theta_max = std::sqrt(1 - radius*radius/dist_squared);
+	auto solid_angle = 2*pi*(1-cos_theta_max);
+
+	return  1 / solid_angle;
+}
+
+vec3 random(const point3& origin) const override {
+	vec3 direction = center.at(0) - origin;
+	auto distance_squared = direction.length_squared();
+	onb uvw(direction);
+	return uvw.transform(random_to_sphere(radius, distance_squared));
+}
+
+*/
+/**
+ * sphere_pdf_value - Computes the PDF value for a uniform sphere.
+ * @self: Pointer to the object (unused in this function).
+ * @direction: Pointer to the t_vec3 direction vector (unused in this function).
+ *
+ * This function returns the probability density function (PDF) value for a
+ * uniformly distributed direction over the surface of a sphere. Since the
+ * distribution is uniform, the PDF value is constant and equal to the inverse
+ * of the surface area of the sphere, which is 1 / (4 * PI).
+ *
+ * Return: A double representing the PDF value for a uniform sphere.
+ */
+double sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
+{
+	const t_sphere *s = (t_sphere *)self;
+	t_hit_record rec;
+	const t_ray r = ray(*orig, *dir);
+	if (!hit_sphere(s, &r, interval(0.001, INFINITY), &rec))
+		return 0;
+
+    // Calculate distance squared from origin to sphere center
+    double distance_squared = length_squared(vec3substr(s->center, *orig));
+
+    // Calculate cosine of maximum theta (angle between ray and normal)
+    double cos_theta_max = sqrt(1.0 - s->radius * s->radius / distance_squared);
+
+    // Calculate solid angle
+    double solid_angle = 2.0 * PI * (1.0 - cos_theta_max);
+
+    // Return PDF (reciprocal of solid angle)
+    return 1.0 / solid_angle;
+	
+}
+t_vec3 sphere_random(const void *self, const t_point3 *orig) 
+{
+    const t_sphere *s = (t_sphere *)self;
+
+    // Distance squared from origin to sphere center
+    double distance_squared = length_squared(vec3substr(s->center, *orig));
+
+    // Call random_to_sphere to generate a random point on the unit sphere
+    t_vec3 random_point = random_to_sphere(s->radius, distance_squared);
+
+    // Translate the random point relative to the sphere's center
+    return vec3add(random_point, s->center);
+}
+
+// Function to generate a random direction within the sphere's volume
+t_vec3 random_to_sphere(double radius, double distance_squared) 
+{
+    double r1 = random_d(); // Generate random number between 0 and 1
+    double r2 = random_d();
+
+    // Calculate z-coordinate based on uniform distribution within the unit sphere
+    double z = 1.0 + r2 * (sqrt(1.0 - radius * radius / distance_squared) - 1.0);
+
+    // Calculate phi (azimuthal angle) and x, y coordinates using spherical coordinates
+    double phi = 2.0 * PI * r1;
+    double x = cos(phi) * sqrt(1.0 - z * z);
+    double y = sin(phi) * sqrt(1.0 - z * z);
+
+    return unit_vector(vec3(x, y, z));  // Normalize to get a unit direction vector
 }

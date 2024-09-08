@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 21:13:25 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 13:39:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ typedef struct 		s_material
 {
 	bool 			(*scatter)(void *self,  t_ray *r_in, t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
 	t_color			(*emit)(void *self, t_hit_record rec, double u, double v, t_point3);
-	// double 			(*scattering_pdf)(void *self,  t_ray *r_in,  t_hit_record *rec,  t_ray *scattered);
-
+	double 			(*scattering_pdf)(void *self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
 }					t_material;
 
 // Define a structure for Lambertian material
@@ -54,7 +53,7 @@ void		lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex);
 void		diffuse_light_init(t_diffuse_light *diffuse_light, t_texture *tex);
 
 bool		lambertian_scatter(void* self,  t_ray *r_in,  t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf); ;
-double 		lambertian_scatter_pdf(void* self, t_ray *r_in, t_hit_record *rec, t_ray *scattered);
+double 		lambertian_scatter_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
 // bool		metal_scatter(void *self, const t_ray* r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
 // bool		dielectric_scatter(void *self, const t_ray *r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);
 bool 		noscatter(void *self,  t_ray *r_in,  t_hit_record *rec, t_color *attenuation, t_ray *scattered, double *pdf);

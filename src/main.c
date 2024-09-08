@@ -10,6 +10,7 @@
 #include "utils.h"
 #include "color.h"
 #include "ambient.h"
+#include "quad.h"
 
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
@@ -115,24 +116,12 @@ bool init_data(t_mrt *data)
     data->image = NULL;
 	data->renderscene = render;
 
-	/***************************** */
-	/* 			camera 			   */	
-	/***************************** */
-	t_point3 center = point3(0,4,4);
-	t_vec3 direction = vec3(0,-2,-2);
-	data->cam = init_cam(center, direction, 60);
-	data->cam.print((void*)(&(*data).cam));
 
-	/***************************** */
-	/* 		ambient light		   */	
-	/***************************** */
-	t_ambient ambient_light = ambient(0.2, rgb(255,255,255));
-	data->ambient_light = ambient_light;
-	data->cam.background = ambient_light.color;
-	ambient_light.print((void*)&ambient_light);
 
     return (true);
 }
+
+
 
 
 int main(int argc, char **argv)
@@ -140,8 +129,93 @@ int main(int argc, char **argv)
     t_mrt data;
     (void)argv;
 	(void)argc;
+
 	if (!init_data(&data))
         return (1);
+
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	t_point3 center = point3(278, 278, -800);
+	t_vec3 direction = vec3(0,0,800);
+	data.cam = init_cam(center, direction, 40);
+	data.cam.print((void*)(&(data.cam)));
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	t_ambient ambient_light = ambient(0.0, rgb(255,255,255));
+	data.ambient_light = ambient_light;
+	data.cam.background = ambient_light.color;
+	ambient_light.print((void*)&ambient_light);
+
+	// world
+	t_hittable *list[2];
+
+	// red sphere
+	t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	s1.print((void*)&s1);
+
+	/***********************************/
+	/* 			light        		   */
+	/***********************************/
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(20, 20, 20));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+	// t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	t_sphere s6 = sphere_mat(point3( 190,290,190 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	
+	list[0] = (t_hittable*)(&s1);
+	list[1] = (t_hittable*)(&s6);
+
+	const t_hittablelist world = hittablelist(list, 2);
+
+
+	t_hittable *list_lights[1];
+	list_lights[0] = (t_hittable*)(&s6);
+	const t_hittablelist lights = hittablelist(list_lights, 1);
+
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+
+	data.world = world;
+	render(&data, &world, &lights);
+	
+
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
+}
+
+
+int main_earth(int argc, char **argv)
+{
+    t_mrt data;
+    (void)argv;
+	(void)argc;
+	if (!init_data(&data))
+        return (1);
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	t_point3 center = point3(0,4,4);
+	t_vec3 direction = vec3(0,-2,-2);
+	data.cam = init_cam(center, direction, 50);
+	data.cam.print((void*)(&(data.cam)));
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	t_ambient ambient_light = ambient(0.0, rgb(255,255,255));
+	data.ambient_light = ambient_light;
+	data.cam.background = ambient_light.color;
+	ambient_light.print((void*)&ambient_light);
 
 	// world
 	t_hittable *list[7];
@@ -212,12 +286,11 @@ int main(int argc, char **argv)
 	/***********************************/
 	t_diffuse_light difflight;
 	t_solid_color difflight_color;
-	solid_color_init(&difflight_color, color(4, 4, 4));
+	solid_color_init(&difflight_color, color(20, 20, 20));
 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
-	t_sphere s6 = sphere_mat(point3(5, 0, 0), 6.0, rgb(255,223 ,34 ), (t_material*)&difflight);
-
-
-
+	// t_sphere s6 = sphere_mat(point3(5, 0, 0), 5.0, rgb(255,223 ,34 ), (t_material*)&difflight);
+	t_quad s6 = quad(point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
+	
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s2);
 	list[2] = (t_hittable*)(&s3);

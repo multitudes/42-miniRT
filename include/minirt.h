@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 12:43:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 12:57:51 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include "plane.h"
 #include "cylinder.h"
 
-#define IMAGE_WIDTH 400
+
 # define TRUE 1
 # define FALSE 0
 
