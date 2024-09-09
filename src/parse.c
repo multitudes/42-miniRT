@@ -14,9 +14,20 @@
 #include <fcntl.h>  /* open() */
 #include <stdio.h>  /* perror() */
 #include "minirt.h"
+#include <assert.h>
+
+static void	free_split(char **split)
+{
+	int	i;
+
+	i = -1;
+	while (split[++i])
+		free(split[i]);
+	free(split);
+}
 
 /* program will exit if there is an error */
-static int call_error(char *msg, char *prefix)
+static int call_error(char *msg, char *prefix, char **tokens)
 {
 	write(2, "Error\n", 6);
 	if (prefix)
@@ -26,9 +37,10 @@ static int call_error(char *msg, char *prefix)
 	}
 	write(2, msg, ft_strlen(msg));
 	write(2, "\n", 1);
-
-	// TODO: may need to close open file first
+	if (tokens)
+		free_split(tokens);
 	exit(1);
+	// TODO: may need to close open file first
 }
 
 static int	count_tokens(char **tokens)
@@ -87,23 +99,26 @@ double	ft_atod(char *str)
 }
 
 /* Returns a t_rgb struct that contains values from the token */
-static t_rgb	set_rgb(char *token, char *func_name)
+static t_rgb	set_rgb(char **tokens, int index, char *func_name)
 {
 	char	**rgb_tok;
 	int		rgb_val[3];
 	int		i;
 
-	rgb_tok = ft_split(token, ',');
+	rgb_tok = ft_split(tokens[index], ',');
 	if (*rgb_tok == NULL)
-		call_error("ft_split() fail", func_name);
+		call_error("ft_split() fail", func_name, tokens);
 	i = -1;
 	while (++i < 3)
 	{
 		rgb_val[i] = ft_atoi(rgb_tok[i]);
 		if (rgb_val[i] < 0 || rgb_val[i] > 255)
-			call_error("color not in rgb range", func_name);
+		{
+			free_split(rgb_tok);
+			call_error("color not in rgb range", func_name, tokens);
+		}
 	}
-	free(rgb_tok);
+	free_split(rgb_tok);
 	return(rgb(rgb_val[0], rgb_val[1], rgb_val[2]));
 }
 
@@ -113,23 +128,26 @@ static t_rgb	set_rgb(char *token, char *func_name)
  * Function is very similar to set_rgb, but sets doubles, checks
  * if values from token are normalized, calls vec3().
 */
-static t_vec3	set_vec3(char *token, char *func_name, int normalized)
+static t_vec3	set_vec3(char **tokens, int index, char *func_name, int normalized)
 {
 	char	**coord_tok;
 	double	coord_val[3];
 	int		i;
 
-	coord_tok = ft_split(token, ',');
+	coord_tok = ft_split(tokens[index], ',');
 	if (*coord_tok == NULL)
-		call_error("ft_split() fail", func_name);
+		call_error("ft_split() fail", func_name, tokens);
 	i = -1;
 	while (++i < 3)
 	{
 		coord_val[i] = ft_atod(coord_tok[i]);
 		if (normalized && (coord_val[i] < .0 || coord_val[i] > 1.0))
-			call_error("vector not normalized", func_name);
+		{
+			free_split(coord_tok);
+			call_error("vector not normalized", func_name, tokens);
+		}
 	}
-	free(coord_tok);
+	free_split(coord_tok);
 	return(vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
 
@@ -138,11 +156,11 @@ static void	get_ambient(char **tokens, t_ambient *data)
 	static int	already_set;
 
 	if (already_set)
-		call_error("this element can only be set once", "ambient");
+		call_error("this element can only be set once", "ambient", tokens);
 	if (count_tokens(tokens) != 3)
-		call_error("invalid token amount", "ambient");
+		call_error("invalid token amount", "ambient", tokens);
 	data->ratio = ft_atod(tokens[1]);
-	data->rgbcolor = set_rgb(tokens[2], "ambient");
+	data->rgbcolor = set_rgb(tokens, 2, "ambient");
 	already_set = 1;
 }
 
@@ -151,14 +169,14 @@ static void	get_camera(char **tokens, t_camera *data)
 	static int	already_set;
 
 	if (already_set)
-		call_error("this element can only be set once", "camera");
+		call_error("this element can only be set once", "camera", tokens);
 	if (count_tokens(tokens) != 4)
-		call_error("invalid token amount", "camera");
-	data->center = set_vec3(tokens[1], "camera", 0);
-	data->direction = set_vec3(tokens[2], "camera", 1);
+		call_error("invalid token amount", "camera", tokens);
+	data->center = set_vec3(tokens, 1, "camera", 0);
+	data->direction = set_vec3(tokens, 2, "camera", 1);
 	data->hfov = ft_atod(tokens[3]);
 	if (data->hfov < 0. || data->hfov > 180.)
-		call_error("fov must be in range [0;180]", "camera");
+		call_error("fov must be in range [0;180]", "camera", tokens);
 	already_set = 1;
 }
 
@@ -168,15 +186,15 @@ static void	get_light(char **tokens, t_light *data)
 	int			token_count;
 
 	if (already_set)
-		call_error("this element can only be set once", "light");
+		call_error("this element can only be set once", "light", tokens);
 	token_count = count_tokens(tokens);
 	if (token_count < 3 || token_count > 4)
-		call_error("invalid token amount", "light");
-	data->center = set_vec3(tokens[1], "light", 0);
+		call_error("invalid token amount", "light", tokens);
+	data->center = set_vec3(tokens, 1, "light", 0);
 	data->brightness = ft_atod(tokens[2]);
 	if (data->brightness < 0. || data->brightness > 1.)
-		call_error("brightness must be normalized", "light");
-	data->color = set_rgb(tokens[3], "color");
+		call_error("brightness must be normalized", "light", tokens);
+	data->color = set_rgb(tokens, 3, "color");
 	already_set = 1;
 }
 
@@ -185,10 +203,10 @@ static void	get_sphere(char **tokens, t_sphere *spheres)
 	static int	set_index;
 
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "sphere");
-	spheres[set_index].center = set_vec3(tokens[1], "sphere", 0);
+		call_error("exceeds array size", "sphere", tokens);
+	spheres[set_index].center = set_vec3(tokens, 1, "sphere", 0);
 	spheres[set_index].radius = ft_atod(tokens[2]) / 2.;
-	spheres[set_index].rgb = set_rgb(tokens[3], "sphere");
+	spheres[set_index].rgb = set_rgb(tokens, 3, "sphere");
 	set_index++;
 }
 
@@ -197,10 +215,10 @@ static void	get_plane(char **tokens, t_plane *planes)
 	static int	set_index;
 
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "plane");
-	planes[set_index].point = set_vec3(tokens[1], "plane", 0);
-	planes[set_index].normal = set_vec3(tokens[2], "plane", 1);
-	planes[set_index].rgb = set_rgb(tokens[3], "plane");
+		call_error("exceeds array size", "plane", tokens);
+	planes[set_index].point = set_vec3(tokens, 1, "plane", 0);
+	planes[set_index].normal = set_vec3(tokens, 2, "plane", 1);
+	planes[set_index].rgb = set_rgb(tokens, 3, "plane");
 	set_index++;
 }
 
@@ -209,16 +227,16 @@ static void	get_cylinder(char **tokens, t_cylinder *cylinders)
 	static int	set_index;
 
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "cylinder");
-	cylinders[set_index].center = set_vec3(tokens[1], "cylinder", 0);
-	cylinders[set_index].axis = set_vec3(tokens[2], "cylinder", 1);
+		call_error("exceeds array size", "cylinder", tokens);
+	cylinders[set_index].center = set_vec3(tokens, 1, "cylinder", 0);
+	cylinders[set_index].axis = set_vec3(tokens, 2, "cylinder", 1);
 	cylinders[set_index].radius = ft_atod(tokens[3]) / 2.;
 	cylinders[set_index].height = ft_atod(tokens[4]);
-	cylinders[set_index].rgb = set_rgb(tokens[5], "cylinder");
+	cylinders[set_index].rgb = set_rgb(tokens, 5, "cylinder");
 	set_index++;
 }
 
-static int	update_struct(t_objects *obj, char **tokens)
+static void	update_struct(t_objects *obj, char **tokens)
 {
 	if (ft_strncmp("A", tokens[0], 2) == 0)
 		get_ambient(tokens, &obj->ambient);
@@ -233,8 +251,7 @@ static int	update_struct(t_objects *obj, char **tokens)
 	else if (ft_strncmp("cy", tokens[0], 3) == 0)
 		get_cylinder(tokens, obj->cylinders);
 	else
-		return(call_error("invalid object identifier\n", tokens[1]));
-	return (0);
+		call_error("invalid object identifier\n", tokens[1], tokens);
 }
 
 /* in case or error, the parser calls exit() */
@@ -245,19 +262,27 @@ void	parse_input(char *filename, t_objects *obj)
     char    **tokens;
 
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
-		call_error("invalid file extension\n", NULL);
+		call_error("invalid file extension\n", NULL, NULL);
     fd = open(filename, O_RDONLY);
     if (fd == -1)
     	perror(filename), exit(1);
     while ((line = get_next_line(fd)) != NULL)
     {
 		if (ft_strlen(line) == 1)
-		    continue ;
+		{
+			free(line);
+			continue ;
+		}
 		tokens = ft_split(line, ' ');
 		if (tokens == NULL)
-			call_error("ft_split()", "parse_input");
+		{
+			free(line);
+			call_error("ft_split()", "parse_input", NULL);
+		}
+		free(line);
+
 		update_struct(obj, tokens);
-		free(tokens);
+		free_split(tokens);
     }
     if (close(fd) == -1)
     	perror("MiniRT: close()");
