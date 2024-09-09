@@ -59,7 +59,7 @@ typedef struct
 	t_light		light;
 	t_sphere	spheres[OBJECT_COUNT];
 	t_plane		planes[OBJECT_COUNT];
-	t_cylinder	cylinder[OBJECT_COUNT];
+	t_cylinder	cylinders[OBJECT_COUNT];
 }			t_objects;
 
 void	parse_input(char *filename, t_objects *obj);

@@ -18,7 +18,7 @@
 /* program will exit if there is an error */
 static int call_error(char *msg, char *prefix)
 {
-	write(2, "MiniRT: ERROR: ", 15);
+	write(2, "Error\n", 6);
 	if (prefix)
 	{
 		write(2, prefix, ft_strlen(prefix));
@@ -159,54 +159,42 @@ static void	get_light(char **tokens, t_light *data)
 	data->color = set_rgb(tokens[3], "color");
 }
 
-// TODO: this doesnt work
-// do i really have to keep a counter for each array?
-static int	find_last_object(void *void_array, size_t size)
-{
-	int		i;
-	char	*array;
-
-	array = (char *)void_array;
-	i = -1;
-	while (++i < OBJECT_COUNT)
-	{
-		if (ft_memcmp(array + i * size, "\0", size) == 0)
-			return (i - 1);
-	}
-	return (OBJECT_COUNT - 1);
-}
-
 static void	get_sphere(char **tokens, t_sphere *spheres)
 {
-	int	set_index;
+	static int	set_index;
 
-	set_index = find_last_object(spheres, sizeof(t_sphere));
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "sphere");
 	spheres[set_index].center = set_vec3(tokens[1], "sphere", 0);
 	spheres[set_index].radius = ft_atod(tokens[2]) / 2.;
 	spheres[set_index].rgb = set_rgb(tokens[3], "sphere");
+	set_index++;
 }
 
 static void	get_plane(char **tokens, t_plane *planes)
 {
-	int	set_index;
+	static int	set_index;
 
-	set_index = find_last_object(planes, sizeof(t_plane));
-	printf("plane set index: %i\n", set_index);
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "plane");
 	planes[set_index].point = set_vec3(tokens[1], "plane", 0);
 	planes[set_index].normal = set_vec3(tokens[2], "plane", 1);
 	planes[set_index].rgb = set_rgb(tokens[3], "plane");
+	set_index++;
 }
 
 static void	get_cylinder(char **tokens, t_cylinder *cylinders)
 {
-	int	set_index;
+	static int	set_index;
 
-	set_index = find_last_object(cylinders, sizeof(t_cylinder));
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "cylinder");
 	cylinders[set_index].center = set_vec3(tokens[1], "cylinder", 0);
 	cylinders[set_index].axis = set_vec3(tokens[2], "cylinder", 1);
 	cylinders[set_index].radius = ft_atod(tokens[3]) / 2.;
 	cylinders[set_index].height = ft_atod(tokens[4]);
 	cylinders[set_index].rgb = set_rgb(tokens[5], "cylinder");
+	set_index++;
 }
 
 static int	update_struct(t_objects *obj, char **tokens)
@@ -223,7 +211,7 @@ static int	update_struct(t_objects *obj, char **tokens)
 	else if (ft_strncmp("pl", tokens[0], 3) == 0)
 		get_plane(tokens, obj->planes);
 	else if (ft_strncmp("cy", tokens[0], 3) == 0)
-		get_cylinder(tokens, obj->cylinder);
+		get_cylinder(tokens, obj->cylinders);
 	else
 		return(call_error("invalid objects identifier\n", tokens[1]));
 	return (0);
