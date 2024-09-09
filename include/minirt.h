@@ -45,6 +45,7 @@ typedef struct 	s_mrt
 	// t_pixel		pixel;
 }				t_mrt;
 
+/* struct that we didnt already have - used in the parser */
 typedef struct
 {
 	t_vec3	center;
@@ -52,6 +53,7 @@ typedef struct
 	t_rgb	color;
 }			t_light;
 
+/* added for the parser */
 typedef struct
 {
 	t_ambient	ambient;

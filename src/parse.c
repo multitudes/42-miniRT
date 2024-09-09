@@ -86,6 +86,7 @@ double	ft_atod(char *str)
 	return (result);
 }
 
+/* Returns a t_rgb struct that contains values from the token */
 static t_rgb	set_rgb(char *token, char *func_name)
 {
 	char	**rgb_tok;
@@ -106,6 +107,12 @@ static t_rgb	set_rgb(char *token, char *func_name)
 	return(rgb(rgb_val[0], rgb_val[1], rgb_val[2]));
 }
 
+/*
+ * Returns t_vec3 with values from the token.
+ *
+ * Function is very similar to set_rgb, but sets doubles, checks
+ * if values from token are normalized, calls vec3().
+*/
 static t_vec3	set_vec3(char *token, char *func_name, int normalized)
 {
 	char	**coord_tok;
@@ -128,14 +135,23 @@ static t_vec3	set_vec3(char *token, char *func_name, int normalized)
 
 static void	get_ambient(char **tokens, t_ambient *data)
 {
+	static int	already_set;
+
+	if (already_set)
+		call_error("this element can only be set once", "ambient");
 	if (count_tokens(tokens) != 3)
 		call_error("invalid token amount", "ambient");
 	data->ratio = ft_atod(tokens[1]);
 	data->rgbcolor = set_rgb(tokens[2], "ambient");
+	already_set = 1;
 }
 
 static void	get_camera(char **tokens, t_camera *data)
 {
+	static int	already_set;
+
+	if (already_set)
+		call_error("this element can only be set once", "camera");
 	if (count_tokens(tokens) != 4)
 		call_error("invalid token amount", "camera");
 	data->center = set_vec3(tokens[1], "camera", 0);
@@ -143,12 +159,16 @@ static void	get_camera(char **tokens, t_camera *data)
 	data->hfov = ft_atod(tokens[3]);
 	if (data->hfov < 0. || data->hfov > 180.)
 		call_error("fov must be in range [0;180]", "camera");
+	already_set = 1;
 }
 
 static void	get_light(char **tokens, t_light *data)
 {
-	int	token_count;
+	static int	already_set;
+	int			token_count;
 
+	if (already_set)
+		call_error("this element can only be set once", "light");
 	token_count = count_tokens(tokens);
 	if (token_count < 3 || token_count > 4)
 		call_error("invalid token amount", "light");
@@ -157,6 +177,7 @@ static void	get_light(char **tokens, t_light *data)
 	if (data->brightness < 0. || data->brightness > 1.)
 		call_error("brightness must be normalized", "light");
 	data->color = set_rgb(tokens[3], "color");
+	already_set = 1;
 }
 
 static void	get_sphere(char **tokens, t_sphere *spheres)
@@ -199,7 +220,6 @@ static void	get_cylinder(char **tokens, t_cylinder *cylinders)
 
 static int	update_struct(t_objects *obj, char **tokens)
 {
-	// TODO: how do i check if the capitals already exist??
 	if (ft_strncmp("A", tokens[0], 2) == 0)
 		get_ambient(tokens, &obj->ambient);
 	else if (ft_strncmp("C", tokens[0], 2) == 0)
@@ -213,11 +233,10 @@ static int	update_struct(t_objects *obj, char **tokens)
 	else if (ft_strncmp("cy", tokens[0], 3) == 0)
 		get_cylinder(tokens, obj->cylinders);
 	else
-		return(call_error("invalid objects identifier\n", tokens[1]));
+		return(call_error("invalid object identifier\n", tokens[1]));
 	return (0);
 }
 
-// TODO: this will return a struct (we dont have memset)
 /* in case or error, the parser calls exit() */
 void	parse_input(char *filename, t_objects *obj)
 {
@@ -225,19 +244,15 @@ void	parse_input(char *filename, t_objects *obj)
     char    *line;
     char    **tokens;
 
-    // should check for extension
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
 		call_error("invalid file extension\n", NULL);
-
     fd = open(filename, O_RDONLY);
     if (fd == -1)
     	perror(filename), exit(1);
     while ((line = get_next_line(fd)) != NULL)
     {
-		// so if there is just a newline
 		if (ft_strlen(line) == 1)
 		    continue ;
-
 		tokens = ft_split(line, ' ');
 		if (tokens == NULL)
 			call_error("ft_split()", "parse_input");
