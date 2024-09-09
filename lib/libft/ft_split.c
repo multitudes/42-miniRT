@@ -3,159 +3,122 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/10 17:03:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2023/11/22 19:39:53 by lbrusa           ###   ########.fr       */
+/*   Created: 2023/11/07 13:21:23 by ralgaran          #+#    #+#             */
+/*   Updated: 2024/02/10 13:35:23 by ralgaran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#define IN   1  /* inside a word */
-#define OUT  0  /* outside a word */
-
-#include <stdio.h>
 /*
-SYNOPSIS
+	char	**ft_split(char const *s, char c)
+	-> splits a string into words on the char c
+*/
 
-char **ft_split(char const *s, char c);
+#include "libft.h"		/* malloc(), free(), NULL */
 
- s:  The string to be split.
- c:  The delimiter character.
- Return value
- The array of new strings resulting from the split.
- NULL if the allocation fails.
- Allocates (with malloc(3)) and returns an array
- of strings obtained by splitting ’s’ using the
- character ’c’ as a delimiter.  The array must end
- with a NULL pointer.
- allowed are malloc, free
- */
-// inspired by UNIX
-// I use a char** str because the string *str will be changed 
-// in the func
-//*ft_substr(char const *s, unsigned int start, size_t len)
-static char	*ft_strsep(char **str, char *delim)
+// works
+static int	word_count(char const *str, char c)
 {
-	char	*s;
-	int		c;
-	int		i;
-	char	*tok;	
+	int	count;
+	int	is_split;
 
-	if (*str == NULL || str == NULL)
-		return (NULL);
-	i = 0;
-	s = *str;
-	while (*s == *delim)
-		s++;
-	tok = s;
-	while (1)
-	{
-		c = *s++;
-		i++;
-		if (c == *delim || c == '\0')
-		{
-			if (c != 0)
-				i--;
-			*str = s;
-			return (ft_substr(tok, 0, i));
-		}
-	}
-}
-
-// Counting the words divided by the char c 
-static int	my_word_count(const char *s, char c)
-{
-	int		count;
-	int		state;
-
-	state = OUT;
 	count = 0;
-	while (*s != '\0' && (s != NULL))
+	is_split = 1;
+	while (*str)
 	{
-		if (*s == c)
-			state = OUT;
-		else if (state == OUT)
+		if (is_split && *str != c)
 		{
-			state = IN;
 			count++;
+			is_split = 0;
 		}
-		s++;
+		else if (!is_split && *str == c)
+			is_split = 1;
+		str++;
 	}
 	return (count);
 }
 
-static void	*ft_free(char **arr, int i)
+// works
+static int	word_len(char const *str, char c)
 {
-	while (i >= 0)
+	int	len;
+
+	len = 0;
+	while (*str)
 	{
-		if (arr[i] != NULL)
-			free(arr[i]);
-		i--;
+		if (*str == c)
+			break ;
+		len++;
+		str++;
 	}
-	free(arr);
+	return (len);
+}
+
+// works
+static char	*make_a_string(char const **s, char c)
+{
+	int		len;
+	int		added;
+	char	*string;
+	char	*string_start;
+
+	len = word_len(*s, c);
+	string = malloc ((len + 1) * sizeof(char));
+	if (!string)
+		return (NULL);
+	string_start = string;
+	added = 0;
+	while (added < len && **s != c)
+	{
+		*string++ = *(*s)++;
+		added++;
+	}
+	*string = '\0';
+	return (string_start);
+}
+
+void	*free_array(char **array, int strings)
+{
+	int	i;
+
+	if (!array)
+		return (NULL);
+	i = 0;
+	while (i < strings)
+	{
+		if (array[i])
+			free(array[i]);
+		i++;
+	}
+	free(array);
 	return (NULL);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	int		i;
-	int		count;
-	char	**arr;
+	int		string_count;
+	int		array_index;
+	char	*string;
+	char	**array;
 
-	if (s == NULL)
+	string_count = word_count(s, c);
+	array = malloc ((string_count + 1) * sizeof(char *));
+	if (!array)
 		return (NULL);
-	i = 0;
-	count = 0;
-	count = my_word_count(s, c);
-	arr = malloc(sizeof(char *) * (count + 1));
-	if (arr == NULL)
-		return (NULL);
-	while (i < count)
+	array_index = 0;
+	while (*s)
 	{
-		arr[i] = ft_strsep((char **)&s, &c);
-		if (arr[i] == NULL)
-			return (ft_free(arr, i--));
-		i++;
+		if (*s != c)
+		{
+			string = make_a_string(&s, c);
+			if (!string)
+				return (free_array(array, array_index));
+			array[array_index++] = string;
+		}
+		else
+			s++;
 	}
-	arr[i] = NULL;
-	return (arr);
+	array[array_index] = NULL;
+	return (array);
 }
-
-// #include <stdio.h>
-// void freeTab(char * * tab)
-// {
-// 	for (int i = 0; tab[i] != NULL; ++i)
-// 	{
-// 		printf("freeing in arr[%d] ===> %s\n", i, tab[i]);
-// 		free(tab[i]);
-// 	}
-// 	free(tab);
-// }
-// int main()
-// {
-// 	char **res = ft_split("hello!zzzzzzzz", 'z');
-// 	printf("==== %s \n",res[0]);
-// 	printf("==== %s \n",res[1]);
-// 	// printf("==== %s \n",res[2]);
-// 	// printf("==== %s \n",res[3]);
-// 	// printf("==== %s \n",res[4]);
-// 	// printf("==== %s \n",res[5]);
-// 	// printf("==== %s \n",res[6]);
-// 	// printf("==== %s \n",res[7]);
-// 	// printf("==== %s \n",res[8]);
-// 	// printf("==== %s \n",res[9]);
-// 	// printf("==== %s \n",res[10]);
-// 	// printf("==== %s \n",res[11]);
-// 	// printf("==== %s \n",res[12]);
-// 	// printf("==== %s \n",res[13]);
-// 	// char **res2 = ft_split("hello!zzzzzzzz", 'z');
-// 	// 	printf("==== %s \n",res2[0]);
-// 	// char test[45] = "--1-2--3---4----5-----42";
-// 	// char **res = ft_split(test, '-');
-// 	// printf("==== %s-\n",res[0]);
-// 	// printf("==== %s \n",res[1]);
-// 	// printf("==== %s \n",res[2]);
-// 	// printf("==== %s \n",res[3]);
-// freeTab(res);
-// }
