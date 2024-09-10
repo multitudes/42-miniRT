@@ -27,14 +27,9 @@ typedef struct 	s_hit_record {
 
 void 		set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);
 
-
 /* translated from cpp - remains to see if I will incorporate this into every object*/
 typedef struct 	s_hittable{
     bool 		(*hit)(const void* self, const t_ray* r, t_interval closest, t_hit_record* rec);
 } 				t_hittable;
 
-
-
 #endif
-
-

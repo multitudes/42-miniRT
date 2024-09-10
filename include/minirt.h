@@ -59,7 +59,6 @@ typedef struct 	s_mrt
 	// t_pixel		pixel;
 }				t_mrt;
 
-
 void	parse_input(char *filename, t_objects *obj);
 
 #endif

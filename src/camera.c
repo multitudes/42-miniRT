@@ -22,14 +22,14 @@
 #include "utils.h"
 #include "camera.h"
 
-t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
+t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 {
 	t_camera cam;
 
 	// ratio is not a given from the subject. we can try different values
 	cam.aspect_ratio = (double)16.0/9.0;
 	// cam.aspect_ratio = (double)16.0/16.0;
-	
+
 	// this is for the antialiasing
 	cam.samples_per_pixel = 10;
 	cam.max_depth = 5; // bouncing ray
@@ -41,19 +41,19 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	cam.lookfrom = center;
 	cam.hfov = hfov; // the book has vfow, but we use hfov
 	cam.vup = vec3(0,1,0);					// Camera-relative "up" direction
-	
+
 	cam.print = print_camera;
 
     // Calculate lookat from lookdir
     t_point3 lookat = vec3add(cam.lookfrom, direction);
 
 	double focal_length = length(vec3substr(center, lookat));
-	
+
 	double theta = degrees_to_radians(hfov);
     double h = tan(theta/2);
 	double viewport_width = 2 * h * focal_length;
     double viewport_height = viewport_width * ((double)cam.image_height/cam.image_width);
-	
+
 	// Calculate the u,v,w unit basis vectors for the camera coordinate frame.
     cam.w = unit_vector(vec3substr(cam.lookfrom, lookat));
     cam.u = unit_vector(cross(cam.vup, cam.w));
@@ -86,7 +86,7 @@ t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
 		t_ray new_ray = ray(rec.p, direction);
 		return vec3multscalar(ray_color(&new_ray, depth - 1, world), 0.3);
 	}
-	
+
 	t_vec3 unit_direction = unit_vector(r->dir);
 	double a = 0.5 * unit_direction.y + 1.0;
 	t_color white = color(1.0, 1.0, 1.0);
@@ -106,7 +106,7 @@ unsigned int    color_gamma_corrected(t_color color)
 }
 
 /*
-this is my draw pixel function. I write directly to the buffer 
+this is my draw pixel function. I write directly to the buffer
 and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib!
 */
 void write_color(t_mrt *data, int x, int y, t_color colorvector)
@@ -117,7 +117,7 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
     uint8_t *pixel;
 
     image = data->image;
-    offset = y * data->cam.image_width + x;
+    offset = y * data->objects.camera.image_width + x;
     pixel = &image->pixels[offset * 4];
     *(pixel++) = (uint8_t)(color >> 24);
     *(pixel++) = (uint8_t)(color >> 16);
@@ -129,14 +129,14 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
 t_ray get_ray(t_camera cam, int i, int j)
 {
 	t_vec3 offset = sample_square();
-	
+
 	t_vec3 iu = vec3multscalar(cam.pixel_delta_u, i + offset.x);
 	t_vec3 ju = vec3multscalar(cam.pixel_delta_v, j + offset.y);
-	t_vec3 partial = vec3add(iu, ju); 
+	t_vec3 partial = vec3add(iu, ju);
 	t_point3 pixel_sample = vec3add(cam.pixel00_loc, partial);
 
 	t_point3 ray_origin = cam.center;
-	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin); 
+	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin);
 	return ray(ray_origin, ray_direction);
 
 }
@@ -146,38 +146,36 @@ void    render(t_mrt *data, const t_hittablelist* world)
     int             x;
 	int             y;
 	int 			i;
-    
+
     y = 0;
     x = 0;
 	i = 0;
 
-    while (y < data->cam.image_height)
-    {	
+    while (y < data->objects.camera.image_height)
+    {
 		x = 0;
-        while (x < data->cam.image_width)
+        while (x < data->objects.camera.image_width)
         {
 			t_color pixel_color = color(0,0,0);
 			i = 0;
-			while (i < data->cam.samples_per_pixel)
+			while (i < data->objects.camera.samples_per_pixel)
 			{
-				t_ray r = get_ray(data->cam, x, y);
+				t_ray r = get_ray(data->objects.camera, x, y);
 
-				pixel_color = vec3add(pixel_color, ray_color(&r, data->cam.max_depth ,world));
-				
+				pixel_color = vec3add(pixel_color, ray_color(&r, data->objects.camera.max_depth ,world));
+
 				i++;
 			}
-
-            write_color(data, x, y, vec3divscalar(pixel_color, data->cam.samples_per_pixel));
+            write_color(data, x, y, vec3divscalar(pixel_color, data->objects.camera.samples_per_pixel));
 			x++;
-			// add bar progress
         }
-		debug("%.3d of %.3d\r", y, data->cam.image_height);
+		debug("%.3d of %.3d\r", y, data->objects.camera.image_height);
 		y++;
     }
 	debug("\nDONE!\n");
 }
 
-/** 
+/**
  * @brief print the camera information
  * in the rt file format
  * like C -50,0,20 		0,0,1	 70
@@ -185,8 +183,8 @@ void    render(t_mrt *data, const t_hittablelist* world)
 void			print_camera(const void* self)
 {
 	const t_camera *c = (const t_camera *)self;
-	printf("C\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\n", 
-	c->center.x, c->center.y, c->center.z, 
-	c->direction.x, c->direction.y, c->direction.z, 
+	printf("C\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\n",
+	c->center.x, c->center.y, c->center.z,
+	c->direction.x, c->direction.y, c->direction.z,
 	c->hfov);
 }

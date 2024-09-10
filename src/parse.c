@@ -249,7 +249,7 @@ static void	update_struct(t_objects *obj, char **tokens)
 	else if (ft_strncmp("cy", tokens[0], 3) == 0)
 		get_cylinder(tokens, obj->cylinders);
 	else
-		call_error("invalid object identifier\n", tokens[1], tokens);
+		call_error("invalid object identifier\n", tokens[0], tokens);
 }
 
 /* in case or error, the parser calls exit() */
