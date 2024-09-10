@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 15:14:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/10 13:09:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,6 @@
 # define FALSE 0
 # define OBJECT_COUNT 100
 
-typedef struct 	s_mrt
-{
-	void		*mlx;
-	void		*win_ptr;
-	mlx_image_t	*image;
-
-	t_camera cam;
-	t_ambient ambient_light;
-
-	t_sphere spheres[100];
-	t_plane planes[100];
-	t_cylinder cylinders[100];
-
-	// t_viewport	viewport;
-	// t_pixel		pixel;
-}				t_mrt;
-
 /* struct that we didnt already have - used in the parser */
 typedef struct
 {
@@ -63,6 +46,19 @@ typedef struct
 	t_plane		planes[OBJECT_COUNT];
 	t_cylinder	cylinders[OBJECT_COUNT];
 }			t_objects;
+
+typedef struct 	s_mrt
+{
+	void		*mlx;
+	void		*win_ptr;
+	mlx_image_t	*image;
+
+	t_objects	objects;
+
+	// t_viewport	viewport;
+	// t_pixel		pixel;
+}				t_mrt;
+
 
 void	parse_input(char *filename, t_objects *obj);
 
