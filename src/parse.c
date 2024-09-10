@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/06 17:20:25 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/09/10 18:53:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,14 +200,15 @@ static void	get_light(char **tokens, t_light *data)
 	already_set = 1;
 }
 
-static void	get_sphere(char **tokens, t_sphere *spheres)
+static void	get_sphere(char **tokens, t_objects *obj)
 {
 	static int	set_index;
 
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "sphere", tokens);
-	spheres[set_index] = sphere(set_vec3(tokens, 1, "sphere", 0), \
+	obj->spheres[set_index] = sphere(set_vec3(tokens, 1, "sphere", 0), \
 	 ft_atod(tokens[2]), set_rgb(tokens, 3, "sphere"));
+	obj->hittable_list[obj->list_idx++] = (t_hittable*)&spheres[set_index];
 	set_index++;
 }
 
@@ -256,8 +257,9 @@ static void	update_struct(t_objects *obj, char **tokens)
 void	parse_input(char *filename, t_objects *obj)
 {
     int	    fd;
-    char    *line;
+	char    *line;
     char    **tokens;
+	
 
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
 		call_error("invalid file extension\n", NULL, NULL);

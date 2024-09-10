@@ -67,13 +67,13 @@ int main(int argc, char **argv)
 	parse_input("example_scene.rt", &data.objects);
 	return (0);
 
-	t_hittable *list[4];
+
 
 	// TODO: needa to create a hittable list
-	list[0] = (t_hittable*)(&s1);
-	list[1] = (t_hittable*)(&s2);
-	list[2] = (t_hittable*)(&s3);
-	list[3] = (t_hittable*)(&s4);
+	// list[0] = (t_hittable*)(&s1);
+	// list[1] = (t_hittable*)(&s2);
+	// list[2] = (t_hittable*)(&s3);
+	// list[3] = (t_hittable*)(&s4);
 
 	const t_hittablelist world = hittablelist(list, 4);
 

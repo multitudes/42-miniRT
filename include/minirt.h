@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/10 13:09:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/10 18:46:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,13 @@ typedef struct
 {
 	t_ambient	ambient;
 	t_camera	camera;
-	t_light		light;
+	t_light		lights[OBJECT_COUNT];
 	t_sphere	spheres[OBJECT_COUNT];
 	t_plane		planes[OBJECT_COUNT];
 	t_cylinder	cylinders[OBJECT_COUNT];
+	t_cones		cones[OBJECT_COUNT];
+	t_hittable *list[OBJECT_COUNT * 5];
+	int 		list_idx;
 }			t_objects;
 
 typedef struct 	s_mrt
