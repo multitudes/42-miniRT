@@ -3,48 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/18 16:02:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/05/04 14:26:30 by lbrusa           ###   ########.fr       */
+/*   Created: 2023/12/07 21:23:46 by ralgaran          #+#    #+#             */
+/*   Updated: 2023/12/12 12:22:26 by ralgaran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+// includes
+# include <stdlib.h>		// malloc, free, NULL, size_t
+# include <unistd.h>		// read
+
+// macros
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 256
 # endif
 
-# ifndef OPEN_MAX
-#  define OPEN_MAX 256
-# endif
-
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdint.h>
-# include "../libft.h"
-
-typedef struct s_blk
-{
-	ssize_t			size;
-	ssize_t			has_nl;
-	void			*content;
-	struct s_blk	*next;
-}					t_blk;
-
+// functions
+int		ft_my_strlen(char	*str);
 char	*get_next_line(int fd);
-
-char	*_get_line_and_stash(t_blk **line, char *buf, ssize_t n);
-int		_fr(t_blk **line, char *s);
-ssize_t	_app_str(t_blk *line, char *str, ssize_t n);
-ssize_t	_strchr_newline(char *str);
-t_blk	*_lstnew(void *content, ssize_t n);
-int		_safety_check(int fd, char **buf, ssize_t *n);
-ssize_t	read_again(int fd, char **buf, ssize_t *n);
-ssize_t	_get_content_in_lst(t_blk *node, char *line_string);
+char	*make_new_line(char *line, char *buffer);
+void	ft_strcpy(char *dest, char *src);
+void	ft_strcpy_until_newline(char *line, char *buffer, int *line_valid);
+void	make_new_remainder(char *remaider, char *buffer);
 
 #endif
