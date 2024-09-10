@@ -67,15 +67,15 @@ void	hook(void *param)
 		debug("DOWN key pressed");
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 	{
-		mrt->cam.center = rotate_camera(mrt->cam.center, 5);
-		mrt->cam.direction = calculate_direction(mrt->cam.center);
-		mrt->renderscene(mrt, &(mrt->world));
+		// mrt->cam.center = rotate_camera(mrt->cam.center, 5);
+		// mrt->cam.direction = calculate_direction(mrt->cam.center);
+		// mrt->renderscene(mrt, &(mrt->world));
 		debug("LEFT key pressed");
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
-		mrt->cam.center = rotate_camera(mrt->cam.center, -5);
-		mrt->cam.direction = calculate_direction(mrt->cam.center);
-		mrt->renderscene(mrt, &(mrt->world));
+		// mrt->cam.center = rotate_camera(mrt->cam.center, -5);
+		// mrt->cam.direction = calculate_direction(mrt->cam.center);
+		// mrt->renderscene(mrt, &(mrt->world));
 		debug("RIGHT key pressed");
 	}
 	
@@ -105,38 +105,9 @@ int init_window(t_mrt *data)
     return (TRUE);
 }
 
-<<<<<<< HEAD
-=======
-bool init_data(t_mrt *data)
-{
-	/***************************** */
-	/* 			MLX42 			   */	
-	/***************************** */
-    data->mlx = NULL;
-    data->win_ptr = NULL;
-    data->image = NULL;
-	data->renderscene = render;
-
-	/***************************** */
-	/* 			camera 			   */	
-	/***************************** */
-	t_point3 center = point3(0,4,4);
-	t_vec3 direction = vec3(0,-2,-2);
-	data->cam = init_cam(center, direction, 60);
-	data->cam.print((void*)(&(*data).cam));
-
-	/***************************** */
-	/* 		ambient light		   */	
-	/***************************** */
-	t_ambient ambient_light = ambient(0.2, rgb(255,255,255));
-	data->ambient_light = ambient_light;
-	ambient_light.print((void*)&ambient_light);
-
-    return (true);
-}
 
 
->>>>>>> dev
+
 int main(int argc, char **argv)
 {
     t_mrt data;
@@ -146,7 +117,7 @@ int main(int argc, char **argv)
 	ft_memset(&data, 0, sizeof(t_mrt));
 
 	parse_input("example_scene.rt", &data.objects);
-	return (0);
+	// return (0);
 
 
 
@@ -156,7 +127,7 @@ int main(int argc, char **argv)
 	// list[2] = (t_hittable*)(&s3);
 	// list[3] = (t_hittable*)(&s4);
 
-	const t_hittablelist world = hittablelist(list, 4);
+	const t_hittablelist world = hittablelist(data.objects.list, data.objects.list_idx);
 
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
@@ -179,8 +150,8 @@ int main_new(int argc, char **argv)
     t_mrt data;
     (void)argv;
 	(void)argc;
-	if (!init_data(&data))
-        return (1);
+	// if (!init_data(&data))
+    //     return (1);
 
 	// world
 	t_hittable *list[7];

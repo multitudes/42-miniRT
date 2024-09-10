@@ -11,13 +11,9 @@ NAME 			= 	miniRT
 
 CC 				= 	cc
 
-<<<<<<< HEAD
-CFLAGS 			= 	-Wextra -Wall -Werror -g
-CFLAGS 			+= 	-Iinclude -Isrc -Wunreachable-code 
-=======
 CFLAGS 			= 	-Wextra -Wall -Werror
+CFLAGS			+= -g
 CFLAGS 			+= 	-Iinclude -Isrc -O3 -Wunreachable-code -Ofast
->>>>>>> dev
 # CFLAGS += -DDEBUG=1
 
 # directories
@@ -35,14 +31,9 @@ LDFLAGS			= 	-Wl,--gc-sections -Wl,-O2 -Wl,--as-needed -Wl,--strip-all
 INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
-<<<<<<< HEAD
-SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c \
-											vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c parse.c)
-=======
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
 											vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
-											texture.c material.c onb.c)
->>>>>>> dev
+											texture.c material.c onb.c parse.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \

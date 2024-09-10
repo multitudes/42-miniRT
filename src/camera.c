@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 11:14:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/10 19:32:58 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,28 +22,18 @@
 #include "utils.h"
 #include "camera.h"
 
-<<<<<<< HEAD
-t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
-=======
 #define ASPECT_RATIO (double)16.0/16.0
 
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
->>>>>>> dev
 {
 	t_camera cam;
 	cam.background = color(0.7,0.7,0.7); // grey
 	cam.samples_per_pixel = 50;
 	cam.max_depth = 50; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
-<<<<<<< HEAD
-	cam.aspect_ratio = (double)16.0/9.0;
-	// cam.aspect_ratio = (double)16.0/16.0;
-
-=======
 	// cam.aspect_ratio = (double)16.0/9.0;
 	cam.aspect_ratio = ASPECT_RATIO;
 	
->>>>>>> dev
 	// this is for the antialiasing
 	cam.image_width = IMAGE_WIDTH; // also not given in the subject or file, smaller is faster - defined in minirt.h
 	cam.image_height = IMAGE_WIDTH / cam.aspect_ratio;
@@ -159,13 +149,6 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	}
 
-<<<<<<< HEAD
-	t_vec3 unit_direction = unit_vector(r->dir);
-	double a = 0.5 * unit_direction.y + 1.0;
-	t_color white = color(1.0, 1.0, 1.0);
-	t_color blue = color(0.5, 0.7, 1.0);
-	return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
-=======
 	// t_vec3 x_axis = vec3(100,0,0);
 	// t_vec3 y_axis = vec3(0,100,0);
 	// t_vec3 z_axis = vec3(0,0,100);
@@ -182,6 +165,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
 	// t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
 	return cam->background;
+	
 	// return vec3add(start, end);
 	// if (depth <= 0)
 	// 	return color(0, 0, 0);
@@ -223,7 +207,6 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// t_color white = color(1.0, 1.0, 1.0);
 	// t_color blue = color(0.5, 0.7, 1.0);
 	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
->>>>>>> dev
 
 
 }
@@ -294,13 +277,8 @@ void    render(t_mrt *data, const t_hittablelist* world)
 			{
 				t_ray r = get_ray(data->objects.camera, x, y);
 
-				pixel_color = vec3add(pixel_color, ray_color(&r, data->objects.camera.max_depth ,world));
-
-<<<<<<< HEAD
-=======
-				pixel_color = vec3add(pixel_color, ray_color(&(data->cam), &r, data->cam.max_depth ,world));
+				pixel_color = vec3add(pixel_color, ray_color(&(data->objects.camera), &r, data->objects.camera.max_depth ,world));
 				
->>>>>>> dev
 				i++;
 			}
             write_color(data, x, y, vec3divscalar(pixel_color, data->objects.camera.samples_per_pixel));
