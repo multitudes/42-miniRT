@@ -171,3 +171,12 @@ miniRT
 obj/cylinder.o
 obj/cylinder.o
 obj/plane.o
+miniRT
+obj/plane.o
+obj/cylinder.o
+miniRT
+obj/ambient.o
+obj/material.o
+obj/onb.o
+obj/rtw_stb_image.o
+obj/texture.o

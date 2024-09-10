@@ -6,7 +6,11 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/09/10 18:46:19 by lbrusa           ###   ########.fr       */
+=======
+/*   Updated: 2024/09/08 11:13:36 by lbrusa           ###   ########.fr       */
+>>>>>>> dev
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +61,11 @@ typedef struct 	s_mrt
 	mlx_image_t	*image;
 
 	t_objects	objects;
+
+	// hittable list
+	t_hittablelist world;
+	// render function
+	    void (*renderscene)(struct s_mrt *, const t_hittablelist *);
 
 	// t_viewport	viewport;
 	// t_pixel		pixel;

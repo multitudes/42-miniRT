@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 13:08:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/08 11:14:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,37 @@
 #include "utils.h"
 #include "camera.h"
 
+<<<<<<< HEAD
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
+=======
+#define ASPECT_RATIO (double)16.0/16.0
+
+t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
+>>>>>>> dev
 {
 	t_camera cam;
-
+	cam.background = color(0.7,0.7,0.7); // grey
+	cam.samples_per_pixel = 50;
+	cam.max_depth = 50; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
+<<<<<<< HEAD
 	cam.aspect_ratio = (double)16.0/9.0;
 	// cam.aspect_ratio = (double)16.0/16.0;
 
+=======
+	// cam.aspect_ratio = (double)16.0/9.0;
+	cam.aspect_ratio = ASPECT_RATIO;
+	
+>>>>>>> dev
 	// this is for the antialiasing
-	cam.samples_per_pixel = 10;
-	cam.max_depth = 5; // bouncing ray
 	cam.image_width = IMAGE_WIDTH; // also not given in the subject or file, smaller is faster - defined in minirt.h
 	cam.image_height = IMAGE_WIDTH / cam.aspect_ratio;
 	cam.image_height = (cam.image_height < 1) ? 1 : cam.image_height;
 	cam.center = center;  // refactor later
 	cam.direction = direction;
 	cam.lookfrom = center;
-	cam.hfov = hfov; // the book has vfow, but we use hfov
+
+	cam.hfov = clamp(interval(1, 170), hfov); // the book has vfow, but we use hfov
 	cam.vup = vec3(0,1,0);					// Camera-relative "up" direction
 
 	cam.print = print_camera;
@@ -73,25 +86,144 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	cam.pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam.pixel_delta_u, cam.pixel_delta_v), 2));
     return cam;
 }
+#include <stdbool.h>
+#include <math.h>
 
-t_color	ray_color(t_ray *r, int depth, const t_hittablelist *world)
+// Epsilon value for floating-point comparison
+#define EPSILON 1e-1
+
+// Check if two floating-point numbers are approximately equal
+bool is_near_zero(double value) {
+    return fabs(value) < EPSILON;
+}
+
+// Function to check if a ray intersects an axis-aligned line
+bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
+    // Check for intersection with x-axis (line along the x-axis)
+    if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
+        // The ray intersects the x-axis when y = 0 and z = 0
+        if (!is_near_zero(r->orig.y) || !is_near_zero(r->orig.z)) {
+            // Ray origin is not on the yz-plane, so calculate the intersection point
+            double t = -r->orig.y / r->dir.y; // Find where y = 0
+            double z_at_t = r->orig.z + t * r->dir.z;
+            return is_near_zero(z_at_t); // Check if z also equals 0
+        }
+        return true; // If the ray origin is on the yz-plane
+    }
+
+    // Check for intersection with y-axis (line along the y-axis)
+    if (axis->x == 0 && axis->y != 0 && axis->z == 0) {
+        // The ray intersects the y-axis when x = 0 and z = 0
+        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.z)) {
+            // Ray origin is not on the xz-plane, so calculate the intersection point
+            double t = -r->orig.x / r->dir.x; // Find where x = 0
+            double z_at_t = r->orig.z + t * r->dir.z;
+            return is_near_zero(z_at_t); // Check if z also equals 0
+        }
+        return true; // If the ray origin is on the xz-plane
+    }
+
+    // Check for intersection with z-axis (line along the z-axis)
+    if (axis->x == 0 && axis->y == 0 && axis->z != 0) {
+        // The ray intersects the z-axis when x = 0 and y = 0
+        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.y)) {
+            // Ray origin is not on the xy-plane, so calculate the intersection point
+            double t = -r->orig.x / r->dir.x; // Find where x = 0
+            double y_at_t = r->orig.y + t * r->dir.y;
+            return is_near_zero(y_at_t); // Check if y also equals 0
+        }
+        return true; // If the ray origin is on the xy-plane
+    }
+
+    // If none of the conditions match, the ray does not intersect the line
+    return false;
+}
+
+t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world)
 {
-	t_hit_record rec;
+	(void)cam;
 
+	t_hit_record rec;
+	
 	if (depth <= 0)
-		return color(0, 0, 0);
+        return color(0,0,0);
 	if (hit_world(world, r, interval(0.001, INFINITY), &rec))
 	{
-		t_vec3 direction = vec3add(rec.normal, random_unit_vector());
-		t_ray new_ray = ray(rec.p, direction);
-		return vec3multscalar(ray_color(&new_ray, depth - 1, world), 0.3);
+		t_ray scattered;
+		t_color attenuation = color(0,0,0);
+		t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
+		if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
+		 	return color_from_emission;
+		t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world));
+		return vec3add(color_from_emission, color_from_scatter);
+
 	}
 
+<<<<<<< HEAD
 	t_vec3 unit_direction = unit_vector(r->dir);
 	double a = 0.5 * unit_direction.y + 1.0;
 	t_color white = color(1.0, 1.0, 1.0);
 	t_color blue = color(0.5, 0.7, 1.0);
 	return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
+=======
+	// t_vec3 x_axis = vec3(100,0,0);
+	// t_vec3 y_axis = vec3(0,100,0);
+	// t_vec3 z_axis = vec3(0,0,100);
+	// 	if (ray_intersects_line(r, &x_axis)) {
+	// 	return color(1.0, 0.0, 0.0); // Red for x-axis
+	// } else if (ray_intersects_line(r, &y_axis)) {
+	// 	return color(0.0, 1.0, 0.0); // Green for y-axis
+	// } else if (ray_intersects_line(r, &z_axis)) {
+	// 	return color(0.0, 0.0, 1.0); // Blue for z-axis
+	// }
+
+	// t_vec3 unit_direction = unit_vector(r->dir);
+	// double a = 0.5 * (unit_direction.y + 1.0);
+	// t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
+	// t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
+	return cam->background;
+	// return vec3add(start, end);
+	// if (depth <= 0)
+	// 	return color(0, 0, 0);
+
+	// t_hit_record rec;
+	// if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
+	// {
+	// 	// t_vec3 unit_direction = unit_vector(r->dir);
+	// 	// double a = 0.5 * unit_direction.y + 1.0;
+	// 	// t_color white = color(1.0, 1.0, 1.0);
+	// 	// t_color blue = color(0.5, 0.7, 1.0);
+	// 	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
+	// 	return cam->background; // it should be the cam beckground but since this is c and raycolor is not a member func i have no access to cam
+	// }
+
+
+	// t_ray scattered;
+	// t_color attenuation;
+	// t_color color_from_emission = rec.mat->emit(rec.mat, &rec, rec.u, rec.v, rec.p);
+	
+	// if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
+	// 	return color_from_emission;
+		
+	// t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth-1, world));
+	
+	// return vec3add(color_from_emission, color_from_scatter);
+
+	// t_ray scattered;
+	// t_color attenuation;
+	// if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
+	// 	return vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world));
+	// t_vec3 direction = vec3add(rec.normal, random_unit_vector());
+	// t_ray scattered = ray(rec.p, direction);
+	// return vec3multscalar(ray_color(&scattered, depth - 1, world), 0.5);
+	// return color(0,0,0);
+	
+	// t_vec3 unit_direction = unit_vector(r->dir);
+	// double a = 0.5 * unit_direction.y + 1.0;
+	// t_color white = color(1.0, 1.0, 1.0);
+	// t_color blue = color(0.5, 0.7, 1.0);
+	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
+>>>>>>> dev
 
 
 }
@@ -164,6 +296,11 @@ void    render(t_mrt *data, const t_hittablelist* world)
 
 				pixel_color = vec3add(pixel_color, ray_color(&r, data->objects.camera.max_depth ,world));
 
+<<<<<<< HEAD
+=======
+				pixel_color = vec3add(pixel_color, ray_color(&(data->cam), &r, data->cam.max_depth ,world));
+				
+>>>>>>> dev
 				i++;
 			}
             write_color(data, x, y, vec3divscalar(pixel_color, data->objects.camera.samples_per_pixel));

@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray.h                                              :+:      :+:    :+:   */
+/*   onb.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/18 15:44:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 17:03:32 by lbrusa           ###   ########.fr       */
+/*   Created: 2024/07/27 18:22:44 by lbrusa            #+#    #+#             */
+/*   Updated: 2024/07/27 18:58:20 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RAY_H
-# define RAY_H
+#ifndef ONB_H
+#define ONB_H
 
 #include "vec3.h"
 
-typedef struct s_ray
-{
-	t_point3	orig;
-	t_vec3		dir;
-}				t_ray;
+typedef struct 	s_onb {
+    t_vec3		u;
+	t_vec3		v;
+	t_vec3		w;
+} 				t_onb;
 
-t_ray			ray(const t_point3 origin, const t_vec3 direction);
-const t_point3	*ray_origin(const t_ray *ray);
-const t_vec3	*ray_direction(const t_ray *ray);
-t_point3		point_at(const t_ray *ray, double t);
+void onb_build_from_w(t_onb *basis, const t_vec3 *w);
+t_vec3 onb_local(const t_onb *basis, double a, double b, double c);
+t_vec3 onb_local_vec(const t_onb *basis, t_vec3 a);
 
 #endif

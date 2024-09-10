@@ -12,6 +12,11 @@
 		"sphere.h": "c",
 		"ambient.h": "c",
 		"mlx42.h": "c",
-		"hittable_list.h": "c"
+		"hittable_list.h": "c",
+		"material.h": "c",
+		"limits.h": "c",
+		"stdio.h": "c",
+		"utils.h": "c",
+		"texture.h": "c"
 	}
 }

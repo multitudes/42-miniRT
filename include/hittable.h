@@ -6,10 +6,9 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 16:59:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/04 18:13:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/07 16:39:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef HITTABLE_H
 #define HITTABLE_H
@@ -17,19 +16,33 @@
 #include "ray.h"
 #include <stdbool.h>
 #include "interval.h"
+#include "material.h"
+
+typedef struct s_material t_material;
 
 typedef struct 	s_hit_record {
+	t_material 	*mat;
     t_point3 	p;
     t_vec3 		normal;
     double 		t;
 	bool 		front_face;
+	double		u;
+	double		v;
 } 				t_hit_record;
 
+<<<<<<< HEAD
 void 		set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);
 
 /* translated from cpp - remains to see if I will incorporate this into every object*/
+=======
+>>>>>>> dev
 typedef struct 	s_hittable{
     bool 		(*hit)(const void* self, const t_ray* r, t_interval closest, t_hit_record* rec);
 } 				t_hittable;
 
+<<<<<<< HEAD
+=======
+void 		set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);
+
+>>>>>>> dev
 #endif

@@ -18,9 +18,9 @@ t_ambient ambient(double ratio, t_rgb rgb)
 {
 	t_ambient result;
 
-	result.ratio = ratio;
+	result.ratio = clamp(interval(0,1), ratio);
 	result.rgbcolor = rgb;
-	result.color = color(0,0,0);
+	result.color = rgb_to_color(rgb);
 	result.print = &print_ambient;
 	return result;
 }
