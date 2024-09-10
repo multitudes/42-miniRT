@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 15:27:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/10 11:40:53 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material
 	s.rgb = rgbcolor;
 	s.color = rgb_to_color(rgbcolor);
  	s.mat = mat; 
-	debug("sphere_mat emit: %p", s.mat->emit);
 	return s;
 }
 
@@ -235,7 +234,9 @@ vec3 random(const point3& origin) const override {
 double sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
 	const t_sphere *s = (t_sphere *)self;
+
 	t_hit_record rec;
+	
 	const t_ray r = ray(*orig, *dir);
 	if (!hit_sphere(s, &r, interval(0.001, INFINITY), &rec))
 		return 0;
@@ -244,7 +245,7 @@ double sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *di
     double distance_squared = length_squared(vec3substr(s->center, *orig));
 
     // Calculate cosine of maximum theta (angle between ray and normal)
-    double cos_theta_max = sqrt(1.0 - s->radius * s->radius / distance_squared);
+    double cos_theta_max = sqrt(1.0 - (s->radius * s->radius / distance_squared));
 
     // Calculate solid angle
     double solid_angle = 2.0 * PI * (1.0 - cos_theta_max);

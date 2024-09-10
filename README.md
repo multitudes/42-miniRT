@@ -171,6 +171,7 @@ Here are a few really good resources by [Fabien Sanglard](https://fabiensanglard
 - scratchapixel.com : Great raytracer lessons written by professionals that have worked on Toy Story, Avatar, Lord of the Rings, Harry Potter, Pirates of the Caribbean and many other movies.  
 - An Introduction to Ray Tracing : An old book but a Classic.  
 - Physically Based Rendering : Heavy on maths but really good and well explained.  
+- http://cosinekitty.com/raytrace/raytrace_us.pdf  
 
 References:
 https://graphicscodex.com/app/app.html  

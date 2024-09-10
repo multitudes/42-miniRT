@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 19:10:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/10 11:14:15 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 #include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 800
+#define IMAGE_WIDTH 400
 
 // Epsilon value for floating-point comparison
 #define EPSILON 1e-1
@@ -36,7 +36,7 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	t_camera cam;
 	cam.background = color(0.7,0.7,0.7); // grey
 	cam.samples_per_pixel = 100;
-	cam.max_depth = 50; // bouncing ray
+	cam.max_depth = 5; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
 	cam.aspect_ratio = ASPECT_RATIO;
