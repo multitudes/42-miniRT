@@ -181,3 +181,4 @@ obj/onb.o
 obj/rtw_stb_image.o
 obj/texture.o
 .vscode/c_cpp_properties.json
+obj/hittable_list.o

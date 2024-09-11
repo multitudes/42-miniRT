@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:05:52 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 15:29:13 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 12:52:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "vec3.h"
 #include "onb.h"
-#include "hittable.h"
+#include "hittable_list.h"
 
 typedef struct	s_pdf
 {
@@ -39,7 +39,7 @@ typedef struct	s_hittable_pdf
 {
 	t_pdf	base;
 	t_vec3	origin;
-	t_hittable *object;
+	t_hittablelist *objects;
 }				t_hittable_pdf;
 
 typedef struct	s_mixture_pdf
@@ -55,7 +55,7 @@ void	cosine_pdf_init(t_cosine_pdf *cos_pdf, const t_vec3 *w);
 double	cosine_pdf_value(const void *self, const t_vec3 *direction);
 t_vec3	cosine_pdf_generate( void *self);
 
-void hittable_pdf_init(t_hittable_pdf *hittable_pdf, t_hittable *object, const t_vec3 *origin);
+void hittable_pdf_init(t_hittable_pdf *hittable_pdf, t_hittablelist *objects, const t_vec3 *origin);
 double hittable_pdf_value(const void *self, const t_vec3 *direction);
 t_vec3 hittable_pdf_generate(void *self);
 
