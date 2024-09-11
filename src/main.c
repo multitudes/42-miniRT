@@ -28,14 +28,14 @@ void	exit_gracefully(mlx_t *mlx)
 //keep y the same rotate around the y axis
 t_point3 rotate_camera(t_point3 camera, double angle_degrees) {
     double angle_radians = degrees_to_radians(angle_degrees);
-    
+
     // Keep the y coordinate the same
     double new_y = camera.y;
-    
+
     // Calculate the new x and z using the rotation matrix
     double new_x = camera.x * cos(angle_radians) - camera.z * sin(angle_radians);
     double new_z = camera.x * sin(angle_radians) + camera.z * cos(angle_radians);
-    
+
     // Return the new camera position
     return point3(new_x, new_y, new_z);
 }
@@ -45,7 +45,7 @@ t_point3 rotate_camera(t_point3 camera, double angle_degrees) {
 t_point3 calculate_direction(t_point3 camera_pos) {
     // Direction vector from the camera to the origin (0, 0, 0)
     t_point3 direction = point3(-camera_pos.x, -camera_pos.y, -camera_pos.z);
-    
+
     // Normalize the direction vector
     return unit_vector(direction);
 }
@@ -78,7 +78,7 @@ void	hook(void *param)
 		// mrt->renderscene(mrt, &(mrt->world));
 		debug("RIGHT key pressed");
 	}
-	
+
 }
 
 
@@ -114,12 +114,12 @@ int main(int argc, char **argv)
     (void)argv;
 	(void)argc;
 
+
+	// check if argc is 2
+
 	ft_memset(&data, 0, sizeof(t_mrt));
 
 	parse_input("example_scene.rt", &data.objects);
-	// return (0);
-
-
 
 	// TODO: needa to create a hittable list
 	// list[0] = (t_hittable*)(&s1);
@@ -127,7 +127,7 @@ int main(int argc, char **argv)
 	// list[2] = (t_hittable*)(&s3);
 	// list[3] = (t_hittable*)(&s4);
 
-	const t_hittablelist world = hittablelist(data.objects.list, data.objects.list_idx);
+	const t_hittablelist world = hittablelist(data.objects.hit_list, data.objects.hit_idx);
 
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
@@ -162,7 +162,7 @@ int main_new(int argc, char **argv)
 
 	// t_sphere s2 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
 	// s2.print((void*)&s2);
-	
+
 	// checker texture sphere
 	t_lambertian lambertian_material;
 	t_checker_texture checker_texture1;
@@ -173,7 +173,7 @@ int main_new(int argc, char **argv)
 	checker_texture_init(&checker_texture1, 0.31, &even1, &odd1);
 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
 	t_sphere s2 = sphere_mat(point3(0, -500.5, -1), 1000, rgb(0,0,0), (t_material*)&lambertian_material);
-	
+
 	// yellow sphere
 	t_sphere s3 = sphere(vec3(-1, 0.0, -2.0), 1, rgb(255,219,0));
 	s3.print((void*)&s3);
@@ -243,7 +243,7 @@ int main_new(int argc, char **argv)
 
 	data.world = world;
 	render(&data, &world);
-	
+
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 

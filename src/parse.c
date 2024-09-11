@@ -12,7 +12,6 @@
 
 #include "libft.h"  // get_next_line should be here
 #include <fcntl.h>  /* open() */
-#include <math.h>
 #include <stdio.h>  /* perror() */
 #include "minirt.h"
 #include <assert.h>
@@ -181,23 +180,26 @@ static void	get_camera(char **tokens, t_camera *data)
 	already_set = 1;
 }
 
-static void	get_light(char **tokens, t_light *data)
+/*
+ * Puts the light into the t_light array and the pointer to it
+ * into the hittable_list.
+ *
+ * This function is longer than others, because light didnrt have an init func.
+*/
+static void	get_light(char **tokens, t_objects *obj)
 {
-	static int	already_set;
-	int			token_count;
+	static int	set_index;
 
-	if (already_set)
-		call_error("this element can only be set once", "light", tokens);
-	token_count = count_tokens(tokens);
-	if (token_count < 3 || token_count > 4)
+	if (count_tokens(tokens) != 4)
 		call_error("invalid token amount", "light", tokens);
-	data->center = set_vec3(tokens, 1, "light", 0);
-	data->brightness = ft_atod(tokens[2]);
-	if (data->brightness < 0. || data->brightness > 1.)
+	obj->lights[set_index].center = set_vec3(tokens, 1, "light", 0);
+	obj->lights[set_index].brightness = ft_atod(tokens[2]);
+	if (obj->lights[set_index].brightness < 0. || obj->lights[set_index].brightness > 1.)
 		call_error("brightness must be normalized", "light", tokens);
-	if (token_count == 4)
-		data->color = set_rgb(tokens, 3, "color");
-	already_set = 1;
+	obj->lights[set_index].color = set_rgb(tokens, 3, "color");
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->spheres[set_index];
+	obj->hit_idx++;
+	set_index++;
 }
 
 static void	get_sphere(char **tokens, t_objects *obj)
@@ -206,32 +208,43 @@ static void	get_sphere(char **tokens, t_objects *obj)
 
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "sphere", tokens);
+	if (count_tokens(tokens) != 4)
+		call_error("invalid token amount", "light", tokens);
 	obj->spheres[set_index] = sphere(set_vec3(tokens, 1, "sphere", 0), \
-	 ft_atod(tokens[2]), set_rgb(tokens, 3, "sphere"));
-	obj->hittable_list[obj->list_idx++] = (t_hittable*)&spheres[set_index];
+		ft_atod(tokens[2]), set_rgb(tokens, 3, "sphere"));
+	obj->hit_list[obj->hit_idx] = (t_hittable*)&obj->spheres[set_index];
+	obj->hit_idx++;
 	set_index++;
 }
 
-static void	get_plane(char **tokens, t_plane *planes)
+static void	get_plane(char **tokens, t_objects *obj)
 {
 	static int	set_index;
 
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "plane", tokens);
-	planes[set_index] = plane(set_vec3(tokens, 1, "plane", 0), \
+	if (count_tokens(tokens) != 4)
+		call_error("invalid token amount", "plane", tokens);
+	obj->planes[set_index] = plane(set_vec3(tokens, 1, "plane", 0), \
 		set_vec3(tokens, 2, "plane", 1), set_rgb(tokens, 3, "plane"));
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->planes[set_index];
+	obj->hit_idx++;
 	set_index++;
 }
 
-static void	get_cylinder(char **tokens, t_cylinder *cylinders)
+static void	get_cylinder(char **tokens, t_objects *obj)
 {
 	static int	set_index;
 
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "cylinder", tokens);
-	cylinders[set_index] = cylinder(set_vec3(tokens, 1, "cylinder", 0), \
-	 set_vec3(tokens, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]),
-	 set_rgb(tokens, 5, "cylinder"));
+	if (count_tokens(tokens) != 5)
+		call_error("invalid token amount", "cylinder", tokens);
+	obj->cylinders[set_index] = cylinder(set_vec3(tokens, 1, "cylinder", 0), \
+		set_vec3(tokens, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
+		set_rgb(tokens, 5, "cylinder"));
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];
+	obj->hit_idx++;
 	set_index++;
 }
 
@@ -242,13 +255,13 @@ static void	update_struct(t_objects *obj, char **tokens)
 	else if (ft_strncmp("C", tokens[0], 2) == 0)
 		get_camera(tokens, &obj->camera);
 	else if (ft_strncmp("L", tokens[0], 2) == 0)
-		get_light(tokens, &obj->light);
+		get_light(tokens, obj);
 	else if (ft_strncmp("sp", tokens[0], 3) == 0)
-		get_sphere(tokens, obj->spheres);
+		get_sphere(tokens, obj);
 	else if (ft_strncmp("pl", tokens[0], 3) == 0)
-		get_plane(tokens, obj->planes);
+		get_plane(tokens, obj);
 	else if (ft_strncmp("cy", tokens[0], 3) == 0)
-		get_cylinder(tokens, obj->cylinders);
+		get_cylinder(tokens, obj);
 	else
 		call_error("invalid object identifier\n", tokens[0], tokens);
 }
@@ -259,7 +272,6 @@ void	parse_input(char *filename, t_objects *obj)
     int	    fd;
 	char    *line;
     char    **tokens;
-	
 
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
 		call_error("invalid file extension\n", NULL, NULL);

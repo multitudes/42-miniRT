@@ -46,8 +46,8 @@ typedef struct
 	t_plane		planes[OBJECT_COUNT];
 	t_cylinder	cylinders[OBJECT_COUNT];
 	// t_cones		cones[OBJECT_COUNT];
-	t_hittable *list[OBJECT_COUNT * 5];
-	int 		list_idx;
+	t_hittable *hit_list[OBJECT_COUNT * 5];
+	int 		hit_idx;
 }			t_objects;
 
 typedef struct 	s_mrt
