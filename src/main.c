@@ -150,11 +150,11 @@ int main(int argc, char **argv)
 	ambient_light.print((void*)&ambient_light);
 
 	// world
-	t_hittable *list[2];
+	t_hittable *list[4];
 
 	// red sphere
-	t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
-	s1.print((void*)&s1);
+	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	// s1.print((void*)&s1);
 
 	/***********************************/
 	/* 			light        		   */
@@ -163,18 +163,34 @@ int main(int argc, char **argv)
 	t_solid_color difflight_color;
 	solid_color_init(&difflight_color, color(20, 20, 20));
 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
-	t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
-	// t_sphere s6 = sphere_mat(point3( 190,290,190 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	t_quad s0 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	t_quad s1 = quad(point3(190, 90, 190), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+
+	t_sphere s6 = sphere_mat(point3( 190,290,190 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+
+
+
+	t_lambertian smallsphere;
+	t_solid_color smallsphere_color;
+	solid_color_init(&smallsphere_color, color(0.7, 0.1, 0.1));
+   	lambertian_init_tex(&smallsphere, (t_texture*)&smallsphere_color);
+	t_sphere s2 = sphere_mat(point3(90, 100.5, 90), 2.0, rgb(255,0,0),(t_material*)&smallsphere);
+	// t_quad s2 = quad(point3(90, 100.5, 90), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&smallsphere);
+	// t_sphere s2 = sphere_mat(point3(90, 100.5, 90), 90, rgb(255,0,0), (t_material*)&lambertian_material);
 	
-	list[0] = (t_hittable*)(&s1);
-	list[1] = (t_hittable*)(&s6);
+	list[0] = (t_hittable*)(&s0);
+	list[1] = (t_hittable*)(&s1);
+	list[2] = (t_hittable*)(&s6);
+	list[3] = (t_hittable*)(&s2);
+	
+	const t_hittablelist world = hittablelist(list, 4);
 
-	const t_hittablelist world = hittablelist(list, 2);
 
-
-	t_hittable *list_lights[1];
-	list_lights[0] = (t_hittable*)(&s6);
-	const t_hittablelist lights = hittablelist(list_lights, 1);
+	t_hittable *list_lights[3];
+	list_lights[0] = (t_hittable*)(&s0);
+	list_lights[1] = (t_hittable*)(&s1);
+	list_lights[2] = (t_hittable*)(&s6);
+	const t_hittablelist lights = hittablelist(list_lights, 3);
 
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))

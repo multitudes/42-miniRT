@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 12:48:30 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 18:33:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex)
 {
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
 	lambertian_material->base.emit = emitzero;
-	// lambertian_material->base.scattering_pdf = lambertian_scattering_pdf;
+	lambertian_material->base.scattering_pdf = lambertian_scattering_pdf;
     lambertian_material->albedo = color(0,0,0); // Set the albedo to null to experiment with lights
 	lambertian_material->texture = tex;
 	lambertian_material->base.scattering_pdf = lambertian_scattering_pdf;
@@ -98,15 +98,17 @@ t_color		emitzero(void *self, t_hit_record rec, double u, double v, t_point3 p)
 /*
  * scatter function for a lambertian material
  */
-bool lambertian_scatter(void* self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec)  
+bool lambertian_scatter(void* self, t_ray *r_in, t_hit_record *rec, t_scatter_record *srec)  
 {
 	(void)r_in;
 	t_lambertian *lamb = (t_lambertian *)self;
 
 	srec->attenuation = lamb->texture->value(lamb->texture, rec->u, rec->v, &rec->p);
-	cosine_pdf_init(srec->cosine_pdf, &rec->normal);
+
+	cosine_pdf_init(&srec->cosine_pdf, &rec->normal);
 	srec->pdf_ptr = (t_pdf *)&(srec->cosine_pdf);
 	srec->skip_pdf = false;
+
     return true; 
 	
 // 	t_vec3 scatter_direction = vec3add(rec->normal, random_unit_vector());

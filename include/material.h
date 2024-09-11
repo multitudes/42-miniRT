@@ -6,27 +6,28 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 14:35:58 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 18:42:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MATERIAL_H
 # define MATERIAL_H
 
-#include "pdf.h"
+#include "hittable_list.h"
 #include "texture.h"
 #include "ray.h"
+#include "pdf.h"
 #include "color.h"
 #include "vec3.h"
-#include "hittable_list.h"
 
 typedef struct s_scatter_record t_scatter_record;
 typedef struct s_hit_record t_hit_record;
-typedef struct s_pdf t_pdf;
-typedef struct s_cosine_pdf t_cosine_pdf;
-typedef struct s_sphere_pdf t_sphere_pdf;
-typedef struct s_hittable_pdf t_hittable_pdf;
-typedef struct s_mixture_pdf t_mixture_pdf;
+typedef struct s_ray t_ray;
+// typedef struct s_pdf t_pdf;
+// typedef struct s_cosine_pdf t_cosine_pdf;
+// typedef struct s_sphere_pdf t_sphere_pdf;
+// typedef struct s_hittable_pdf t_hittable_pdf;
+// typedef struct s_mixture_pdf t_mixture_pdf;
 /**
  * @brief Material structure
  * 
@@ -63,11 +64,11 @@ typedef struct 		s_texture t_texture;
 typedef struct 	s_scatter_record 
 {
     t_color 		attenuation;
-    t_pdf* 			pdf_ptr;
-	t_cosine_pdf 	*cosine_pdf;
-	t_sphere_pdf 	*sphere_pdf;
-	t_hittable_pdf 	*hittable_pdf;
-	t_mixture_pdf 	*mixture_pdf;
+    t_pdf 			*pdf_ptr;
+	t_cosine_pdf 	cosine_pdf;
+	t_sphere_pdf 	sphere_pdf;
+	t_hittable_pdf 	hittable_pdf;
+	t_mixture_pdf 	mixture_pdf;
     bool 			skip_pdf;
     t_ray 			skip_pdf_ray;
 } 				t_scatter_record;
@@ -115,7 +116,6 @@ double 		lambertian_scattering_pdf(void* self, const t_ray *r_in, const t_hit_re
 
 void		metal_init(t_metal *metal, t_color albedo, double fuzz);
 bool		metal_scatter(void *self, t_ray* r_in, t_hit_record *rec, t_scatter_record *srec);
-double		metal_scattering_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
 
 t_color		emitlight(void *self, t_hit_record rec, double u, double v, t_point3 p);
 

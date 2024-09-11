@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 16:59:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 12:45:49 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 18:27:05 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "ray.h"
 #include <stdbool.h>
 #include "interval.h"
-#include "material.h"
 
 typedef struct s_material t_material;
 

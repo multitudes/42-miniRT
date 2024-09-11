@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:05:52 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 14:36:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 17:24:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef struct	s_hittable_pdf
 {
 	t_pdf	base;
 	t_vec3	origin;
-	t_hittablelist *objects;
+	const t_hittablelist *objects;
 }				t_hittable_pdf;
 
 typedef struct	s_mixture_pdf
@@ -57,7 +57,7 @@ void	cosine_pdf_init(t_cosine_pdf *cos_pdf, const t_vec3 *w);
 double	cosine_pdf_value(const void *self, const t_vec3 *direction);
 t_vec3	cosine_pdf_generate( void *self);
 
-void hittable_pdf_init(t_hittable_pdf *hittable_pdf, t_hittablelist *objects, const t_vec3 *origin);
+void hittable_pdf_init(t_hittable_pdf *hittable_pdf,const t_hittablelist *objects, const t_vec3 *origin);
 double hittable_pdf_value(const void *self, const t_vec3 *direction);
 t_vec3 hittable_pdf_generate(void *self);
 

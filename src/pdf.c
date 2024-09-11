@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:08:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 14:33:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 18:50:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "utils.h"
 #include "sphere.h"
 #include "hittable_list.h"
+#include "debug.h"
 
 
 /**
@@ -36,7 +37,9 @@ t_vec3 sphere_pdf_generate(void *self)
 
 void	cosine_pdf_init(t_cosine_pdf *cos_pdf, const t_vec3 *w)
 {
+	debug("cosine_pdf_init");
 	cos_pdf->base.value = cosine_pdf_value;
+		debug("cosine_pdf_init");
 	cos_pdf->base.generate = cosine_pdf_generate;
 	onb_build_from_w(&cos_pdf->uvw, w);
 }
@@ -55,7 +58,7 @@ t_vec3 cosine_pdf_generate(void *self)
 }
 
 
-void hittable_pdf_init(t_hittable_pdf *hittable_pdf, t_hittablelist *objects, const t_vec3 *origin)
+void hittable_pdf_init(t_hittable_pdf *hittable_pdf, const t_hittablelist *objects, const t_vec3 *origin)
 {
 	hittable_pdf->base.value = hittable_pdf_value;
 	hittable_pdf->base.generate = hittable_pdf_generate;
@@ -108,9 +111,15 @@ double	mixture_pdf_value(const void *self, const t_vec3 *direction)
 
 t_vec3	mixture_pdf_generate(void *self)
 {
+	debug("mixture_pdf_generate");
 	t_mixture_pdf *mixture_pdf = (t_mixture_pdf *)self;
 	if (random_d() < 0.5)
-		return mixture_pdf->p[0].generate(&mixture_pdf->p[0]);
+	{
+		t_pdf p = mixture_pdf->p[0];
+		return p.generate(&p);
+	}
 	else
+	{
 		return mixture_pdf->p[1].generate(&mixture_pdf->p[1]);
+	}
 }
