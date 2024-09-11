@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:08:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 12:39:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 14:33:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "hittable.h"
 #include "utils.h"
 #include "sphere.h"
+#include "hittable_list.h"
 
 
 /**

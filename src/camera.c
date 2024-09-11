@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/10 11:14:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 14:43:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include "ray.h"
 #include "hittable_list.h"
 #include "interval.h"
-#include "hittable.h"
 #include "utils.h"
 #include "camera.h"
 #include "pdf.h"
@@ -136,27 +135,39 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 {
 	(void)cam;
 
-	t_hit_record rec;
-	
 	if (depth <= 0)
         return color(0,0,0);
+
+	t_hit_record rec;
+
 	if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
-		return cam->background;
+		return color(0,0,0); // the book does it differently, but this is the same
 
-
-	t_ray scattered;
-	t_color attenuation;
-	double pdf_val;	
+	t_scatter_record srec;
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
-	if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, &pdf_val))
+	
+	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 		return color_from_emission;
 
-
-	t_hittable_pdf light_pdf;
-	hittable_pdf_init(&light_pdf, lights->list[0], &rec.p);
+	t_ray scattered = srec.skip_pdf_ray;
+	if (srec.skip_pdf)
+	{
+		return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+	}
 	
-	t_cosine_pdf surface_pdf;
-	cosine_pdf_init(&surface_pdf, &rec.normal);
+	t_hittable_pdf light_pdf;
+	hittable_pdf_init(&light_pdf, lights, &rec.p);
+	
+	t_mixture_pdf p;
+	mixture_pdf_init(&p, &light_pdf, srec.pdf_ptr);
+
+	scattered = ray(rec.p, mixture_pdf_generate(&p));
+	double pdf_val = mixture_pdf_value(&p, &scattered.dir);
+
+	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
+
+	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
+
 	if (random_d() < 0.5)
 		scattered = ray(rec.p, hittable_pdf_generate(&light_pdf));
 	else

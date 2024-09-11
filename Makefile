@@ -40,7 +40,7 @@ OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
 									utils.h ambient.h plane.h cylinder.h texture.h \
-									rtw_stb_image.h material.h onb.h pdf.h quad.h)
+									rtw_stb_image.h material.h onb.h pdf.h quad.h )
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a

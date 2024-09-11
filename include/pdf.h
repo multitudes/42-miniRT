@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:05:52 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 12:52:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 14:36:45 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "vec3.h"
 #include "onb.h"
 #include "hittable_list.h"
+
+typedef struct s_hittablelist t_hittablelist;
 
 typedef struct	s_pdf
 {
