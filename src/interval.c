@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 09:59:43 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/05 13:11:44 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 11:55:12 by ralgaran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_interval empty_interval()
  */
 t_interval universe_interval()
 {
-	return (t_interval){-INFINITY, INFINITY};
+	return (t_interval){-1e30, 1e30};
 }
 
 double	clamp(t_interval t, double x)

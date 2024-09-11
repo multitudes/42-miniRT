@@ -24,7 +24,7 @@
 
 #define ASPECT_RATIO (double)16.0/16.0
 
-t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
+t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 {
 	t_camera cam;
 	cam.background = color(0.7,0.7,0.7); // grey
@@ -33,7 +33,7 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
 	cam.aspect_ratio = ASPECT_RATIO;
-	
+
 	// this is for the antialiasing
 	cam.image_width = IMAGE_WIDTH; // also not given in the subject or file, smaller is faster - defined in minirt.h
 	cam.image_height = IMAGE_WIDTH / cam.aspect_ratio;
@@ -134,10 +134,10 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	(void)cam;
 
 	t_hit_record rec;
-	
+
 	if (depth <= 0)
         return color(0,0,0);
-	if (hit_world(world, r, interval(0.001, INFINITY), &rec))
+	if (hit_world(world, r, interval(0.001, 1e30), &rec))
 	{
 		t_ray scattered;
 		t_color attenuation = color(0,0,0);
@@ -165,7 +165,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
 	// t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
 	return cam->background;
-	
+
 	// return vec3add(start, end);
 	// if (depth <= 0)
 	// 	return color(0, 0, 0);
@@ -185,12 +185,12 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// t_ray scattered;
 	// t_color attenuation;
 	// t_color color_from_emission = rec.mat->emit(rec.mat, &rec, rec.u, rec.v, rec.p);
-	
+
 	// if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
 	// 	return color_from_emission;
-		
+
 	// t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth-1, world));
-	
+
 	// return vec3add(color_from_emission, color_from_scatter);
 
 	// t_ray scattered;
@@ -201,7 +201,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// t_ray scattered = ray(rec.p, direction);
 	// return vec3multscalar(ray_color(&scattered, depth - 1, world), 0.5);
 	// return color(0,0,0);
-	
+
 	// t_vec3 unit_direction = unit_vector(r->dir);
 	// double a = 0.5 * unit_direction.y + 1.0;
 	// t_color white = color(1.0, 1.0, 1.0);
@@ -278,7 +278,7 @@ void    render(t_mrt *data, const t_hittablelist* world)
 				t_ray r = get_ray(data->objects.camera, x, y);
 
 				pixel_color = vec3add(pixel_color, ray_color(&(data->objects.camera), &r, data->objects.camera.max_depth ,world));
-				
+
 				i++;
 			}
             write_color(data, x, y, vec3divscalar(pixel_color, data->objects.camera.samples_per_pixel));
