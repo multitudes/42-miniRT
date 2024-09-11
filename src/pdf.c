@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:08:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 18:50:09 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 19:07:10 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ t_vec3 sphere_pdf_generate(void *self)
 
 void	cosine_pdf_init(t_cosine_pdf *cos_pdf, const t_vec3 *w)
 {
-	debug("cosine_pdf_init");
 	cos_pdf->base.value = cosine_pdf_value;
-		debug("cosine_pdf_init");
 	cos_pdf->base.generate = cosine_pdf_generate;
 	onb_build_from_w(&cos_pdf->uvw, w);
 }
@@ -64,7 +62,6 @@ void hittable_pdf_init(t_hittable_pdf *hittable_pdf, const t_hittablelist *objec
 	hittable_pdf->base.generate = hittable_pdf_generate;
 	hittable_pdf->objects = objects;
 	hittable_pdf->origin = *origin;
-
 }
 
 /**
