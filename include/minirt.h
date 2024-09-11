@@ -23,7 +23,7 @@
 #include "cylinder.h"
 #include "vec3.h"
 
-# define IMAGE_WIDTH 400
+# define IMAGE_WIDTH 800
 # define TRUE 1
 # define FALSE 0
 # define OBJECT_COUNT 100
@@ -61,7 +61,7 @@ typedef struct 	s_mrt
 	// hittable list
 	t_hittablelist world;
 	// render function
-	    void (*renderscene)(struct s_mrt *, const t_hittablelist *);
+    void (*renderscene)(struct s_mrt *, const t_hittablelist *);
 
 	// t_viewport	viewport;
 	// t_pixel		pixel;

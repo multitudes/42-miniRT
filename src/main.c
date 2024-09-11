@@ -105,42 +105,28 @@ int init_window(t_mrt *data)
     return (TRUE);
 }
 
-
-
-
 int main(int argc, char **argv)
 {
     t_mrt data;
     (void)argv;
 	(void)argc;
 
-
 	// check if argc is 2
-
 	ft_memset(&data, 0, sizeof(t_mrt));
-
-	parse_input("example_scene.rt", &data.objects);
-
-	// TODO: needa to create a hittable list
-	// list[0] = (t_hittable*)(&s1);
-	// list[1] = (t_hittable*)(&s2);
-	// list[2] = (t_hittable*)(&s3);
-	// list[3] = (t_hittable*)(&s4);
+	parse_input("scenes/first.rt", &data.objects);
 
 	const t_hittablelist world = hittablelist(data.objects.hit_list, data.objects.hit_idx);
 
     debug("Start of minirt %s", "helllo !! ");
+
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 
 	render(&data, &world);
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
-
     mlx_loop(data.mlx);
-    ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
-
     return (EXIT_SUCCESS);
 }
 
@@ -193,7 +179,7 @@ int main_new(int argc, char **argv)
 	t_sphere s5 = sphere_mat(point3(0.0, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&earth_surface);
 
 	// /***********************************/
-	// /* 			mars        		   */
+	// /* 			mars        		  */
 	// /***********************************/
 
 	// t_lambertian mars_surface;

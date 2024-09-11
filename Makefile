@@ -8,13 +8,8 @@
 # $< is another special variable, representing the first prerequisite (dependency) of the rule. It is the source file.
 
 NAME 			= 	miniRT
-
 CC 				= 	cc
-
-CFLAGS 			=	-Wextra -Wall -Werror
-CFLAGS			+=	-g
-CFLAGS 			+= 	-Iinclude -Isrc -O3 -Wunreachable-code -Ofast
-# CFLAGS += -DDEBUG=1
+CFLAGS 			=	-Wextra -Wall -Werror -g -Iinclude -Isrc
 
 # directories
 OBJ_DIR			= 	obj/
@@ -26,7 +21,7 @@ LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 LIBS 			+= 	$(LIBFTDIR)/libft.a
 
 # this is used in production to optimize the linking and remove unnecessary code aking the binary smaller
-LDFLAGS			= 	-Wl,--gc-sections -Wl,-O2 -Wl,--as-needed -Wl,--strip-all
+#LDFLAGS			= 	-Wl,--gc-sections -Wl,-O2 -Wl,--as-needed -Wl,--strip-all
 
 INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac

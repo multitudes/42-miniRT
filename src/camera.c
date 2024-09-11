@@ -22,13 +22,13 @@
 #include "utils.h"
 #include "camera.h"
 
-#define ASPECT_RATIO (double)16.0/16.0
+#define ASPECT_RATIO 16.0/9.0
 
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 {
 	t_camera cam;
 	cam.background = color(0.7,0.7,0.7); // grey
-	cam.samples_per_pixel = 50;
+	cam.samples_per_pixel = 50;	// antialising
 	cam.max_depth = 50; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
@@ -148,6 +148,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 		return vec3add(color_from_emission, color_from_scatter);
 
 	}
+	return cam->background;
 
 	// t_vec3 x_axis = vec3(100,0,0);
 	// t_vec3 y_axis = vec3(0,100,0);
@@ -164,7 +165,6 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// double a = 0.5 * (unit_direction.y + 1.0);
 	// t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
 	// t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
-	return cam->background;
 
 	// return vec3add(start, end);
 	// if (depth <= 0)
@@ -231,6 +231,8 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
     mlx_image_t *image;
     uint8_t *pixel;
 
+
+    debug("%i, %i color = %f,%f,%f\n", x, y, colorvector.r, colorvector.g, colorvector.b);
     image = data->image;
     offset = y * data->objects.camera.image_width + x;
     pixel = &image->pixels[offset * 4];
@@ -258,14 +260,11 @@ t_ray get_ray(t_camera cam, int i, int j)
 
 void    render(t_mrt *data, const t_hittablelist* world)
 {
-    int             x;
-	int             y;
-	int 			i;
+    int	x;
+	int	y;
+	int	i;
 
     y = 0;
-    x = 0;
-	i = 0;
-
     while (y < data->objects.camera.image_height)
     {
 		x = 0;
@@ -276,9 +275,7 @@ void    render(t_mrt *data, const t_hittablelist* world)
 			while (i < data->objects.camera.samples_per_pixel)
 			{
 				t_ray r = get_ray(data->objects.camera, x, y);
-
-				pixel_color = vec3add(pixel_color, ray_color(&(data->objects.camera), &r, data->objects.camera.max_depth ,world));
-
+				pixel_color = vec3add(pixel_color, ray_color(&(data->objects.camera), &r, data->objects.camera.max_depth, world));
 				i++;
 			}
             write_color(data, x, y, vec3divscalar(pixel_color, data->objects.camera.samples_per_pixel));

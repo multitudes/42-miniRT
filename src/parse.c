@@ -141,7 +141,7 @@ static t_vec3	set_vec3(char **tokens, int index, char *func_name, int normalized
 	while (++i < 3)
 	{
 		coord_val[i] = ft_atod(coord_tok[i]);
-		if (normalized && (coord_val[i] < .0 || coord_val[i] > 1.0))
+		if (normalized && (coord_val[i] < -1.0 || coord_val[i] > 1.0))
 		{
 			free_split(coord_tok);
 			call_error("vector not normalized", func_name, tokens);
