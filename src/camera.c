@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 19:31:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 19:46:46 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,21 +139,31 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
         return color(0,0,0);
 
 	t_hit_record rec;
-	t_ray scattered;
+
 	double pdf_value;
 
 	if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
 		return color(0.001,0.001,0.001); 
 
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
+
 	t_scatter_record srec;
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 		return color_from_emission;
 
+	t_ray scattered = srec.skip_pdf_ray;
+	if (srec.skip_pdf)
+	{
+		return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+	}
+
 
 	t_hittable_pdf light_pdf;
 	hittable_pdf_init(&light_pdf, lights, &rec.p);
-	
+
+
+
+
 	t_cosine_pdf surface_pdf;
 	cosine_pdf_init(&surface_pdf, &rec.normal);
 	if (random_d() < 0.5)
@@ -161,7 +171,6 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	else
 		scattered = ray(rec.p, cosine_pdf_generate(&surface_pdf));
 
-    // scattered = ray(rec.p, mixture_pdf_generate(&mix_pdf), r->tm);
 
     pdf_value = 0.5 * cosine_pdf_value(&surface_pdf, &scattered.dir) + 0.5 * hittable_pdf_value(&light_pdf, &scattered.dir);
 
@@ -173,34 +182,8 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, sample_color);
 	t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_value);
 
-	// t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-	
 	return vec3add(color_from_emission, color_from_scatter);
-	// (void)cam;
-
-	// if (depth <= 0)
-    //     return color(0,0,0);
-
-	// t_hit_record rec;
-
-	// if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
-	// 	return color(0.5,0.5,0.5); // the book does it differently, but this is the same
 	
-
-	// t_scatter_record srec;
-	// t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
-	
-	// if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
-	// 	return color_from_emission;
-	// t_ray scattered = srec.skip_pdf_ray;
-	// if (srec.skip_pdf)
-	// {
-	// 	return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-	// }
-
-	// t_hittable_pdf light_pdf;
-	// hittable_pdf_init(&light_pdf, lights, &rec.p);
-
 
 	// t_vec3 mixture_pdf;
 
