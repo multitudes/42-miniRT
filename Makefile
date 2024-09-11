@@ -11,8 +11,8 @@ NAME 			= 	miniRT
 
 CC 				= 	cc
 
-CFLAGS 			= 	-Wextra -Wall -Werror
-CFLAGS			+= -g
+CFLAGS 			=	-Wextra -Wall -Werror
+CFLAGS			+=	-g
 CFLAGS 			+= 	-Iinclude -Isrc -O3 -Wunreachable-code -Ofast
 # CFLAGS += -DDEBUG=1
 
@@ -81,7 +81,6 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 $(NAME): $(OBJS) $(HDRS)
-	$(CFLAGS) += -g
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) -o $(NAME)
 
 clean:
@@ -90,7 +89,7 @@ clean:
 #$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
-	@rm -rf $(NAME)
+	rm -rf $(NAME)
 #$(MAKE) -C $(LIBFTDIR) fclean
 #@rm -rf $(LIBMLX)/build
 

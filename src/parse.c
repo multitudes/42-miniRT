@@ -238,7 +238,7 @@ static void	get_cylinder(char **tokens, t_objects *obj)
 
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "cylinder", tokens);
-	if (count_tokens(tokens) != 5)
+	if (count_tokens(tokens) != 6)
 		call_error("invalid token amount", "cylinder", tokens);
 	obj->cylinders[set_index] = cylinder(set_vec3(tokens, 1, "cylinder", 0), \
 		set_vec3(tokens, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
