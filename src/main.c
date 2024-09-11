@@ -105,6 +105,13 @@ int init_window(t_mrt *data)
     return (TRUE);
 }
 
+
+void	print_vector(t_vec3 vec, char *msg)
+{
+	printf("%s: ", msg);
+	printf("%f,%f,%f\n", vec.x, vec.y, vec.z);
+}
+
 int main(int argc, char **argv)
 {
     t_mrt data;
@@ -115,7 +122,37 @@ int main(int argc, char **argv)
 	ft_memset(&data, 0, sizeof(t_mrt));
 	parse_input("scenes/first.rt", &data.objects);
 
+
+	// int i = -1;
+	// while (&data.objects.spheres[++i] != NULL && i < OBJECT_COUNT)
+	// {
+	// 	printf("center:")
+	// }
+
 	const t_hittablelist world = hittablelist(data.objects.hit_list, data.objects.hit_idx);
+	printf("hittable list size: %i\n", world.size);
+
+	for (int i = 0; i < world.size; ++i)
+		printf("hittable list member %i has hit function %p\n", i, world.list[i]->hit);
+
+	printf("\nthe camera\n");
+	print_vector(data.objects.camera.center, "center");
+	print_vector(data.objects.camera.direction, "direction");
+	printf("hfov: %f\n", data.objects.camera.hfov);
+
+	world.list[0]->hit();
+
+	return(0);
+
+
+
+
+
+
+
+
+
+
 
     debug("Start of minirt %s", "helllo !! ");
 
