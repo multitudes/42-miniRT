@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 16:55:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 20:16:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
 {
 	t_camera cam;
-	cam.background = color(0.6,0.6,0.6); // grey
+
 	cam.samples_per_pixel = 200;
 	cam.max_depth = 100; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
@@ -150,8 +150,10 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
 
+	t_color ambient = vec3divscalar(cam->ambient_light.color,1);
+	t_color ambient_samplecolor = vec3add(ambient, sample_color);
 	t_color attenuationxscattering_pdf = vec3multscalar(srec.attenuation, scattering_pdf);
-	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, sample_color);
+	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, ambient_samplecolor);
 	t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_value);
 
 	return vec3add(color_from_emission, color_from_scatter);

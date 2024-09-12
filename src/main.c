@@ -123,6 +123,93 @@ bool init_data(t_mrt *data)
 
 
 
+int main_mixtest(int argc, char **argv)
+{
+    t_mrt data;
+    (void)argv;
+	(void)argc;
+
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	t_point3 center = point3(378, 378, -1800);
+	t_vec3 direction = vec3(0,0,800);
+	data.cam = init_cam(center, direction, 40);
+	data.cam.print((void*)(&(data.cam)));
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	t_ambient ambient_light = ambient(0.0, rgb(255,255,255));
+	data.ambient_light = ambient_light;
+
+	ambient_light.print((void*)&ambient_light);
+
+	// world
+	t_hittable *list[10];
+
+	// red sphere
+	t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	s1.print((void*)&s1);
+
+	/***********************************/
+	/* 			light        		   */
+	/***********************************/
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(40, 40, 40));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+	t_diffuse_light difflight2;
+	t_solid_color difflight_color2;
+	solid_color_init(&difflight_color2, color(0, 0, 80));
+	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
+	// t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	t_sphere s2 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&difflight2);
+	// t_sphere s6 = sphere_old(point3( 343,554,332), 90, (t_material*)&difflight);
+
+	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
+
+
+	t_sphere s5 = sphere(vec3(0, 0, -1.2), 1, rgb(128,0,0));
+	s1.print((void*)&s1);
+	t_sphere s8 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
+	s2.print((void*)&s2);
+	t_sphere s7 = sphere(vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+
+	list[0] = (t_hittable*)(&s1);
+	// list[1] = (t_hittable*)(&s6);
+	list[1] = (t_hittable*)(&s2);
+	list[2] = (t_hittable*)(&s4);
+	list[3] = (t_hittable*)(&s5);
+	list[4] = (t_hittable*)(&s7);
+	list[5] = (t_hittable*)(&s8);
+
+	const t_hittablelist world = hittablelist(list, 6);
+
+	t_hittable *list_lights[1];
+	list_lights[0] = (t_hittable*)(&s2);
+	// list_lights[1] = (t_hittable*)(&s6);
+	const t_hittablelist lights = hittablelist(list_lights, 1);
+
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+
+	data.world = world;
+	render(&data, &world, &lights);
+	
+
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
+}
+
+
 
 int main(int argc, char **argv)
 {
@@ -141,13 +228,14 @@ int main(int argc, char **argv)
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	t_ambient ambient_light = ambient(0.0, rgb(255,255,255));
-	data.ambient_light = ambient_light;
-	data.cam.background = ambient_light.color;
+	t_ambient ambient_light = ambient(1, rgb(255,255,255));
+	data.cam.ambient_light = ambient_light;
+
+
 	ambient_light.print((void*)&ambient_light);
 
 	// world
-	t_hittable *list[3];
+	t_hittable *list[4];
 
 	// red sphere
 	t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
@@ -218,7 +306,7 @@ int main_earth(int argc, char **argv)
 	/***************************** */
 	t_ambient ambient_light = ambient(0.0, rgb(255,255,255));
 	data.ambient_light = ambient_light;
-	data.cam.background = ambient_light.color;
+
 	ambient_light.print((void*)&ambient_light);
 
 	// world

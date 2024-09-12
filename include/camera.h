@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 12:41:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 19:32:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "ray.h"
 #include "vec3.h"
 #include "hittable_list.h"
+#include "ambient.h"
 
 typedef struct s_mrt t_mrt;
 typedef struct	s_camera
@@ -36,14 +37,13 @@ typedef struct	s_camera
 	t_point3 	lookfrom;   		// Point camera is looking from
     t_point3 	lookat;  			// Point camera is looking at
     t_vec3   	vup;     			// Camera-relative "up" direction
-
-	t_color		background;  // Background color
 	
 	// considered private
     t_point3	pixel00_loc;    // Location of pixel 0, 0
     t_vec3		pixel_delta_u;  // Offset to pixel to the right
     t_vec3		pixel_delta_v;  // Offset to pixel below
 
+	t_ambient  ambient_light;
 
 	void		(*print)(const void* self);
 	
