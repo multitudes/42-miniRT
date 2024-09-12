@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sphere.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 15:28:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:42:59 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void		get_sphere_uv(t_vec3 normal, double* u, double* v);
 
 /**
  * sphere_pdf_value - Computes the PDF value for a uniform sphere.
- * @self: Pointer to the object (unused in this function).
- * @direction: Pointer to the t_vec3 direction vector (unused in this function).
+ * @self: Pointer to the object
+ * @direction: Pointer to the t_vec3 direction vector
  *
  * This function returns the probability density function (PDF) value for a
  * uniformly distributed direction over the surface of a sphere. Since the
@@ -58,8 +58,8 @@ void		get_sphere_uv(t_vec3 normal, double* u, double* v);
  *
  * Return: A double representing the PDF value for a uniform sphere.
  */
-double sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir);
-t_vec3 sphere_random(const void *self, const t_point3 *orig);
+double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir);
+t_vec3 obj_sphere_random(const void *self, const t_point3 *orig);
 // Function to generate a random direction within the sphere's volume
 t_vec3 random_to_sphere(double radius, double distance_squared);
 

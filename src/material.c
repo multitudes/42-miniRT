@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 18:33:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:26:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,22 @@ double scattering_pdf_zero(void* self, const t_ray *r_in, const t_hit_record *re
     return 0;
 }
 
+void init_scatter_record(t_scatter_record *srec)
+{
+	srec->attenuation = color(0, 0, 0);
+	srec->pdf_ptr = NULL;
+	srec->skip_pdf = false;
+	srec->skip_pdf_ray = ray(point3(0, 0, 0), vec3(0, 0, 0));
+	srec->cosine_pdf.base.value = cosine_pdf_value;
+	srec->cosine_pdf.base.generate = cosine_pdf_generate;
+	srec->sphere_pdf.base.value = sphere_pdf_value;
+	srec->sphere_pdf.base.generate = sphere_pdf_generate;
+	srec->hittable_pdf.base.value = hittable_pdf_value;
+	srec->hittable_pdf.base.generate = hittable_pdf_generate;
+	srec->mixture_pdf.p[0].value = mixture_pdf_value;
+	srec->mixture_pdf.p[0].generate = mixture_pdf_generate;
+}
+
 /**
  * No scatter as default for light and lambertian materials 
  */
@@ -78,7 +94,7 @@ bool noscatter(void *self, t_ray *r_in, t_hit_record *rec, t_scatter_record *sre
 	(void)self;
 	(void)r_in;
 	(void)rec;
-	(void)srec;
+	init_scatter_record(srec);
 	return false;
 }
 

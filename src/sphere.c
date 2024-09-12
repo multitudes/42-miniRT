@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/10 11:40:53 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:44:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 {
 	t_sphere s;
 	s.base.hit = hit_sphere;
-	s.base.pdf_value = sphere_pdf_value;
-	s.base.random = sphere_random;
+	s.base.pdf_value = obj_sphere_pdf_value;
+	s.base.random = obj_sphere_random;
 	s.center = center;
 	s.radius = fmax(0, diameter / 2);
 	s.print = print_sphere;
@@ -57,12 +57,17 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 	return s;
 }
 
+/**
+ * @brief: initializer for a sphere with a material
+ * 
+ * The base struct of the material is initialized with the three functions I need
+ */
 t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat)
 {
 	t_sphere s;
 	s.base.hit = hit_sphere;
-	s.base.pdf_value = sphere_pdf_value;
-	s.base.random = sphere_random;
+	s.base.pdf_value = obj_sphere_pdf_value;
+	s.base.random = obj_sphere_random;
 	s.center = center;
 	s.radius = fmax(0, diameter / 2);
 	s.print = print_sphere_mat;
@@ -231,7 +236,7 @@ vec3 random(const point3& origin) const override {
  *
  * Return: A double representing the PDF value for a uniform sphere.
  */
-double sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
+double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
 	const t_sphere *s = (t_sphere *)self;
 
@@ -254,7 +259,7 @@ double sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *di
     return 1.0 / solid_angle;
 	
 }
-t_vec3 sphere_random(const void *self, const t_point3 *orig) 
+t_vec3 obj_sphere_random(const void *self, const t_point3 *orig) 
 {
     const t_sphere *s = (t_sphere *)self;
 

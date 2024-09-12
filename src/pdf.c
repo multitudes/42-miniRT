@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:08:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 19:07:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:44:39 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,14 @@ t_vec3 sphere_pdf_generate(void *self)
 	(void)self;
 	return random_unit_vector();
 }
+
+double sphere_pdf_value(const void *self, const t_vec3 *dir)
+{
+	(void)self;
+	(void)dir;
+	return 1 / (4 * PI);
+}
+
 
 void	cosine_pdf_init(t_cosine_pdf *cos_pdf, const t_vec3 *w)
 {

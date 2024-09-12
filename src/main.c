@@ -161,7 +161,7 @@ int main(int argc, char **argv)
 	solid_color_init(&difflight_color, color(20, 20, 20));
 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
 	t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
-	t_sphere s6 = sphere_mat(point3( 190,290,190 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	// t_sphere s6 = sphere_mat(point3( 190,290,190 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
 	
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 19:46:46 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:58:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 200
+#define IMAGE_WIDTH 400
 
 // Epsilon value for floating-point comparison
 #define EPSILON 1e-1
@@ -148,6 +148,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 
 	t_scatter_record srec;
+	init_scatter_record(&srec);
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 		return color_from_emission;
 
@@ -161,7 +162,18 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	t_hittable_pdf light_pdf;
 	hittable_pdf_init(&light_pdf, lights, &rec.p);
 
+//   mixture_pdf p(light_ptr, srec.pdf_ptr);
 
+//         ray scattered = ray(rec.p, p.generate(), r.time());
+//         auto pdf_value = p.value(scattered.direction());
+
+//         double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
+
+//         color sample_color = ray_color(scattered, depth-1, world, lights);
+//         color color_from_scatter =
+//             (srec.attenuation * scattering_pdf * sample_color) / pdf_value;
+
+//         return color_from_emission + color_from_scatter;
 
 
 	t_cosine_pdf surface_pdf;
@@ -184,7 +196,29 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	return vec3add(color_from_emission, color_from_scatter);
 	
+	//   mixture_pdf p(light_ptr, srec.pdf_ptr);
 
+    //     ray scattered = ray(rec.p, p.generate(), r.time());
+    //     auto pdf_value = p.value(scattered.direction());
+
+    //     double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
+
+    //     color sample_color = ray_color(scattered, depth-1, world, lights);
+    //     color color_from_scatter =
+    //         (srec.attenuation * scattering_pdf * sample_color) / pdf_value;
+
+    //     return color_from_emission + color_from_scatter;
+
+
+	// t_mixture_pdf mixture_pdf;
+	// if (random_d() < 0.5)
+	// {
+	// 	mixture_pdf = light_pdf.base.generate(&light_pdf);
+	// }
+	// else
+	// {
+	// 	mixture_pdf = srec.pdf_ptr->generate(&srec.pdf_ptr);
+	// }
 	// t_vec3 mixture_pdf;
 
 
@@ -195,7 +229,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// }
 	// else
 	// {
-	// 	mixture_pdf = srec.pdf_ptr->generate(&srec.pdf_ptr);
+		// mixture_pdf = srec.pdf_ptr->generate(&srec.pdf_ptr);
 	// }
 
 	// scattered = ray(rec.p, mixture_pdf);

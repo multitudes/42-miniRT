@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:05:52 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 17:24:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:40:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ typedef struct	s_pdf
 	double (*value)(const void *self, const t_vec3 *dir);
 	t_vec3 (*generate)(void *self);
 }				t_pdf;
-
 
 typedef struct	s_sphere_pdf
 {
@@ -49,9 +48,8 @@ typedef struct	s_mixture_pdf
 	t_pdf	p[2];
 }				t_mixture_pdf;
 
-//double sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
-
 t_vec3 sphere_pdf_generate(void *self);
+double sphere_pdf_value(const void *self, const t_vec3 *dir);
 
 void	cosine_pdf_init(t_cosine_pdf *cos_pdf, const t_vec3 *w);
 double	cosine_pdf_value(const void *self, const t_vec3 *direction);

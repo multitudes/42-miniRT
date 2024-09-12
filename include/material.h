@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 18:42:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:26:05 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,12 @@ typedef struct 	s_scatter_record
 {
     t_color 		attenuation;
     t_pdf 			*pdf_ptr;
+    bool 			skip_pdf;
+    t_ray 			skip_pdf_ray;
 	t_cosine_pdf 	cosine_pdf;
 	t_sphere_pdf 	sphere_pdf;
 	t_hittable_pdf 	hittable_pdf;
 	t_mixture_pdf 	mixture_pdf;
-    bool 			skip_pdf;
-    t_ray 			skip_pdf_ray;
 } 				t_scatter_record;
 
 typedef struct 		s_metal
@@ -110,6 +110,8 @@ void 		lambertian_init(t_lambertian *lambertian_material, t_color albedo);
 void		lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex);
 
 void		diffuse_light_init(t_diffuse_light *diffuse_light, t_texture *tex);
+
+void init_scatter_record(t_scatter_record *srec);
 
 bool		lambertian_scatter(void* self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec); ;
 double 		lambertian_scattering_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
