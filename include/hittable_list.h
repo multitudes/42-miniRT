@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 08:21:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 18:26:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 15:57:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,14 @@ typedef struct 	s_ray t_ray;
 typedef struct 	s_hittablelist {
 	t_hittable 	**list;
 	int 		size;
+	bool 		(*hit_objects)(const void* self, const t_ray* r, t_interval ray_t, t_hit_record* rec);
+	double      (*obj_pdf_value)(const void *self, const t_point3 *o, const t_vec3 *v);
+	t_vec3      (*obj_random)(const void *self, const t_vec3 *o);
 } 				t_hittablelist; 
 
-bool 			hit_world(const t_hittablelist *world, const t_ray* r, t_interval ray_t, t_hit_record* rec);
+bool 			hit_objects(const void *self, const t_ray* r, t_interval ray_t, t_hit_record* rec);
 t_hittablelist 	hittablelist(t_hittable **list, int size);
-double 			hittablelist_pdf_value(const void *self, const t_point3 *o, const t_vec3 *v);
-t_vec3 			hittablelist_random(const void *self, const t_vec3 *o);
+double 			obj_pdf_value(const void *self, const t_point3 *o, const t_vec3 *v);
+t_vec3 			obj_random(const void *self, const t_vec3 *o);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 11:44:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 16:46:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,30 @@
 #include "debug.h"
 #include "utils.h"
 #include "pdf.h"
+#include "texture.h"
+
+t_sphere sphere_old(t_point3 center, double radius, t_material *mat)
+{
+	t_sphere s;
+
+	s.base.hit = hit_sphere;
+	s.base.pdf_value = obj_sphere_pdf_value;
+	s.base.random = obj_sphere_random;
+	s.center = center;
+	s.radius = fmax(0,radius);
+	s.mat = mat;
+	s.print = print_sphere;
+	s.rgb = rgb(0, 0, 0);
+	s.color = color(1, 0, 0);
+	t_lambertian lambertian;
+	lambertian_init(&(lambertian), s.color);
+	s.lambertian_mat = lambertian;
+	t_solid_color solid_color;
+	solid_color_init(&solid_color, s.color);
+	s.texture = solid_color;
+	
+	return s;
+}
 
 /*
  * @brief: initializer for a sphere
@@ -239,7 +263,7 @@ vec3 random(const point3& origin) const override {
 double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
 	const t_sphere *s = (t_sphere *)self;
-
+	debug("sphere_pdf_value");
 	t_hit_record rec;
 	
 	const t_ray r = ray(*orig, *dir);
@@ -259,18 +283,30 @@ double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3
     return 1.0 / solid_angle;
 	
 }
+
+
 t_vec3 obj_sphere_random(const void *self, const t_point3 *orig) 
 {
     const t_sphere *s = (t_sphere *)self;
 
-    // Distance squared from origin to sphere center
-    double distance_squared = length_squared(vec3substr(s->center, *orig));
+    // Calculate the direction vector from the origin to the sphere's center
+    t_vec3 direction = vec3substr(s->center, *orig);
 
-    // Call random_to_sphere to generate a random point on the unit sphere
+    // Calculate the squared distance from the origin to the sphere's center
+    double distance_squared = length_squared(direction);
+
+    // Build an orthonormal basis (ONB) from the direction vector
+    t_onb uvw;
+    onb_build_from_w(&uvw, &direction);
+
+    // Generate a random point on the unit sphere
     t_vec3 random_point = random_to_sphere(s->radius, distance_squared);
 
-    // Translate the random point relative to the sphere's center
-    return vec3add(random_point, s->center);
+    // Transform the random point using the ONB
+    t_vec3 transformed_point = onb_transform(&uvw, random_point);
+
+    // Return the transformed vector
+    return transformed_point;
 }
 
 // Function to generate a random direction within the sphere's volume

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:08:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 11:44:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 16:23:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "sphere.h"
 #include "hittable_list.h"
 #include "debug.h"
-
 
 /**
  * sphere_pdf_generate - Generates a random direction uniformly distributed over a sphere.
@@ -85,7 +84,7 @@ void hittable_pdf_init(t_hittable_pdf *hittable_pdf, const t_hittablelist *objec
 double hittable_pdf_value(const void *self, const t_vec3 *direction)
 {
 	t_hittable_pdf *hittable_pdf = (t_hittable_pdf *)self;
-	return hittablelist_pdf_value(hittable_pdf->objects, &hittable_pdf->origin, direction);
+	return hittable_pdf->objects->obj_pdf_value(hittable_pdf->objects, &hittable_pdf->origin, direction);
 }
 
 /**
@@ -97,7 +96,7 @@ double hittable_pdf_value(const void *self, const t_vec3 *direction)
 t_vec3 hittable_pdf_generate(void *self)
 {
 	t_hittable_pdf *hittable_pdf = (t_hittable_pdf *)self;
-	return hittablelist_random(hittable_pdf->objects, &hittable_pdf->origin);
+	return hittable_pdf->objects->obj_random(hittable_pdf->objects, &hittable_pdf->origin);
 }
 
 void mixture_pdf_init(t_mixture_pdf *mixture_pdf, t_pdf *p0, t_pdf *p1)
@@ -116,7 +115,7 @@ double	mixture_pdf_value(const void *self, const t_vec3 *direction)
 
 t_vec3	mixture_pdf_generate(void *self)
 {
-	debug("mixture_pdf_generate");
+	// debug("mixture_pdf_generate");
 	t_mixture_pdf *mixture_pdf = (t_mixture_pdf *)self;
 	if (random_d() < 0.5)
 	{

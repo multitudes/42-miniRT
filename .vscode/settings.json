@@ -19,6 +19,7 @@
 		"utils.h": "c",
 		"texture.h": "c",
 		"rtw_stb_image.h": "c",
-		"pdf.h": "c"
+		"pdf.h": "c",
+		"*.tcc": "c"
 	}
 }

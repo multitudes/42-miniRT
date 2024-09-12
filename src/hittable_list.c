@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:23:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 12:24:34 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 15:58:58 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@
 #include <stdbool.h>
 #include "utils.h"
 
-bool hit_world(const t_hittablelist *hittablelist, const t_ray* r, t_interval ray_t, t_hit_record* rec)
+bool hit_objects(const void *self, const t_ray* r, t_interval ray_t, t_hit_record* rec)
 {
+	t_hittablelist *hittablelist = (t_hittablelist *)self;
 	t_hit_record temp_rec;
 	bool hit_anything = false;
 	double closest_so_far = ray_t.max;
@@ -46,11 +47,13 @@ t_hittablelist hittablelist(t_hittable **list, int size)
 
 	hittablelist.list = list;
 	hittablelist.size = size;
-		// hittablelist.hit = hit;
+	hittablelist.hit_objects = hit_objects;
+	hittablelist.obj_pdf_value = obj_pdf_value;
+	hittablelist.obj_random = obj_random;
 	return (hittablelist);
 }
 
-double hittablelist_pdf_value(const void *self, const t_point3 *o, const t_vec3 *v)
+double obj_pdf_value(const void *self, const t_point3 *o, const t_vec3 *v)
 {
 	t_hittablelist *objects = (t_hittablelist *)self;
 	double weight = 1.0 / objects->size;
@@ -71,7 +74,7 @@ double hittablelist_pdf_value(const void *self, const t_point3 *o, const t_vec3 
 //     auto int_size = int(objects.size());
 //     return objects[random_int(0, int_size-1)]->random(origin);
 // }
-t_vec3 hittablelist_random(const void *self, const t_vec3 *o)
+t_vec3 obj_random(const void *self, const t_vec3 *o)
 {
 	t_hittablelist *objects = (t_hittablelist *)self;
 	int int_size = objects->size;

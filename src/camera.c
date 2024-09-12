@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 11:58:52 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/12 16:55:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 
 {
 	t_camera cam;
-	cam.background = color(0.7,0.7,0.7); // grey
-	cam.samples_per_pixel = 100;
-	cam.max_depth = 5; // bouncing ray
+	cam.background = color(0.6,0.6,0.6); // grey
+	cam.samples_per_pixel = 200;
+	cam.max_depth = 100; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
 	cam.aspect_ratio = ASPECT_RATIO;
@@ -84,53 +84,6 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 }
 
 
-// Check if two floating-point numbers are approximately equal
-bool is_near_zero(double value) {
-    return fabs(value) < EPSILON;
-}
-
-// Function to check if a ray intersects an axis-aligned line
-bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
-    // Check for intersection with x-axis (line along the x-axis)
-    if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
-        // The ray intersects the x-axis when y = 0 and z = 0
-        if (!is_near_zero(r->orig.y) || !is_near_zero(r->orig.z)) {
-            // Ray origin is not on the yz-plane, so calculate the intersection point
-            double t = -r->orig.y / r->dir.y; // Find where y = 0
-            double z_at_t = r->orig.z + t * r->dir.z;
-            return is_near_zero(z_at_t); // Check if z also equals 0
-        }
-        return true; // If the ray origin is on the yz-plane
-    }
-
-    // Check for intersection with y-axis (line along the y-axis)
-    if (axis->x == 0 && axis->y != 0 && axis->z == 0) {
-        // The ray intersects the y-axis when x = 0 and z = 0
-        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.z)) {
-            // Ray origin is not on the xz-plane, so calculate the intersection point
-            double t = -r->orig.x / r->dir.x; // Find where x = 0
-            double z_at_t = r->orig.z + t * r->dir.z;
-            return is_near_zero(z_at_t); // Check if z also equals 0
-        }
-        return true; // If the ray origin is on the xz-plane
-    }
-
-    // Check for intersection with z-axis (line along the z-axis)
-    if (axis->x == 0 && axis->y == 0 && axis->z != 0) {
-        // The ray intersects the z-axis when x = 0 and y = 0
-        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.y)) {
-            // Ray origin is not on the xy-plane, so calculate the intersection point
-            double t = -r->orig.x / r->dir.x; // Find where x = 0
-            double y_at_t = r->orig.y + t * r->dir.y;
-            return is_near_zero(y_at_t); // Check if y also equals 0
-        }
-        return true; // If the ray origin is on the xy-plane
-    }
-
-    // If none of the conditions match, the ray does not intersect the line
-    return false;
-}
-
 t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights)
 {
 	(void)cam;
@@ -142,8 +95,8 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	double pdf_value;
 
-	if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
-		return color(0.001,0.001,0.001); 
+	if (!world->hit_objects(world, r, interval(0.001, INFINITY), &rec))
+		return color(0.005,0.005,0.005); 
 
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 
@@ -157,10 +110,12 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	{
 		return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 	}
-
+	// debug("rec normal: %f %f %f\n", rec.normal.x, rec.normal.y, rec.normal.z);
 
 	t_hittable_pdf light_pdf;
 	hittable_pdf_init(&light_pdf, lights, &rec.p);
+
+	t_pdf *recorded_pdf = srec.pdf_ptr;
 
 //   mixture_pdf p(light_ptr, srec.pdf_ptr);
 
@@ -176,15 +131,20 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 //         return color_from_emission + color_from_scatter;
 
 
-	t_cosine_pdf surface_pdf;
-	cosine_pdf_init(&surface_pdf, &rec.normal);
+
 	if (random_d() < 0.5)
-		scattered = ray(rec.p, hittable_pdf_generate(&light_pdf));
+	{
+		scattered = ray(rec.p, recorded_pdf->generate(recorded_pdf));
+	}
 	else
-		scattered = ray(rec.p, cosine_pdf_generate(&surface_pdf));
+	{
+		scattered = ray(rec.p, lights->obj_random(lights, &rec.p));
+	}
+	
+	double pdf_value1 = recorded_pdf->value(recorded_pdf, &scattered.dir);
+	double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scattered.dir);
 
-
-    pdf_value = 0.5 * cosine_pdf_value(&surface_pdf, &scattered.dir) + 0.5 * hittable_pdf_value(&light_pdf, &scattered.dir);
+    pdf_value = 0.5 * pdf_value1 + 0.5 * pdf_value2;
 
 	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
 
@@ -427,4 +387,51 @@ void			print_camera(const void* self)
 	c->center.x, c->center.y, c->center.z, 
 	c->direction.x, c->direction.y, c->direction.z, 
 	c->hfov);
+}
+
+// Check if two floating-point numbers are approximately equal
+bool is_near_zero(double value) {
+    return fabs(value) < EPSILON;
+}
+
+// Function to check if a ray intersects an axis-aligned line
+bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
+    // Check for intersection with x-axis (line along the x-axis)
+    if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
+        // The ray intersects the x-axis when y = 0 and z = 0
+        if (!is_near_zero(r->orig.y) || !is_near_zero(r->orig.z)) {
+            // Ray origin is not on the yz-plane, so calculate the intersection point
+            double t = -r->orig.y / r->dir.y; // Find where y = 0
+            double z_at_t = r->orig.z + t * r->dir.z;
+            return is_near_zero(z_at_t); // Check if z also equals 0
+        }
+        return true; // If the ray origin is on the yz-plane
+    }
+
+    // Check for intersection with y-axis (line along the y-axis)
+    if (axis->x == 0 && axis->y != 0 && axis->z == 0) {
+        // The ray intersects the y-axis when x = 0 and z = 0
+        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.z)) {
+            // Ray origin is not on the xz-plane, so calculate the intersection point
+            double t = -r->orig.x / r->dir.x; // Find where x = 0
+            double z_at_t = r->orig.z + t * r->dir.z;
+            return is_near_zero(z_at_t); // Check if z also equals 0
+        }
+        return true; // If the ray origin is on the xz-plane
+    }
+
+    // Check for intersection with z-axis (line along the z-axis)
+    if (axis->x == 0 && axis->y == 0 && axis->z != 0) {
+        // The ray intersects the z-axis when x = 0 and y = 0
+        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.y)) {
+            // Ray origin is not on the xy-plane, so calculate the intersection point
+            double t = -r->orig.x / r->dir.x; // Find where x = 0
+            double y_at_t = r->orig.y + t * r->dir.y;
+            return is_near_zero(y_at_t); // Check if y also equals 0
+        }
+        return true; // If the ray origin is on the xy-plane
+    }
+
+    // If none of the conditions match, the ray does not intersect the line
+    return false;
 }
