@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 16:46:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/13 20:04:05 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,46 +157,6 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 }
 
 
-// /*
-//  * The formula for a sphere is derived from the equation of a sphere
-//  * (p - c) * (p - c) = r * r
-//  * The func takes a first param of type void* to be able to be used in 
-//  * the hittable list (sort of polymorphic behaviour)
-//  * in the body oc is the vector from origin of the ray 
-//  * to the center of the sphere
-//  * At first the formula was derived from the quadratic formula
-//  * double b = -2.0 * dot(&(r->dir), &oc);
-//  * double c = dot(&oc, &oc) - s->radius * s->radius;
-//  * but this has been refactored using double h 
-//  */
-// bool hit_sphere(const void *self, const t_ray *r, double ray_tmin, double ray_tmax, t_hit_record *rec) 
-// {
-// 	const t_sphere *s = (t_sphere *)self;
-//     t_vec3 oc = vec3substr(&(s->center), &(r->orig));
-//     double a = length3_squared(&r->dir); 
-//     double h = dot(&(r->dir), &oc);
-// 	double c = length3_squared(&oc) - s->radius * s->radius;
-//     double discriminant = h*h - a*c;
-
-// 	if (discriminant < 0)
-// 		return (false);
-// 	double sqrtd = sqrt(discriminant);
-// 	double root = (h - sqrtd) / a;
-// 	if (root <= ray_tmin || ray_tmax <= root) {
-// 	root = (h + sqrtd) / a;
-// 	if (root <= ray_tmin || ray_tmax <= root)
-// 		return false;
-//     }
-// 	rec->t = root;
-// 	rec->p = point_at(r, rec->t);
-// 	t_vec3 inters_minus_center = vec3substr(&rec->p, &(s->center));
-// 	rec->normal = vec3divscalar(&inters_minus_center, s->radius);
-// 	set_face_normal(rec, r, &rec->normal);
-
-// 	return (true);
-// }
-
-
 void set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal)
 {
 	rec->front_face = dot(r->dir, outward_normal) < 0;
@@ -224,34 +184,10 @@ void	get_sphere_uv(t_vec3 normal, double* u, double* v)
     *v = theta / PI;
 }
 
-/* in c++
-
-double pdf_value(const point3& origin, const vec3& direction) const override {
-	// This method only works for stationary spheres.
-
-	hit_record rec;
-	if (!this->hit(ray(origin, direction), interval(0.001, infinity), rec))
-		return 0;
-
-	auto dist_squared = (center.at(0) - origin).length_squared();
-	auto cos_theta_max = std::sqrt(1 - radius*radius/dist_squared);
-	auto solid_angle = 2*pi*(1-cos_theta_max);
-
-	return  1 / solid_angle;
-}
-
-vec3 random(const point3& origin) const override {
-	vec3 direction = center.at(0) - origin;
-	auto distance_squared = direction.length_squared();
-	onb uvw(direction);
-	return uvw.transform(random_to_sphere(radius, distance_squared));
-}
-
-*/
 /**
  * sphere_pdf_value - Computes the PDF value for a uniform sphere.
- * @self: Pointer to the object (unused in this function).
- * @direction: Pointer to the t_vec3 direction vector (unused in this function).
+ * @self: Pointer to the object
+ * @direction: Pointer to the t_vec3 direction vector
  *
  * This function returns the probability density function (PDF) value for a
  * uniformly distributed direction over the surface of a sphere. Since the
@@ -263,7 +199,7 @@ vec3 random(const point3& origin) const override {
 double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
 	const t_sphere *s = (t_sphere *)self;
-	debug("sphere_pdf_value");
+
 	t_hit_record rec;
 	
 	const t_ray r = ray(*orig, *dir);
@@ -275,8 +211,6 @@ double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3
 
     // Calculate cosine of maximum theta (angle between ray and normal)
     double cos_theta_max = sqrt(1.0 - (s->radius * s->radius / distance_squared));
-
-    // Calculate solid angle
     double solid_angle = 2.0 * PI * (1.0 - cos_theta_max);
 
     // Return PDF (reciprocal of solid angle)
@@ -299,20 +233,17 @@ t_vec3 obj_sphere_random(const void *self, const t_point3 *orig)
     t_onb uvw;
     onb_build_from_w(&uvw, &direction);
 
-    // Generate a random point on the unit sphere
     t_vec3 random_point = random_to_sphere(s->radius, distance_squared);
 
     // Transform the random point using the ONB
     t_vec3 transformed_point = onb_transform(&uvw, random_point);
-
-    // Return the transformed vector
     return transformed_point;
 }
 
 // Function to generate a random direction within the sphere's volume
 t_vec3 random_to_sphere(double radius, double distance_squared) 
 {
-    double r1 = random_d(); // Generate random number between 0 and 1
+    double r1 = random_d(); 
     double r2 = random_d();
 
     // Calculate z-coordinate based on uniform distribution within the unit sphere
@@ -323,5 +254,5 @@ t_vec3 random_to_sphere(double radius, double distance_squared)
     double x = cos(phi) * sqrt(1.0 - z * z);
     double y = sin(phi) * sqrt(1.0 - z * z);
 
-    return unit_vector(vec3(x, y, z));  // Normalize to get a unit direction vector
+    return unit_vector(vec3(x, y, z));  
 }

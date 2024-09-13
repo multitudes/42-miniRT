@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/13 17:55:41 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/13 20:00:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,7 +159,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, ambient_samplecolor);
 	t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_value);
 
-	return vec3add(color_from_emission, color_from_scatter);
+	return color_from_scatter;
 	
 	//   mixture_pdf p(light_ptr, srec.pdf_ptr);
 

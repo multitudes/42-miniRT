@@ -238,13 +238,13 @@ int main(int argc, char **argv)
 	t_hittable *list[4];
 
 	// red sphere
-	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	
-	t_color albedo = color_random_min_max(0.5,1);
-	double fuzz = random_double(0, 0.5);
-	t_metal metal;
-	metal_init(&metal, albedo, fuzz);
-	t_sphere s1 = sphere_old(point3( 90,190,90 ), 90, (t_material*)&metal);
+	// t_color albedo = color_random_min_max(0.5,1);
+	// double fuzz = random_double(0, 0.5);
+	// t_metal metal;
+	// metal_init(&metal, albedo, fuzz);
+	// t_sphere s1 = sphere_old(point3( 90,190,90 ), 90, (t_material*)&metal);
 	s1.print((void*)&s1);
 
 	/***********************************/
@@ -272,10 +272,10 @@ int main(int argc, char **argv)
 	t_hittable *list_lights[2];
 
 	t_empty_material empty_material;
-	t_material *mat = (t_material*)&empty_material;
-	t_quad l6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&mat);
+	t_material *no_material = (t_material*)&empty_material;
+	t_quad l6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere l2 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&mat);
+	t_sphere l2 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&no_material);
 	list_lights[0] = (t_hittable*)(&l6);
 	list_lights[1] = (t_hittable*)(&l2);
 	const t_hittablelist lights = hittablelist(list_lights, 2);
