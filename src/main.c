@@ -228,7 +228,7 @@ int main(int argc, char **argv)
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	t_ambient ambient_light = ambient(1, rgb(255,255,255));
+	t_ambient ambient_light = ambient(0.2, rgb(255,255,255));
 	data.cam.ambient_light = ambient_light;
 
 
@@ -238,13 +238,13 @@ int main(int argc, char **argv)
 	t_hittable *list[4];
 
 	// red sphere
-	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	
-	t_color albedo = color_random_min_max(0.5,1);
-	double fuzz = random_double(0, 0.5);
-	t_metal metal;
-	metal_init(&metal, albedo, fuzz);
-	t_sphere s1 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&metal);
+	// t_color albedo = color_random_min_max(0.5,1);
+	// double fuzz = random_double(0, 0.5);
+	// t_metal metal;
+	// metal_init(&metal, albedo, fuzz);
+	// t_sphere s1 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&metal);
 	s1.print((void*)&s1);
 
 	/***********************************/
