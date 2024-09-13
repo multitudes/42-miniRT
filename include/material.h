@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 11:26:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/13 13:39:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,19 @@ typedef struct 		s_diffuse_light
 	
 }					t_diffuse_light;
 
+typedef struct 		s_empty_material
+{
+	t_material		base;
+}					t_empty_material;
+
+
 void		set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);
 
 bool 		noscatter(void *self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec);
 t_color		emitzero(void *self, t_hit_record rec, double u, double v, t_point3 p);
 double 		scattering_pdf_zero(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
+
+void 		empty_material_init(t_empty_material *empty_material);
 
 void 		lambertian_init(t_lambertian *lambertian_material, t_color albedo);
 void		lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex);

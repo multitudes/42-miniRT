@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/13 11:55:59 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/13 13:40:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,13 @@ t_color		emitzero(void *self, t_hit_record rec, double u, double v, t_point3 p)
 	return color(0, 0, 0);
 }
 
+void 		empty_material_init(t_empty_material *empty_material)
+{
+	empty_material->base.scatter = noscatter;
+	empty_material->base.emit = emitzero;
+	empty_material->base.scattering_pdf = scattering_pdf_zero;
+}
+
 /*
  * scatter function for a lambertian material
  */
@@ -126,28 +133,6 @@ bool lambertian_scatter(void* self, t_ray *r_in, t_hit_record *rec, t_scatter_re
 	srec->skip_pdf = false;
 
     return true; 
-	
-// 	t_vec3 scatter_direction = vec3add(rec->normal, random_unit_vector());
-// 	if (near_zero(scatter_direction))
-// 		scatter_direction = rec->normal;
-//     *scattered = ray(rec->p, scatter_direction);
-//     if (lamb->texture && lamb->texture->value) {
-//          *attenuation = lamb->texture->value(lamb->texture, rec->u, rec->v, &rec->p);
-//    } else {
-//         // Fallback or error handling if texture or value function is not set
-//         *attenuation = lamb->albedo; // Example fallback color
-//     }
-
-
-	// t_onb uvw;
-	
-	// onb_build_from_w(&uvw, &(rec->normal));
-	// t_lambertian *lamb = (t_lambertian *)self;
-	// t_vec3 scatter_direction = onb_transform(&uvw, random_cosine_direction());
-    // *scattered = ray(rec->p, unit_vector(scatter_direction));
-    // *attenuation = lamb->texture->value(lamb->texture, rec->u, rec->v, &rec->p);
-	// *pdf = dot(uvw.w, scattered->dir) / PI;
-
 }
 
 /*

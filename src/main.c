@@ -222,7 +222,7 @@ int main(int argc, char **argv)
 	/***************************** */
 	t_point3 center = point3(278, 278, -800);
 	t_vec3 direction = vec3(0,0,800);
-	data.cam = init_cam(center, direction, 40);
+	data.cam = init_cam(center, direction, 60);
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
@@ -270,8 +270,14 @@ int main(int argc, char **argv)
 	const t_hittablelist world = hittablelist(list, 3);
 
 	t_hittable *list_lights[2];
-	list_lights[0] = (t_hittable*)(&s6);
-	list_lights[1] = (t_hittable*)(&s2);
+
+	t_empty_material empty_material;
+	t_material *mat = (t_material*)&empty_material;
+	t_quad l6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	t_sphere l2 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&difflight2);
+	list_lights[0] = (t_hittable*)(&l6);
+	list_lights[1] = (t_hittable*)(&l2);
 	const t_hittablelist lights = hittablelist(list_lights, 2);
 
     debug("Start of minirt %s", "helllo !! ");
