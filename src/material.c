@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 11:26:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/13 11:55:59 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ bool metal_scatter(void *self,  t_ray* r_in,  t_hit_record *rec, t_scatter_recor
 {
 	t_metal *metal = (t_metal *)self;
 	t_vec3 reflected = reflect(r_in->dir, rec->normal);
-	reflected = vec3add(unit_vector(reflected), unit_vector(vec3multscalar(random_unit_vector(), metal->fuzz)));
+	reflected = vec3add(unit_vector(reflected), vec3multscalar(random_unit_vector(), metal->fuzz));
 	srec->attenuation = metal->albedo;
 	srec->pdf_ptr = NULL;
 	srec->skip_pdf = true;
