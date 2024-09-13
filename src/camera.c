@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 20:16:09 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/13 17:55:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,10 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	double pdf_value;
 
 	if (!world->hit_objects(world, r, interval(0.001, INFINITY), &rec))
-		return color(0.005,0.005,0.005); 
+		return color(0.005,0.005,0.005); // space grey!
 
+	// this is when a world object material is a light source 
+	// so it will emit light only. no diffuse or specular reflection of course
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 
 	t_scatter_record srec;
@@ -150,6 +152,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
 
+	// combine the surface color with the light's color/intensity
 	t_color ambient = vec3divscalar(cam->ambient_light.color,1);
 	t_color ambient_samplecolor = vec3add(ambient, sample_color);
 	t_color attenuationxscattering_pdf = vec3multscalar(srec.attenuation, scattering_pdf);
