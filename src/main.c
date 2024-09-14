@@ -313,6 +313,20 @@ int main_earth(int argc, char **argv)
 	data.cam = init_cam(center, direction, 50);
 	data.cam.print((void*)(&(data.cam)));
 
+	/*## RESOLUTION ##############
+	# | width  | height | ######
+	############################
+	*/
+	printf("R   %d     %d\n", data.cam.image_width, data.cam.image_height);
+
+	/*## SAMPLING #####################
+	# 	samples per pixel | bounces ###
+	###################################
+	*/
+	printf("S   %d      %d\n", data.cam.samples_per_pixel, data.cam.max_depth);
+
+
+
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */

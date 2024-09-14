@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/13 20:00:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 09:23:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 400
+#define IMAGE_WIDTH 200
 
 // Epsilon value for floating-point comparison
 #define EPSILON 1e-1
@@ -34,8 +34,8 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 {
 	t_camera cam;
 
-	cam.samples_per_pixel = 200;
-	cam.max_depth = 100; // bouncing ray
+	cam.samples_per_pixel = 100;
+	cam.max_depth = 50; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
 	cam.aspect_ratio = ASPECT_RATIO;
