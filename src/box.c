@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:40:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 17:20:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 17:30:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ t_box box(t_point3 a, t_point3 b, t_material *mat)
     box.q6 = quad(point3(min.x, min.y, min.z),  dx,  dz, mat); // bottom
 
 	box.base.hit = hit_box;
+    box.base.pdf_value = obj_pdf_value;
+    box.base.random = obj_random;
 
 	return (box);
 }

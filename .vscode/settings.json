@@ -20,6 +20,7 @@
 		"texture.h": "c",
 		"rtw_stb_image.h": "c",
 		"pdf.h": "c",
-		"*.tcc": "c"
+		"*.tcc": "c",
+		"box.h": "c"
 	}
 }

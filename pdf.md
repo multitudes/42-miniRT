@@ -296,3 +296,147 @@ t_plane plane(t_point3 p, t_vec3 n, t_rgb rgbcolor) {
 - **Plane Equation Constant:** The `d` member is calculated using the dot product of the normal vector and the point on the plane, ensuring that the plane equation is satisfied.
 - **Other Members:** The remaining members (like `rgb`, `color`, `texture`, `mat`) are initialized similarly to the quad structure.
 
+
+
+## creating a triangle
+## Creating a Triangle Initializer
+
+**Understanding the Triangle Structure:**
+
+A triangle can be defined by three vertices. The normal vector of the triangle can be calculated by taking the cross product of two edges.
+
+**Triangle Initializer:**
+
+```c
+t_triangle triangle_rgb(t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolor) {
+    t_triangle tri;
+
+    tri.base.hit = hit_triangle;
+    tri.base.pdf_value = triangle_pdf_value;
+    tri.base.random = triangle_random;
+    tri.a = a;
+    tri.b = b;
+    tri.c = c;
+    tri.rgb = rgbcolor;
+    tri.color = rgb_to_color(rgbcolor);
+    tri.normal = unit_vector(cross(vec3substr(b, a), vec3substr(c, a)));
+    tri.d = dot(tri.normal, a);
+    tri.area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
+
+    // Initialize texture and material as before
+    solid_color_init(&(tri.texture), tri.color);
+    lambertian_init_tex(&(tri.lambertian_mat), (t_texture*)&(tri.texture));
+    tri.mat = (t_material*)&(tri.lambertian_mat);
+
+    return tri;
+}
+```
+
+- **Vertices:** The triangle is defined by three vertices `a`, `b`, and `c`.
+- **Normal:** The normal vector is calculated using the cross product of the vectors `b - a` and `c - a`.
+- **Area:** The area of the triangle is calculated using the formula `0.5 * |a - b| * |c - a| * sin(θ)`, where θ is the angle between the vectors `a - b` and `c - a`. However, since we're dealing with a triangle in a plane, the sin(θ) term is always 1, so we can simplify it to `0.5 * |cross(a - b, c - a)|`.
+
+**Hit Function for Triangle:**
+
+This can be done using barycentric coordinates to check if the intersection point lies within the triangle's boundaries.
+
+## Hitting a Triangle in Raytracing
+
+**Barycentric Coordinates:**
+
+Barycentric coordinates are a convenient way to represent a point within a triangle relative to its vertices. A point P can be expressed as a linear combination of the triangle's vertices A, B, and C using barycentric coordinates (u, v, w):
+
+```
+P = uA + vB + wC
+```
+
+The condition for P to lie within the triangle is:
+
+```
+0 <= u <= 1
+0 <= v <= 1
+0 <= w <= 1
+u + v + w = 1
+```
+
+**Modified `hit_triangle` Function:**
+
+```c
+bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec) {
+    const t_triangle *tri = (t_triangle *)self;
+    double denom = dot(tri->normal, r->dir);
+
+    if (fabs(denom) < 1e-8)
+        return false;
+
+    double t = (tri->d - dot(tri->normal, r->orig)) / denom;
+    if (!contains(&ray_t, t))
+        return false;
+
+    // Determine the hit point lies within the triangle using barycentric coordinates
+    t_point3 intersection = point_at(r, t);
+    t_vec3 e1 = vec3substr(tri->b, tri->a);
+    t_vec3 e2 = vec3substr(tri->c, tri->a);
+    t_vec3 p = vec3substr(intersection, tri->a);
+    double u = dot(tri->normal, cross(e2, p));
+    double v = dot(tri->normal, cross(p, e1));
+
+    if (u >= 0 && v >= 0 && u + v <= 1) {
+        // Ray hits the triangle; set the rest of the hit record and return true
+        rec->t = t;
+        rec->p = intersection;
+        rec->mat = tri->mat;
+        set_face_normal(rec, r, tri->normal);
+        return true;
+    }
+
+    return false;
+}
+```
+
+
+- We calculate the barycentric coordinates `u` and `v` of the intersection point relative to the triangle's vertices.
+- If both `u` and `v` are non-negative and their sum is less than or equal to 1, the intersection point lies within the triangle.
+
+This modified `hit_triangle` function accurately determines if a ray intersects a triangle and sets the hit record accordingly.
+
+## triangle pdf functions
+The `triangle_pdf_value` function for a triangle can be derived from the general formula for the probability density function of a point on a 2D surface:
+
+```
+pdf(x, y) = 1 / area
+```
+
+where `area` is the area of the surface.
+
+For a triangle, the area can be calculated using the cross product of two edges:
+
+```
+area = 0.5 * |cross(e1, e2)|
+```
+
+where `e1 = b - a` and `e2 = c - a` are the vectors representing two edges of the triangle.
+
+Combining these equations, we get:
+
+```c
+double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir) {
+    const t_triangle *tri = (t_triangle *)self;
+    t_hit_record rec;
+    const t_ray r = ray(*orig, *dir);
+    if (!hit_triangle(tri, &r, interval(0.001, INFINITY), &rec))
+        return 0;
+
+    double distance_squared = length_squared(vec3substr(rec.p, *orig));
+    double cosine = fabs(dot(*dir, tri->normal));
+
+    // Calculate the area of the triangle
+    t_vec3 e1 = vec3substr(tri->b, tri->a);
+    t_vec3 e2 = vec3substr(tri->c, tri->a);
+    double area = 0.5 * length(cross(e1, e2));
+
+    return distance_squared / (cosine * area);
+}
+```
+
+This function calculates the PDF for a ray hitting a specific point on the triangle's surface. It takes into account the distance from the origin, the angle between the ray and the triangle's normal, and the area of the triangle.

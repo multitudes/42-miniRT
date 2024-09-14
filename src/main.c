@@ -13,6 +13,8 @@
 #include "quad.h"
 #include "plane.h"
 #include "disk.h"
+#include "box.h"
+#include "triangle.h"
 
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
@@ -227,7 +229,7 @@ int main(int argc, char **argv)
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	t_ambient ambient_light = ambient(0.6, rgb(110,110,110));
+	t_ambient ambient_light = ambient(1, rgb(110,110,110));
 	data.cam.ambient_light = ambient_light;
 
 
@@ -247,7 +249,7 @@ int main(int argc, char **argv)
 
 
 	// world
-	t_hittable *list[7];
+	t_hittable *list[9];
 
 	// red sphere
 	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
@@ -257,6 +259,7 @@ int main(int argc, char **argv)
 	double fuzz = 0.0;
 	t_metal metal;
 	metal_init(&metal, albedo, fuzz);
+	// red metallic sphere
 	t_sphere s1 = sphere_old(point3( 90,190,90 ), 90, (t_material*)&metal);
 	s1.print((void*)&s1);
 
@@ -300,6 +303,13 @@ int main(int argc, char **argv)
 	t_disk s8 = disk(point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
 	s8.print((void*)&s8);
 
+
+// try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
+	t_box s9 = box(point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
+
+	t_triangle s10 = triangle(point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
+	s10.print((void*)&s10);
+	
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
@@ -307,8 +317,10 @@ int main(int argc, char **argv)
 	list[4] = (t_hittable*)(&s5);	
 	list[5] = (t_hittable*)(&s7);
 	list[6] = (t_hittable*)(&s8);
+	list[7] = (t_hittable*)(&s9);
+	list[8] = (t_hittable*)(&s10);
 
-	const t_hittablelist world = hittablelist(list, 7);
+	const t_hittablelist world = hittablelist(list, 9);
 
 	t_hittable *list_lights[2];
 

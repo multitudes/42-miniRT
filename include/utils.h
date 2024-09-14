@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 12:19:17 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 18:27:36 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 #ifndef PI
 # define PI 3.1415926535897932385
 #endif
+
+// Epsilon value for floating-point comparison
+#define EPSILON 1e-6
 
 // Define constants for the LCG
 #define A 1664525
