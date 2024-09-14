@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 15:57:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 17:19:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "color.h"
 
 
-t_quad	quad(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor) 
+t_quad	quad_rgb(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor) 
 {
 	t_quad qd;
 
@@ -48,7 +48,7 @@ t_quad	quad(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
 
 }
 
-t_quad quad_mat(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
+t_quad quad(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 {
 	t_quad qd;
 

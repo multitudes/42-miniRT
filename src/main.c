@@ -275,7 +275,7 @@ int main(int argc, char **argv)
 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
 
 	// quad as light
-	t_quad s6 = quad_mat(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
 	s6.print((void*)&s6);
 
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
@@ -290,7 +290,7 @@ int main(int argc, char **argv)
 	s4.print((void*)&s4);
 
 	// add a quad just left of the s4 sphere
-	t_quad s5 = quad(point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
+	t_quad s5 = quad_rgb(point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
 	s5.print((void*)&s5);
 
 	// add a plane just below the s4 sphere
@@ -314,7 +314,7 @@ int main(int argc, char **argv)
 
 	t_empty_material empty_material;
 	t_material *no_material = (t_material*)&empty_material;
-	t_quad l6 = quad_mat(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
+	t_quad l6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
 	t_sphere l2 = sphere_old(point3( 0,250,-50 ), 60, (t_material*)&no_material);
@@ -450,7 +450,7 @@ int main_earth(int argc, char **argv)
 	solid_color_init(&difflight_color, color(20, 20, 20));
 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
 	// t_sphere s6 = sphere_mat(point3(5, 0, 0), 5.0, rgb(255,223 ,34 ), (t_material*)&difflight);
-	 t_quad s6 = quad_mat(point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
+	 t_quad s6 = quad(point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
 	
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s2);

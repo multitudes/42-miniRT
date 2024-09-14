@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:07:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 12:56:08 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 17:19:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ typedef struct s_quad
 	void		(*print)(const void* self);
 }				t_quad;
 
-t_quad	quad(t_point3 q, t_vec3 u, t_vec3 v, t_rgb color);
-t_quad	quad_mat(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat);
+t_quad	quad_rgb(t_point3 q, t_vec3 u, t_vec3 v, t_rgb color);
+t_quad	quad(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat);
 void	print_quad(const void *self);
 bool	hit_quad(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec);
 bool	is_interior(double a, double b, t_hit_record *rec);
