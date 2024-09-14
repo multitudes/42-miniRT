@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 16:12:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 16:46:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,3 +106,4 @@ t_vec3 plane_random(const void *self, const t_point3 *orig)
 	t_vec3 p = vec3add(pl->q, vec3add(vec3multscalar(pl->u, max_u), vec3multscalar(pl->v, max_v)));
 	return vec3substr(p, *orig);
 }
+

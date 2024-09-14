@@ -11,6 +11,8 @@
 #include "color.h"
 #include "ambient.h"
 #include "quad.h"
+#include "plane.h"
+#include "disk.h"
 
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
@@ -225,7 +227,7 @@ int main(int argc, char **argv)
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	t_ambient ambient_light = ambient(0.6, rgb(255,255,255));
+	t_ambient ambient_light = ambient(0.6, rgb(110,110,110));
 	data.cam.ambient_light = ambient_light;
 
 
@@ -245,7 +247,7 @@ int main(int argc, char **argv)
 
 
 	// world
-	t_hittable *list[6];
+	t_hittable *list[7];
 
 	// red sphere
 	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
@@ -295,14 +297,18 @@ int main(int argc, char **argv)
 	t_plane s7 = plane(point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
 	s7.print((void*)&s7);
 
+	t_disk s8 = disk(point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
+	s8.print((void*)&s8);
+
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
 	list[3] = (t_hittable*)(&s4);
 	list[4] = (t_hittable*)(&s5);	
 	list[5] = (t_hittable*)(&s7);
+	list[6] = (t_hittable*)(&s8);
 
-	const t_hittablelist world = hittablelist(list, 6);
+	const t_hittablelist world = hittablelist(list, 7);
 
 	t_hittable *list_lights[2];
 

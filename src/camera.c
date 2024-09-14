@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 16:11:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 16:51:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 100
+#define IMAGE_WIDTH 200
 
 // Epsilon value for floating-point comparison
 #define EPSILON 1e-1
