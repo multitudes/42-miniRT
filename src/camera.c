@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 09:23:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 09:40:22 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	t_hit_record rec;
 
-	double pdf_value;
 
 	if (!world->hit_objects(world, r, interval(0.001, INFINITY), &rec))
 		return color(0.005,0.005,0.005); // space grey!
@@ -146,7 +145,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	double pdf_value1 = recorded_pdf->value(recorded_pdf, &scattered.dir);
 	double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scattered.dir);
 
-    pdf_value = 0.5 * pdf_value1 + 0.5 * pdf_value2;
+    double pdf_value = 0.5 * pdf_value1 + 0.5 * pdf_value2;
 
 	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
 
@@ -161,141 +160,6 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	return color_from_scatter;
 	
-	//   mixture_pdf p(light_ptr, srec.pdf_ptr);
-
-    //     ray scattered = ray(rec.p, p.generate(), r.time());
-    //     auto pdf_value = p.value(scattered.direction());
-
-    //     double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
-
-    //     color sample_color = ray_color(scattered, depth-1, world, lights);
-    //     color color_from_scatter =
-    //         (srec.attenuation * scattering_pdf * sample_color) / pdf_value;
-
-    //     return color_from_emission + color_from_scatter;
-
-
-	// t_mixture_pdf mixture_pdf;
-	// if (random_d() < 0.5)
-	// {
-	// 	mixture_pdf = light_pdf.base.generate(&light_pdf);
-	// }
-	// else
-	// {
-	// 	mixture_pdf = srec.pdf_ptr->generate(&srec.pdf_ptr);
-	// }
-	// t_vec3 mixture_pdf;
-
-
-
-	// if (random_d() < 0.5)
-	// {
-	// 	mixture_pdf = light_pdf.base.generate(&light_pdf);
-	// }
-	// else
-	// {
-		// mixture_pdf = srec.pdf_ptr->generate(&srec.pdf_ptr);
-	// }
-
-	// scattered = ray(rec.p, mixture_pdf);
-
-	// double first_pdf_value = light_pdf.base.value(&light_pdf.base, &scattered.dir);
-	// double second_pdf_value = srec.pdf_ptr->value(srec.pdf_ptr, &scattered.dir);
-	// double pdf_value =  0.5 * first_pdf_value + 0.5 * second_pdf_value;
-
-
-	// double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
-
-	// t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
-
-	// t_color attenuationxscattering_pdf = vec3multscalar(srec.attenuation, scattering_pdf);
-	// t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, sample_color);
-	// t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_value);
-
-	// return vec3add(color_from_emission, color_from_scatter);
-	
-	
-	
-	
-	
-	// if (random_d() < 0.5)
-	// 	scattered = ray(rec.p, hittable_pdf_generate(&light_pdf));
-	// else
-	// 	scattered = ray(rec.p, cosine_pdf_generate(&surface_pdf));
-
-    // scattered = ray(rec.p, mixture_pdf_generate(&mix_pdf), r->tm);
-
-    // pdf_val = 0.5 * cosine_pdf_value(&surface_pdf, &scattered.dir) + 0.5 * hittable_pdf_value(&light_pdf, &scattered.dir);
-
-	// double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
-
-	// t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
-
-	// t_color attenuationxscattering_pdf = vec3multscalar(attenuation, scattering_pdf);
-	// t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, sample_color);
-	// t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_val);
-
-	// t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-	
-	// return vec3add(color_from_emission, color_from_scatter);
-	// t_vec3 x_axis = vec3(100,0,0);
-	// t_vec3 y_axis = vec3(0,100,0);
-	// t_vec3 z_axis = vec3(0,0,100);
-	// 	if (ray_intersects_line(r, &x_axis)) {
-	// 	return color(1.0, 0.0, 0.0); // Red for x-axis
-	// } else if (ray_intersects_line(r, &y_axis)) {
-	// 	return color(0.0, 1.0, 0.0); // Green for y-axis
-	// } else if (ray_intersects_line(r, &z_axis)) {
-	// 	return color(0.0, 0.0, 1.0); // Blue for z-axis
-	// }
-
-	// t_vec3 unit_direction = unit_vector(r->dir);
-	// double a = 0.5 * (unit_direction.y + 1.0);
-	// t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
-	// t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
-
-	// return vec3add(start, end);
-	// if (depth <= 0)
-	// 	return color(0, 0, 0);
-
-	// t_hit_record rec;
-	// if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
-	// {
-	// 	// t_vec3 unit_direction = unit_vector(r->dir);
-	// 	// double a = 0.5 * unit_direction.y + 1.0;
-	// 	// t_color white = color(1.0, 1.0, 1.0);
-	// 	// t_color blue = color(0.5, 0.7, 1.0);
-	// 	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
-	// 	return cam->background; // it should be the cam beckground but since this is c and raycolor is not a member func i have no access to cam
-	// }
-
-
-	// t_ray scattered;
-	// t_color attenuation;
-	// t_color color_from_emission = rec.mat->emit(rec.mat, &rec, rec.u, rec.v, rec.p);
-	
-	// if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
-	// 	return color_from_emission;
-		
-	// t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth-1, world));
-	
-	// return vec3add(color_from_emission, color_from_scatter);
-
-	// t_ray scattered;
-	// t_color attenuation;
-	// if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
-	// 	return vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world));
-	// t_vec3 direction = vec3add(rec.normal, random_unit_vector());
-	// t_ray scattered = ray(rec.p, direction);
-	// return vec3multscalar(ray_color(&scattered, depth - 1, world), 0.5);
-	// return color(0,0,0);
-	
-	// t_vec3 unit_direction = unit_vector(r->dir);
-	// double a = 0.5 * unit_direction.y + 1.0;
-	// t_color white = color(1.0, 1.0, 1.0);
-	// t_color blue = color(0.5, 0.7, 1.0);
-	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
-
 
 }
 
