@@ -228,11 +228,28 @@ int main(int argc, char **argv)
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	t_ambient ambient_light = ambient(0.6, rgb(255,255,255));
+	t_ambient ambient_light = ambient(0.3, rgb(255,255,255));
 	data.cam.ambient_light = ambient_light;
 
 
 	ambient_light.print((void*)&ambient_light);
+
+	/*## RESOLUTION ##############
+	# | width  | height | ######
+	############################
+	*/
+	printf("R   %d     %d\n", data.cam.image_width, data.cam.image_height);
+	data.cam.image_width = 200;
+
+	/*## SAMPLING #####################
+	# 	samples per pixel | bounces ###
+	###################################
+	*/
+	printf("S   %d      %d\n", data.cam.samples_per_pixel, data.cam.max_depth);
+	data.cam.samples_per_pixel = 100;
+	data.cam.max_depth = 50;
+
+
 
 	// world
 	t_hittable *list[4];
