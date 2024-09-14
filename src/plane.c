@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 16:46:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 17:12:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_plane plane(t_point3 point, t_vec3 normal, t_rgb rgbcol)
     pl.d = -dot(pl.normal, point); // Calculate D for the plane equation
 	pl.u = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
 	pl.v = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
-    pl.rgbcolor = rgbcol;
+    pl.rgb = rgbcol;
     pl.color = rgb_to_color(rgbcol);
 
     // Initialize texture and material as I did for the quad
@@ -38,6 +38,28 @@ t_plane plane(t_point3 point, t_vec3 normal, t_rgb rgbcol)
     return pl;
 }
 
+t_plane plane_mat(t_point3 point, t_vec3 normal, t_material *mat) 
+{
+    t_plane pl;
+
+    pl.base.hit = hit_plane;
+    pl.base.pdf_value = plane_pdf_value;
+    pl.base.random = plane_random;
+    pl.q = point;
+    pl.normal = unit_vector(normal);
+    pl.d = -dot(pl.normal, point); // Calculate D for the plane equation
+	pl.u = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
+	pl.v = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
+
+    pl.mat = mat;
+	// colors are depnding of the type of mat which i dont know yet
+    pl.rgb = rgb(0, 0, 0);
+	pl.color = color(0, 0, 0);
+
+	// print plane for the rt file
+	pl.print = print_plane;
+    return pl;
+}
 
 
 /**

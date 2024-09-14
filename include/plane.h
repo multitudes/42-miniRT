@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:53:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 16:06:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 17:13:40 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef struct 		s_plane
 	t_vec3			normal;
 	t_rgb			rgb;
 	t_color			color;
-	t_rgb			rgbcolor;
 	t_lambertian 	lambertian_mat;
 	t_solid_color 	texture;
 	t_material		*mat;
@@ -51,6 +50,7 @@ typedef struct 		s_plane
  * a sort of initializer for a plane
  */
 t_plane		plane(t_point3 center, t_vec3 normal, t_rgb color);
+t_plane 	plane_mat(t_point3 point, t_vec3 normal, t_material *mat); 
 void		print_plane(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool		hit_plane(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);

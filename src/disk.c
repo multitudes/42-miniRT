@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 16:47:50 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 17:15:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include "utils.h"
 
-t_disk	disk(t_point3 q, t_vec3 u, t_vec3 v, t_rgb color)
+t_disk	disk(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
 {
 	t_disk disk;
 
@@ -30,8 +30,8 @@ t_disk	disk(t_point3 q, t_vec3 u, t_vec3 v, t_rgb color)
     disk.d = dot(disk.normal, q);
 	disk.w = vec3divscalar(n, dot(n, n));
 	
-	disk.rgbcolor = color;
-    disk.color = rgb_to_color(color);
+	disk.rgb = rgbcolor;
+    disk.color = rgb_to_color(rgbcolor);
 
     // Initialize texture and material as I did for the quad
     solid_color_init(&(disk.texture), disk.color);
@@ -56,6 +56,9 @@ t_disk disk_mat(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
     disk.normal = unit_vector(n);
     disk.d = dot(disk.normal, q);
 	disk.w = vec3divscalar(n, dot(n, n));
+	// colors depend of material and will be calc in the scatter function
+	disk.rgb = rgb(0, 0, 0);	
+    disk.color = color(0, 0, 0);
 	disk.mat = mat;
 	disk.print = print_disk;
 	return (disk);
@@ -71,8 +74,10 @@ void		print_disk(const void *self)
 {
 	const t_disk *d = (const t_disk *)self;
 	printf("disk\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", 
-	d->q.x, d->q.y, d->q.z, d->u.x, d->u.y, d->u.z, d->v.x, d->v.y, d->v.z, d->rgb.r, d->rgb.g, d->rgb.b);
-
+	d->q.x, d->q.y, d->q.z, 
+	d->u.x, d->u.y, d->u.z, 
+	d->v.x, d->v.y, d->v.z, 
+	d->rgb.r, d->rgb.g, d->rgb.b);
 }
 
 
