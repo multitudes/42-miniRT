@@ -116,12 +116,8 @@ bool init_data(t_mrt *data)
     data->image = NULL;
 	data->renderscene = render;
 
-
-
     return (true);
 }
-
-
 
 int main_mixtest(int argc, char **argv)
 {
@@ -176,6 +172,7 @@ int main_mixtest(int argc, char **argv)
 	t_sphere s8 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
 	s2.print((void*)&s2);
 	t_sphere s7 = sphere(vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+
 
 	list[0] = (t_hittable*)(&s1);
 	// list[1] = (t_hittable*)(&s6);
@@ -248,7 +245,7 @@ int main(int argc, char **argv)
 
 
 	// world
-	t_hittable *list[5];
+	t_hittable *list[6];
 
 	// red sphere
 	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
@@ -292,15 +289,20 @@ int main(int argc, char **argv)
 
 	// add a quad just left of the s4 sphere
 	t_quad s5 = quad(point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
+	s5.print((void*)&s5);
 
+	// add a plane just below the s4 sphere
+	t_plane s7 = plane(point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
+	s7.print((void*)&s7);
 
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
 	list[3] = (t_hittable*)(&s4);
 	list[4] = (t_hittable*)(&s5);	
+	list[5] = (t_hittable*)(&s7);
 
-	const t_hittablelist world = hittablelist(list, 5);
+	const t_hittablelist world = hittablelist(list, 6);
 
 	t_hittable *list_lights[2];
 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 15:52:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 16:12:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_plane plane(t_point3 point, t_vec3 normal, t_rgb rgbcol)
 void		print_plane(const void *self)
 {
 	const t_plane *p = (const t_plane *)self;
-	printf("sp\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", 
+	printf("pl\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", 
 	p->q.x, p->q.y, p->q.z, p->normal.x, p->normal.y, p->normal.z, p->rgb.r, p->rgb.g, p->rgb.b);
 
 }

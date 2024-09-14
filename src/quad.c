@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 13:01:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 15:57:15 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_quad	quad(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
  	qd.mat = (t_material*)&(qd.lambertian_mat); 
-
+	qd.print = print_quad;
 	return (qd);
 
 }
