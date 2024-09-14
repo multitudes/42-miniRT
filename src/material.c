@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 09:53:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 12:50:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,13 +171,13 @@ bool metal_scatter(void *self,  t_ray* r_in,  t_hit_record *rec, t_scatter_recor
 t_color		emitlight(void *self,  t_hit_record rec, double u, double v, t_point3 p)
 {
 	// debug("emitting light");
-	(void)rec;
-	t_diffuse_light *light = (t_diffuse_light *)self;
-	return light->texture->value(light->texture ,u, v, &p);
-
+	// (void)rec;
 	// t_diffuse_light *light = (t_diffuse_light *)self;
-	// // if (!rec.front_face)
-	// // 	return color(0, 0, 0);
 	// return light->texture->value(light->texture ,u, v, &p);
+
+	t_diffuse_light *light = (t_diffuse_light *)self;
+	if (!rec.front_face)
+		return color(0, 0, 0);
+	return light->texture->value(light->texture ,u, v, &p);
 }
 

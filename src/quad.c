@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quad.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 13:56:42 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 13:01:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,41 @@
 #include "quad.h"
 #include "hittable.h"
 #include "utils.h"
+#include "color.h"
 
-t_quad quad(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
+
+t_quad	quad(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor) 
+{
+	t_quad qd;
+
+	qd.base.hit = hit_quad;
+	qd.base.pdf_value = quad_pdf_value;
+	qd.base.random = quad_random;
+	qd.q = q;
+	qd.u = u;
+	qd.v = v;
+	qd.rgb = rgbcolor;
+	qd.color = rgb_to_color(rgbcolor);
+	t_vec3 n = cross(u, v);
+	qd.normal = unit_vector(n);
+	qd.d = dot(qd.normal, q);
+	qd.w = vec3divscalar(n, dot(n, n));
+	qd.area = length(n);
+
+	// i use the color to create a texture
+	solid_color_init(&(qd.texture), qd.color);
+	// i init the lambertian material with the texture
+	lambertian_init_tex(&(qd.lambertian_mat), (t_texture*)&(qd.texture));
+	// i assign the material to the sphere as a pointer
+	// the pointer will contain the scatter function for the material
+	// which will be passed to the t_record struct when hit
+ 	qd.mat = (t_material*)&(qd.lambertian_mat); 
+
+	return (qd);
+
+}
+
+t_quad quad_mat(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 {
 	t_quad qd;
 
@@ -31,7 +64,26 @@ t_quad quad(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
     qd.d = dot(qd.normal, q);
 	qd.w = vec3divscalar(n, dot(n, n));
 	qd.area = length(n);
+	qd.rgb = rgb(0, 0, 0);
+	qd.print = print_quad;
 	return (qd);
+}
+
+/**
+ * @brief: print the quad object
+ * 
+ * @param: self: the quad object
+ * the format will be 
+ * "quad %f,%f,%f    %f,%f,%f     %f,%f,%f      %d,%d,%d"
+ 
+*/
+void	print_quad(const void *self)
+{
+	const t_quad *qd = (t_quad *)self;
+	printf("quad   %.f,%.f,%.f    %.f,%.f,%.f    %.f,%.f,%.f  %d,%d,%d\n", 
+	qd->q.x, qd->q.y, qd->q.z, 
+	qd->u.x, qd->u.y, qd->u.z, 
+	qd->v.x, qd->v.y, qd->v.z, qd->rgb.r, qd->rgb.g, qd->rgb.b);
 }
 
 bool hit_quad(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec)

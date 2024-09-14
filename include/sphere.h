@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 16:13:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 12:56:23 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ typedef struct		s_sphere
 	void			(*print)(const void* self);
 }					t_sphere;
 
-
-
 /*
  * a sort of initializer for a sphere
  */
@@ -46,6 +44,7 @@ void		print_sphere_mat(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool		hit_sphere(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
 void		get_sphere_uv(t_vec3 normal, double* u, double* v);
+t_rgb 		color_to_rgb(t_color color);
 
 /**
  * sphere_pdf_value - Computes the PDF value for a uniform sphere.

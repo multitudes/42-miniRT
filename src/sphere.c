@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/13 20:04:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 12:58:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,12 @@
 #include "pdf.h"
 #include "texture.h"
 
+/**
+ * @brief: initializer for a sphere the old way
+ * 
+ * The old way is when i was using the weekend book
+ * Here it suppose to have a metal material
+*/
 t_sphere sphere_old(t_point3 center, double radius, t_material *mat)
 {
 	t_sphere s;
@@ -67,7 +73,6 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 	s.base.random = obj_sphere_random;
 	s.center = center;
 	s.radius = fmax(0, diameter / 2);
-	s.print = print_sphere;
 	s.rgb = rgbcolor;
 	s.color = rgb_to_color(rgbcolor);
 	// i use the color to create a texture
@@ -78,6 +83,7 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
  	s.mat = (t_material*)&(s.lambertian_mat); 
+	s.print = print_sphere;
 	return s;
 }
 
@@ -94,7 +100,6 @@ t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material
 	s.base.random = obj_sphere_random;
 	s.center = center;
 	s.radius = fmax(0, diameter / 2);
-	s.print = print_sphere_mat;
 	s.rgb = rgbcolor;
 	s.color = rgb_to_color(rgbcolor);
  	s.mat = mat; 
@@ -114,14 +119,6 @@ void		print_sphere(const void *self)
 	s->rgb.r, s->rgb.g, s->rgb.b);
 }
 
-// print_sphere_mat
-void		print_sphere_mat(const void *self)
-{
-	const t_sphere *s = (const t_sphere *)self;
-	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d mat\n", 
-	s->center.x, s->center.y, s->center.z, s->radius * 2,
-	s->rgb.r, s->rgb.g, s->rgb.b);
-}
 
 bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record* rec)
 {
@@ -255,4 +252,13 @@ t_vec3 random_to_sphere(double radius, double distance_squared)
     double y = sin(phi) * sqrt(1.0 - z * z);
 
     return unit_vector(vec3(x, y, z));  
+}
+
+t_rgb color_to_rgb(t_color color)
+{
+	t_rgb rgb;
+	rgb.r = (uint8_t)(255.999 * color.x);
+	rgb.g = (uint8_t)(255.999 * color.y);
+	rgb.b = (uint8_t)(255.999 * color.z);
+	return rgb;
 }

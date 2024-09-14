@@ -228,7 +228,7 @@ int main(int argc, char **argv)
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	t_ambient ambient_light = ambient(0.3, rgb(255,255,255));
+	t_ambient ambient_light = ambient(0.6, rgb(255,255,255));
 	data.cam.ambient_light = ambient_light;
 
 
@@ -239,29 +239,26 @@ int main(int argc, char **argv)
 	############################
 	*/
 	printf("R   %d     %d\n", data.cam.image_width, data.cam.image_height);
-	data.cam.image_width = 200;
 
 	/*## SAMPLING #####################
 	# 	samples per pixel | bounces ###
 	###################################
 	*/
 	printf("S   %d      %d\n", data.cam.samples_per_pixel, data.cam.max_depth);
-	data.cam.samples_per_pixel = 100;
-	data.cam.max_depth = 50;
-
 
 
 	// world
-	t_hittable *list[4];
+	t_hittable *list[5];
 
 	// red sphere
-	t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	
-	// t_color albedo = color_random_min_max(0.5,1);
-	// double fuzz = random_double(0, 0.5);
-	// t_metal metal;
-	// metal_init(&metal, albedo, fuzz);
-	// t_sphere s1 = sphere_old(point3( 90,190,90 ), 90, (t_material*)&metal);
+	//red metallic 
+	t_color albedo = color(0.8, 0.1, 0.1);
+	double fuzz = 0.0;
+	t_metal metal;
+	metal_init(&metal, albedo, fuzz);
+	t_sphere s1 = sphere_old(point3( 90,190,90 ), 90, (t_material*)&metal);
 	s1.print((void*)&s1);
 
 	/***********************************/
@@ -271,28 +268,45 @@ int main(int argc, char **argv)
 	t_solid_color difflight_color;
 	solid_color_init(&difflight_color, color(40, 40, 40));
 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+
+	// blue light
 	t_diffuse_light difflight2;
 	t_solid_color difflight_color2;
 	solid_color_init(&difflight_color2, color(0, 0, 80));
 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
-	t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+
+	// quad as light
+	t_quad s6 = quad_mat(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	s6.print((void*)&s6);
+
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere s2 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&difflight2);
+	// t_sphere s2 = sphere(vec3(0,250,-50), 120, rgb(16, 13, 166));
+	t_sphere s2 = sphere_old(point3( 0,250,-50 ), 60, (t_material*)&difflight2);
+	s2.print((void*)&s2);
 	// t_sphere s6 = sphere_old(point3( 343,554,332), 90, (t_material*)&difflight);
+
+
+	// adding another sphere
+	// red sphere
+	t_sphere s4 = sphere(vec3(400, 90, 190), 90, rgb(166, 13, 13));
+	s4.print((void*)&s4);
 
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
+	list[3] = (t_hittable*)(&s4);
 
-	const t_hittablelist world = hittablelist(list, 3);
+	const t_hittablelist world = hittablelist(list, 4);
 
 	t_hittable *list_lights[2];
 
 	t_empty_material empty_material;
 	t_material *no_material = (t_material*)&empty_material;
-	t_quad l6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
+	t_quad l6 = quad_mat(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
+
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere l2 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&no_material);
+	t_sphere l2 = sphere_old(point3( 0,250,-50 ), 60, (t_material*)&no_material);
+
 	list_lights[0] = (t_hittable*)(&l6);
 	list_lights[1] = (t_hittable*)(&l2);
 	const t_hittablelist lights = hittablelist(list_lights, 2);
@@ -424,7 +438,7 @@ int main_earth(int argc, char **argv)
 	solid_color_init(&difflight_color, color(20, 20, 20));
 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
 	// t_sphere s6 = sphere_mat(point3(5, 0, 0), 5.0, rgb(255,223 ,34 ), (t_material*)&difflight);
-	 t_quad s6 = quad(point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
+	 t_quad s6 = quad_mat(point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
 	
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s2);

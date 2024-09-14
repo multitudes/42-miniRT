@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 09:51:53 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 11:28:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 200
+#define IMAGE_WIDTH 400
 
 // Epsilon value for floating-point comparison
 #define EPSILON 1e-1
@@ -95,8 +95,8 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	// if I hit an object in the world (including a light) I fill the 
 	// hit record rec struct
-	if (!world->hit_objects(world, r, interval(0.001, INFINITY), &rec))
-		return color(0.005,0.005,0.005); // space grey!
+	if (!world->hit_objects(world, r, interval(0.001, 10000), &rec))
+		return color(0.0005,0.0005,0.005); // space grey!
 
 	// Here I use the hit_record collected from the previous hit
 	// when a world object material is a light source it will emit light only. 
@@ -106,13 +106,28 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// another hit record for the scatter
 	t_scatter_record srec;
 	init_scatter_record(&srec);
+	// is light only so it doesnt have scatter
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 		return color_from_emission;
-
+	//we should only call the pdf_value() if it is diffuse, 
+	//so for specular material we should skip the pdf_value() call
+	// and use the scattered ray skip_pdf ray multiplied by the attenuation
+	// of the material to get the color of the object
 	t_ray scattered = srec.skip_pdf_ray;
 	if (srec.skip_pdf)
 	{
-		return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+		if (srec.skip_pdf) {
+			t_color ambient_light = cam->ambient_light.color;
+			t_metal *metal = (t_metal *)rec.mat;
+			t_color ambient_material = vec3mult(metal->albedo, ambient_light);
+
+       		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+
+        return vec3add(ambient_material, reflected_color);
+    }
+
+		// t_color ambient = vec3divscalar(vec cam->ambient_light.color, cam->max_depth);
+		// return vec3add(ambient ,vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights)));
 	}
 	// debug("rec normal: %f %f %f\n", rec.normal.x, rec.normal.y, rec.normal.z);
 
