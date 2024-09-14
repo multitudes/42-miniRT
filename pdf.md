@@ -88,4 +88,144 @@ The provided code snippet seems to be a simplified implementation of a lighting 
 The final color is a combination of diffuse and ambient light. The diffuse component is significant due to the 45-degree angle between the light source and the surface, resulting in a moderate amount of diffuse reflection. The ambient component adds a constant background lighting level.
 
 
+## what is the hittable_pdf
+The `hittable_pdf` in the book "Raytracing: The Rest of Your Life" is a probability density function (PDF) that represents the likelihood of a ray hitting a particular object in a scene. It's used in conjunction with importance sampling to improve the efficiency of raytracing, especially for complex scenes with many objects.
 
+**Key Points:**
+
+- **Hittable:** Refers to any object in the scene that a ray can potentially intersect.
+- **PDF:** A function that describes the probability of a random variable taking on a particular value. In this case, the random variable is the direction of a ray.
+- **Importance Sampling:** A technique that biases the sampling of rays towards areas of the scene that are more likely to contribute significantly to the final image.
+
+**How `hittable_pdf` Works:**
+
+1. **Initialization:** The `hittable_pdf` is initialized with a list of hittable objects and a point of origin.
+2. **`value` Method:** This method calculates the probability of a ray originating from the given point and traveling in a specific direction hitting any of the objects in the list.
+3. **`generate` Method:** This method generates a random direction based on the `hittable_pdf`. It selects a random object from the list and samples a direction from that object's surface, weighted according to the object's area and distance from the origin.
+
+**Why `hittable_pdf` is Important:**
+
+- **Efficient Sampling:** By using `hittable_pdf` for sampling, rays are more likely to be directed towards objects that are more likely to contribute to the final image, reducing wasted samples.
+- **Realistic Lighting:** Accurate sampling of objects helps to achieve more realistic lighting effects, especially for complex scenes with many objects and occlusions.
+
+**Example Usage:**
+
+In a raytracer, you might use `hittable_pdf` to:
+
+- Sample light sources more efficiently.
+- Generate scattered rays for indirect lighting calculations.
+- Improve the accuracy of global illumination techniques.
+
+By understanding the concept of `hittable_pdf`, you can better appreciate how it contributes to the efficiency and accuracy of raytracing algorithms.
+
+## what is sphere_pdf
+In a raytracer, you might use sphere_pdf to:
+
+Sample light sources that are spherical in shape.
+Generate scattered rays from a spherical object.
+Improve the accuracy of global illumination calculations involving spheres.
+
+The sphere_pdf being 1 / (4 * PI) for a sphere in raytracing indicates that the probability of a ray hitting any particular point on the sphere's surface is uniform. This means that every point on the sphere has an equal chance of being hit by a ray.
+
+## Cosine PDF
+A cosine PDF is indeed commonly used to represent flat light sources in raytracing.
+
+ This is because a perfectly diffuse surface, such as a flat light source, emits light with a cosine distribution. This means that the intensity of light emitted in a particular direction is proportional to the cosine of the angle between that direction and the surface normal.
+
+Key Points:
+
+    Cosine Distribution: A cosine distribution means that light is emitted more strongly in directions that are closer to the surface normal and less strongly in directions that are more tangential.
+    Flat Light Sources: Idealized flat light sources, like a ceiling light or a wall lamp, are often assumed to have a cosine emission pattern.
+    PDF: A cosine PDF is a mathematical function that describes this probability distribution.
+
+Using Cosine PDF for Flat Light Sources:
+
+    Initialization: A cosine PDF is typically initialized with the surface normal of the flat light source.
+    value Method: This method calculates the probability density for a given direction based on the cosine of the angle between the direction and the surface normal.
+    generate Method: This method generates a random direction according to the cosine PDF, favoring directions closer to the surface normal.
+
+Benefits of Using Cosine PDF:
+
+    Realistic Lighting: Using a cosine PDF for flat light sources accurately models their diffuse emission pattern, leading to more realistic lighting effects.
+    Efficient Sampling: By sampling light rays according to the cosine PDF, you can focus your sampling efforts on directions that are more likely to contribute significantly to the final image.
+
+```c
+double cosine_pdf_value(const void *self, const t_vec3 *direction)
+{
+	t_cosine_pdf *cos_pdf = (t_cosine_pdf *)self;
+	double cosine_theta = dot(unit_vector(*direction), cos_pdf->uvw.w);
+	return (fmax(0, cosine_theta / PI));
+}
+```
+
+unit_vector(*direction) normalizes the input direction vector.  
+cos_pdf->uvw.w represents the w component of the orthonormal basis (ONB) associated with the cosine PDF.   This component is typically aligned with the surface normal.  
+dot(...) calculates the dot product between the normalized direction vector and the w component. This gives the cosine of the angle between the direction and the surface normal.  
+The fmax function ensures that the returned value is non-negative.  
+The result is divided by PI to normalize the PDF, ensuring that the integral of the PDF over all directions equals 1.  
+
+## dot product
+The dot product doesn't give you an orthogonal vector; it gives you a **scalar**. This scalar value represents the projection of one vector onto another, scaled by their magnitudes.
+
+**Geometric Interpretation:**
+
+- Imagine two vectors, `A` and `B`.
+- Project `B` onto `A`. The length of this projection is the scalar value obtained from the dot product.
+- If the angle between `A` and `B` is 90 degrees (they are orthogonal), the projection of one onto the other is 0. This is why the dot product of orthogonal vectors is 0.
+
+**Mathematical Formula:**
+
+The dot product of two vectors `A` and `B` is given by:
+
+```
+A · B = |A| * |B| * cos(θ)
+```
+
+where:
+
+- `|A|` and `|B|` are the magnitudes of vectors `A` and `B`, respectively.
+- `θ` is the angle between vectors `A` and `B`.
+
+**Cosine Relationship:**
+The dot product is directly related to the cosine of the angle between the two vectors. When the angle is 0 (vectors are parallel), the cosine is 1, and the dot product is maximum. When the angle is 90 degrees (vectors are orthogonal), the cosine is 0, and the dot product is 0.
+
+
+
+
+## cross product
+## Understanding the Cross Product
+
+**The cross product is a mathematical operation that takes two vectors as input and produces a third vector that is perpendicular to both of them.** This resulting vector is often referred to as the **normal vector**.
+
+**Geometric Interpretation:**
+
+Imagine two vectors, A and B, in three-dimensional space. The cross product A × B produces a new vector that is perpendicular to the plane containing A and B. The direction of this new vector is determined by the right-hand rule: if you curl your right hand from A towards B, your thumb will point in the direction of the cross product.
+
+**Mathematical Formula:**
+
+The cross product of two vectors A = (a1, a2, a3) and B = (b1, b2, b3) is given by:
+
+```
+A × B = (a2 * b3 - a3 * b2, a3 * b1 - a1 * b3, a1 * b2 - a2 * b1)
+```
+
+**Properties of the Cross Product:**
+
+- **Anti-commutativity:** A × B = -B × A
+- **Distributivity:** A × (B + C) = A × B + A × C
+- **Scalar multiplication:** (cA) × B = c(A × B) = A × (cB)
+- **Magnitude:** |A × B| = |A| * |B| * sin(θ), where θ is the angle between A and B.
+
+**Applications of the Cross Product:**
+
+- **Finding the normal vector to a plane:** Given two vectors in the plane, their cross product gives the normal vector.
+- **Calculating torque:** In physics, the torque of a force on an object is calculated using the cross product.
+- **Determining the direction of rotation:** In computer graphics and robotics, the cross product is used to determine the direction of rotation.
+
+**Example:**
+
+If A = (1, 2, 3) and B = (4, 5, 6), then:
+
+A × B = (2 * 6 - 3 * 5, 3 * 4 - 1 * 6, 1 * 5 - 2 * 4) = (-3, 6, -3)
+
+The vector (-3, 6, -3) is perpendicular to both A and B.

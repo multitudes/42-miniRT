@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 09:40:22 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 09:51:53 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,17 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	t_hit_record rec;
 
-
+	// if I hit an object in the world (including a light) I fill the 
+	// hit record rec struct
 	if (!world->hit_objects(world, r, interval(0.001, INFINITY), &rec))
 		return color(0.005,0.005,0.005); // space grey!
 
-	// this is when a world object material is a light source 
-	// so it will emit light only. no diffuse or specular reflection of course
+	// Here I use the hit_record collected from the previous hit
+	// when a world object material is a light source it will emit light only. 
+	// and I will directly return the color from the light source
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 
+	// another hit record for the scatter
 	t_scatter_record srec;
 	init_scatter_record(&srec);
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))

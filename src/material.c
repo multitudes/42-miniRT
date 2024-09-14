@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/13 13:40:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/14 09:53:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,12 @@ double scattering_pdf_zero(void* self, const t_ray *r_in, const t_hit_record *re
     return 0;
 }
 
+/**
+ * @brief basic initialization of a scatter record
+ * 
+ * 
+ * 
+*/
 void init_scatter_record(t_scatter_record *srec)
 {
 	srec->attenuation = color(0, 0, 0);
