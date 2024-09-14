@@ -251,3 +251,48 @@ A × B = (2 * 6 - 3 * 5, 3 * 4 - 1 * 6, 1 * 5 - 2 * 4) = (-3, 6, -3)
 The vector (-3, 6, -3) is perpendicular to both A and B.
 
 
+## A plane
+## Creating a Plane Initializer in Raytracing
+
+**Understanding the Plane Structure:**
+
+A plane can be defined by a point on the plane and its normal vector. The equation of a plane is typically represented as:
+
+```
+Ax + By + Cz + D = 0
+```
+
+where (A, B, C) is the normal vector and D is a constant.
+
+**Initializing the Plane Structure:**
+
+Here's how you can initialize a plane structure:
+
+```c
+t_plane plane(t_point3 p, t_vec3 n, t_rgb rgbcolor) {
+    t_plane pl;
+
+    pl.base.hit = hit_plane;
+    pl.base.pdf_value = plane_pdf_value;
+    pl.base.random = plane_random;
+    pl.p = p;
+    pl.n = unit_vector(n);
+    pl.d = -dot(pl.n, p); // Calculate D for the plane equation
+    pl.rgb = rgbcolor;
+    pl.color = rgb_to_color(rgbcolor);
+
+    // Initialize texture and material as you did for the quad
+    solid_color_init(&(pl.texture), pl.color);
+    lambertian_init_tex(&(pl.lambertian_mat), (t_texture*)&(pl.texture));
+    pl.mat = (t_material*)&(pl.lambertian_mat);
+
+    return pl;
+}
+```
+
+**Explanation of Changes:**
+
+- **Normal Vector:** The `n` member is directly used as the normal vector of the plane.
+- **Plane Equation Constant:** The `d` member is calculated using the dot product of the normal vector and the point on the plane, ensuring that the plane equation is satisfied.
+- **Other Members:** The remaining members (like `rgb`, `color`, `texture`, `mat`) are initialized similarly to the quad structure.
+

@@ -285,18 +285,22 @@ int main(int argc, char **argv)
 	s2.print((void*)&s2);
 	// t_sphere s6 = sphere_old(point3( 343,554,332), 90, (t_material*)&difflight);
 
-
 	// adding another sphere
 	// red sphere
 	t_sphere s4 = sphere(vec3(400, 90, 190), 90, rgb(166, 13, 13));
 	s4.print((void*)&s4);
 
+	// add a quad just left of the s4 sphere
+	t_quad s5 = quad(point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
+
+
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
 	list[3] = (t_hittable*)(&s4);
+	list[4] = (t_hittable*)(&s5);	
 
-	const t_hittablelist world = hittablelist(list, 4);
+	const t_hittablelist world = hittablelist(list, 5);
 
 	t_hittable *list_lights[2];
 
