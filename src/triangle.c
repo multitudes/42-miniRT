@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:04:25 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 18:59:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/15 12:07:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,39 +69,49 @@ t_triangle triangle_mat(t_point3 a, t_point3 b, t_point3 c, t_material *mat) {
 
 void print_triangle(const void *self) {
     t_triangle *tri = (t_triangle *)self;
-    printf("tri %f,%f,%f %f,%f,%f %f,%f,%f %d,%d,%d\n", 
+    printf("tri %.f,%.f,%.f %.f,%.f,%.f %.f,%.f,%.f %d,%d,%d\n", 
     tri->a.x, tri->a.y, tri->a.z, 
     tri->b.x, tri->b.y, tri->b.z, 
     tri->c.x, tri->c.y, tri->c.z, 
     tri->rgb.r, tri->rgb.g, tri->rgb.b);
 }
 
-bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec) {
+bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec) 
+{
     const t_triangle *tri = (t_triangle *)self;
     t_vec3 e1 = tri->edge1;
     t_vec3 e2 = tri->edge2;
-   
+
+        // the .. Trumbore algo
+    
     // Calculate the ray direction vector
-    t_vec3 p = cross(r->dir, e2);
+    t_vec3 dir_cross_e2 = cross(r->dir, e2);
 
     // Calculate the determinant
-    double det = dot(e1, p);
+    double det = dot(e1, dir_cross_e2);
 
     if (fabs(det) < EPSILON)
         return false; // Ray is parallel to the triangle
 
     // Calculate barycentric coordinates
-    double invDet = 1.0 / det;
-    t_vec3 o_to_vertex = vec3substr(r->orig, tri->a);
-    double u = dot(o_to_vertex, p) * invDet;
-    double v = dot(r->dir, cross(e2, o_to_vertex)) * invDet;
-
-    // Check if the intersection point is within the triangle
-    if (u < 0 || v < 0 || u + v > 1)
+    double f = 1.0 / det;
+    
+    t_vec3 p1_to_origin = vec3substr(r->orig, tri->a);
+    
+    double u = f * dot(p1_to_origin, dir_cross_e2);
+    if (u < 0 || u > 1)
+        return false;
+    
+    t_vec3 origin_cross_e1 = cross(p1_to_origin, e1);
+    double v = f * dot(r->dir, origin_cross_e1);
+    
+    if (v < 0 || u + v > 1)
         return false;
 
+
     // Calculate the intersection point
-    double t = dot(e1, cross(e2, o_to_vertex)) * invDet;
+    double t = f * dot(e2, origin_cross_e1);
+    
     if (!contains(&ray_t, t))
         return false;
 

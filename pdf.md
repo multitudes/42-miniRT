@@ -290,8 +290,6 @@ t_plane plane(t_point3 p, t_vec3 n, t_rgb rgbcolor) {
 }
 ```
 
-**Explanation of Changes:**
-
 - **Normal Vector:** The `n` member is directly used as the normal vector of the plane.
 - **Plane Equation Constant:** The `d` member is calculated using the dot product of the normal vector and the point on the plane, ensuring that the plane equation is satisfied.
 - **Other Members:** The remaining members (like `rgb`, `color`, `texture`, `mat`) are initialized similarly to the quad structure.
@@ -363,34 +361,47 @@ u + v + w = 1
 
 ```c
 bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec) {
-    const t_triangle *tri = (t_triangle *)self;
-    double denom = dot(tri->normal, r->dir);
+       const t_triangle *tri = (t_triangle *)self;
+    t_vec3 e1 = tri->edge1;
+    t_vec3 e2 = tri->edge2;
 
-    if (fabs(denom) < 1e-8)
+        // the .. Trumbore algo
+    
+    // Calculate the ray direction vector
+    t_vec3 dir_cross_e2 = cross(r->dir, e2);
+
+    // Calculate the determinant
+    double det = dot(e1, dir_cross_e2);
+
+    if (fabs(det) < EPSILON)
+        return false; // Ray is parallel to the triangle
+
+    // Calculate barycentric coordinates
+    double f = 1.0 / det;
+    
+    t_vec3 p1_to_origin = vec3substr(r->orig, tri->a);
+    
+    double u = f * dot(p1_to_origin, dir_cross_e2);
+    if (u < 0 || u > 1)
+        return false;
+    
+    t_vec3 origin_cross_e1 = cross(p1_to_origin, e1);
+    double v = f * dot(r->dir, origin_cross_e1);
+    
+    if (v < 0 || u + v > 1)
         return false;
 
-    double t = (tri->d - dot(tri->normal, r->orig)) / denom;
-    if (!contains(&ray_t, t))
-        return false;
 
-    // Determine the hit point lies within the triangle using barycentric coordinates
-    t_point3 intersection = point_at(r, t);
-    t_vec3 e1 = vec3substr(tri->b, tri->a);
-    t_vec3 e2 = vec3substr(tri->c, tri->a);
-    t_vec3 p = vec3substr(intersection, tri->a);
-    double u = dot(tri->normal, cross(e2, p));
-    double v = dot(tri->normal, cross(p, e1));
+    // Calculate the intersection point
+    double t = f * dot(e2, origin_cross_e1);
 
-    if (u >= 0 && v >= 0 && u + v <= 1) {
-        // Ray hits the triangle; set the rest of the hit record and return true
-        rec->t = t;
-        rec->p = intersection;
-        rec->mat = tri->mat;
-        set_face_normal(rec, r, tri->normal);
-        return true;
-    }
+// populate the hit record
+    rec->t = t;
+    rec->p = point_at(r, t);
+    rec->mat = tri->mat;
+    set_face_normal(rec, r, tri->normal);
 
-    return false;
+    return true;
 }
 ```
 
@@ -420,9 +431,11 @@ where `e1 = b - a` and `e2 = c - a` are the vectors representing two edges of th
 Combining these equations, we get:
 
 ```c
-double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir) {
+double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir) 
+{
     const t_triangle *tri = (t_triangle *)self;
     t_hit_record rec;
+
     const t_ray r = ray(*orig, *dir);
     if (!hit_triangle(tri, &r, interval(0.001, INFINITY), &rec))
         return 0;
