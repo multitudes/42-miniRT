@@ -15,6 +15,7 @@
 #include "disk.h"
 #include "box.h"
 #include "triangle.h"
+#include <time.h>
 
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
@@ -249,8 +250,10 @@ int main(int argc, char **argv)
 
 
 	// world
-	t_hittable *list[9];
-
+	// ================================================== world ==================================================
+	t_hittable *list[11];
+	// ================================================== world ==================================================
+	
 	// red sphere
 	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	
@@ -311,6 +314,33 @@ int main(int argc, char **argv)
 	t_triangle s10 = triangle(point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
 	s10.print((void*)&s10);
 	
+	// checker texture sphere
+	t_lambertian lambertian_material;
+	t_checker_texture checker_texture1;
+	t_solid_color even1;
+	t_solid_color odd1;
+	solid_color_init(&even1, color(0.2, 0.3, 0.1));
+	solid_color_init(&odd1, color(0.9, 0.9, 0.9));
+	checker_texture_init(&checker_texture1, 20.0, &even1, &odd1);
+	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
+	t_sphere s11 = sphere_mat(point3(650, 300, 200), 100, rgb(0,0,0), (t_material*)&lambertian_material);
+
+	printf("_______________\n");
+	printf("size of t_triangle: %lu\n", sizeof(t_triangle));
+
+
+	/***********************************/
+	/* 			earth       		   */
+	/***********************************/
+	t_lambertian earth_surface;
+	t_rtw_image img;
+	init_rtw_image(&img,"rtw_image/earthmap.jpg");
+	t_img_texture img_texture;
+	img_texture_init(&img_texture, &img);
+	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
+	t_sphere s12 = sphere_mat(point3(250, 100, -200), 100.0, rgb(0,0,0) ,(t_material*)&earth_surface);
+
+
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
@@ -320,8 +350,10 @@ int main(int argc, char **argv)
 	list[6] = (t_hittable*)(&s8);
 	list[7] = (t_hittable*)(&s9);
 	list[8] = (t_hittable*)(&s10);
+	list[9] = (t_hittable*)(&s11);
+	list[10] = (t_hittable*)(&s12);
 
-	const t_hittablelist world = hittablelist(list, 9);
+	const t_hittablelist world = hittablelist(list, 11);
 
 	t_hittable *list_lights[2];
 
