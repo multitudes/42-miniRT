@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 12:58:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/15 16:42:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,34 +25,34 @@
 #include "pdf.h"
 #include "texture.h"
 
-/**
- * @brief: initializer for a sphere the old way
- * 
- * The old way is when i was using the weekend book
- * Here it suppose to have a metal material
-*/
-t_sphere sphere_old(t_point3 center, double radius, t_material *mat)
-{
-	t_sphere s;
+// /**
+//  * @brief: initializer for a sphere the old way
+//  * 
+//  * The old way is when i was using the weekend book
+//  * Here it suppose to have a metal material
+// */
+// t_sphere sphere_mat(t_point3 center, double radius, t_material *mat)
+// {
+// 	t_sphere s;
 
-	s.base.hit = hit_sphere;
-	s.base.pdf_value = obj_sphere_pdf_value;
-	s.base.random = obj_sphere_random;
-	s.center = center;
-	s.radius = fmax(0,radius);
-	s.mat = mat;
-	s.print = print_sphere;
-	s.rgb = rgb(0, 0, 0);
-	s.color = color(1, 0, 0);
-	t_lambertian lambertian;
-	lambertian_init(&(lambertian), s.color);
-	s.lambertian_mat = lambertian;
-	t_solid_color solid_color;
-	solid_color_init(&solid_color, s.color);
-	s.texture = solid_color;
-	
-	return s;
-}
+// 	s.base.hit = hit_sphere;
+// 	s.base.pdf_value = obj_sphere_pdf_value;
+// 	s.base.random = obj_sphere_random;
+// 	s.center = center;
+// 	s.radius = fmax(0,radius);
+// 	s.mat = mat;
+// 	s.print = print_sphere;
+// 	s.rgb = rgb(0, 0, 0);
+// 	s.color = color(0, 0, 0);
+// 	t_lambertian lambertian;
+// 	lambertian_init(&(lambertian), s.color);
+// 	s.lambertian_mat = lambertian;
+// 	t_solid_color solid_color;
+// 	solid_color_init(&solid_color, s.color);
+// 	s.texture = solid_color;
+// 	s.mat = (t_material*)&(s.lambertian_mat);
+// 	return s;
+// }
 
 /*
  * @brief: initializer for a sphere
@@ -94,15 +94,17 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
  */
 t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat)
 {
+	(void)rgbcolor;
 	t_sphere s;
 	s.base.hit = hit_sphere;
 	s.base.pdf_value = obj_sphere_pdf_value;
 	s.base.random = obj_sphere_random;
 	s.center = center;
 	s.radius = fmax(0, diameter / 2);
-	s.rgb = rgbcolor;
-	s.color = rgb_to_color(rgbcolor);
+	s.rgb = rgb(0,0,0);
+	s.color = color(0,0,0);
  	s.mat = mat; 
+	s.print = print_sphere;
 	return s;
 }
 

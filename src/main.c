@@ -166,8 +166,8 @@ int main_mixtest(int argc, char **argv)
 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
 	// t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere s2 = sphere_old(point3( 90,190,90 ), 30, (t_material*)&difflight2);
-	// t_sphere s6 = sphere_old(point3( 343,554,332), 90, (t_material*)&difflight);
+	t_sphere s2 = sphere_mat(point3( 90,190,90 ), 30, rgb(0,0,0), (t_material*)&difflight2);
+	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
 
 	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
 
@@ -251,7 +251,7 @@ int main(int argc, char **argv)
 
 	// world
 	// ================================================== world ==================================================
-	t_hittable *list[11];
+	t_hittable *list[13];
 	// ================================================== world ==================================================
 	
 	// red sphere
@@ -263,7 +263,7 @@ int main(int argc, char **argv)
 	t_metal metal;
 	metal_init(&metal, albedo, fuzz);
 	// red metallic sphere
-	t_sphere s1 = sphere_old(point3( 90,190,90 ), 90, (t_material*)&metal);
+	t_sphere s1 = sphere_mat(point3( 90,190,90 ), 180, rgb(0,0,0), (t_material*)&metal);
 	s1.print((void*)&s1);
 
 	/***********************************/
@@ -286,9 +286,9 @@ int main(int argc, char **argv)
 
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
 	// t_sphere s2 = sphere(vec3(0,250,-50), 120, rgb(16, 13, 166));
-	t_sphere s2 = sphere_old(point3( 0,250,-50 ), 60, (t_material*)&difflight2);
+	t_sphere s2 = sphere_mat(point3( 0,250,-50 ), 120, rgb(0,0,0), (t_material*)&difflight2);
 	s2.print((void*)&s2);
-	// t_sphere s6 = sphere_old(point3( 343,554,332), 90, (t_material*)&difflight);
+	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
 
 	// adding another sphere
 	// red sphere
@@ -339,7 +339,10 @@ int main(int argc, char **argv)
 	img_texture_init(&img_texture, &img);
 	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
 	t_sphere s12 = sphere_mat(point3(250, 100, -200), 100.0, rgb(0,0,0) ,(t_material*)&earth_surface);
-
+	s12.print((void*)&s12);
+	
+	t_cylinder s13 = cylinder(point3(350, 100, -200), vec3(0,1,0), 100, 200, rgb(166, 103, 13));
+	s13.print((void*)&s13);
 
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);
@@ -352,8 +355,9 @@ int main(int argc, char **argv)
 	list[8] = (t_hittable*)(&s10);
 	list[9] = (t_hittable*)(&s11);
 	list[10] = (t_hittable*)(&s12);
+	list[11] = (t_hittable*)(&s13);
 
-	const t_hittablelist world = hittablelist(list, 11);
+	const t_hittablelist world = hittablelist(list, 12);
 
 	t_hittable *list_lights[2];
 
@@ -362,7 +366,7 @@ int main(int argc, char **argv)
 	t_quad l6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere l2 = sphere_old(point3( 0,250,-50 ), 60, (t_material*)&no_material);
+	t_sphere l2 = sphere_mat(point3( 0,250,-50 ), 60, rgb(0,0,0),(t_material*)&no_material);
 
 	list_lights[0] = (t_hittable*)(&l6);
 	list_lights[1] = (t_hittable*)(&l2);

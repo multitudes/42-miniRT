@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 12:56:23 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/15 16:03:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ t_rgb 		color_to_rgb(t_color color);
  */
 double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir);
 t_vec3 obj_sphere_random(const void *self, const t_point3 *orig);
-t_sphere sphere_old(t_point3 center, double radius, t_material *mat);
 // Function to generate a random direction within the sphere's volume
 t_vec3 random_to_sphere(double radius, double distance_squared);
 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 12:28:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/15 18:33:23 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 100
+#define IMAGE_WIDTH 800
 
 
 
@@ -256,7 +256,9 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 			// add bar progress
         }
 		debug("%.3d of %.3d\r", y, data->cam.image_height);
+		fflush(stderr);
 		y++;
+
     }
 	debug("\nDONE!\n");
 }
