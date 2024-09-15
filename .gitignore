@@ -185,3 +185,4 @@ obj/hittable_list.o
 obj/pdf.o
 obj/quad.o
 src/scrap.c
+obj/box.o
