@@ -24,21 +24,7 @@ void	cylinder(t_cylinder *result, t_point3 center, t_vec3 axis, double diameter,
 	result->radius = diameter / 2;
 	result->height = height;
 	result->rgb = color;
-	result->print = &print_cylinder;
 }
-
-/**
- * @brief print the cylinder object
- * cy 50.0,0.0,20.6 	 0.0,0.0,1.0  	14.2	 21.42  	10,0,255
- */
-void		print_cylinder(const void *self)
-{
-	const t_cylinder *c = (const t_cylinder *)self;
-	printf("sp\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%f\t%f\t%d,%d,%d\n",
-	c->center.x, c->center.y, c->center.z, c->axis.x, c->axis.y, c->axis.z, c->radius * 2, c->height, c->rgb.r, c->rgb.g, c->rgb.b);
-
-}
-
 
 bool		hit_cyclinder(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec)
 {

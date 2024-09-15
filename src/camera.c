@@ -279,17 +279,3 @@ void    render(t_mrt *data, const t_hittablelist* world)
     }
 	debug("\nDONE!\n");
 }
-
-/**
- * @brief print the camera information
- * in the rt file format
- * like C -50,0,20 		0,0,1	 70
- */
-void			print_camera(const void* self)
-{
-	const t_camera *c = (const t_camera *)self;
-	printf("C\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\n",
-	c->center.x, c->center.y, c->center.z,
-	c->direction.x, c->direction.y, c->direction.z,
-	c->hfov);
-}

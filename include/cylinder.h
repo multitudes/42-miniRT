@@ -37,17 +37,10 @@ typedef struct	s_cylinder
 	double		height;
 	t_color		color;
 	t_rgb		rgb;
-	void		(*print)(const void* self);
 }				t_cylinder;
 
-/*
- * a sort of initializer for a plane
- */
 void	cylinder(t_cylinder *result, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb color);
-void		print_cylinder(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool		hit_cyclinder(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
-
-
 
 #endif

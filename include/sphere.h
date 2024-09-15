@@ -30,17 +30,11 @@ typedef struct		s_sphere
 	t_material		*mat;
 	t_lambertian 	lambertian_mat;
 	t_solid_color 	texture;
-	void			(*print)(const void* self);
 }					t_sphere;
 
 
-
-/*
- * a sort of initializer for a sphere
- */
 void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb color);
 t_sphere 	sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat);
-void		print_sphere(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool		hit_sphere(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
 void		get_sphere_uv(t_vec3 normal, double* u, double* v);
