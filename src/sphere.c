@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 16:42:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/15 18:39:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,35 +25,6 @@
 #include "pdf.h"
 #include "texture.h"
 
-// /**
-//  * @brief: initializer for a sphere the old way
-//  * 
-//  * The old way is when i was using the weekend book
-//  * Here it suppose to have a metal material
-// */
-// t_sphere sphere_mat(t_point3 center, double radius, t_material *mat)
-// {
-// 	t_sphere s;
-
-// 	s.base.hit = hit_sphere;
-// 	s.base.pdf_value = obj_sphere_pdf_value;
-// 	s.base.random = obj_sphere_random;
-// 	s.center = center;
-// 	s.radius = fmax(0,radius);
-// 	s.mat = mat;
-// 	s.print = print_sphere;
-// 	s.rgb = rgb(0, 0, 0);
-// 	s.color = color(0, 0, 0);
-// 	t_lambertian lambertian;
-// 	lambertian_init(&(lambertian), s.color);
-// 	s.lambertian_mat = lambertian;
-// 	t_solid_color solid_color;
-// 	solid_color_init(&solid_color, s.color);
-// 	s.texture = solid_color;
-// 	s.mat = (t_material*)&(s.lambertian_mat);
-// 	return s;
-// }
-
 /*
  * @brief: initializer for a sphere
  * @param: center: the center of the sphere
@@ -62,8 +33,7 @@
  * @return: a t_sphere struct
  *
  * This is also contains the initialization of the lambertian material
- * as hardcoded. Using textures allows to reuse this structure for other
- * textures like checkers
+ * as hardcoded. Mainly so i can use it as default in the rt files
  */
 t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 {
@@ -90,7 +60,15 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
 /**
  * @brief: initializer for a sphere with a material
  * 
- * The base struct of the material is initialized with the three functions I need
+ * @param: center: the center of the sphere
+ * @param: diameter: the diameter of the sphere
+ * @param: rgbcolor: the color of the sphere
+ * @param: mat: the material of the sphere
+ * @return: a t_sphere struct
+ * 
+ * This initializer also allows to assign a material to the sphere
+ * Supported are checkers and metal materials. Textures like solid color 
+ * and images are also supported
  */
 t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat)
 {
@@ -109,9 +87,12 @@ t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material
 }
 
 /** 
- * @brief print the sphere information
- * in the rt file format
- * like sp 	0.0,0.020.6 	12.6	10,0,255
+ * @brief prints the sphere information for the rt file
+ *
+ * like: sp 	0.0,0.020.6 	12.6	10,0,255
+ * where the first 3 values are the center of the sphere
+ * the 4th value is the diameter of the sphere
+ * the last 3 values are the rgb color of the sphere
  */
 void		print_sphere(const void *self)
 {
@@ -121,7 +102,18 @@ void		print_sphere(const void *self)
 	s->rgb.r, s->rgb.g, s->rgb.b);
 }
 
-
+/**
+ * @brief returns true if the ray hits the sphere
+ * 
+ * @param: self: the sphere object
+ * @param: r: the ray
+ * @param: ray_t: the interval of the ray
+ * @param: rec: the hit record
+ * @return: true if the ray hits the sphere
+ * 
+ * 
+ * 
+*/
 bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record* rec)
 {
 	const t_sphere* s = (t_sphere*)self;

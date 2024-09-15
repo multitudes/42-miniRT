@@ -341,7 +341,7 @@ int main(int argc, char **argv)
 	t_sphere s12 = sphere_mat(point3(250, 100, -200), 100.0, rgb(0,0,0) ,(t_material*)&earth_surface);
 	s12.print((void*)&s12);
 	
-	t_cylinder s13 = cylinder(point3(350, 100, -200), vec3(0,1,0), 100, 200, rgb(166, 103, 13));
+	t_cylinder s13 = cylinder(point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
 	s13.print((void*)&s13);
 
 	list[0] = (t_hittable*)(&s1);

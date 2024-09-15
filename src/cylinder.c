@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 18:22:08 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/15 19:09:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ t_cylinder		cylinder_mat(t_point3 center, t_vec3 axis, double diameter, double h
 void		print_cylinder(const void *self)
 {
 	const t_cylinder *c = (const t_cylinder *)self;
-	printf("cy\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%f\t%f\t%d,%d,%d\n", 
+	printf("cy\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\t%.f\t%d,%d,%d\n", 
 	c->center.x, c->center.y, c->center.z, c->axis.x, c->axis.y, c->axis.z, c->radius * 2, c->height, c->rgb.r, c->rgb.g, c->rgb.b);
 
 }
@@ -109,32 +109,52 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 
 	rec->v = 0;
 	rec->u = 0;	
-	
-
-
     double t0 = (-b - sqrt(discriminant)) / (2 * a);
     double t1 = (-b + sqrt(discriminant)) / (2 * a);
 	
-    // Check if either hit point is within the cylinder's height range
-    if (surrounds(&ray_t, t0) && fabs(point_at(r, t0).y - cyl->center.y) <= cyl->height / 2) {
-        rec->t = t0;
-		double y = point_at(r, t1).y;
-		if (y > cyl->center.y + cyl->height / 2 || y < cyl->center.y - cyl->height / 2)
-			return false;
-        rec->p = point_at(r, t0);
-        rec->normal = unit_vector(vec3((rec->p.x - cyl->center.x), 0.0, rec->p.z - cyl->center.z));
-		set_face_normal(rec, r, rec->normal);
-		rec->mat = cyl->mat;
-        return true;
-    } else if (surrounds(&ray_t, t1) && fabs(point_at(r, t1).y - cyl->center.y) <= cyl->height / 2) {
-        rec->t = t1;
-		double y = point_at(r, t1).y;
-		if (y > cyl->center.y + cyl->height / 2 || y < cyl->center.y - cyl->height / 2)
-			return false;
-        rec->p = point_at(r, t1);
-        rec->normal = unit_vector(vec3(rec->p.x - cyl->center.x, 0.0, rec->p.z - cyl->center.z));
+    // return false;
+	  // Initialize variables to track the closest intersection point
+    double closest_t = -1;
+    t_vec3 closest_point;
+    t_vec3 normal;
+    
+	bool hit = false;
+
+    // Check both intersections
+	if (surrounds(&ray_t, t0)) {
+		t_vec3 point = point_at(r, t0);
+		double y = point.y;
+		if (fabs(y - cyl->center.y) <= cyl->height / 2) {
+			// Check if this intersection point is closer to the origin
+			if (closest_t < 0 || t0 < closest_t) {
+				closest_t = t0;
+				closest_point = point;
+				normal = unit_vector(vec3(point.x - cyl->center.x, 0.0, point.z - cyl->center.z));
+				hit = true;
+			}
+		}
+	}
+
+	if (surrounds(&ray_t, t1)) {
+		t_vec3 point = point_at(r, t1);
+		double y = point.y;
+		if (fabs(y - cyl->center.y) <= cyl->height / 2) {
+			// Check if this intersection point is closer to the origin
+			if (closest_t < 0 || t1 < closest_t) {
+				closest_t = t1;
+				closest_point = point;
+				normal = unit_vector(vec3(point.x - cyl->center.x, 0.0, point.z - cyl->center.z));
+				hit = true;
+			}
+		}
+	}
+    if (closest_t >= 0 && hit) {
+        rec->t = closest_t;
+        rec->p = closest_point;
+        rec->normal = normal;
         set_face_normal(rec, r, rec->normal);
-		rec->mat = cyl->mat;
+        rec->mat = cyl->mat;
+		get_cylinder_uv(rec->normal, &rec->u, &rec->v);
         return true;
     }
 
@@ -194,4 +214,20 @@ t_vec3 obj_cylinder_random(const void *self, const t_point3 *orig) {
 
     // Normalize the direction vector
     return unit_vector(direction);
+}
+
+void get_cylinder_uv(t_vec3 normal, double* u, double* v) 
+{
+    double theta;
+    double phi;
+
+    // Calculate theta (angle around the cylinder's axis)
+    theta = atan2(normal.x, normal.z);
+
+    // Calculate phi (angle along the cylinder's height)
+    phi = acos(normal.y);
+
+    // Map theta and phi to UV coordinates
+    *u = theta / (2 * M_PI);
+    *v = phi / M_PI;
 }
