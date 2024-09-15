@@ -210,7 +210,7 @@ static void	get_sphere(char **tokens, t_objects *obj)
 		call_error("exceeds array size", "sphere", tokens);
 	if (count_tokens(tokens) != 4)
 		call_error("invalid token amount", "light", tokens);
-	obj->spheres[set_index] = sphere(set_vec3(tokens, 1, "sphere", 0), \
+	sphere(&obj->spheres[set_index], set_vec3(tokens, 1, "sphere", 0), \
 		ft_atod(tokens[2]), set_rgb(tokens, 3, "sphere"));
 	obj->hit_list[obj->hit_idx] = (t_hittable*)&obj->spheres[set_index];
 	obj->hit_idx++;

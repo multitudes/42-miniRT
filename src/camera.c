@@ -231,8 +231,6 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
     mlx_image_t *image;
     uint8_t *pixel;
 
-
-    debug("%i, %i color = %f,%f,%f\n", x, y, colorvector.r, colorvector.g, colorvector.b);
     image = data->image;
     offset = y * data->objects.camera.image_width + x;
     pixel = &image->pixels[offset * 4];
@@ -241,7 +239,6 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
     *(pixel++) = (uint8_t)(color >> 8);
     *(pixel++) = (uint8_t)(color & 0xFF);
 }
-
 
 t_ray get_ray(t_camera cam, int i, int j)
 {

@@ -123,11 +123,6 @@ int main(int argc, char **argv)
 	parse_input("scenes/first.rt", &data.objects);
 
 
-	// int i = -1;
-	// while (&data.objects.spheres[++i] != NULL && i < OBJECT_COUNT)
-	// {
-	// 	printf("center:")
-	// }
 
 	const t_hittablelist world = hittablelist(data.objects.hit_list, data.objects.hit_idx);
 	printf("hittable list size: %i\n", world.size);
@@ -140,19 +135,6 @@ int main(int argc, char **argv)
 	print_vector(data.objects.camera.direction, "direction");
 	printf("hfov: %f\n", data.objects.camera.hfov);
 
-	world.list[0]->hit();
-
-	return(0);
-
-
-
-
-
-
-
-
-
-
 
     debug("Start of minirt %s", "helllo !! ");
 
@@ -164,115 +146,5 @@ int main(int argc, char **argv)
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
     mlx_loop(data.mlx);
     mlx_terminate(data.mlx);
-    return (EXIT_SUCCESS);
-}
-
-
-int main_new(int argc, char **argv)
-{
-    t_mrt data;
-    (void)argv;
-	(void)argc;
-	// if (!init_data(&data))
-    //     return (1);
-
-	// world
-	t_hittable *list[7];
-
-	// red sphere
-	t_sphere s1 = sphere(vec3(0, 0, -2.0), 1, rgb(128,0,0));
-	s1.print((void*)&s1);
-
-	// t_sphere s2 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
-	// s2.print((void*)&s2);
-
-	// checker texture sphere
-	t_lambertian lambertian_material;
-	t_checker_texture checker_texture1;
-	t_solid_color even1;
-	t_solid_color odd1;
-	solid_color_init(&even1, color(0.2, 0.3, 0.1));
-	solid_color_init(&odd1, color(0.9, 0.9, 0.9));
-	checker_texture_init(&checker_texture1, 0.31, &even1, &odd1);
-	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
-	t_sphere s2 = sphere_mat(point3(0, -500.5, -1), 1000, rgb(0,0,0), (t_material*)&lambertian_material);
-
-	// yellow sphere
-	t_sphere s3 = sphere(vec3(-1, 0.0, -2.0), 1, rgb(255,219,0));
-	s3.print((void*)&s3);
-	// white
-	t_sphere s4 = sphere(vec3(1, 0.0, -2.0), 1, rgb(255,255,254));
-	s4.print((void*)&s4);
-
-	/***********************************/
-	/* 			earth       		   */
-	/***********************************/
-	t_lambertian earth_surface;
-	t_rtw_image img;
-	init_rtw_image(&img,"rtw_image/earthmap.jpg");
-	t_img_texture img_texture;
-	img_texture_init(&img_texture, &img);
-	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
-	t_sphere s5 = sphere_mat(point3(0.0, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&earth_surface);
-
-	// /***********************************/
-	// /* 			mars        		  */
-	// /***********************************/
-
-	// t_lambertian mars_surface;
-	// t_rtw_image img2;
-	// init_rtw_image(&img2,"rtw_image/jupiter.jpg");
-	// t_img_texture img_texture2;
-	// img_texture_init(&img_texture2, &img2);
-	// lambertian_init_tex(&mars_surface, (t_texture*)&img_texture2);
-	// t_sphere s6 = sphere_mat(point3(-1, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&mars_surface);
-
-	/***********************************/
-	/* 			checker        		   */
-	/***********************************/
-	// t_lambertian lambertian_material;
-	// t_checker_texture checker_texture1;
-	// t_solid_color even1;
-	// t_solid_color odd1;
-	// solid_color_init(&even1, color(0.2, 0.3, 0.1));
-	// solid_color_init(&odd1, color(0.9, 0.9, 0.9));
-	// checker_texture_init(&checker_texture1, 0.31, &even1, &odd1);
-	// lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
-	// t_sphere s6 = sphere_mat(point3(-1, 0, 0), 2.0, rgb(0,0,0), (t_material*)&lambertian_material);
-
-	/***********************************/
-	/* 			light        		   */
-	/***********************************/
-	t_diffuse_light difflight;
-	t_solid_color difflight_color;
-	solid_color_init(&difflight_color, color(4, 4, 4));
-	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
-	t_sphere s6 = sphere_mat(point3(5, 0, 0), 6.0, rgb(255,223 ,34 ), (t_material*)&difflight);
-
-
-
-	list[0] = (t_hittable*)(&s1);
-	list[1] = (t_hittable*)(&s2);
-	list[2] = (t_hittable*)(&s3);
-	list[3] = (t_hittable*)(&s4);
-	list[4] = (t_hittable*)(&s5);
-	list[5] = (t_hittable*)(&s6);
-
-	const t_hittablelist world = hittablelist(list, 6);
-
-    debug("Start of minirt %s", "helllo !! ");
-	if (!init_window(&data))
-		return (EXIT_FAILURE);
-
-	data.world = world;
-	render(&data, &world);
-
-
-    mlx_loop_hook(data.mlx, &hook, (void *)&data);
-
-    mlx_loop(data.mlx);
-    ft_printf("\nbyebye!\n");
-    mlx_terminate(data.mlx);
-
     return (EXIT_SUCCESS);
 }

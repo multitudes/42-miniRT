@@ -38,7 +38,7 @@ typedef struct		s_sphere
 /*
  * a sort of initializer for a sphere
  */
-t_sphere	sphere(t_point3 center, double diameter, t_rgb color);
+void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb color);
 t_sphere 	sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat);
 void		print_sphere(const void *self);
 /* if the ray hits the sphere, return the t value */

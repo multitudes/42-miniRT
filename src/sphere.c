@@ -34,24 +34,22 @@
  * as hardcoded. Using textures allows to reuse this structure for other
  * textures like checkers
  */
-t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
+void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb rgbcolor)
 {
-	t_sphere s;
-	s.base.hit = hit_sphere;
-	s.center = center;
-	s.radius = fmax(0, diameter / 2);
-	s.print = print_sphere;
-	s.rgb = rgbcolor;
-	s.color = rgb_to_color(rgbcolor);
+	s->base.hit = hit_sphere;
+	s->center = center;
+	s->radius = fmax(0, diameter / 2);
+	s->print = print_sphere;
+	s->rgb = rgbcolor;
+	s->color = rgb_to_color(rgbcolor);
 	// i use the color to create a texture
-	solid_color_init(&(s.texture), s.color);
+	solid_color_init(&(s->texture), s->color);
 	// i init the lambertian material with the texture
-	lambertian_init_tex(&(s.lambertian_mat), (t_texture*)&(s.texture));
+	lambertian_init_tex(&(s->lambertian_mat), (t_texture*)&(s->texture));
 	// i assign the material to the sphere as a pointer
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
- 	s.mat = (t_material*)&(s.lambertian_mat); 
-	return s;
+ 	s->mat = (t_material*)&(s->lambertian_mat);
 }
 
 t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat)
@@ -63,12 +61,12 @@ t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material
 	s.print = print_sphere;
 	s.rgb = rgbcolor;
 	s.color = rgb_to_color(rgbcolor);
- 	s.mat = mat; 
+ 	s.mat = mat;
 	debug("sphere_mat emit: %p", s.mat->emit);
 	return s;
 }
 
-/** 
+/**
  * @brief print the sphere information
  * in the rt file format
  * like sp 	0.0,0.020.6 	12.6	10,0,255
@@ -76,7 +74,7 @@ t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material
 void		print_sphere(const void *self)
 {
 	const t_sphere *s = (const t_sphere *)self;
-	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n", 
+	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n",
 	s->center.x, s->center.y, s->center.z, s->radius * 2,
 	s->rgb.r, s->rgb.g, s->rgb.b);
 }
@@ -87,7 +85,7 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 
 
 	t_vec3 oc = vec3substr(s->center, r->orig);
-	
+
 	double a = length_squared(r->dir);
 	double h = dot(r->dir, oc);
 	double c = length_squared(oc) - (s->radius * s->radius);
@@ -106,32 +104,32 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 	rec->t = root;
 	rec->p = point_at(r, root);
 	t_vec3 outward_normal = vec3divscalar(vec3substr(rec->p, s->center), s->radius);
-	set_face_normal(rec, r, outward_normal); 
+	set_face_normal(rec, r, outward_normal);
 	get_sphere_uv(rec->normal, &rec->u, &rec->v);
 
 	rec->mat = s->mat;
 	return true;
-	
+
 }
 
 
 // /*
 //  * The formula for a sphere is derived from the equation of a sphere
 //  * (p - c) * (p - c) = r * r
-//  * The func takes a first param of type void* to be able to be used in 
+//  * The func takes a first param of type void* to be able to be used in
 //  * the hittable list (sort of polymorphic behaviour)
-//  * in the body oc is the vector from origin of the ray 
+//  * in the body oc is the vector from origin of the ray
 //  * to the center of the sphere
 //  * At first the formula was derived from the quadratic formula
 //  * double b = -2.0 * dot(&(r->dir), &oc);
 //  * double c = dot(&oc, &oc) - s->radius * s->radius;
-//  * but this has been refactored using double h 
+//  * but this has been refactored using double h
 //  */
-// bool hit_sphere(const void *self, const t_ray *r, double ray_tmin, double ray_tmax, t_hit_record *rec) 
+// bool hit_sphere(const void *self, const t_ray *r, double ray_tmin, double ray_tmax, t_hit_record *rec)
 // {
 // 	const t_sphere *s = (t_sphere *)self;
 //     t_vec3 oc = vec3substr(&(s->center), &(r->orig));
-//     double a = length3_squared(&r->dir); 
+//     double a = length3_squared(&r->dir);
 //     double h = dot(&(r->dir), &oc);
 // 	double c = length3_squared(&oc) - s->radius * s->radius;
 //     double discriminant = h*h - a*c;
@@ -164,11 +162,11 @@ void set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_nor
 
 /*
  * get_sphere_uv
- * 
+ *
  * p: point / the outward normal on the sphere
  * u: u
  * v: v
- * 
+ *
  * returns: the uv coordinates of a sphere
  */
 void	get_sphere_uv(t_vec3 normal, double* u, double* v)
