@@ -3,13 +3,9 @@
 #include "minirt.h"
 #include "camera.h"
 #include "vec3.h"
-#include "hittable.h"
 #include "hittable_list.h"
-#include "sphere.h"
 #include <MLX42/MLX42.h>
 #include "utils.h"
-#include "color.h"
-#include "ambient.h"
 
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
@@ -23,7 +19,6 @@ void	exit_gracefully(mlx_t *mlx)
 	mlx_terminate(mlx);
 	exit(EXIT_SUCCESS);
 }
-
 
 //keep y the same rotate around the y axis
 t_point3 rotate_camera(t_point3 camera, double angle_degrees) {
@@ -59,30 +54,7 @@ void	hook(void *param)
 	mlx = mrt->mlx;
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		exit_gracefully(mlx);
-	if (mlx_is_key_down(mlx, MLX_KEY_UP))
-	{
-		debug("UP key pressed");
-	}
-	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-		debug("DOWN key pressed");
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-	{
-		// mrt->cam.center = rotate_camera(mrt->cam.center, 5);
-		// mrt->cam.direction = calculate_direction(mrt->cam.center);
-		// mrt->renderscene(mrt, &(mrt->world));
-		debug("LEFT key pressed");
-	}
-	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
-		// mrt->cam.center = rotate_camera(mrt->cam.center, -5);
-		// mrt->cam.direction = calculate_direction(mrt->cam.center);
-		// mrt->renderscene(mrt, &(mrt->world));
-		debug("RIGHT key pressed");
-	}
-
 }
-
-
-
 
 int init_window(t_mrt *data)
 {
@@ -94,7 +66,6 @@ int init_window(t_mrt *data)
 	{
 		mlx_close_window(data->mlx);
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
-
 	}
 	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
 	{
@@ -103,13 +74,6 @@ int init_window(t_mrt *data)
     }
 	debug("Window initialized");
     return (TRUE);
-}
-
-
-void	print_vector(t_vec3 vec, char *msg)
-{
-	printf("%s: ", msg);
-	printf("%f,%f,%f\n", vec.x, vec.y, vec.z);
 }
 
 int main(int argc, char **argv)
@@ -122,19 +86,7 @@ int main(int argc, char **argv)
 	ft_memset(&data, 0, sizeof(t_mrt));
 	parse_input("scenes/first.rt", &data.objects);
 
-
-
 	const t_hittablelist world = hittablelist(data.objects.hit_list, data.objects.hit_idx);
-	printf("hittable list size: %i\n", world.size);
-
-	for (int i = 0; i < world.size; ++i)
-		printf("hittable list member %i has hit function %p\n", i, world.list[i]->hit);
-
-	printf("\nthe camera\n");
-	print_vector(data.objects.camera.center, "center");
-	print_vector(data.objects.camera.direction, "direction");
-	printf("hfov: %f\n", data.objects.camera.hfov);
-
 
     debug("Start of minirt %s", "helllo !! ");
 

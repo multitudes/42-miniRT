@@ -14,20 +14,17 @@
 #include "ambient.h"
 #include "color.h"
 
-t_ambient ambient(double ratio, t_rgb rgb)
+void	ambient(t_ambient *result, double ratio, t_rgb rgb)
 {
-	t_ambient result;
-
-	result.ratio = clamp(interval(0,1), ratio);
-	result.rgbcolor = rgb;
-	result.color = rgb_to_color(rgb);
-	result.print = &print_ambient;
-	return result;
+	result->ratio = clamp(interval(0,1), ratio);
+	result->rgbcolor = rgb;
+	result->color = rgb_to_color(rgb);
+	result->print = &print_ambient;
 }
 
 void		print_ambient(const void *self)
 {
 	const t_ambient *ambient = self;
-	printf("A\t%.f\t\t%d,%d,%d\n",ambient->ratio, 
+	printf("A\t%.f\t\t%d,%d,%d\n",ambient->ratio,
 	ambient->rgbcolor.r, ambient->rgbcolor.g, ambient->rgbcolor.b);
 }

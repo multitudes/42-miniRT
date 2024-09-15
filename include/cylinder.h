@@ -21,7 +21,7 @@
  * @brief A cylinder is a hittable object
  * identifier: cy
  ∗ x,y,z coordinates of the center of the cylinder: 50.0,0.0,20.6
- ∗ 3d normalized vector of axis of cylinder. 
+ ∗ 3d normalized vector of axis of cylinder.
  * In range [-1,1] for each x,y,z axis:
  * 0.0,0.0,1.0
  ∗ the cylinder diameter: 14.2
@@ -43,7 +43,7 @@ typedef struct	s_cylinder
 /*
  * a sort of initializer for a plane
  */
-t_cylinder		cylinder(t_point3 center, t_vec3 axis, double diameter, double height, t_rgb color);
+void	cylinder(t_cylinder *result, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb color);
 void		print_cylinder(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool		hit_cyclinder(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);

@@ -13,7 +13,6 @@
 #ifndef CAMERA_H
 # define CAMERA_H
 
-#include "minirt.h"
 #include "ray.h"
 #include "vec3.h"
 #include "hittable_list.h"
@@ -21,7 +20,7 @@
 typedef struct s_mrt t_mrt;
 typedef struct	s_camera
 {
-	// considered "public" 
+	// considered "public"
     t_point3 	center;         // Camera center
 	t_vec3		direction;
 	double 		aspect_ratio;
@@ -38,7 +37,7 @@ typedef struct	s_camera
     t_vec3   	vup;     			// Camera-relative "up" direction
 
 	t_color		background;  // Background color
-	
+
 	// considered private
     t_point3	pixel00_loc;    // Location of pixel 0, 0
     t_vec3		pixel_delta_u;  // Offset to pixel to the right
@@ -46,10 +45,10 @@ typedef struct	s_camera
 
 
 	void		(*print)(const void* self);
-	
+
 } 				t_camera;
 
-t_camera 	init_cam(t_point3 center, t_vec3 direction, double hfov);
+void		init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov);
 void    	render(t_mrt *data, const t_hittablelist* world);
 t_color		ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world);
 void 		write_color(t_mrt *data, int x, int y, t_color colorvector);

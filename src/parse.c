@@ -14,7 +14,6 @@
 #include <fcntl.h>  /* open() */
 #include <stdio.h>  /* perror() */
 #include "minirt.h"
-#include <assert.h>
 
 static void	free_split(char **split)
 {
@@ -159,7 +158,7 @@ static void	get_ambient(char **tokens, t_ambient *data)
 		call_error("this element can only be set once", "ambient", tokens);
 	if (count_tokens(tokens) != 3)
 		call_error("invalid token amount", "ambient", tokens);
-	*data = ambient(ft_atod(tokens[1]), set_rgb(tokens, 2, "ambient"));
+	ambient(data, ft_atod(tokens[1]), set_rgb(tokens, 2, "ambient"));
 	already_set = 1;
 }
 
@@ -175,7 +174,7 @@ static void	get_camera(char **tokens, t_camera *data)
 	hfov = ft_atod(tokens[3]);
 	if (hfov < 0. || hfov > 180.)
 		call_error("fov must be in range [0;180]", "camera", tokens);
-	*data = init_cam(set_vec3(tokens, 1, "camera", 0), \
+	init_cam(data, set_vec3(tokens, 1, "camera", 0), \
 		set_vec3(tokens, 2, "camera", 1), hfov);
 	already_set = 1;
 }
@@ -186,6 +185,7 @@ static void	get_camera(char **tokens, t_camera *data)
  *
  * This function is longer than others, because light didnrt have an init func.
 */
+/* TODO: init function? */
 static void	get_light(char **tokens, t_objects *obj)
 {
 	static int	set_index;
@@ -225,7 +225,7 @@ static void	get_plane(char **tokens, t_objects *obj)
 		call_error("exceeds array size", "plane", tokens);
 	if (count_tokens(tokens) != 4)
 		call_error("invalid token amount", "plane", tokens);
-	obj->planes[set_index] = plane(set_vec3(tokens, 1, "plane", 0), \
+	plane(&obj->planes[set_index], set_vec3(tokens, 1, "plane", 0), \
 		set_vec3(tokens, 2, "plane", 1), set_rgb(tokens, 3, "plane"));
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->planes[set_index];
 	obj->hit_idx++;
@@ -240,7 +240,7 @@ static void	get_cylinder(char **tokens, t_objects *obj)
 		call_error("exceeds array size", "cylinder", tokens);
 	if (count_tokens(tokens) != 6)
 		call_error("invalid token amount", "cylinder", tokens);
-	obj->cylinders[set_index] = cylinder(set_vec3(tokens, 1, "cylinder", 0), \
+	cylinder(&obj->cylinders[set_index], set_vec3(tokens, 1, "cylinder", 0), \
 		set_vec3(tokens, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
 		set_rgb(tokens, 5, "cylinder"));
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];

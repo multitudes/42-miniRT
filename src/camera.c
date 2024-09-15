@@ -24,57 +24,53 @@
 
 #define ASPECT_RATIO 16.0/9.0
 
-t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
+void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
-	t_camera cam;
-	cam.background = color(0.7,0.7,0.7); // grey
-	cam.samples_per_pixel = 50;	// antialising
-	cam.max_depth = 50; // bouncing ray
+	cam->background = color(0.7,0.7,0.7); // grey
+	cam->samples_per_pixel = 50;	// antialising
+	cam->max_depth = 50; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
-	cam.aspect_ratio = ASPECT_RATIO;
+	cam->aspect_ratio = ASPECT_RATIO;
 
 	// this is for the antialiasing
-	cam.image_width = IMAGE_WIDTH; // also not given in the subject or file, smaller is faster - defined in minirt.h
-	cam.image_height = IMAGE_WIDTH / cam.aspect_ratio;
-	cam.image_height = (cam.image_height < 1) ? 1 : cam.image_height;
-	cam.center = center;  // refactor later
-	cam.direction = direction;
-	cam.lookfrom = center;
+	cam->image_width = IMAGE_WIDTH; // also not given in the subject or file, smaller is faster - defined in minirt.h
+	cam->image_height = IMAGE_WIDTH / cam->aspect_ratio;
+	cam->image_height = (cam->image_height < 1) ? 1 : cam->image_height;
+	cam->center = center;  // refactor later
+	cam->direction = direction;
+	cam->lookfrom = center;
 
-	cam.hfov = clamp(interval(1, 170), hfov); // the book has vfow, but we use hfov
-	cam.vup = vec3(0,1,0);					// Camera-relative "up" direction
-
-	cam.print = print_camera;
+	cam->hfov = clamp(interval(1, 170), hfov); // the book has vfow, but we use hfov
+	cam->vup = vec3(0,1,0);					// Camera-relative "up" direction
 
     // Calculate lookat from lookdir
-    t_point3 lookat = vec3add(cam.lookfrom, direction);
+    t_point3 lookat = vec3add(cam->lookfrom, direction);
 
 	double focal_length = length(vec3substr(center, lookat));
 
 	double theta = degrees_to_radians(hfov);
     double h = tan(theta/2);
 	double viewport_width = 2 * h * focal_length;
-    double viewport_height = viewport_width * ((double)cam.image_height/cam.image_width);
+    double viewport_height = viewport_width * ((double)cam->image_height/cam->image_width);
 
 	// Calculate the u,v,w unit basis vectors for the camera coordinate frame.
-    cam.w = unit_vector(vec3substr(cam.lookfrom, lookat));
-    cam.u = unit_vector(cross(cam.vup, cam.w));
-    cam.v = cross(cam.w, cam.u);
+    cam->w = unit_vector(vec3substr(cam->lookfrom, lookat));
+    cam->u = unit_vector(cross(cam->vup, cam->w));
+    cam->v = cross(cam->w, cam->u);
 
 	// Calculate the vectors across the horizontal and down the vertical viewport edges.
-    t_vec3 viewport_u = vec3multscalar(cam.u, viewport_width);    // Vector across viewport horizontal edge
-	t_vec3 viewport_v = vec3multscalar(vec3negate(cam.v), viewport_height);  // Vector down viewport vertical edge
+    t_vec3 viewport_u = vec3multscalar(cam->u, viewport_width);    // Vector across viewport horizontal edge
+	t_vec3 viewport_v = vec3multscalar(vec3negate(cam->v), viewport_height);  // Vector down viewport vertical edge
 
-	cam.pixel_delta_u = vec3divscalar(viewport_u, cam.image_width);
-	cam.pixel_delta_v = vec3divscalar(viewport_v, cam.image_height);
+	cam->pixel_delta_u = vec3divscalar(viewport_u, cam->image_width);
+	cam->pixel_delta_v = vec3divscalar(viewport_v, cam->image_height);
 
-	t_point3 part1 = vec3substr(cam.center, vec3multscalar(cam.w, focal_length));
+	t_point3 part1 = vec3substr(cam->center, vec3multscalar(cam->w, focal_length));
 	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
 	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
 
-	cam.pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam.pixel_delta_u, cam.pixel_delta_v), 2));
-    return cam;
+	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
 #include <stdbool.h>
 #include <math.h>
