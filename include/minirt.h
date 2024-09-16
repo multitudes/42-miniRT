@@ -18,6 +18,7 @@
 #include <math.h>
 #include "camera.h"
 #include "ambient.h"
+#include "interval.h"
 #include "sphere.h"
 #include "plane.h"
 #include "cylinder.h"
@@ -48,6 +49,10 @@ typedef struct
 	// t_cones		cones[OBJECT_COUNT];
 	t_hittable *hit_list[OBJECT_COUNT * 5];
 	int 		hit_idx;
+
+	// data for the parser
+	int			_file_fd;
+	char		**_tokens;
 }			t_objects;
 
 typedef struct 	s_mrt

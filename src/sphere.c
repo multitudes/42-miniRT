@@ -68,7 +68,6 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 {
 	const t_sphere* s = (t_sphere*)self;
 
-
 	t_vec3 oc = vec3substr(s->center, r->orig);
 
 	double a = length_squared(r->dir);

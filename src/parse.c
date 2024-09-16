@@ -26,7 +26,7 @@ static void	free_split(char **split)
 }
 
 /* program will exit if there is an error */
-static int call_error(char *msg, char *prefix, char **tokens)
+static int call_error(char *msg, char *prefix, t_objects *obj)
 {
 	write(2, "Error\n", 6);
 	if (prefix)
@@ -36,8 +36,12 @@ static int call_error(char *msg, char *prefix, char **tokens)
 	}
 	write(2, msg, ft_strlen(msg));
 	write(2, "\n", 1);
-	if (tokens)
-		free_split(tokens);
+	if (obj)
+	{
+		if (obj->_tokens)
+			free_split(obj->_tokens);
+		close(obj->_file_fd);
+	}
 	exit(1);
 	// TODO: may need to close open file first
 }
@@ -98,15 +102,15 @@ double	ft_atod(char *str)
 }
 
 /* Returns a t_rgb struct that contains values from the token */
-static t_rgb	set_rgb(char **tokens, int index, char *func_name)
+static t_rgb	set_rgb(t_objects *obj, int index, char *func_name)
 {
 	char	**rgb_tok;
 	int		rgb_val[3];
 	int		i;
 
-	rgb_tok = ft_split(tokens[index], ',');
+	rgb_tok = ft_split(obj->_tokens[index], ',');
 	if (*rgb_tok == NULL)
-		call_error("ft_split() fail", func_name, tokens);
+		call_error("ft_split() fail", func_name, obj);
 	i = -1;
 	while (++i < 3)
 	{
@@ -114,7 +118,7 @@ static t_rgb	set_rgb(char **tokens, int index, char *func_name)
 		if (rgb_val[i] < 0 || rgb_val[i] > 255)
 		{
 			free_split(rgb_tok);
-			call_error("color not in rgb range", func_name, tokens);
+			call_error("color not in rgb range", func_name, obj);
 		}
 	}
 	free_split(rgb_tok);
@@ -127,15 +131,15 @@ static t_rgb	set_rgb(char **tokens, int index, char *func_name)
  * Function is very similar to set_rgb, but sets doubles, checks
  * if values from token are normalized, calls vec3().
 */
-static t_vec3	set_vec3(char **tokens, int index, char *func_name, int normalized)
+static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
 {
 	char	**coord_tok;
 	double	coord_val[3];
 	int		i;
 
-	coord_tok = ft_split(tokens[index], ',');
+	coord_tok = ft_split(obj->_tokens[index], ',');
 	if (*coord_tok == NULL)
-		call_error("ft_split() fail", func_name, tokens);
+		call_error("ft_split() fail", func_name, obj);
 	i = -1;
 	while (++i < 3)
 	{
@@ -143,39 +147,43 @@ static t_vec3	set_vec3(char **tokens, int index, char *func_name, int normalized
 		if (normalized && (coord_val[i] < -1.0 || coord_val[i] > 1.0))
 		{
 			free_split(coord_tok);
-			call_error("vector not normalized", func_name, tokens);
+			call_error("vector not normalized", func_name, obj);
 		}
 	}
 	free_split(coord_tok);
 	return(vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
 
-static void	get_ambient(char **tokens, t_ambient *data)
+static void	get_ambient(t_objects *obj)
 {
 	static int	already_set;
+	char		**tokens;
 
+	tokens = obj->_tokens;
 	if (already_set)
-		call_error("this element can only be set once", "ambient", tokens);
+		call_error("this element can only be set once", "ambient", obj);
 	if (count_tokens(tokens) != 3)
-		call_error("invalid token amount", "ambient", tokens);
-	ambient(data, ft_atod(tokens[1]), set_rgb(tokens, 2, "ambient"));
+		call_error("invalid token amount", "ambient", obj);
+	ambient(&obj->ambient, ft_atod(tokens[1]), set_rgb(obj, 2, "ambient"));
 	already_set = 1;
 }
 
-static void	get_camera(char **tokens, t_camera *data)
+static void	get_camera(t_objects *obj)
 {
 	static int	already_set;
 	double		hfov;
+	char		**tokens;
 
+	tokens = obj->_tokens;
 	if (already_set)
-		call_error("this element can only be set once", "camera", tokens);
+		call_error("this element can only be set once", "camera", obj);
 	if (count_tokens(tokens) != 4)
-		call_error("invalid token amount", "camera", tokens);
+		call_error("invalid token amount", "camera", obj);
 	hfov = ft_atod(tokens[3]);
 	if (hfov < 0. || hfov > 180.)
-		call_error("fov must be in range [0;180]", "camera", tokens);
-	init_cam(data, set_vec3(tokens, 1, "camera", 0), \
-		set_vec3(tokens, 2, "camera", 1), hfov);
+		call_error("fov must be in range [0;180]", "camera", obj);
+	init_cam(&obj->camera, set_vec3(obj, 1, "camera", 0), \
+		set_vec3(obj, 2, "camera", 1), hfov);
 	already_set = 1;
 }
 
@@ -186,115 +194,135 @@ static void	get_camera(char **tokens, t_camera *data)
  * This function is longer than others, because light didnrt have an init func.
 */
 /* TODO: init function? */
-static void	get_light(char **tokens, t_objects *obj)
+static void	get_light(t_objects *obj)
 {
 	static int	set_index;
+	char		**tokens;
 
+	tokens = obj->_tokens;
 	if (count_tokens(tokens) != 4)
-		call_error("invalid token amount", "light", tokens);
-	obj->lights[set_index].center = set_vec3(tokens, 1, "light", 0);
+		call_error("invalid token amount", "light", obj);
+	obj->lights[set_index].center = set_vec3(obj, 1, "light", 0);
 	obj->lights[set_index].brightness = ft_atod(tokens[2]);
 	if (obj->lights[set_index].brightness < 0. || obj->lights[set_index].brightness > 1.)
-		call_error("brightness must be normalized", "light", tokens);
-	obj->lights[set_index].color = set_rgb(tokens, 3, "color");
+		call_error("brightness must be normalized", "light", obj);
+	obj->lights[set_index].color = set_rgb(obj, 3, "color");
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->spheres[set_index];
 	obj->hit_idx++;
 	set_index++;
 }
 
-static void	get_sphere(char **tokens, t_objects *obj)
+static void	get_sphere(t_objects *obj)
 {
 	static int	set_index;
+	char		**tokens;
 
+	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "sphere", tokens);
+		call_error("exceeds array size", "sphere", obj);
 	if (count_tokens(tokens) != 4)
-		call_error("invalid token amount", "light", tokens);
-	sphere(&obj->spheres[set_index], set_vec3(tokens, 1, "sphere", 0), \
-		ft_atod(tokens[2]), set_rgb(tokens, 3, "sphere"));
+		call_error("invalid token amount", "light", obj);
+	sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), \
+		ft_atod(tokens[2]), set_rgb(obj, 3, "sphere"));
 	obj->hit_list[obj->hit_idx] = (t_hittable*)&obj->spheres[set_index];
 	obj->hit_idx++;
 	set_index++;
 }
 
-static void	get_plane(char **tokens, t_objects *obj)
+static void	get_plane(t_objects *obj)
 {
 	static int	set_index;
+	char		**tokens;
 
+	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "plane", tokens);
+		call_error("exceeds array size", "plane", obj);
 	if (count_tokens(tokens) != 4)
-		call_error("invalid token amount", "plane", tokens);
-	plane(&obj->planes[set_index], set_vec3(tokens, 1, "plane", 0), \
-		set_vec3(tokens, 2, "plane", 1), set_rgb(tokens, 3, "plane"));
+		call_error("invalid token amount", "plane", obj);
+	plane(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
+		set_vec3(obj, 2, "plane", 1), set_rgb(obj, 3, "plane"));
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->planes[set_index];
 	obj->hit_idx++;
 	set_index++;
 }
 
-static void	get_cylinder(char **tokens, t_objects *obj)
+static void	get_cylinder(t_objects *obj)
 {
 	static int	set_index;
+	char		**tokens;
 
+	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "cylinder", tokens);
+		call_error("exceeds array size", "cylinder", obj);
 	if (count_tokens(tokens) != 6)
-		call_error("invalid token amount", "cylinder", tokens);
-	cylinder(&obj->cylinders[set_index], set_vec3(tokens, 1, "cylinder", 0), \
-		set_vec3(tokens, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
-		set_rgb(tokens, 5, "cylinder"));
+		call_error("invalid token amount", "cylinder", obj);
+	cylinder(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
+		set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
+		set_rgb(obj, 5, "cylinder"));
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];
 	obj->hit_idx++;
 	set_index++;
 }
 
-static void	update_struct(t_objects *obj, char **tokens)
+static void	update_struct(t_objects *obj)
 {
-	if (ft_strncmp("A", tokens[0], 2) == 0)
-		get_ambient(tokens, &obj->ambient);
-	else if (ft_strncmp("C", tokens[0], 2) == 0)
-		get_camera(tokens, &obj->camera);
-	else if (ft_strncmp("L", tokens[0], 2) == 0)
-		get_light(tokens, obj);
-	else if (ft_strncmp("sp", tokens[0], 3) == 0)
-		get_sphere(tokens, obj);
-	else if (ft_strncmp("pl", tokens[0], 3) == 0)
-		get_plane(tokens, obj);
-	else if (ft_strncmp("cy", tokens[0], 3) == 0)
-		get_cylinder(tokens, obj);
+	if (ft_strncmp("A", obj->_tokens[0], 2) == 0)
+		get_ambient(obj);
+	else if (ft_strncmp("C", obj->_tokens[0], 2) == 0)
+		get_camera(obj);
+	else if (ft_strncmp("L", obj->_tokens[0], 2) == 0)
+		get_light(obj);
+	else if (ft_strncmp("sp", obj->_tokens[0], 3) == 0)
+		get_sphere(obj);
+	else if (ft_strncmp("pl", obj->_tokens[0], 3) == 0)
+		get_plane(obj);
+	else if (ft_strncmp("cy", obj->_tokens[0], 3) == 0)
+		get_cylinder(obj);
 	else
-		call_error("invalid object identifier\n", tokens[0], tokens);
+		call_error("invalid object identifier\n", obj->_tokens[0], obj);
+}
+
+/* replaces tabs and newlines, so thta ft_split can split
+on just the space */
+void	sanitize_line(char *line)
+{
+	int	i;
+
+	i = -1;
+	while (line[++i])
+	{
+		if (line[i] == '\t' || line[i] == '\n')
+			line[i] = ' ';
+	}
 }
 
 /* in case or error, the parser calls exit() */
 void	parse_input(char *filename, t_objects *obj)
 {
-    int	    fd;
 	char    *line;
-    char    **tokens;
 
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
 		call_error("invalid file extension\n", NULL, NULL);
-    fd = open(filename, O_RDONLY);
-    if (fd == -1)
+    obj->_file_fd = open(filename, O_RDONLY);
+    if (obj->_file_fd == -1)
     	perror(filename), exit(1);
-    while ((line = get_next_line(fd)) != NULL)
+    while ((line = get_next_line(obj->_file_fd)) != NULL)
     {
 		if (ft_strlen(line) == 1)
 		{
 			free(line);
 			continue ;
 		}
-		tokens = ft_split(line, ' ');
-		if (tokens == NULL)
+		obj->_tokens = ft_split(line, ' ');
+		if (obj->_tokens == NULL)
 		{
 			free(line);
-			call_error("ft_split()", "parse_input", NULL);
+			call_error("ft_split()", "parse_input", obj);
 		}
 		free(line);
-		update_struct(obj, tokens);
-		free_split(tokens);
+		update_struct(obj);
+		free_split(obj->_tokens);
     }
-    if (close(fd) == -1)
+    if (close(obj->_file_fd) == -1)
     	perror("MiniRT: close()");
 }
