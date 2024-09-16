@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 14:24:46 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 16:49:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,56 +21,50 @@
 // initaquad(data->obj>quad[0], a);
 // // data->obj>quad[0] = a
 
-t_quad	quad_rgb(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor) 
+void	quad_rgb(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor) 
 {
-	t_quad qd;
-
-	qd.base.hit = hit_quad;
-	qd.base.pdf_value = quad_pdf_value;
-	qd.base.random = quad_random;
-	qd.q = q;
-	qd.u = u;
-	qd.v = v;
-	qd.rgb = rgbcolor;
-	qd.color = rgb_to_color(rgbcolor);
+	qd->base.hit = hit_quad;
+	qd->base.pdf_value = quad_pdf_value;
+	qd->base.random = quad_random;
+	qd->q = q;
+	qd->u = u;
+	qd->v = v;
+	qd->rgb = rgbcolor;
+	qd->color = rgb_to_color(rgbcolor);
 	t_vec3 n = cross(u, v);
-	qd.normal = unit_vector(n);
-	qd.d = dot(qd.normal, q);
-	qd.w = vec3divscalar(n, dot(n, n));
-	qd.area = length(n);
+	qd->normal = unit_vector(n);
+	qd->d = dot(qd->normal, q);
+	qd->w = vec3divscalar(n, dot(n, n));
+	qd->area = length(n);
 
 	// i use the color to create a texture
-	solid_color_init(&(qd.texture), qd.color);
+	solid_color_init(&(qd->texture), qd->color);
 	// i init the lambertian material with the texture
-	lambertian_init_tex(&(qd.lambertian_mat), (t_texture*)&(qd.texture));
+	lambertian_init_tex(&(qd->lambertian_mat), (t_texture*)&(qd->texture));
 	// i assign the material to the sphere as a pointer
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
- 	qd.mat = (t_material*)&(qd.lambertian_mat); 
-	qd.print = print_quad;
-	return (qd);
+ 	qd->mat = (t_material*)&(qd->lambertian_mat); 
+	qd->print = print_quad;
 }
 
 
-t_quad quad(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
+void quad_mat(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 {
-	t_quad qd;
-
-	qd.base.hit = hit_quad;
-	qd.base.pdf_value = quad_pdf_value;
-	qd.base.random = quad_random;
-	qd.q = q;
-	qd.u = u;
-	qd.v = v;
-	qd.mat = mat;
+	qd->base.hit = hit_quad;
+	qd->base.pdf_value = quad_pdf_value;
+	qd->base.random = quad_random;
+	qd->q = q;
+	qd->u = u;
+	qd->v = v;
+	qd->mat = mat;
 	t_vec3 n = cross(u, v);
-    qd.normal = unit_vector(n);
-    qd.d = dot(qd.normal, q);
-	qd.w = vec3divscalar(n, dot(n, n));
-	qd.area = length(n);
-	qd.rgb = rgb(0, 0, 0);
-	qd.print = print_quad;
-	return (qd);
+    qd->normal = unit_vector(n);
+    qd->d = dot(qd->normal, q);
+	qd->w = vec3divscalar(n, dot(n, n));
+	qd->area = length(n);
+	qd->rgb = rgb(0, 0, 0);
+	qd->print = print_quad;
 }
 
 /**

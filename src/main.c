@@ -150,7 +150,8 @@ int main_mixtest(int argc, char **argv)
 	t_hittable *list[10];
 
 	// red sphere
-	t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	t_sphere s1;
+	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	s1.print((void*)&s1);
 
 	/***********************************/
@@ -166,17 +167,22 @@ int main_mixtest(int argc, char **argv)
 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
 	// t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere s2 = sphere_mat(point3( 90,190,90 ), 30, rgb(0,0,0), (t_material*)&difflight2);
+	t_sphere s2;
+	sphere_mat(&s2, point3( 90,190,90 ), 30, (t_material*)&difflight2);
 	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
 
-	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
+	t_sphere s4;
+	sphere(&s4, vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
 
 
-	t_sphere s5 = sphere(vec3(0, 0, -1.2), 1, rgb(128,0,0));
+	t_sphere s5;
+	sphere(&s5, vec3(0, 0, -1.2), 1, rgb(128,0,0));
 	s1.print((void*)&s1);
-	t_sphere s8 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
+	t_sphere s8;
+	sphere(&s8, vec3(0, -100.5, -1), 200, rgb(0,128,0));
 	s2.print((void*)&s2);
-	t_sphere s7 = sphere(vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+	t_sphere s7;
+	sphere(&s7, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
 
 
 	list[0] = (t_hittable*)(&s1);
@@ -263,7 +269,8 @@ int main(int argc, char **argv)
 	t_metal metal;
 	metal_init(&metal, albedo, fuzz);
 	// red metallic sphere
-	t_sphere s1 = sphere_mat(point3( 90,190,90 ), 180, rgb(0,0,0), (t_material*)&metal);
+	t_sphere s1;
+	sphere_mat(&s1, point3( 90,190,90 ), 180, (t_material*)&metal);
 	s1.print((void*)&s1);
 
 	/***********************************/
@@ -281,22 +288,26 @@ int main(int argc, char **argv)
 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
 
 	// quad as light
-	t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	t_quad s6;
+	quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
 	s6.print((void*)&s6);
 
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
 	// t_sphere s2 = sphere(vec3(0,250,-50), 120, rgb(16, 13, 166));
-	t_sphere s2 = sphere_mat(point3( 0,250,-50 ), 120, rgb(0,0,0), (t_material*)&difflight2);
+	t_sphere s2;
+	sphere_mat(&s2, point3( 0,250,-50 ), 120, (t_material*)&difflight2);
 	s2.print((void*)&s2);
 	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
 
 	// adding another sphere
 	// red sphere
-	t_sphere s4 = sphere(vec3(400, 90, 190), 90, rgb(166, 13, 13));
+	t_sphere s4;
+	sphere(&s4, vec3(400, 90, 190), 90, rgb(166, 13, 13));
 	s4.print((void*)&s4);
 
 	// add a quad just left of the s4 sphere
-	t_quad s5 = quad_rgb(point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
+	t_quad s5;
+	quad_rgb(&s5, point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
 	s5.print((void*)&s5);
 
 	// add a plane just below the s4 sphere
@@ -326,7 +337,8 @@ int main(int argc, char **argv)
 	solid_color_init(&odd1, color(0.9, 0.9, 0.9));
 	checker_texture_init(&checker_texture1, 20.0, &even1, &odd1);
 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
-	t_sphere s11 = sphere_mat(point3(650, 300, 200), 100, rgb(0,0,0), (t_material*)&lambertian_material);
+	t_sphere s11;
+	sphere_mat(&s11, point3(650, 300, 200), 100, (t_material*)&lambertian_material);
 
 	printf("_______________\n");
 	printf("size of t_triangle: %lu\n", sizeof(t_triangle));
@@ -341,7 +353,8 @@ int main(int argc, char **argv)
 	t_img_texture img_texture;
 	img_texture_init(&img_texture, &img);
 	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
-	t_sphere s12 = sphere_mat(point3(250, 100, -200), 100.0, rgb(0,0,0) ,(t_material*)&earth_surface);
+	t_sphere s12;
+	sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
 	s12.print((void*)&s12);
 	
 	t_cylinder s13;
@@ -367,10 +380,12 @@ int main(int argc, char **argv)
 
 	t_empty_material empty_material;
 	t_material *no_material = (t_material*)&empty_material;
-	t_quad l6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
+	t_quad l6;
+	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere l2 = sphere_mat(point3( 0,250,-50 ), 120, rgb(0,0,0),(t_material*)&no_material);
+	t_sphere l2;
+	sphere_mat(&l2, point3( 0,250,-50 ), 120, (t_material*)&no_material);
 //0,250,-50 ), 120
 	list_lights[0] = (t_hittable*)(&l6);
 	list_lights[1] = (t_hittable*)(&l2);
@@ -435,7 +450,8 @@ int main_earth(int argc, char **argv)
 	t_hittable *list[7];
 
 	// red sphere
-	t_sphere s1 = sphere(vec3(0, 0, -2.0), 1, rgb(128,0,0));
+	t_sphere s1;
+	sphere(&s1, vec3(0, 0, -2.0), 1, rgb(128,0,0));
 	s1.print((void*)&s1);
 
 	// t_sphere s2 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
@@ -450,13 +466,16 @@ int main_earth(int argc, char **argv)
 	solid_color_init(&odd1, color(0.9, 0.9, 0.9));
 	checker_texture_init(&checker_texture1, 0.31, &even1, &odd1);
 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
-	t_sphere s2 = sphere_mat(point3(0, -500.5, -1), 1000, rgb(0,0,0), (t_material*)&lambertian_material);
+	t_sphere s2;
+	sphere_mat(&s2, point3(0, -500.5, -1), 1000, (t_material*)&lambertian_material);
 	
 	// yellow sphere
-	t_sphere s3 = sphere(vec3(-1, 0.0, -2.0), 1, rgb(255,219,0));
+	t_sphere s3;
+	sphere(&s3, vec3(-1, 0.0, -2.0), 1, rgb(255,219,0));
 	s3.print((void*)&s3);
 	// white
-	t_sphere s4 = sphere(vec3(1, 0.0, -2.0), 1, rgb(255,255,254));
+	t_sphere s4;
+	sphere(&s4, vec3(1, 0.0, -2.0), 1, rgb(255,255,254));
 	s4.print((void*)&s4);
 
 	/***********************************/
@@ -468,7 +487,8 @@ int main_earth(int argc, char **argv)
 	t_img_texture img_texture;
 	img_texture_init(&img_texture, &img);
 	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
-	t_sphere s5 = sphere_mat(point3(0.0, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&earth_surface);
+	t_sphere s5;
+	sphere_mat(&s5, point3(0.0, 0, 0), 2.0, (t_material*)&earth_surface);
 
 	// /***********************************/
 	// /* 			mars        		   */
@@ -503,7 +523,8 @@ int main_earth(int argc, char **argv)
 	solid_color_init(&difflight_color, color(20, 20, 20));
 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
 	// t_sphere s6 = sphere_mat(point3(5, 0, 0), 5.0, rgb(255,223 ,34 ), (t_material*)&difflight);
-	 t_quad s6 = quad(point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
+	t_quad s6;
+	quad_mat(&s6, point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
 	
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s2);
@@ -549,13 +570,17 @@ int main_old(int argc, char **argv)
 	// world
 	t_hittable *list[4];
 
-	t_sphere s1 = sphere(vec3(0, 0, -1.2), 1, rgb(128,0,0));
+	t_sphere s1;
+	sphere(&s1, vec3(0, 0, -1.2), 1, rgb(128,0,0));
 	s1.print((void*)&s1);
-	t_sphere s2 = sphere(vec3(0, -100.5, -1), 200, rgb(0,128,0));
+	t_sphere s2;
+	sphere(&s2, vec3(0, -100.5, -1), 200, rgb(0,128,0));
 	s2.print((void*)&s2);
-	t_sphere s3 = sphere(vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+	t_sphere s3; 
+	sphere(&s3, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
 	s3.print((void*)&s3);
-	t_sphere s4 = sphere(vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
+	t_sphere s4;
+	sphere(&s4, vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
 	s4.print((void*)&s4);
 
 	list[0] = (t_hittable*)(&s1);

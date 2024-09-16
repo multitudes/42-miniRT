@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 14:33:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 16:51:10 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 
 #define ASPECT_RATIO (double)16.0/16.0
 #define IMAGE_WIDTH 100
-
 
 
 t_camera init_cam(t_point3 center, t_vec3 direction, double hfov) 

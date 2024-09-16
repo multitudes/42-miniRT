@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 13:58:50 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 16:53:55 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,26 +35,24 @@
  * This is also contains the initialization of the lambertian material
  * as hardcoded. Mainly so i can use it as default in the rt files
  */
-t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
+void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb rgbcolor)
 {
-	t_sphere s;
-	s.base.hit = hit_sphere;
-	s.base.pdf_value = obj_sphere_pdf_value;
-	s.base.random = obj_sphere_random;
-	s.center = center;
-	s.radius = fmax(0, diameter / 2);
-	s.rgb = rgbcolor;
-	s.color = rgb_to_color(rgbcolor);
+	s->base.hit = hit_sphere;
+	s->base.pdf_value = obj_sphere_pdf_value;
+	s->base.random = obj_sphere_random;
+	s->center = center;
+	s->radius = fmax(0, diameter / 2);
+	s->rgb = rgbcolor;
+	s->color = rgb_to_color(rgbcolor);
 	// i use the color to create a texture
-	solid_color_init(&(s.texture), s.color);
+	solid_color_init(&(s->texture), s->color);
 	// i init the lambertian material with the texture
-	lambertian_init_tex(&(s.lambertian_mat), (t_texture*)&(s.texture));
+	lambertian_init_tex(&(s->lambertian_mat), (t_texture*)&(s->texture));
 	// i assign the material to the sphere as a pointer
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
- 	s.mat = (t_material*)&(s.lambertian_mat); 
-	s.print = print_sphere;
-	return s;
+ 	s->mat = (t_material*)&(s->lambertian_mat); 
+	s->print = print_sphere;
 }
 
 /**
@@ -70,20 +68,17 @@ t_sphere sphere(t_point3 center, double diameter, t_rgb rgbcolor)
  * Supported are checkers and metal materials. Textures like solid color 
  * and images are also supported
  */
-t_sphere sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat)
+void	sphere_mat(t_sphere *s, t_point3 center, double diameter, t_material *mat)
 {
-	(void)rgbcolor;
-	t_sphere s;
-	s.base.hit = hit_sphere;
-	s.base.pdf_value = obj_sphere_pdf_value;
-	s.base.random = obj_sphere_random;
-	s.center = center;
-	s.radius = fmax(0, diameter / 2);
-	s.rgb = rgb(0,0,0);
-	s.color = color(0,0,0);
- 	s.mat = mat; 
-	s.print = print_sphere;
-	return s;
+	s->base.hit = hit_sphere;
+	s->base.pdf_value = obj_sphere_pdf_value;
+	s->base.random = obj_sphere_random;
+	s->center = center;
+	s->radius = fmax(0, diameter / 2);
+	s->rgb = rgb(0,0,0);
+	s->color = color(0,0,0);
+ 	s->mat = mat; 
+	s->print = print_sphere;
 }
 
 /** 

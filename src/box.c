@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:40:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 16:12:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 16:49:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ void box_rgb(t_box *box, t_point3 a, t_point3 b, t_rgb rgb)
     t_vec3 dy = vec3(0, max.y - min.y, 0);
     t_vec3 dz = vec3(0, 0, max.z - min.z);
 
-    box->q1 = quad_rgb(point3(min.x, min.y, max.z),  dx,  dy, rgb); // front
-    box->q2 = quad_rgb(point3(max.x, min.y, max.z), vec3negate(dz),  dy, rgb); // right
-    box->q3 = quad_rgb(point3(max.x, min.y, min.z), vec3negate(dx),  dy, rgb); // back
-    box->q4 = quad_rgb(point3(min.x, min.y, min.z),  dz,  dy, rgb); // left
-    box->q5 = quad_rgb(point3(min.x, max.y, max.z),  dx, vec3negate(dz), rgb); // top
-    box->q6 = quad_rgb(point3(min.x, min.y, min.z),  dx,  dz, rgb); // bottom
+    quad_rgb(&box->q1, point3(min.x, min.y, max.z),  dx,  dy, rgb); // front
+    quad_rgb(&box->q2, point3(max.x, min.y, max.z), vec3negate(dz),  dy, rgb); // right
+    quad_rgb(&box->q3, point3(max.x, min.y, min.z), vec3negate(dx),  dy, rgb); // back
+    quad_rgb(&box->q4, point3(min.x, min.y, min.z),  dz,  dy, rgb); // left
+    quad_rgb(&box->q5, point3(min.x, max.y, max.z),  dx, vec3negate(dz), rgb); // top
+    quad_rgb(&box->q6, point3(min.x, min.y, min.z),  dx,  dz, rgb); // bottom
     box->rgb = rgb;
 
 // i use the color to create a texture
@@ -63,12 +63,12 @@ void box(t_box *box, t_point3 a, t_point3 b, t_material *mat)
     t_vec3 dy = vec3(0, max.y - min.y, 0);
     t_vec3 dz = vec3(0, 0, max.z - min.z);
 
-    box->q1 = quad(point3(min.x, min.y, max.z),  dx,  dy, mat); // front
-    box->q2 = quad(point3(max.x, min.y, max.z), vec3negate(dz),  dy, mat); // right
-    box->q3 = quad(point3(max.x, min.y, min.z), vec3negate(dx),  dy, mat); // back
-    box->q4 = quad(point3(min.x, min.y, min.z),  dz,  dy, mat); // left
-    box->q5 = quad(point3(min.x, max.y, max.z),  dx, vec3negate(dz), mat); // top
-    box->q6 = quad(point3(min.x, min.y, min.z),  dx,  dz, mat); // bottom
+    quad_mat(&box->q1, point3(min.x, min.y, max.z),  dx,  dy, mat); // front
+    quad_mat(&box->q2, point3(max.x, min.y, max.z), vec3negate(dz),  dy, mat); // right
+    quad_mat(&box->q3, point3(max.x, min.y, min.z), vec3negate(dx),  dy, mat); // back
+    quad_mat(&box->q4, point3(min.x, min.y, min.z),  dz,  dy, mat); // left
+    quad_mat(&box->q5, point3(min.x, max.y, max.z),  dx, vec3negate(dz), mat); // top
+    quad_mat(&box->q6, point3(min.x, min.y, min.z),  dx,  dz, mat); // bottom
     box->rgb = rgb(0, 0, 0);
 	box->base.hit = hit_box;
     box->base.pdf_value = obj_pdf_value;

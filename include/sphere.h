@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 16:03:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 16:54:23 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ typedef struct		s_sphere
 /*
  * a sort of initializer for a sphere
  */
-t_sphere	sphere(t_point3 center, double diameter, t_rgb color);
-t_sphere 	sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat);
+void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb color);
+void	sphere_mat(t_sphere *s, t_point3 center, double diameter, t_material *mat);
 
 void		print_sphere(const void *self);
 void		print_sphere_mat(const void *self);
