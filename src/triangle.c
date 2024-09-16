@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:04:25 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 12:07:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:04:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,51 +20,44 @@
 
 
 
-t_triangle triangle(t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolor) {
-    t_triangle tri;
-
-    tri.base.hit = hit_triangle;
-    tri.base.pdf_value = triangle_pdf_value;
-    tri.base.random = triangle_random;
-    tri.a = a;
-    tri.b = b;
-    tri.c = c;
-    tri.edge1 = vec3substr(b, a);
-    tri.edge2 = vec3substr(c, a);
-    tri.rgb = rgbcolor;
-    tri.color = rgb_to_color(rgbcolor);
-    tri.normal = unit_vector(cross(tri.edge2, tri.edge1));
-    tri.d = dot(tri.normal, a);
-    tri.area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
+void triangle(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolor) 
+{
+    tri->base.hit = hit_triangle;
+    tri->base.pdf_value = triangle_pdf_value;
+    tri->base.random = triangle_random;
+    tri->a = a;
+    tri->b = b;
+    tri->c = c;
+    tri->edge1 = vec3substr(b, a);
+    tri->edge2 = vec3substr(c, a);
+    tri->rgb = rgbcolor;
+    tri->color = rgb_to_color(rgbcolor);
+    tri->normal = unit_vector(cross(tri->edge2, tri->edge1));
+    tri->d = dot(tri->normal, a);
+    tri->area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
 
     // Initialize texture and material as before
-    solid_color_init(&(tri.texture), tri.color);
-    lambertian_init_tex(&(tri.lambertian_mat), (t_texture*)&(tri.texture));
-    tri.mat = (t_material*)&(tri.lambertian_mat);
-
-    tri.print = print_triangle;
-    return tri;
+    solid_color_init(&(tri->texture), tri->color);
+    lambertian_init_tex(&(tri->lambertian_mat), (t_texture*)&(tri->texture));
+    tri->mat = (t_material*)&(tri->lambertian_mat);
+    tri->print = print_triangle;
 }
 
-t_triangle triangle_mat(t_point3 a, t_point3 b, t_point3 c, t_material *mat) {
-    t_triangle tri;
-
-    tri.base.hit = hit_triangle;
-    tri.base.pdf_value = triangle_pdf_value;
-    tri.base.random = triangle_random;
-    tri.a = a;
-    tri.b = b;
-    tri.c = c;
-    tri.mat = mat;
-    tri.normal = unit_vector(cross(vec3substr(b, a), vec3substr(c, a)));
-    tri.d = dot(tri.normal, a);
-    tri.area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
-
-    tri.rgb = rgb(0, 0, 0);
-    tri.color = color(0, 0, 0);
-
-    tri.print = print_triangle;
-    return tri;
+void triangle_mat(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_material *mat) 
+{
+    tri->base.hit = hit_triangle;
+    tri->base.pdf_value = triangle_pdf_value;
+    tri->base.random = triangle_random;
+    tri->a = a;
+    tri->b = b;
+    tri->c = c;
+    tri->mat = mat;
+    tri->normal = unit_vector(cross(vec3substr(b, a), vec3substr(c, a)));
+    tri->d = dot(tri->normal, a);
+    tri->area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
+    tri->rgb = rgb(0, 0, 0);
+    tri->color = color(0, 0, 0);
+    tri->print = print_triangle;
 }
 
 void print_triangle(const void *self) {

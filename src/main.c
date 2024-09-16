@@ -325,7 +325,8 @@ int main(int argc, char **argv)
 	box(&s9, point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
 	s9.print((void*)&s9);
 
-	t_triangle s10 = triangle(point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
+	t_triangle s10;
+	triangle(&s10, point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
 	s10.print((void*)&s10);
 	
 	// checker texture sphere
