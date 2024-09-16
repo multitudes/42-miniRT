@@ -303,12 +303,14 @@ int main(int argc, char **argv)
 	t_plane s7 = plane(point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
 	s7.print((void*)&s7);
 
-	t_disk s8 = disk(point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
+	t_disk s8;
+	disk(&s8, point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
 	s8.print((void*)&s8);
 
 
 // try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
-	t_box s9 = box(point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
+	t_box s9;
+	box(&s9, point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
 	s9.print((void*)&s9);
 
 	t_triangle s10 = triangle(point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));

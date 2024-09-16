@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 17:15:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 16:21:55 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,53 +15,46 @@
 #include <stdio.h>
 #include "utils.h"
 
-t_disk	disk(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
+void	disk(t_disk *d, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
 {
-	t_disk disk;
-
-	disk.base.hit = hit_disk;
-	disk.base.pdf_value = disk_pdf_value;
-	disk.base.random = disk_random;
-	disk.q = q;
-	disk.u = u;
-	disk.v = v;
+	d->base.hit = hit_disk;
+	d->base.pdf_value = disk_pdf_value;
+	d->base.random = disk_random;
+	d->q = q;
+	d->u = u;
+	d->v = v;
 	t_vec3 n = cross(u, v);
-    disk.normal = unit_vector(n);
-    disk.d = dot(disk.normal, q);
-	disk.w = vec3divscalar(n, dot(n, n));
+    d->normal = unit_vector(n);
+    d->d = dot(d->normal, q);
+	d->w = vec3divscalar(n, dot(n, n));
 	
-	disk.rgb = rgbcolor;
-    disk.color = rgb_to_color(rgbcolor);
+	d->rgb = rgbcolor;
+    d->color = rgb_to_color(rgbcolor);
 
     // Initialize texture and material as I did for the quad
-    solid_color_init(&(disk.texture), disk.color);
-    lambertian_init_tex(&(disk.lambertian_mat), (t_texture*)&(disk.texture));
-    disk.mat = (t_material*)&(disk.lambertian_mat);
-	disk.print = print_disk;
+    solid_color_init(&(d->texture), d->color);
+    lambertian_init_tex(&(d->lambertian_mat), (t_texture*)&(d->texture));
+    d->mat = (t_material*)&(d->lambertian_mat);
+	d->print = print_disk;
 
-	
-	return (disk);
 }
 
-t_disk disk_mat(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
+void disk_mat(t_disk *disk, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 {
-	t_disk disk;
-
-	disk.base.hit = hit_disk;
-	disk.q = q;
-	disk.u = u;
-	disk.v = v;
-	disk.mat = mat;
+	disk->base.hit = hit_disk;
+	disk->q = q;
+	disk->u = u;
+	disk->v = v;
+	disk->mat = mat;
 	t_vec3 n = cross(u, v);
-    disk.normal = unit_vector(n);
-    disk.d = dot(disk.normal, q);
-	disk.w = vec3divscalar(n, dot(n, n));
+    disk->normal = unit_vector(n);
+    disk->d = dot(disk->normal, q);
+	disk->w = vec3divscalar(n, dot(n, n));
 	// colors depend of material and will be calc in the scatter function
-	disk.rgb = rgb(0, 0, 0);	
-    disk.color = color(0, 0, 0);
-	disk.mat = mat;
-	disk.print = print_disk;
-	return (disk);
+	disk->rgb = rgb(0, 0, 0);	
+    disk->color = color(0, 0, 0);
+	disk->mat = mat;
+	disk->print = print_disk;
 }
 
 /**
