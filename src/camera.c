@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 19:04:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 14:33:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 #include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 800
+#define IMAGE_WIDTH 100
 
 
 
@@ -33,8 +33,8 @@ t_camera init_cam(t_point3 center, t_vec3 direction, double hfov)
 {
 	t_camera cam;
 
-	cam.samples_per_pixel = 200;
-	cam.max_depth = 200; // bouncing ray
+	cam.samples_per_pixel = 100;
+	cam.max_depth = 100; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
 	cam.aspect_ratio = ASPECT_RATIO;
@@ -95,7 +95,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// if I hit an object in the world (including a light) I fill the 
 	// hit record rec struct
 	if (!world->hit_objects(world, r, interval(0.001, 10000), &rec))
-		return color(0.0005,0.0005,0.005); // space grey!
+		return color(0.0005,0.0005,0.0005); // space grey!
 
 	// Here I use the hit_record collected from the previous hit
 	// when a world object material is a light source it will emit light only. 
@@ -123,7 +123,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
        		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 
         return vec3add(ambient_material, reflected_color);
-    }
+    	}
 
 		// t_color ambient = vec3divscalar(vec cam->ambient_light.color, cam->max_depth);
 		// return vec3add(ambient ,vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights)));

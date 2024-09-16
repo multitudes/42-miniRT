@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 18:39:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 13:58:50 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,6 +230,7 @@ t_vec3 obj_sphere_random(const void *self, const t_point3 *orig)
     t_vec3 transformed_point = onb_transform(&uvw, random_point);
     return transformed_point;
 }
+
 
 // Function to generate a random direction within the sphere's volume
 t_vec3 random_to_sphere(double radius, double distance_squared) 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 17:19:09 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 14:24:46 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 #include "utils.h"
 #include "color.h"
 
+
+// t_quad a = quad_rgb(....)
+// initaquad(data->obj>quad[0], a);
+// // data->obj>quad[0] = a
 
 t_quad	quad_rgb(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor) 
 {
@@ -45,8 +49,8 @@ t_quad	quad_rgb(t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
  	qd.mat = (t_material*)&(qd.lambertian_mat); 
 	qd.print = print_quad;
 	return (qd);
-
 }
+
 
 t_quad quad(t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 {

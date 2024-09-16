@@ -341,7 +341,8 @@ int main(int argc, char **argv)
 	t_sphere s12 = sphere_mat(point3(250, 100, -200), 100.0, rgb(0,0,0) ,(t_material*)&earth_surface);
 	s12.print((void*)&s12);
 	
-	t_cylinder s13 = cylinder(point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
+	t_cylinder s13;
+	cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
 	s13.print((void*)&s13);
 
 	list[0] = (t_hittable*)(&s1);
@@ -366,8 +367,8 @@ int main(int argc, char **argv)
 	t_quad l6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere l2 = sphere_mat(point3( 0,250,-50 ), 60, rgb(0,0,0),(t_material*)&no_material);
-
+	t_sphere l2 = sphere_mat(point3( 0,250,-50 ), 120, rgb(0,0,0),(t_material*)&no_material);
+//0,250,-50 ), 120
 	list_lights[0] = (t_hittable*)(&l6);
 	list_lights[1] = (t_hittable*)(&l2);
 	const t_hittablelist lights = hittablelist(list_lights, 2);

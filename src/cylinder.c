@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 19:09:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 14:38:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,49 +30,47 @@
  * the cylinder height
  * R,G,B colors in range [0,255]
 */
-t_cylinder		cylinder(t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
+void		cylinder_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
 {
-	t_cylinder c;
 
-	c.base.hit = hit_cylinder;
-	c.base.pdf_value = obj_cylinder_pdf_value;
-	c.base.random = obj_cylinder_random;
-	c.center = center;
-	c.axis = axis;
-	c.radius = diameter / 2;
-	c.height = height;
-	c.rgb = rgbcolor;
-	c.color = rgb_to_color(rgbcolor);
+	c->base.hit = hit_cylinder;
+	c->base.pdf_value = obj_cylinder_pdf_value;
+	c->base.random = obj_cylinder_random;
+	c->center = center;
+	c->axis = axis;
+	c->radius = diameter / 2;
+	c->height = height;
+	c->rgb = rgbcolor;
+	c->color = rgb_to_color(rgbcolor);
 	// i use the color to create a texture
-	solid_color_init(&(c.texture), c.color);
+	solid_color_init(&(c->texture), c->color);
 	// i init the lambertian material with the texture
-	lambertian_init_tex(&(c.lambertian_mat), (t_texture*)&(c.texture));
+	lambertian_init_tex(&(c->lambertian_mat), (t_texture*)&(c->texture));
 	// i assign the material to the sphere as a pointer
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
- 	c.mat = (t_material*)&(c.lambertian_mat); 
+ 	c->mat = (t_material*)&(c->lambertian_mat); 
 
-	c.print = &print_cylinder;
-	return c;
+	c->print = &print_cylinder;
+
 }
 
-t_cylinder		cylinder_mat(t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
+void		cylinder_mat_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
 {
-	t_cylinder c;
 
-	c.base.hit = hit_cylinder;
-	c.base.pdf_value = obj_cylinder_pdf_value;
-	c.base.random = obj_cylinder_random;
-	c.center = center;
-	c.axis = axis;
-	c.radius = diameter / 2;
-	c.height = height;
-	c.mat = mat;
-	c.rgb = rgb(0, 0, 0);
-	c.color = color(0, 0, 0);
+	c->base.hit = hit_cylinder;
+	c->base.pdf_value = obj_cylinder_pdf_value;
+	c->base.random = obj_cylinder_random;
+	c->center = center;
+	c->axis = axis;
+	c->radius = diameter / 2;
+	c->height = height;
+	c->mat = mat;
+	c->rgb = rgb(0, 0, 0);
+	c->color = color(0, 0, 0);
 
-	c.print = &print_cylinder;
-	return c;
+	c->print = &print_cylinder;
+
 }
 
 
@@ -98,6 +96,8 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 
     // Calculate coefficients for the quadratic equation
     double a = r->dir.x * r->dir.x + r->dir.z * r->dir.z;
+	if (fabs(a) <= EPSILON)
+		return false;
     double b = 2 * (r->dir.x * (r->orig.x - cyl->center.x) + r->dir.z * (r->orig.z - cyl->center.z));
     double c = (r->orig.x - cyl->center.x) * (r->orig.x - cyl->center.x) + (r->orig.z - cyl->center.z) * (r->orig.z - cyl->center.z) - cyl->radius * cyl->radius;
 
@@ -135,6 +135,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 		}
 	}
 
+
 	if (surrounds(&ray_t, t1)) {
 		t_vec3 point = point_at(r, t1);
 		double y = point.y;
@@ -148,6 +149,8 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 			}
 		}
 	}
+
+
     if (closest_t >= 0 && hit) {
         rec->t = closest_t;
         rec->p = closest_point;
