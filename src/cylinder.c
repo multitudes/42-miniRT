@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 17:18:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:43:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,5 +232,5 @@ void get_cylinder_uv(t_vec3 normal, double* u, double* v)
 
     // Map theta and phi to UV coordinates
     *u = theta / (2 * PI);
-    *v = phi / M_PI;
+    *v = phi / PI;
 }
