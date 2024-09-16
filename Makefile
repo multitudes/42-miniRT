@@ -9,7 +9,14 @@
 
 NAME 			= 	miniRT
 CC 				= 	cc
-CFLAGS 			=	-Wextra -Wall -Werror -g -Iinclude -Isrc
+
+CFLAGS 			= 	-Wextra -Wall -Werror
+CFLAGS 			+= 	-Iinclude -Isrc -Ilib/external
+CFLAGS			+=  -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
+CFLAGS 			+=  -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+# CFLAGS 			+=  -DNDEBUG
+# CFLAGS 			+=  -g
+# CFLAGS += -DDEBUG=1
 
 # directories
 OBJ_DIR			= 	obj/
@@ -23,17 +30,20 @@ LIBS 			+= 	$(LIBFTDIR)/libft.a
 # this is used in production to optimize the linking and remove unnecessary code aking the binary smaller
 #LDFLAGS			= 	-Wl,--gc-sections -Wl,-O2 -Wl,--as-needed -Wl,--strip-all
 
-INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR)
+INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
 											vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
-											texture.c material.c onb.c parse.c)
+											texture.c material.c onb.c pdf.c quad.c hittable_list.c \
+											disk.c box.c triangle.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
 									utils.h ambient.h plane.h cylinder.h texture.h \
-									rtw_stb_image.h material.h onb.h external/stb_image.h external/stb_image_write.h)
+									rtw_stb_image.h material.h onb.h pdf.h quad.h disk.h \
+									box.h triangle.h)
+HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
@@ -94,8 +104,6 @@ re: fclean all
 # and optimize the binary size
 run:
 	@echo
-	@$(CFLAGS) += -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
-	@$(CFLAGS) += -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) $(LDFLAGS) -o $(NAME)
 	@PATH=".$${PATH:+:$${PATH}}" && $(NAME) $(ARGS)
 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 16:59:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/10 19:22:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:14:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "ray.h"
 #include <stdbool.h>
 #include "interval.h"
-#include "material.h"
 
 typedef struct s_material t_material;
 
@@ -32,6 +31,8 @@ typedef struct 	s_hit_record {
 
 typedef struct 	s_hittable{
     bool 		(*hit)(const void* self, const t_ray* r, t_interval closest, t_hit_record* rec);
+	double      (*pdf_value)(const void *self, const t_point3 *o, const t_vec3 *v);
+	t_vec3      (*random)(const void *self, const t_vec3 *o);
 } 				t_hittable;
 
 void 		set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   onb.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:37:17 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 17:07:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 11:18:46 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_vec3 onb_local(const t_onb *basis, double a, double b, double c)
 }
 
 /**
- * onb_local_vec - Converts a vector from the local orthonormal basis to world coordinates.
+ * onb_transform - Converts a vector from the local orthonormal basis to world coordinates.
  * @basis: Pointer to the t_onb structure representing the orthonormal basis.
  * @a: t_vec3 vector in the local orthonormal basis.
  *
@@ -76,7 +76,7 @@ t_vec3 onb_local(const t_onb *basis, double a, double b, double c)
  *
  * Return: A t_vec3 vector representing the coordinates in world space.
  */
-t_vec3 onb_local_vec(const t_onb *basis, t_vec3 a) 
+t_vec3 onb_transform(const t_onb *basis, t_vec3 a) 
 {
 	t_vec3 uax = vec3multscalar(basis->u, a.x);
 	t_vec3 vay = vec3multscalar(basis->v, a.y);

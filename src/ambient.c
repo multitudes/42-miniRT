@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ambient.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:53:45 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 13:31:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:16:14 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ambient(t_ambient *result, double ratio, t_rgb rgb)
 {
 	result->ratio = clamp(interval(0,1), ratio);
 	result->rgbcolor = rgb;
-	result->color = rgb_to_color(rgb);
+	result->color = vec3multscalar(rgb_to_color(rgb), ratio);
 	result->print = &print_ambient;
 }
 

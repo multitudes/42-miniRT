@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/10 19:28:34 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:14:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #include "cylinder.h"
 #include "vec3.h"
 
-# define IMAGE_WIDTH 800
 # define TRUE 1
 # define FALSE 0
 # define OBJECT_COUNT 100
@@ -65,8 +64,9 @@ typedef struct 	s_mrt
 
 	// hittable list
 	t_hittablelist world;
+	t_hittablelist lights;
 	// render function
-    void (*renderscene)(struct s_mrt *, const t_hittablelist *);
+	void (*renderscene)(struct s_mrt *, const t_hittablelist *, const t_hittablelist *);
 
 	// t_viewport	viewport;
 	// t_pixel		pixel;

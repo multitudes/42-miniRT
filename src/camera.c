@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/10 19:32:58 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:18:04 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,21 @@
 #include "ray.h"
 #include "hittable_list.h"
 #include "interval.h"
-#include "hittable.h"
 #include "utils.h"
 #include "camera.h"
+#include "pdf.h"
+#include <stdbool.h>
+#include <math.h>
 
-#define ASPECT_RATIO 16.0/9.0
+#define ASPECT_RATIO (double)16.0/16.0
+#define IMAGE_WIDTH 100
 
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
-	cam->background = color(0.7,0.7,0.7); // grey
-	cam->samples_per_pixel = 50;	// antialising
-	cam->max_depth = 50; // bouncing ray
+	t_camera cam;
+
+	cam->samples_per_pixel = 100;
+	cam->max_depth = 100; // bouncing ray
 	// ratio is not a given from the subject. we can try different values
 	// cam.aspect_ratio = (double)16.0/9.0;
 	cam->aspect_ratio = ASPECT_RATIO;
@@ -72,138 +76,102 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 
 	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
-#include <stdbool.h>
-#include <math.h>
 
-// Epsilon value for floating-point comparison
-#define EPSILON 1e-1
 
-// Check if two floating-point numbers are approximately equal
-bool is_near_zero(double value) {
-    return fabs(value) < EPSILON;
-}
-
-// Function to check if a ray intersects an axis-aligned line
-bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
-    // Check for intersection with x-axis (line along the x-axis)
-    if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
-        // The ray intersects the x-axis when y = 0 and z = 0
-        if (!is_near_zero(r->orig.y) || !is_near_zero(r->orig.z)) {
-            // Ray origin is not on the yz-plane, so calculate the intersection point
-            double t = -r->orig.y / r->dir.y; // Find where y = 0
-            double z_at_t = r->orig.z + t * r->dir.z;
-            return is_near_zero(z_at_t); // Check if z also equals 0
-        }
-        return true; // If the ray origin is on the yz-plane
-    }
-
-    // Check for intersection with y-axis (line along the y-axis)
-    if (axis->x == 0 && axis->y != 0 && axis->z == 0) {
-        // The ray intersects the y-axis when x = 0 and z = 0
-        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.z)) {
-            // Ray origin is not on the xz-plane, so calculate the intersection point
-            double t = -r->orig.x / r->dir.x; // Find where x = 0
-            double z_at_t = r->orig.z + t * r->dir.z;
-            return is_near_zero(z_at_t); // Check if z also equals 0
-        }
-        return true; // If the ray origin is on the xz-plane
-    }
-
-    // Check for intersection with z-axis (line along the z-axis)
-    if (axis->x == 0 && axis->y == 0 && axis->z != 0) {
-        // The ray intersects the z-axis when x = 0 and y = 0
-        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.y)) {
-            // Ray origin is not on the xy-plane, so calculate the intersection point
-            double t = -r->orig.x / r->dir.x; // Find where x = 0
-            double y_at_t = r->orig.y + t * r->dir.y;
-            return is_near_zero(y_at_t); // Check if y also equals 0
-        }
-        return true; // If the ray origin is on the xy-plane
-    }
-
-    // If none of the conditions match, the ray does not intersect the line
-    return false;
-}
-
-t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world)
+t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights)
 {
 	(void)cam;
 
-	t_hit_record rec;
-
 	if (depth <= 0)
         return color(0,0,0);
-	if (hit_world(world, r, interval(0.001, 1e30), &rec))
+
+	t_hit_record rec;
+
+	// if I hit an object in the world (including a light) I fill the 
+	// hit record rec struct
+	if (!world->hit_objects(world, r, interval(0.001, 10000), &rec))
+		return color(0.0005,0.0005,0.0005); // space grey!
+
+	// Here I use the hit_record collected from the previous hit
+	// when a world object material is a light source it will emit light only. 
+	// and I will directly return the color from the light source
+	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
+
+	// another hit record for the scatter
+	t_scatter_record srec;
+	init_scatter_record(&srec);
+	// is light only so it doesnt have scatter
+	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
+		return color_from_emission;
+	//we should only call the pdf_value() if it is diffuse, 
+	//so for specular material we should skip the pdf_value() call
+	// and use the scattered ray skip_pdf ray multiplied by the attenuation
+	// of the material to get the color of the object
+	t_ray scattered = srec.skip_pdf_ray;
+	if (srec.skip_pdf)
 	{
-		t_ray scattered;
-		t_color attenuation = color(0,0,0);
-		t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
-		if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
-		 	return color_from_emission;
-		t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world));
-		return vec3add(color_from_emission, color_from_scatter);
+		if (srec.skip_pdf) {
+			t_color ambient_light = cam->ambient_light.color;
+			t_metal *metal = (t_metal *)rec.mat;
+			t_color ambient_material = vec3mult(metal->albedo, ambient_light);
 
+       		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+
+        return vec3add(ambient_material, reflected_color);
+    	}
+
+		// t_color ambient = vec3divscalar(vec cam->ambient_light.color, cam->max_depth);
+		// return vec3add(ambient ,vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights)));
 	}
-	return cam->background;
+	// debug("rec normal: %f %f %f\n", rec.normal.x, rec.normal.y, rec.normal.z);
 
-	// t_vec3 x_axis = vec3(100,0,0);
-	// t_vec3 y_axis = vec3(0,100,0);
-	// t_vec3 z_axis = vec3(0,0,100);
-	// 	if (ray_intersects_line(r, &x_axis)) {
-	// 	return color(1.0, 0.0, 0.0); // Red for x-axis
-	// } else if (ray_intersects_line(r, &y_axis)) {
-	// 	return color(0.0, 1.0, 0.0); // Green for y-axis
-	// } else if (ray_intersects_line(r, &z_axis)) {
-	// 	return color(0.0, 0.0, 1.0); // Blue for z-axis
-	// }
+	t_hittable_pdf light_pdf;
+	hittable_pdf_init(&light_pdf, lights, &rec.p);
 
-	// t_vec3 unit_direction = unit_vector(r->dir);
-	// double a = 0.5 * (unit_direction.y + 1.0);
-	// t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
-	// t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
+	t_pdf *recorded_pdf = srec.pdf_ptr;
 
-	// return vec3add(start, end);
-	// if (depth <= 0)
-	// 	return color(0, 0, 0);
+//   mixture_pdf p(light_ptr, srec.pdf_ptr);
 
-	// t_hit_record rec;
-	// if (!hit_world(world, r, interval(0.001, INFINITY), &rec))
-	// {
-	// 	// t_vec3 unit_direction = unit_vector(r->dir);
-	// 	// double a = 0.5 * unit_direction.y + 1.0;
-	// 	// t_color white = color(1.0, 1.0, 1.0);
-	// 	// t_color blue = color(0.5, 0.7, 1.0);
-	// 	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
-	// 	return cam->background; // it should be the cam beckground but since this is c and raycolor is not a member func i have no access to cam
-	// }
+//         ray scattered = ray(rec.p, p.generate(), r.time());
+//         auto pdf_value = p.value(scattered.direction());
+
+//         double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
+
+//         color sample_color = ray_color(scattered, depth-1, world, lights);
+//         color color_from_scatter =
+//             (srec.attenuation * scattering_pdf * sample_color) / pdf_value;
+
+//         return color_from_emission + color_from_scatter;
 
 
-	// t_ray scattered;
-	// t_color attenuation;
-	// t_color color_from_emission = rec.mat->emit(rec.mat, &rec, rec.u, rec.v, rec.p);
 
-	// if (!rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
-	// 	return color_from_emission;
+	if (random_d() < 0.5)
+	{
+		scattered = ray(rec.p, recorded_pdf->generate(recorded_pdf));
+	}
+	else
+	{
+		scattered = ray(rec.p, lights->obj_random(lights, &rec.p));
+	}
+	
+	double pdf_value1 = recorded_pdf->value(recorded_pdf, &scattered.dir);
+	double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scattered.dir);
 
-	// t_color color_from_scatter = vec3mult(attenuation, ray_color(cam, &scattered, depth-1, world));
+    double pdf_value = 0.5 * pdf_value1 + 0.5 * pdf_value2;
 
-	// return vec3add(color_from_emission, color_from_scatter);
+	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
 
-	// t_ray scattered;
-	// t_color attenuation;
-	// if (rec.mat->scatter(rec.mat, r, &rec, &attenuation, &scattered, NULL))
-	// 	return vec3mult(attenuation, ray_color(cam, &scattered, depth - 1, world));
-	// t_vec3 direction = vec3add(rec.normal, random_unit_vector());
-	// t_ray scattered = ray(rec.p, direction);
-	// return vec3multscalar(ray_color(&scattered, depth - 1, world), 0.5);
-	// return color(0,0,0);
+	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
 
-	// t_vec3 unit_direction = unit_vector(r->dir);
-	// double a = 0.5 * unit_direction.y + 1.0;
-	// t_color white = color(1.0, 1.0, 1.0);
-	// t_color blue = color(0.5, 0.7, 1.0);
-	// return vec3add(vec3multscalar(white, (1-a)), vec3multscalar(blue, a));
+	// combine the surface color with the light's color/intensity
+	t_color ambient = vec3divscalar(cam->ambient_light.color,1);
+	t_color ambient_samplecolor = vec3add(ambient, sample_color);
+	t_color attenuationxscattering_pdf = vec3multscalar(srec.attenuation, scattering_pdf);
+	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, ambient_samplecolor);
+	t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_value);
 
+	return color_from_scatter;
+	
 
 }
 
@@ -251,7 +219,7 @@ t_ray get_ray(t_camera cam, int i, int j)
 
 }
 
-void    render(t_mrt *data, const t_hittablelist* world)
+void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
 {
     int	x;
 	int	y;
@@ -268,14 +236,79 @@ void    render(t_mrt *data, const t_hittablelist* world)
 			while (i < data->objects.camera.samples_per_pixel)
 			{
 				t_ray r = get_ray(data->objects.camera, x, y);
-				pixel_color = vec3add(pixel_color, ray_color(&(data->objects.camera), &r, data->objects.camera.max_depth, world));
+
+				pixel_color = vec3add(pixel_color, ray_color(&(data->objects.camera), &r, data->objects.camera.max_depth ,world, lights));
+				
 				i++;
 			}
             write_color(data, x, y, vec3divscalar(pixel_color, data->objects.camera.samples_per_pixel));
 			x++;
         }
-		debug("%.3d of %.3d\r", y, data->objects.camera.image_height);
+		// debug("%.3d of %.3d\r", y, data->cam.image_height);
+		fflush(stderr);
 		y++;
+
     }
 	debug("\nDONE!\n");
+}
+
+/** 
+ * @brief print the camera information
+ * in the rt file format
+ * like C -50,0,20 		0,0,1	 70
+ */
+void			print_camera(const void* self)
+{
+	const t_camera *c = (const t_camera *)self;
+	printf("C\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\n", 
+	c->center.x, c->center.y, c->center.z, 
+	c->direction.x, c->direction.y, c->direction.z, 
+	c->hfov);
+}
+
+// Check if two floating-point numbers are approximately equal
+bool is_near_zero(double value) {
+    return fabs(value) < EPSILON;
+}
+
+// Function to check if a ray intersects an axis-aligned line
+bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
+    // Check for intersection with x-axis (line along the x-axis)
+    if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
+        // The ray intersects the x-axis when y = 0 and z = 0
+        if (!is_near_zero(r->orig.y) || !is_near_zero(r->orig.z)) {
+            // Ray origin is not on the yz-plane, so calculate the intersection point
+            double t = -r->orig.y / r->dir.y; // Find where y = 0
+            double z_at_t = r->orig.z + t * r->dir.z;
+            return is_near_zero(z_at_t); // Check if z also equals 0
+        }
+        return true; // If the ray origin is on the yz-plane
+    }
+
+    // Check for intersection with y-axis (line along the y-axis)
+    if (axis->x == 0 && axis->y != 0 && axis->z == 0) {
+        // The ray intersects the y-axis when x = 0 and z = 0
+        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.z)) {
+            // Ray origin is not on the xz-plane, so calculate the intersection point
+            double t = -r->orig.x / r->dir.x; // Find where x = 0
+            double z_at_t = r->orig.z + t * r->dir.z;
+            return is_near_zero(z_at_t); // Check if z also equals 0
+        }
+        return true; // If the ray origin is on the xz-plane
+    }
+
+    // Check for intersection with z-axis (line along the z-axis)
+    if (axis->x == 0 && axis->y == 0 && axis->z != 0) {
+        // The ray intersects the z-axis when x = 0 and y = 0
+        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.y)) {
+            // Ray origin is not on the xy-plane, so calculate the intersection point
+            double t = -r->orig.x / r->dir.x; // Find where x = 0
+            double y_at_t = r->orig.y + t * r->dir.y;
+            return is_near_zero(y_at_t); // Check if y also equals 0
+        }
+        return true; // If the ray origin is on the xy-plane
+    }
+
+    // If none of the conditions match, the ray does not intersect the line
+    return false;
 }

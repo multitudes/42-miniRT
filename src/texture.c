@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   texture.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 19:12:30 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 09:35:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "rtw_stb_image.h"
 #include <stdio.h>
 #include "utils.h"
+#include "interval.h"
 
 void	solid_color_init(t_solid_color *solid_color_texture, t_color albedo)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 10:33:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 12:36:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,32 @@ unsigned int rand_rt()
 /*
  * Comverts degrees to radians.
  */
-double degrees_to_radians(double degrees) {
+double degrees_to_radians(double degrees) 
+{
     return degrees * PI / 180.0;
 }
 
 /*
- * Returns a random real in [0,1).
+ * Returns a random int in [min,max).
+ * max is excluded.
  */
-double random_d() {
+int random_int(int min, int max) 
+{
+    return min + rand_rt() % (max - min);
+}
+/*
+ * Returns a random real in [0,1], 1 excluded.
+ */
+double random_d() 
+{
     return rand_rt() / (UINT32_MAX + 1.0);
 }
 
 /*
- * Returns a random real in [min,max).
+ * Returns a random real in [min,max) with min included 
+ * and max excluded.
  */
-double random_double(double min, double max) {
+double random_double(double min, double max) 
+{
     return min + (max-min)*random_d();
 }

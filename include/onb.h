@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   onb.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:22:44 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/07/27 18:58:20 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/11 11:18:46 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ typedef struct 	s_onb {
 
 void onb_build_from_w(t_onb *basis, const t_vec3 *w);
 t_vec3 onb_local(const t_onb *basis, double a, double b, double c);
-t_vec3 onb_local_vec(const t_onb *basis, t_vec3 a);
+t_vec3 onb_transform(const t_onb *basis, t_vec3 a);
 
 #endif
