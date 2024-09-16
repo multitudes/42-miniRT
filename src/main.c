@@ -303,7 +303,8 @@ int main(int argc, char **argv)
 	t_plane s7 = plane(point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
 	s7.print((void*)&s7);
 
-	t_disk s8 = disk(point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
+	t_disk s8;
+	disk(&s8, point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
 	s8.print((void*)&s8);
 
 

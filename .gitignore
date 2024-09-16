@@ -187,3 +187,5 @@ obj/quad.o
 src/scrap.c
 obj/box.o
 obj/box.o
+obj/box.o
+obj/disk.o
