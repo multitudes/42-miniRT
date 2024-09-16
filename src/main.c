@@ -137,6 +137,9 @@ int main_mixtest(int argc, char **argv)
 	data.cam = init_cam(center, direction, 40);
 	data.cam.print((void*)(&(data.cam)));
 
+
+
+
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
