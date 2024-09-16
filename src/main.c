@@ -300,7 +300,8 @@ int main(int argc, char **argv)
 	s5.print((void*)&s5);
 
 	// add a plane just below the s4 sphere
-	t_plane s7 = plane(point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
+	t_plane s7;
+	plane(&s7, point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
 	s7.print((void*)&s7);
 
 	t_disk s8;
