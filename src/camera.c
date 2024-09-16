@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 17:18:04 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:36:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@
 
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
-	t_camera cam;
-
 	cam->samples_per_pixel = 100;
 	cam->max_depth = 100; // bouncing ray
 	// ratio is not a given from the subject. we can try different values

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/10 18:53:41 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:38:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ static void	get_cylinder(t_objects *obj)
 		call_error("exceeds array size", "cylinder", obj);
 	if (count_tokens(tokens) != 6)
 		call_error("invalid token amount", "cylinder", obj);
-	cylinder(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
+	cylinder_u(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
 		set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
 		set_rgb(obj, 5, "cylinder"));
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];
