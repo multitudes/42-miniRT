@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:38:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/15 12:29:59 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 16:12:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,8 @@ typedef struct	s_box {
     void		    (*print)(const void* self);
 }				t_box;
 
-t_box   box(t_point3 a, t_point3 b, t_material *mat);
-t_box   box_rgb(t_point3 a, t_point3 b, t_rgb rgb);
-// void    create_box(t_box *box, t_point3 a, t_point3 b, t_material *mat);
+void    box_rgb(t_box *box, t_point3 a, t_point3 b, t_rgb rgb);
+void    box(t_box *box, t_point3 a, t_point3 b, t_material *mat);
 void    print_box(const void *self);
 bool    hit_box(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec);
 
