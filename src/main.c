@@ -5,6 +5,7 @@
 #include "vec3.h"
 #include "hittable_list.h"
 #include <MLX42/MLX42.h>
+#include <cstdlib>
 #include "utils.h"
 
 #define WINDOW_TITLE "miniRT"
@@ -79,12 +80,14 @@ int init_window(t_mrt *data)
 int main(int argc, char **argv)
 {
     t_mrt data;
-    (void)argv;
-	(void)argc;
 
-	// check if argc is 2
+	if (argc != 2)
+	{
+		write(2, "Error\nProgram expects an .rt file as input!\n", 44);
+		return (EXIT_FAILURE);
+	}
 	ft_memset(&data, 0, sizeof(t_mrt));
-	parse_input("scenes/first.rt", &data.objects);
+	parse_input(argv[1], &data.objects);
 
 	const t_hittablelist world = hittablelist(data.objects.hit_list, data.objects.hit_idx);
 
