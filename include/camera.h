@@ -36,16 +36,16 @@ typedef struct	s_camera
 	t_point3 	lookfrom;   		// Point camera is looking from
     t_point3 	lookat;  			// Point camera is looking at
     t_vec3   	vup;     			// Camera-relative "up" direction
-	
+
 	// considered private
     t_point3	pixel00_loc;    // Location of pixel 0, 0
     t_vec3		pixel_delta_u;  // Offset to pixel to the right
     t_vec3		pixel_delta_v;  // Offset to pixel below
 
-	t_ambient  ambient_light;
+	t_ambient  ambient;
 
 	void		(*print)(const void* self);
-	
+
 } 				t_camera;
 
 void		init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov);

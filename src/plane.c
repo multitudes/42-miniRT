@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include "utils.h"
 
-void plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol) 
+void plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol)
 {
     pl->base.hit = hit_plane;
     pl->base.pdf_value = plane_pdf_value;
@@ -35,7 +35,7 @@ void plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol)
 	pl->print = print_plane;
 }
 
-void    plane_mat(t_plane *pl, t_point3 point, t_vec3 normal, t_material *mat) 
+void    plane_mat(t_plane *pl, t_point3 point, t_vec3 normal, t_material *mat)
 {
     pl->base.hit = hit_plane;
     pl->base.pdf_value = plane_pdf_value;
@@ -56,14 +56,14 @@ void    plane_mat(t_plane *pl, t_point3 point, t_vec3 normal, t_material *mat)
 
 /**
  * @brief print the plane object
- * 
- * format is like this 
+ *
+ * format is like this
  * pl 0.0,0.0,-10.0 0.0,1.0,0.0 0,0,225
  */
 void		print_plane(const void *self)
 {
 	const t_plane *p = (const t_plane *)self;
-	printf("pl\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", 
+	printf("pl\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n",
 	p->q.x, p->q.y, p->q.z, p->normal.x, p->normal.y, p->normal.z, p->rgb.r, p->rgb.g, p->rgb.b);
 
 }
@@ -92,12 +92,12 @@ bool hit_plane(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record
 	return true;
 }
 
-double plane_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir) 
+double plane_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
     const t_plane *pl = (t_plane *)self;
     t_hit_record rec;
     const t_ray r = ray(*orig, *dir);
-    if (!hit_plane(pl, &r, interval(0.001, INFINITY), &rec))
+    if (!hit_plane(pl, &r, interval(0.001, 1e30), &rec))
         return 0;
 
     // Calculate the distance squared from the origin to the hit point
@@ -107,7 +107,7 @@ double plane_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir
     double cosine = fabs(dot(*dir, pl->normal));
 
     // Calculate the area of the infinite plane (which is infinite)
-    double area = INFINITY;
+    double area = 1e30;
 
     return distance_squared / (cosine * area);
 }
@@ -120,4 +120,3 @@ t_vec3 plane_random(const void *self, const t_point3 *orig)
 	t_vec3 p = vec3add(pl->q, vec3add(vec3multscalar(pl->u, max_u), vec3multscalar(pl->v, max_v)));
 	return vec3substr(p, *orig);
 }
-

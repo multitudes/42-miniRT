@@ -154,36 +154,36 @@ static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalize
 	return(vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
 
-static void	get_ambient(t_objects *obj)
+static void	get_ambient(t_mrt *data)
 {
 	static int	already_set;
 	char		**tokens;
 
-	tokens = obj->_tokens;
+	tokens = data->objects._tokens;
 	if (already_set)
-		call_error("this element can only be set once", "ambient", obj);
+		call_error("this element can only be set once", "ambient", &data->objects);
 	if (count_tokens(tokens) != 3)
-		call_error("invalid token amount", "ambient", obj);
-	ambient(&obj->ambient, ft_atod(tokens[1]), set_rgb(obj, 2, "ambient"));
+		call_error("invalid token amount", "ambient", &data->objects);
+	ambient(&data->camera.ambient, ft_atod(tokens[1]), set_rgb(&data->objects, 2, "ambient"));
 	already_set = 1;
 }
 
-static void	get_camera(t_objects *obj)
+static void	get_camera(t_mrt *data)
 {
 	static int	already_set;
 	double		hfov;
 	char		**tokens;
 
-	tokens = obj->_tokens;
+	tokens = data->objects._tokens;
 	if (already_set)
-		call_error("this element can only be set once", "camera", obj);
+		call_error("this element can only be set once", "camera", &data->objects);
 	if (count_tokens(tokens) != 4)
-		call_error("invalid token amount", "camera", obj);
+		call_error("invalid token amount", "camera", &data->objects);
 	hfov = ft_atod(tokens[3]);
 	if (hfov < 0. || hfov > 180.)
-		call_error("fov must be in range [0;180]", "camera", obj);
-	init_cam(&obj->camera, set_vec3(obj, 1, "camera", 0), \
-		set_vec3(obj, 2, "camera", 1), hfov);
+		call_error("fov must be in range [0;180]", "camera", &data->objects);
+	init_cam(&data->camera, set_vec3(&data->objects, 1, "camera", 0), \
+		set_vec3(&data->objects, 2, "camera", 1), hfov);
 	already_set = 1;
 }
 
@@ -264,22 +264,23 @@ static void	get_cylinder(t_objects *obj)
 	set_index++;
 }
 
-static void	update_struct(t_objects *obj)
+static void	update_struct(t_mrt *data)
 {
-	if (ft_strncmp("A", obj->_tokens[0], 2) == 0)
-		get_ambient(obj);
-	else if (ft_strncmp("C", obj->_tokens[0], 2) == 0)
-		get_camera(obj);
-	else if (ft_strncmp("L", obj->_tokens[0], 2) == 0)
-		get_light(obj);
-	else if (ft_strncmp("sp", obj->_tokens[0], 3) == 0)
-		get_sphere(obj);
-	else if (ft_strncmp("pl", obj->_tokens[0], 3) == 0)
-		get_plane(obj);
-	else if (ft_strncmp("cy", obj->_tokens[0], 3) == 0)
-		get_cylinder(obj);
+	if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
+		get_ambient(data);
+	else if (ft_strncmp("C", data->objects._tokens[0], 2) == 0)
+		get_camera(data);
+	else if (ft_strncmp("L", data->objects._tokens[0], 2) == 0)
+		get_light(&data->objects);
+	else if (ft_strncmp("sp", data->objects._tokens[0], 3) == 0)
+		get_sphere(&data->objects);
+	else if (ft_strncmp("pl", data->objects._tokens[0], 3) == 0)
+		get_plane(&data->objects);
+	else if (ft_strncmp("cy", data->objects._tokens[0], 3) == 0)
+		get_cylinder(&data->objects);
 	else
-		call_error("invalid object identifier\n", obj->_tokens[0], obj);
+		call_error("invalid object identifier\n", data->objects._tokens[0], \
+			&data->objects);
 }
 
 /* replaces tabs and newlines, so thta ft_split can split
@@ -297,32 +298,32 @@ void	sanitize_line(char *line)
 }
 
 /* in case or error, the parser calls exit() */
-void	parse_input(char *filename, t_objects *obj)
+void	parse_input(char *filename, t_mrt *data)
 {
 	char    *line;
 
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
 		call_error("invalid file extension\n", NULL, NULL);
-    obj->_file_fd = open(filename, O_RDONLY);
-    if (obj->_file_fd == -1)
+    data->objects._file_fd = open(filename, O_RDONLY);
+    if (data->objects._file_fd == -1)
     	perror(filename), exit(1);
-    while ((line = get_next_line(obj->_file_fd)) != NULL)
+    while ((line = get_next_line(data->objects._file_fd)) != NULL)
     {
 		if (ft_strlen(line) == 1)
 		{
 			free(line);
 			continue ;
 		}
-		obj->_tokens = ft_split(line, ' ');
-		if (obj->_tokens == NULL)
+		data->objects._tokens = ft_split(line, ' ');
+		if (data->objects._tokens == NULL)
 		{
 			free(line);
-			call_error("ft_split()", "parse_input", obj);
+			call_error("ft_split()", "parse_input", &data->objects);
 		}
 		free(line);
-		update_struct(obj);
-		free_split(obj->_tokens);
+		update_struct(data);
+		free_split(data->objects._tokens);
     }
-    if (close(obj->_file_fd) == -1)
+    if (close(data->objects._file_fd) == -1)
     	perror("MiniRT: close()");
 }

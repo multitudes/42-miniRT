@@ -25,7 +25,7 @@
 #include <math.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 100
+#define IMAGE_WIDTH 400
 
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
@@ -85,13 +85,13 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	t_hit_record rec;
 
-	// if I hit an object in the world (including a light) I fill the 
+	// if I hit an object in the world (including a light) I fill the
 	// hit record rec struct
 	if (!world->hit_objects(world, r, interval(0.001, 10000), &rec))
 		return color(0.0005,0.0005,0.0005); // space grey!
 
 	// Here I use the hit_record collected from the previous hit
-	// when a world object material is a light source it will emit light only. 
+	// when a world object material is a light source it will emit light only.
 	// and I will directly return the color from the light source
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 
@@ -101,7 +101,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// is light only so it doesnt have scatter
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 		return color_from_emission;
-	//we should only call the pdf_value() if it is diffuse, 
+	//we should only call the pdf_value() if it is diffuse,
 	//so for specular material we should skip the pdf_value() call
 	// and use the scattered ray skip_pdf ray multiplied by the attenuation
 	// of the material to get the color of the object
@@ -151,7 +151,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	{
 		scattered = ray(rec.p, lights->obj_random(lights, &rec.p));
 	}
-	
+
 	double pdf_value1 = recorded_pdf->value(recorded_pdf, &scattered.dir);
 	double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scattered.dir);
 
@@ -169,7 +169,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_value);
 
 	return color_from_scatter;
-	
+
 
 }
 
@@ -236,7 +236,7 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 				t_ray r = get_ray(data->objects.camera, x, y);
 
 				pixel_color = vec3add(pixel_color, ray_color(&(data->objects.camera), &r, data->objects.camera.max_depth ,world, lights));
-				
+
 				i++;
 			}
             write_color(data, x, y, vec3divscalar(pixel_color, data->objects.camera.samples_per_pixel));
@@ -250,7 +250,7 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 	debug("\nDONE!\n");
 }
 
-/** 
+/**
  * @brief print the camera information
  * in the rt file format
  * like C -50,0,20 		0,0,1	 70
@@ -258,9 +258,9 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 void			print_camera(const void* self)
 {
 	const t_camera *c = (const t_camera *)self;
-	printf("C\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\n", 
-	c->center.x, c->center.y, c->center.z, 
-	c->direction.x, c->direction.y, c->direction.z, 
+	printf("C\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\n",
+	c->center.x, c->center.y, c->center.z,
+	c->direction.x, c->direction.y, c->direction.z,
 	c->hfov);
 }
 

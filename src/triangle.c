@@ -20,7 +20,7 @@
 
 
 
-void triangle(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolor) 
+void triangle(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolor)
 {
     tri->base.hit = hit_triangle;
     tri->base.pdf_value = triangle_pdf_value;
@@ -43,7 +43,7 @@ void triangle(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolo
     tri->print = print_triangle;
 }
 
-void triangle_mat(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_material *mat) 
+void triangle_mat(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_material *mat)
 {
     tri->base.hit = hit_triangle;
     tri->base.pdf_value = triangle_pdf_value;
@@ -62,21 +62,21 @@ void triangle_mat(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_materia
 
 void print_triangle(const void *self) {
     t_triangle *tri = (t_triangle *)self;
-    printf("tri %.f,%.f,%.f %.f,%.f,%.f %.f,%.f,%.f %d,%d,%d\n", 
-    tri->a.x, tri->a.y, tri->a.z, 
-    tri->b.x, tri->b.y, tri->b.z, 
-    tri->c.x, tri->c.y, tri->c.z, 
+    printf("tri %.f,%.f,%.f %.f,%.f,%.f %.f,%.f,%.f %d,%d,%d\n",
+    tri->a.x, tri->a.y, tri->a.z,
+    tri->b.x, tri->b.y, tri->b.z,
+    tri->c.x, tri->c.y, tri->c.z,
     tri->rgb.r, tri->rgb.g, tri->rgb.b);
 }
 
-bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec) 
+bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec)
 {
     const t_triangle *tri = (t_triangle *)self;
     t_vec3 e1 = tri->edge1;
     t_vec3 e2 = tri->edge2;
 
         // the .. Trumbore algo
-    
+
     // Calculate the ray direction vector
     t_vec3 dir_cross_e2 = cross(r->dir, e2);
 
@@ -88,23 +88,23 @@ bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_rec
 
     // Calculate barycentric coordinates
     double f = 1.0 / det;
-    
+
     t_vec3 p1_to_origin = vec3substr(r->orig, tri->a);
-    
+
     double u = f * dot(p1_to_origin, dir_cross_e2);
     if (u < 0 || u > 1)
         return false;
-    
+
     t_vec3 origin_cross_e1 = cross(p1_to_origin, e1);
     double v = f * dot(r->dir, origin_cross_e1);
-    
+
     if (v < 0 || u + v > 1)
         return false;
 
 
     // Calculate the intersection point
     double t = f * dot(e2, origin_cross_e1);
-    
+
     if (!contains(&ray_t, t))
         return false;
 
@@ -118,12 +118,12 @@ bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_rec
 }
 
 
-double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir) 
+double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
     const t_triangle *tri = (t_triangle *)self;
     t_hit_record rec;
     const t_ray r = ray(*orig, *dir);
-    if (!hit_triangle(tri, &r, interval(0.001, INFINITY), &rec))
+    if (!hit_triangle(tri, &r, interval(0.001, 1e30), &rec))
         return 0;
 
     double distance_squared = length_squared(vec3substr(rec.p, *orig));
@@ -137,7 +137,7 @@ double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *
     return distance_squared / (cosine * area);
 }
 
-t_vec3 triangle_random(const void *self, const t_point3 *orig) 
+t_vec3 triangle_random(const void *self, const t_point3 *orig)
 {
     const t_triangle *tri = (t_triangle *)self;
 

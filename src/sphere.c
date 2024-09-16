@@ -51,21 +51,21 @@ void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb rgbcolor)
 	// i assign the material to the sphere as a pointer
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
- 	s->mat = (t_material*)&(s->lambertian_mat); 
+ 	s->mat = (t_material*)&(s->lambertian_mat);
 	s->print = print_sphere;
 }
 
 /**
  * @brief: initializer for a sphere with a material
- * 
+ *
  * @param: center: the center of the sphere
  * @param: diameter: the diameter of the sphere
  * @param: rgbcolor: the color of the sphere
  * @param: mat: the material of the sphere
  * @return: a t_sphere struct
- * 
+ *
  * This initializer also allows to assign a material to the sphere
- * Supported are checkers and metal materials. Textures like solid color 
+ * Supported are checkers and metal materials. Textures like solid color
  * and images are also supported
  */
 void	sphere_mat(t_sphere *s, t_point3 center, double diameter, t_material *mat)
@@ -77,11 +77,11 @@ void	sphere_mat(t_sphere *s, t_point3 center, double diameter, t_material *mat)
 	s->radius = fmax(0, diameter / 2);
 	s->rgb = rgb(0,0,0);
 	s->color = color(0,0,0);
- 	s->mat = mat; 
+ 	s->mat = mat;
 	s->print = print_sphere;
 }
 
-/** 
+/**
  * @brief prints the sphere information for the rt file
  *
  * like: sp 	0.0,0.020.6 	12.6	10,0,255
@@ -92,22 +92,22 @@ void	sphere_mat(t_sphere *s, t_point3 center, double diameter, t_material *mat)
 void		print_sphere(const void *self)
 {
 	const t_sphere *s = (const t_sphere *)self;
-	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n", 
+	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n",
 	s->center.x, s->center.y, s->center.z, s->radius * 2,
 	s->rgb.r, s->rgb.g, s->rgb.b);
 }
 
 /**
  * @brief returns true if the ray hits the sphere
- * 
+ *
  * @param: self: the sphere object
  * @param: r: the ray
  * @param: ray_t: the interval of the ray
  * @param: rec: the hit record
  * @return: true if the ray hits the sphere
- * 
- * 
- * 
+ *
+ *
+ *
 */
 bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record* rec)
 {
@@ -186,9 +186,9 @@ double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3
 	const t_sphere *s = (t_sphere *)self;
 
 	t_hit_record rec;
-	
+
 	const t_ray r = ray(*orig, *dir);
-	if (!hit_sphere(s, &r, interval(0.001, INFINITY), &rec))
+	if (!hit_sphere(s, &r, interval(0.001, 1e30), &rec))
 		return 0;
 
     // Calculate distance squared from origin to sphere center
@@ -200,11 +200,11 @@ double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3
 
     // Return PDF (reciprocal of solid angle)
     return 1.0 / solid_angle;
-	
+
 }
 
 
-t_vec3 obj_sphere_random(const void *self, const t_point3 *orig) 
+t_vec3 obj_sphere_random(const void *self, const t_point3 *orig)
 {
     const t_sphere *s = (t_sphere *)self;
 
@@ -227,9 +227,9 @@ t_vec3 obj_sphere_random(const void *self, const t_point3 *orig)
 
 
 // Function to generate a random direction within the sphere's volume
-t_vec3 random_to_sphere(double radius, double distance_squared) 
+t_vec3 random_to_sphere(double radius, double distance_squared)
 {
-    double r1 = random_d(); 
+    double r1 = random_d();
     double r2 = random_d();
 
     // Calculate z-coordinate based on uniform distribution within the unit sphere
@@ -240,7 +240,7 @@ t_vec3 random_to_sphere(double radius, double distance_squared)
     double x = cos(phi) * sqrt(1.0 - z * z);
     double y = sin(phi) * sqrt(1.0 - z * z);
 
-    return unit_vector(vec3(x, y, z));  
+    return unit_vector(vec3(x, y, z));
 }
 
 t_rgb color_to_rgb(t_color color)

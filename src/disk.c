@@ -27,7 +27,7 @@ void	disk(t_disk *d, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
     d->normal = unit_vector(n);
     d->d = dot(d->normal, q);
 	d->w = vec3divscalar(n, dot(n, n));
-	
+
 	d->rgb = rgbcolor;
     d->color = rgb_to_color(rgbcolor);
 
@@ -51,7 +51,7 @@ void disk_mat(t_disk *disk, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
     disk->d = dot(disk->normal, q);
 	disk->w = vec3divscalar(n, dot(n, n));
 	// colors depend of material and will be calc in the scatter function
-	disk->rgb = rgb(0, 0, 0);	
+	disk->rgb = rgb(0, 0, 0);
     disk->color = color(0, 0, 0);
 	disk->mat = mat;
 	disk->print = print_disk;
@@ -59,17 +59,17 @@ void disk_mat(t_disk *disk, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 
 /**
  * @brief print the disk object
- * 
- * format is like this 
+ *
+ * format is like this
  * disk 0.0,0.0,-10.0 0.0,1.0,0.0 0,0,225
  */
 void		print_disk(const void *self)
 {
 	const t_disk *d = (const t_disk *)self;
-	printf("disk\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", 
-	d->q.x, d->q.y, d->q.z, 
-	d->u.x, d->u.y, d->u.z, 
-	d->v.x, d->v.y, d->v.z, 
+	printf("disk\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n",
+	d->q.x, d->q.y, d->q.z,
+	d->u.x, d->u.y, d->u.z,
+	d->v.x, d->v.y, d->v.z,
 	d->rgb.r, d->rgb.g, d->rgb.b);
 }
 
@@ -87,7 +87,7 @@ bool hit_disk(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record 
 	double t = (disk->d - dot(disk->normal, r->orig)) / denom;
 	if (!contains(&ray_t, t))
 		return false;
-	
+
 	// Determine the hit point lies within the planar shape using its plane coordinates.
 	// t_point3	point_at(const t_ray *ray, double t)
 	t_point3 intersection = point_at(r, t);
@@ -107,7 +107,7 @@ bool hit_disk(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record 
 	return true;
 }
 
-bool is_interior_disk(double a, double b, t_hit_record *rec, t_vec3 u, t_vec3 v) 
+bool is_interior_disk(double a, double b, t_hit_record *rec, t_vec3 u, t_vec3 v)
 {
     // The center of the disk in plane coordinates is (0.5, 0.5)
     double u_squared = (a - 0.5) * (a - 0.5);
@@ -131,12 +131,12 @@ bool is_interior_disk(double a, double b, t_hit_record *rec, t_vec3 u, t_vec3 v)
     return true;
 }
 
-double disk_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir) 
+double disk_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
     const t_disk *d = (t_disk *)self;
     t_hit_record rec;
     const t_ray r = ray(*orig, *dir);
-    if (!hit_disk(d, &r, interval(0.001, INFINITY), &rec))
+    if (!hit_disk(d, &r, interval(0.001, 1e30), &rec))
         return 0;
 
     // Calculate the distance squared from the origin to the hit point
@@ -152,7 +152,7 @@ double disk_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
     return distance_squared / (cosine * area);
 }
 
-t_vec3 disk_random(const void *self, const t_point3 *orig) 
+t_vec3 disk_random(const void *self, const t_point3 *orig)
 {
     const t_disk *d = (t_disk *)self;
 

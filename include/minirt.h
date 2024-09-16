@@ -15,10 +15,7 @@
 
 #include <limits.h>
 #include <MLX42/MLX42.h>
-#include <math.h>
 #include "camera.h"
-#include "ambient.h"
-#include "interval.h"
 #include "sphere.h"
 #include "plane.h"
 #include "cylinder.h"
@@ -37,10 +34,9 @@ typedef struct
 }			t_light;
 
 /* added for the parser */
+/* camera inside t_mrt, ambient inside camera */
 typedef struct
 {
-	t_ambient	ambient;
-	t_camera	camera;
 	t_light		lights[OBJECT_COUNT];
 	t_sphere	spheres[OBJECT_COUNT];
 	t_plane		planes[OBJECT_COUNT];
@@ -60,18 +56,18 @@ typedef struct 	s_mrt
 	void		*win_ptr;
 	mlx_image_t	*image;
 
+	t_camera	camera;
 	t_objects	objects;
 
 	// hittable list
 	t_hittablelist world;
 	t_hittablelist lights;
 	// render function
-	void (*renderscene)(struct s_mrt *, const t_hittablelist *, const t_hittablelist *);
 
 	// t_viewport	viewport;
 	// t_pixel		pixel;
 }				t_mrt;
 
-void	parse_input(char *filename, t_objects *obj);
+void	parse_input(char *filename, t_mrt *data);
 
 #endif

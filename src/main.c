@@ -81,7 +81,7 @@ void	hook(void *param)
 		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("RIGHT key pressed");
 	}
-	
+
 }
 
 int init_window(t_mrt *data)
@@ -107,12 +107,11 @@ int init_window(t_mrt *data)
 bool init_data(t_mrt *data)
 {
 	/***************************** */
-	/* 			MLX42 			   */	
+	/* 			MLX42 			   */
 	/***************************** */
     data->mlx = NULL;
     data->win_ptr = NULL;
     data->image = NULL;
-	data->renderscene = render;
 
     return (true);
 }
@@ -124,24 +123,20 @@ int main(int argc, char **argv)
     (void)argv;
 	(void)argc;
 	init_data(&data);
-	
+
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(278, 278, -800);
 	t_vec3 direction = vec3(0,0,800);
 	init_cam(&data.objects.camera, center, direction, 60);
-	data.objects.camera.print((void*)(&(data.objects.camera)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 
 	ambient( &data.objects.ambient, 1, rgb(110,110,110));
 
-
-
-	data.objects.ambient.print((void*)&data.objects.ambient);
 
 	/*## RESOLUTION ##############
 	# | width  | height | ######
@@ -160,15 +155,13 @@ int main(int argc, char **argv)
 	// ================================================== world ==================================================
 	t_hittable *list[13];
 	// ================================================== world ==================================================
-	
-	// red sphere
-	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
-	
-	//red metallic 
+
+	//red metallic
 	t_color albedo = color(0.8, 0.1, 0.1);
 	double fuzz = 0.0;
 	t_metal metal;
 	metal_init(&metal, albedo, fuzz);
+
 	// red metallic sphere
 	t_sphere s1;
 	sphere_mat(&s1, point3( 90,190,90 ), 180, (t_material*)&metal);
@@ -229,7 +222,7 @@ int main(int argc, char **argv)
 	t_triangle s10;
 	triangle(&s10, point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
 	s10.print((void*)&s10);
-	
+
 	// checker texture sphere
 	t_lambertian lambertian_material;
 	t_checker_texture checker_texture1;
@@ -258,7 +251,7 @@ int main(int argc, char **argv)
 	t_sphere s12;
 	sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
 	s12.print((void*)&s12);
-	
+
 	t_cylinder s13;
 	cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
 	s13.print((void*)&s13);
@@ -267,7 +260,7 @@ int main(int argc, char **argv)
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
 	list[3] = (t_hittable*)(&s4);
-	list[4] = (t_hittable*)(&s5);	
+	list[4] = (t_hittable*)(&s5);
 	list[5] = (t_hittable*)(&s7);
 	list[6] = (t_hittable*)(&s8);
 	list[7] = (t_hittable*)(&s9);
@@ -299,7 +292,7 @@ int main(int argc, char **argv)
 
 	data.world = world;
 	render(&data, &world, &lights);
-	
+
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
@@ -348,7 +341,7 @@ int main_parse(int argc, char **argv)
 
 	data.world = world;
 	render(&data, &world, &lights);
-	
+
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
@@ -378,7 +371,7 @@ int main_parse(int argc, char **argv)
 // 	t_sphere s2;
 // 	sphere(&s2, vec3(0, -100.5, -1), 200, rgb(0,128,0));
 // 	// s2.print((void*)&s2);
-// 	t_sphere s3; 
+// 	t_sphere s3;
 // 	sphere(&s3, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
 // 	// s3.print((void*)&s3);
 // 	t_sphere s4;
@@ -395,10 +388,10 @@ int main_parse(int argc, char **argv)
 //     debug("Start of minirt %s", "helllo !! ");
 // 	if (!init_window(&data))
 // 		return (EXIT_FAILURE);
-	
+
 
 // 	render(&data, &world, NULL);
-	
+
 
 //     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 //     mlx_loop(data.mlx);

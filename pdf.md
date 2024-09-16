@@ -17,8 +17,8 @@ generate Method: Generates a random direction by randomly selecting an object in
 ## Lambert's Cosine Law
 
 
-## ONB 
-> An orthonormal basis (ONB) is a collection of three mutually orthogonal unit vectors. It is a strict subtype of coordinate system. The Cartesian xyz axes are one example of an orthonormal basis.  
+## ONB
+> An orthonormal basis (ONB) is a collection of three mutually orthogonal unit vectors. It is a strict subtype of coordinate system. The Cartesian xyz axes are one example of an orthonormal basis.
 
 In code we create a struct and an initializer.
 
@@ -30,8 +30,8 @@ If a tangent vector to a curve at a point is a vector that points in the directi
 
 Cotangent Vector: A cotangent vector is a dual vector to the tangent vector. It is a linear functional that takes tangent vectors as input and returns a scalar value. In essence, it is a function that maps tangent vectors to numbers.
 
-As an example with a particle moving through space:  
-While the tangent vector represents the direction of motion, the cotangent vector represents the "force" acting on the particle in that direction.  
+As an example with a particle moving through space:
+While the tangent vector represents the direction of motion, the cotangent vector represents the "force" acting on the particle in that direction.
 
 Let $F$ be the force acting on the particle.
 Cotangent Vector: The cotangent vector ω can be defined as $ω(v) = F · v$, where $·$ denotes the dot product.
@@ -55,7 +55,7 @@ Scenario: Lighting with eye opposite surface, light offset 45°
 Given eyev ← vector(0, 0, -1)
 And normalv ← vector(0, 0, -1)
 And light ← point_light(point(0, 10, -10), color(1, 1, 1))
-what is the result? 
+what is the result?
 
 The provided code snippet seems to be a simplified implementation of a lighting model in computer graphics, specifically for a diffuse material. Let's break down the calculations and the resulting color:
 
@@ -158,11 +158,11 @@ double cosine_pdf_value(const void *self, const t_vec3 *direction)
 }
 ```
 
-unit_vector(*direction) normalizes the input direction vector.  
-cos_pdf->uvw.w represents the w component of the orthonormal basis (ONB) associated with the cosine PDF.   This component is typically aligned with the surface normal.  
-dot(...) calculates the dot product between the normalized direction vector and the w component. This gives the cosine of the angle between the direction and the surface normal.  
-The fmax function ensures that the returned value is non-negative.  
-The result is divided by PI to normalize the PDF, ensuring that the integral of the PDF over all directions equals 1.  
+unit_vector(*direction) normalizes the input direction vector.
+cos_pdf->uvw.w represents the w component of the orthonormal basis (ONB) associated with the cosine PDF.   This component is typically aligned with the surface normal.
+dot(...) calculates the dot product between the normalized direction vector and the w component. This gives the cosine of the angle between the direction and the surface normal.
+The fmax function ensures that the returned value is non-negative.
+The result is divided by PI to normalize the PDF, ensuring that the integral of the PDF over all directions equals 1.
 
 ## cosine_pdf generate
 The `cosine_pdf_generate` function is responsible for generating a random direction according to a cosine probability density function (PDF). This is a common technique used in raytracing to simulate diffuse materials, where light is scattered uniformly in all directions with a bias towards the surface normal.
@@ -366,7 +366,7 @@ bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_rec
     t_vec3 e2 = tri->edge2;
 
         // the .. Trumbore algo
-    
+
     // Calculate the ray direction vector
     t_vec3 dir_cross_e2 = cross(r->dir, e2);
 
@@ -378,16 +378,16 @@ bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_rec
 
     // Calculate barycentric coordinates
     double f = 1.0 / det;
-    
+
     t_vec3 p1_to_origin = vec3substr(r->orig, tri->a);
-    
+
     double u = f * dot(p1_to_origin, dir_cross_e2);
     if (u < 0 || u > 1)
         return false;
-    
+
     t_vec3 origin_cross_e1 = cross(p1_to_origin, e1);
     double v = f * dot(r->dir, origin_cross_e1);
-    
+
     if (v < 0 || u + v > 1)
         return false;
 
@@ -431,13 +431,13 @@ where `e1 = b - a` and `e2 = c - a` are the vectors representing two edges of th
 Combining these equations, we get:
 
 ```c
-double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir) 
+double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
     const t_triangle *tri = (t_triangle *)self;
     t_hit_record rec;
 
     const t_ray r = ray(*orig, *dir);
-    if (!hit_triangle(tri, &r, interval(0.001, INFINITY), &rec))
+    if (!hit_triangle(tri, &r, interval(0.001, 1e30), &rec))
         return 0;
 
     double distance_squared = length_squared(vec3substr(rec.p, *orig));
