@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 12:50:38 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/17 19:08:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,9 @@ void init_scatter_record(t_scatter_record *srec)
 	srec->sphere_pdf.base.generate = sphere_pdf_generate;
 	srec->hittable_pdf.base.value = hittable_pdf_value;
 	srec->hittable_pdf.base.generate = hittable_pdf_generate;
-	srec->mixture_pdf.p[0].value = mixture_pdf_value;
-	srec->mixture_pdf.p[0].generate = mixture_pdf_generate;
+	srec->mixture_pdf.base.value = mixture_pdf_value;
+	srec->mixture_pdf.base.generate = mixture_pdf_generate;
+	
 }
 
 /**

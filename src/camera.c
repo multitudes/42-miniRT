@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/17 18:27:23 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/17 19:20:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,27 +128,19 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	recorded_pdf = srec.pdf_ptr;
 	hittable_pdf_init(&light_pdf, lights, &rec.p);
 
-//   mixture_pdf p(light_ptr, srec.pdf_ptr);
-
-//         ray scattered = ray(rec.p, p.generate(), r.time());
-//         auto pdf_value = p.value(scattered.direction());
-
-//         double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
-
-//         color sample_color = ray_color(scattered, depth-1, world, lights);
-//         color color_from_scatter =
-//             (srec.attenuation * scattering_pdf * sample_color) / pdf_value;
-
-//         return color_from_emission + color_from_scatter;
-
-
-	if (random_d() < 0.5)
-		scattered = ray(rec.p, recorded_pdf->generate(recorded_pdf));
-	else
-		scattered = ray(rec.p, lights->obj_random(lights, &rec.p));
-	double pdf_value1 = recorded_pdf->value(recorded_pdf, &scattered.dir);
-	double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scattered.dir);
-    double pdf_value = 0.5 * pdf_value1 + 0.5 * pdf_value2;
+	t_mixture_pdf mix_pdf;
+	
+	mixture_pdf_init(&mix_pdf, recorded_pdf, (t_pdf *)&light_pdf);
+	
+	scattered = ray(rec.p, mixture_pdf_generate(&mix_pdf));
+	double pdf_value = mixture_pdf_value(&mix_pdf, &scattered.dir);
+	// if (random_d() < 0.5)
+	// 	scattered = ray(rec.p, recorded_pdf->generate(recorded_pdf));
+	// else
+	// 	scattered = ray(rec.p, lights->obj_random(lights, &rec.p));
+	// double pdf_value1 = recorded_pdf->value(recorded_pdf, &scattered.dir);
+	// double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scattered.dir);
+    // double pdf_value = 0.5 * pdf_value1 + 0.5 * pdf_value2;
 	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
 	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
 	t_color ambient = vec3divscalar(cam->ambient_light.color,1);

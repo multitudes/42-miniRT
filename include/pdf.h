@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:05:52 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 11:40:56 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/17 19:17:40 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ typedef struct	s_hittable_pdf
 
 typedef struct	s_mixture_pdf
 {
-	t_pdf	p[2];
+	t_pdf	base;
+	t_pdf	*p1;
+	t_pdf	*p2;
 }				t_mixture_pdf;
 
 t_vec3 sphere_pdf_generate(void *self);
