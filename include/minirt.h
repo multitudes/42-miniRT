@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/08 12:57:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/17 16:27:51 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ typedef struct 	s_mrt
 	t_hittablelist world;
 	t_hittablelist lights;
 	// render function
-	    void (*renderscene)(struct s_mrt *, const t_hittablelist *, const t_hittablelist *);
+	void (*renderscene)(struct s_mrt *, const t_hittablelist *, const t_hittablelist *);
 
 	// t_viewport	viewport;
 	// t_pixel		pixel;

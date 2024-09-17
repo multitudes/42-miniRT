@@ -141,6 +141,29 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	data->cam.image_width = new_width;
 	data->cam.image_height = new_height;
 	debug("Window resized to %d x %d", new_width, new_height);
+	if (data->image)
+	{
+		mlx_delete_image(data->mlx, data->image);
+	}
+
+	data->image = mlx_new_image(data->mlx, new_width, new_height);
+	if (!data->image)
+	{
+		mlx_close_window(data->mlx);
+		ft_printf("%s\n", mlx_strerror(mlx_errno));
+		exit(EXIT_FAILURE);
+	}
+
+	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
+	{
+		mlx_close_window(data->mlx);
+		ft_printf("%s\n", mlx_strerror(mlx_errno));
+		exit(EXIT_FAILURE);
+	}
+
+
+    debug("Window resized to %d x %d", new_width, new_height);
+	// render(data, )
 }
 
 int main(int argc, char **argv)
@@ -206,7 +229,7 @@ int main(int argc, char **argv)
 	// max 100 
 	// rgb (10,0,255) - color (0.5, 0, 1)  * max 200  * strength 
 	// color (100,100,100)
-	
+
 	t_diffuse_light difflight;
 	t_solid_color difflight_color;
 	solid_color_init(&difflight_color, color(40, 40, 40));
@@ -329,11 +352,12 @@ int main(int argc, char **argv)
 
 	data.world = world;
 	data.lights = lights;
+
 	render(&data, &world, &lights);
 	
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
-
     mlx_loop(data.mlx);
     ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
@@ -482,7 +506,7 @@ int main_earth(int argc, char **argv)
 	
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
-
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
     mlx_loop(data.mlx);
     ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
@@ -492,54 +516,54 @@ int main_earth(int argc, char **argv)
 
 
 
-int main_old(int argc, char **argv)
-{
-    t_mrt data;
-    (void)argv;
-	(void)argc;
-	if (!init_data(&data))
-        return (1);
+// int main_old(int argc, char **argv)
+// {
+//     t_mrt data;
+//     (void)argv;
+// 	(void)argc;
+// 	if (!init_data(&data))
+//         return (1);
 
-	// world
-	t_hittable *list[4];
+// 	// world
+// 	t_hittable *list[4];
 
-	t_sphere s1;
-	sphere(&s1, vec3(0, 0, -1.2), 1, rgb(128,0,0));
-	s1.print((void*)&s1);
-	t_sphere s2;
-	sphere(&s2, vec3(0, -100.5, -1), 200, rgb(0,128,0));
-	s2.print((void*)&s2);
-	t_sphere s3; 
-	sphere(&s3, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
-	s3.print((void*)&s3);
-	t_sphere s4;
-	sphere(&s4, vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
-	s4.print((void*)&s4);
+// 	t_sphere s1;
+// 	sphere(&s1, vec3(0, 0, -1.2), 1, rgb(128,0,0));
+// 	s1.print((void*)&s1);
+// 	t_sphere s2;
+// 	sphere(&s2, vec3(0, -100.5, -1), 200, rgb(0,128,0));
+// 	s2.print((void*)&s2);
+// 	t_sphere s3; 
+// 	sphere(&s3, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+// 	s3.print((void*)&s3);
+// 	t_sphere s4;
+// 	sphere(&s4, vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
+// 	s4.print((void*)&s4);
 
-	list[0] = (t_hittable*)(&s1);
-	list[1] = (t_hittable*)(&s2);
-	list[2] = (t_hittable*)(&s3);
-	list[3] = (t_hittable*)(&s4);
+// 	list[0] = (t_hittable*)(&s1);
+// 	list[1] = (t_hittable*)(&s2);
+// 	list[2] = (t_hittable*)(&s3);
+// 	list[3] = (t_hittable*)(&s4);
 
-	const t_hittablelist world = hittablelist(list, 4);
+// 	const t_hittablelist world = hittablelist(list, 4);
 
-    debug("Start of minirt %s", "helllo !! ");
-	if (!init_window(&data))
-		return (EXIT_FAILURE);
+//     debug("Start of minirt %s", "helllo !! ");
+// 	if (!init_window(&data))
+// 		return (EXIT_FAILURE);
 	
 
-	render(&data, &world, NULL);
+// 	render(&data, &world, NULL);
 	
 
-    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+//     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
-    mlx_loop(data.mlx);
-		mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
-    ft_printf("\nbyebye!\n");
-    mlx_terminate(data.mlx);
+//     mlx_loop(data.mlx);
 
-    return (EXIT_SUCCESS);
-}
+//     ft_printf("\nbyebye!\n");
+//     mlx_terminate(data.mlx);
+
+//     return (EXIT_SUCCESS);
+// }
 
 // int main_mixtest(int argc, char **argv)
 // {
