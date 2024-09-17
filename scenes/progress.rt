@@ -1,0 +1,35 @@
+C	278,279,-800    0,0,1		60.0	# this is a commnent
+A	110,110,110		1
+
+l	343,554,332	 0.9   255,255,255
+l	0,250,-50	 0.5	0,0,255		300
+
+sp	400,90,190		90			166,13,13
+pl	400,0,190		0,1,0		166,13,13
+
+
+
+
+
+# this a metalic sphere
+# albedo = 0.8,0.1,0.1
+# fuzz = 0.0
+# sp	90,190,90	180	 [metal struct]
+
+# LIGHTS
+# qd	343,554,332		-130,0,0	0,0,-105	[light struct]
+# sp	0,250,-50		120			[light struct]
+
+# default shapes (just color)
+# qd	300,90,190		50,0,100	0,100,50	166,13,13
+# dsk	500,90,190		0,0,150		0,150,0		166,53,13
+# tr	300,101,100		200,101,290	50,101,190	166,103,13
+# cy	350,100,-400	0,1,0		100			100			166,103,13
+
+# box	600,90,190		700,190,290	[metal struct]
+
+# checker sphere
+# sp	650,300,200		100		[lambertian_material (checker)]
+
+# earth image
+# sp	250,100,-200	100.0	[material (earth_surface)]

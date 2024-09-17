@@ -21,7 +21,7 @@
 #include "debug.h"
 #include "material.h"
 
-void lambertian_init(t_lambertian *lambertian_material, t_color albedo) 
+void lambertian_init(t_lambertian *lambertian_material, t_color albedo)
 {
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
 	lambertian_material->base.emit = emitzero;
@@ -29,7 +29,7 @@ void lambertian_init(t_lambertian *lambertian_material, t_color albedo)
 	lambertian_material->base.scattering_pdf = lambertian_scattering_pdf;
 }
 
-void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex) 
+void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex)
 {
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
 	lambertian_material->base.emit = emitzero;
@@ -59,9 +59,9 @@ void diffuse_light_init(t_diffuse_light *light, t_texture *texture)
 }
 
 /**
- * No scatter as default for light materials 
+ * No scatter as default for light materials
  */
-double scattering_pdf_zero(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered) 
+double scattering_pdf_zero(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered)
 {
 	(void)r_in;
 	(void)self;
@@ -70,11 +70,8 @@ double scattering_pdf_zero(void* self, const t_ray *r_in, const t_hit_record *re
     return 0;
 }
 
-/**
- * @brief basic initialization of a scatter record
- * 
- * 
- * 
+/*
+ * Scatter record init function
 */
 void init_scatter_record(t_scatter_record *srec)
 {
@@ -93,9 +90,9 @@ void init_scatter_record(t_scatter_record *srec)
 }
 
 /**
- * No scatter as default for light and lambertian materials 
+ * No scatter as default for light and lambertian materials
  */
-bool noscatter(void *self, t_ray *r_in, t_hit_record *rec, t_scatter_record *srec) 
+bool noscatter(void *self, t_ray *r_in, t_hit_record *rec, t_scatter_record *srec)
 {
 	(void)self;
 	(void)r_in;
@@ -105,7 +102,7 @@ bool noscatter(void *self, t_ray *r_in, t_hit_record *rec, t_scatter_record *sre
 }
 
 /**
- * No emisssion as default for lambertian and metal materials 
+ * No emisssion as default for lambertian and metal materials
  */
 t_color		emitzero(void *self, t_hit_record rec, double u, double v, t_point3 p)
 {
@@ -127,7 +124,7 @@ void 		empty_material_init(t_empty_material *empty_material)
 /*
  * scatter function for a lambertian material
  */
-bool lambertian_scatter(void* self, t_ray *r_in, t_hit_record *rec, t_scatter_record *srec)  
+bool lambertian_scatter(void* self, t_ray *r_in, t_hit_record *rec, t_scatter_record *srec)
 {
 	(void)r_in;
 	t_lambertian *lamb = (t_lambertian *)self;
@@ -138,13 +135,13 @@ bool lambertian_scatter(void* self, t_ray *r_in, t_hit_record *rec, t_scatter_re
 	srec->pdf_ptr = (t_pdf *)&(srec->cosine_pdf);
 	srec->skip_pdf = false;
 
-    return true; 
+    return true;
 }
 
 /*
  * scatter function for a lambertian material
  */
-double lambertian_scattering_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered) 
+double lambertian_scattering_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered)
 {
 	(void)r_in;
 	(void)self;
@@ -152,7 +149,7 @@ double lambertian_scattering_pdf(void* self, const t_ray *r_in, const t_hit_reco
         return cos_theta < 0 ? 0 : cos_theta/PI;
 }
 
-/** 
+/**
  * scatter function for a metal material
  */
 bool metal_scatter(void *self,  t_ray* r_in,  t_hit_record *rec, t_scatter_record *srec)
@@ -180,4 +177,3 @@ t_color		emitlight(void *self,  t_hit_record rec, double u, double v, t_point3 p
 		return color(0, 0, 0);
 	return light->texture->value(light->texture ,u, v, &p);
 }
-

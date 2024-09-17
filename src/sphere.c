@@ -20,9 +20,7 @@
 #include "interval.h"
 #include "color.h"
 #include "material.h"
-#include "debug.h"
 #include "utils.h"
-#include "pdf.h"
 #include "texture.h"
 
 /*

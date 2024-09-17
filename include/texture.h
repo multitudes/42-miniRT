@@ -13,21 +13,24 @@
 #ifndef TEXTURE_H
 # define TEXTURE_H
 
-#include "vec3.h"
-#include "rtw_stb_image.h"
-#include "color.h"
+# include "vec3.h"
+# include "rtw_stb_image.h"
 
+/*	This will be overlayed (cast) on each instance of the bottom 3 structs.
+	The cast will cause only the first (t_texture) member to be taken from the
+	old struct. */
 typedef struct s_texture
 {
 	t_color (*value)(const void *self, double u, double v, const t_point3 *p);
-}               t_texture;
+}			t_texture;
 
 typedef struct s_solid_color
 {
-	t_texture base;
-	t_color color_albedo;
+	t_texture	base;
+	t_color 	color_albedo;
 }               t_solid_color;
 
+/* has a color for an even and for an odd coordinate */
 typedef struct 		s_checker_texture
 {
 	t_texture 		base;
@@ -41,7 +44,6 @@ typedef struct		s_img_texture
 	t_texture		base;
 	char 			*filename;
 	t_rtw_image		*img;
-
 }					t_img_texture;
 
 void 	solid_color_init(t_solid_color *solid_color_texture, t_color albedo);

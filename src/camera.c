@@ -76,51 +76,51 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 }
 
 
+/*
+ * The main logic.
+ *  > What color to paint each pixel?
+ * The function is RECURSIVE.
+*/
 t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights)
 {
-	(void)cam;
+	t_hit_record rec;
 
+	// base case - stops recursion
 	if (depth <= 0)
         return color(0,0,0);
 
-	t_hit_record rec;
-
 	// if I hit an object in the world (including a light) I fill the
 	// hit record rec struct
-	if (!world->hit_objects(world, r, interval(0.001, 10000), &rec))
-		return color(0.0005,0.0005,0.0005); // space grey!
-
-	// Here I use the hit_record collected from the previous hit
-	// when a world object material is a light source it will emit light only.
-	// and I will directly return the color from the light source
-	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
+	if (world->hit_objects(world, r, interval(0.001, 10000), &rec) == false)
+		return color(0.0005,0.0005,0.0005); // nothing hit - color almost black (background)
 
 	// another hit record for the scatter
 	t_scatter_record srec;
 	init_scatter_record(&srec);
-	// is light only so it doesnt have scatter
-	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
-		return color_from_emission;
-	//we should only call the pdf_value() if it is diffuse,
-	//so for specular material we should skip the pdf_value() call
+
+	/*	If the object has a scatter, it inits the srec.
+		If the object doesnt have a scatter, it is a light
+		and the value of the emit function is returned. */
+	if (rec.mat->scatter(rec.mat, r, &rec, &srec) == false)
+		return rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
+
+
+
+	// we should only call the pdf_value() if it is diffuse,
+	// so for specular material we should skip the pdf_value() call
 	// and use the scattered ray skip_pdf ray multiplied by the attenuation
 	// of the material to get the color of the object
-	t_ray scattered = srec.skip_pdf_ray;
+	t_ray scatter_ray = srec.skip_pdf_ray;
 	if (srec.skip_pdf)
 	{
-		if (srec.skip_pdf) {
-			t_color ambient_light = cam->ambient_light.color;
-			t_metal *metal = (t_metal *)rec.mat;
-			t_color ambient_material = vec3mult(metal->albedo, ambient_light);
-
-       		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-
+		t_color ambient_light = cam->ambient.color;
+		t_metal *metal = (t_metal *)rec.mat;
+		t_color ambient_material = vec3mult(metal->albedo, ambient_light);
+		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scatter_ray, depth - 1, world, lights));
         return vec3add(ambient_material, reflected_color);
-    	}
-
-		// t_color ambient = vec3divscalar(vec cam->ambient_light.color, cam->max_depth);
-		// return vec3add(ambient ,vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights)));
-	}
+   	}
+	// t_color ambient = vec3divscalar(vec cam->ambient_light.color, cam->max_depth);
+	// return vec3add(ambient ,vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights)));
 	// debug("rec normal: %f %f %f\n", rec.normal.x, rec.normal.y, rec.normal.z);
 
 	t_hittable_pdf light_pdf;
@@ -138,41 +138,37 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 //         color sample_color = ray_color(scattered, depth-1, world, lights);
 //         color color_from_scatter =
 //             (srec.attenuation * scattering_pdf * sample_color) / pdf_value;
-
 //         return color_from_emission + color_from_scatter;
 
 
 
-	if (random_d() < 0.5)
-	{
-		scattered = ray(rec.p, recorded_pdf->generate(recorded_pdf));
-	}
-	else
-	{
-		scattered = ray(rec.p, lights->obj_random(lights, &rec.p));
-	}
+	/* The Probablity Density Function */
 
-	double pdf_value1 = recorded_pdf->value(recorded_pdf, &scattered.dir);
-	double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scattered.dir);
+	if (random_d() < 0.5)
+		scatter_ray = ray(rec.p, recorded_pdf->generate(recorded_pdf));
+	else
+		scatter_ray = ray(rec.p, lights->obj_random(lights, &rec.p));
+
+	double pdf_value1 = recorded_pdf->value(recorded_pdf, &scatter_ray.dir);
+	double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scatter_ray.dir);
 
     double pdf_value = 0.5 * pdf_value1 + 0.5 * pdf_value2;
 
-	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
+	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scatter_ray);
 
-	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
+	t_color sample_color = ray_color(cam, &scatter_ray, depth-1, world, lights);
 
 	// combine the surface color with the light's color/intensity
-	t_color ambient = vec3divscalar(cam->ambient_light.color,1);
+	t_color ambient = vec3divscalar(cam->ambient.color, 1);
 	t_color ambient_samplecolor = vec3add(ambient, sample_color);
 	t_color attenuationxscattering_pdf = vec3multscalar(srec.attenuation, scattering_pdf);
 	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, ambient_samplecolor);
 	t_color color_from_scatter = vec3divscalar(color_from_scatter_partial, pdf_value);
 
 	return color_from_scatter;
-
-
 }
 
+/* gamma corrects the colorvector. - squareroots the color values. */
 unsigned int    color_gamma_corrected(t_color color)
 {
 	t_interval intensity = interval(0.0,0.999);
@@ -194,7 +190,7 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
     uint8_t *pixel;
 
     image = data->image;
-    offset = y * data->objects.camera.image_width + x;
+    offset = y * data->camera.image_width + x;
     pixel = &image->pixels[offset * 4];
     *(pixel++) = (uint8_t)(color >> 24);
     *(pixel++) = (uint8_t)(color >> 16);
@@ -202,6 +198,7 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
     *(pixel++) = (uint8_t)(color & 0xFF);
 }
 
+/* makes a ray, that goes from the cam through (i, j) on the viewport */
 t_ray get_ray(t_camera cam, int i, int j)
 {
 	t_vec3 offset = sample_square();
@@ -214,7 +211,6 @@ t_ray get_ray(t_camera cam, int i, int j)
 	t_point3 ray_origin = cam.center;
 	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin);
 	return ray(ray_origin, ray_direction);
-
 }
 
 void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
@@ -224,28 +220,23 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 	int	i;
 
     y = 0;
-    while (y < data->objects.camera.image_height)
+    while (y < data->camera.image_height)
     {
 		x = 0;
-        while (x < data->objects.camera.image_width)
+        while (x < data->camera.image_width)
         {
 			t_color pixel_color = color(0,0,0);
 			i = 0;
-			while (i < data->objects.camera.samples_per_pixel)
+			while (i < data->camera.samples_per_pixel)
 			{
-				t_ray r = get_ray(data->objects.camera, x, y);
-
-				pixel_color = vec3add(pixel_color, ray_color(&(data->objects.camera), &r, data->objects.camera.max_depth ,world, lights));
-
+				t_ray r = get_ray(data->camera, x, y);
+				pixel_color = vec3add(pixel_color, ray_color(&(data->camera), &r, data->camera.max_depth ,world, lights));
 				i++;
 			}
-            write_color(data, x, y, vec3divscalar(pixel_color, data->objects.camera.samples_per_pixel));
+            write_color(data, x, y, vec3divscalar(pixel_color, data->camera.samples_per_pixel));
 			x++;
         }
-		// debug("%.3d of %.3d\r", y, data->cam.image_height);
-		fflush(stderr);
 		y++;
-
     }
 	debug("\nDONE!\n");
 }

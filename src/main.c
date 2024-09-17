@@ -86,10 +86,10 @@ void	hook(void *param)
 
 int init_window(t_mrt *data)
 {
-    data->mlx = mlx_init(data->objects.camera.image_width, data->objects.camera.image_height, WINDOW_TITLE, false);
+    data->mlx = mlx_init(data->camera.image_width, data->camera.image_height, WINDOW_TITLE, false);
 	if (data->mlx == NULL)
 		return (FALSE);
-	data->image = mlx_new_image(data->mlx, data->objects.camera.image_width, data->objects.camera.image_height);
+	data->image = mlx_new_image(data->mlx, data->camera.image_width, data->camera.image_height);
 	if (!(data->image))
 	{
 		mlx_close_window(data->mlx);
@@ -104,57 +104,26 @@ int init_window(t_mrt *data)
     return (TRUE);
 }
 
-bool init_data(t_mrt *data)
-{
-	/***************************** */
-	/* 			MLX42 			   */
-	/***************************** */
-    data->mlx = NULL;
-    data->win_ptr = NULL;
-    data->image = NULL;
-
-    return (true);
-}
-
-
-int main(int argc, char **argv)
+int main_old(int argc, char **argv)
 {
     t_mrt data;
     (void)argv;
 	(void)argc;
-	init_data(&data);
+
+	ft_memset(&data, 0, sizeof(t_mrt));
 
 	/***************************** */
 	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(278, 278, -800);
 	t_vec3 direction = vec3(0,0,800);
-	init_cam(&data.objects.camera, center, direction, 60);
+	init_cam(&data.camera, center, direction, 60);
 
 	/***************************** */
 	/* 		ambient light		   */
 	/***************************** */
 
-	ambient( &data.objects.ambient, 1, rgb(110,110,110));
-
-
-	/*## RESOLUTION ##############
-	# | width  | height | ######
-	############################
-	*/
-	// printf("R   %d     %d\n", data.cam.image_width, data.cam.image_height);
-
-	/*## SAMPLING #####################
-	# 	samples per pixel | bounces ###
-	###################################
-	*/
-	// printf("S   %d      %d\n", data.cam.samples_per_pixel, data.cam.max_depth);
-
-
-	// world
-	// ================================================== world ==================================================
-	t_hittable *list[13];
-	// ================================================== world ==================================================
+	ambient(&data.camera.ambient, 1, rgb(110,110,110));
 
 	//red metallic
 	t_color albedo = color(0.8, 0.1, 0.1);
@@ -164,12 +133,23 @@ int main(int argc, char **argv)
 
 	// red metallic sphere
 	t_sphere s1;
-	sphere_mat(&s1, point3( 90,190,90 ), 180, (t_material*)&metal);
+	sphere_mat(&s1, point3(90, 190, 90), 180, (t_material*)&metal);
 	s1.print((void*)&s1);
 
 	/***********************************/
 	/* 			light        		   */
 	/***********************************/
+
+	// ============ initing the light material =============
+
+	// color here actuall goes in the range of 0-1
+	// when it is color(40, 40, 40), it means that it is brighter than normal.
+
+	// but the light also takes an intenstity value.
+	// the intensity is a float from input.
+	// i will use it as a multiplier to 100, so 100 * float, which means, that
+	// max color will be color(100,100,100);
+
 	t_diffuse_light difflight;
 	t_solid_color difflight_color;
 	solid_color_init(&difflight_color, color(40, 40, 40));
@@ -181,16 +161,15 @@ int main(int argc, char **argv)
 	solid_color_init(&difflight_color2, color(0, 0, 80));
 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
 
+	// =====================================================
+
 	// quad as light
 	t_quad s6;
 	quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
 	s6.print((void*)&s6);
 
-	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	// t_sphere s2 = sphere(vec3(0,250,-50), 120, rgb(16, 13, 166));
 	t_sphere s2;
 	sphere_mat(&s2, point3( 0,250,-50 ), 120, (t_material*)&difflight2);
-	s2.print((void*)&s2);
 	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
 
 	// adding another sphere
@@ -213,8 +192,7 @@ int main(int argc, char **argv)
 	disk(&s8, point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
 	s8.print((void*)&s8);
 
-
-// try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
+	// try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
 	t_box s9;
 	box(&s9, point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
 	s9.print((void*)&s9);
@@ -238,7 +216,6 @@ int main(int argc, char **argv)
 	printf("_______________\n");
 	printf("size of t_triangle: %lu\n", sizeof(t_triangle));
 
-
 	/***********************************/
 	/* 			earth       		   */
 	/***********************************/
@@ -256,6 +233,7 @@ int main(int argc, char **argv)
 	cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
 	s13.print((void*)&s13);
 
+	t_hittable *list[13];
 	list[0] = (t_hittable*)(&s1);
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
@@ -269,21 +247,13 @@ int main(int argc, char **argv)
 	list[10] = (t_hittable*)(&s12);
 	list[11] = (t_hittable*)(&s13);
 
+
 	const t_hittablelist world = hittablelist(list, 12);
 
 	t_hittable *list_lights[2];
 
-	t_empty_material empty_material;
-	t_material *no_material = (t_material*)&empty_material;
-	t_quad l6;
-	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
-
-	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere l2;
-	sphere_mat(&l2, point3( 0,250,-50 ), 120, (t_material*)&no_material);
-//0,250,-50 ), 120
-	list_lights[0] = (t_hittable*)(&l6);
-	list_lights[1] = (t_hittable*)(&l2);
+	list_lights[0] = (t_hittable*)(&s6);
+	list_lights[1] = (t_hittable*)(&s2);
 	const t_hittablelist lights = hittablelist(list_lights, 2);
 
     debug("Start of minirt %s", "helllo !! ");
@@ -299,12 +269,10 @@ int main(int argc, char **argv)
     mlx_loop(data.mlx);
     ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
-
     return (EXIT_SUCCESS);
 }
 
-
-int main_parse(int argc, char **argv)
+int main(int argc, char **argv)
 {
     t_mrt data;
 
@@ -314,33 +282,15 @@ int main_parse(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	ft_memset(&data, 0, sizeof(t_mrt));
-	parse_input(argv[1], &data.objects);
+	parse_input(argv[1], &data);
 
-	const t_hittablelist world = hittablelist(data.objects.hit_list, data.objects.hit_idx);
-
-
-
-	t_diffuse_light difflight2;
-	t_solid_color difflight_color2;
-	solid_color_init(&difflight_color2, color(0, 0, 80));
-	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
-	// t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
-	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere s2;
-	sphere_mat(&s2, point3( 90,190,90 ), 30, (t_material*)&difflight2);
-
-
-	t_hittable *list_lights[1];
-	list_lights[0] = (t_hittable*)(&s2);
-	const t_hittablelist lights = hittablelist(list_lights, 1);
 
     debug("Start of minirt %s", "helllo !! ");
 
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 
-	data.world = world;
-	render(&data, &world, &lights);
+	render(&data, &data.world, &data.lights);
 
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
@@ -351,50 +301,3 @@ int main_parse(int argc, char **argv)
 
     return (EXIT_SUCCESS);
 }
-
-
-
-// int main_old(int argc, char **argv)
-// {
-//     t_mrt data;
-//     (void)argv;
-// 	(void)argc;
-// 	if (!init_data(&data))
-//         return (1);
-
-// 	// world
-// 	t_hittable *list[4];
-
-// 	t_sphere s1;
-// 	sphere(&s1, vec3(0, 0, -1.2), 1, rgb(128,0,0));
-// 	// s1.print((void*)&s1);
-// 	t_sphere s2;
-// 	sphere(&s2, vec3(0, -100.5, -1), 200, rgb(0,128,0));
-// 	// s2.print((void*)&s2);
-// 	t_sphere s3;
-// 	sphere(&s3, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
-// 	// s3.print((void*)&s3);
-// 	t_sphere s4;
-// 	sphere(&s4, vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
-// 	// s4.print((void*)&s4);
-
-// 	list[0] = (t_hittable*)(&s1);
-// 	list[1] = (t_hittable*)(&s2);
-// 	list[2] = (t_hittable*)(&s3);
-// 	list[3] = (t_hittable*)(&s4);
-
-// 	const t_hittablelist world = hittablelist(list, 4);
-
-//     debug("Start of minirt %s", "helllo !! ");
-// 	if (!init_window(&data))
-// 		return (EXIT_FAILURE);
-
-
-// 	render(&data, &world, NULL);
-
-
-//     mlx_loop_hook(data.mlx, &hook, (void *)&data);
-//     mlx_loop(data.mlx);
-//     mlx_terminate(data.mlx);
-//     return (EXIT_SUCCESS);
-// }

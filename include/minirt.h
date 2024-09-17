@@ -16,9 +16,13 @@
 #include <limits.h>
 #include <MLX42/MLX42.h>
 #include "camera.h"
+#include "hittable.h"
+#include "interval.h"
+#include "material.h"
 #include "sphere.h"
 #include "plane.h"
 #include "cylinder.h"
+#include "texture.h"
 #include "vec3.h"
 
 # define TRUE 1
@@ -28,9 +32,9 @@
 /* struct that we didnt already have - used in the parser */
 typedef struct
 {
-	t_vec3	center;
-	double	brightness;
-	t_rgb	color;
+	t_sphere		body;
+	t_solid_color	color;
+	t_diffuse_light	difflight;
 }			t_light;
 
 /* added for the parser */
@@ -42,9 +46,13 @@ typedef struct
 	t_plane		planes[OBJECT_COUNT];
 	t_cylinder	cylinders[OBJECT_COUNT];
 	// t_cones		cones[OBJECT_COUNT];
-	t_hittable *hit_list[OBJECT_COUNT * 5];
-	int 		hit_idx;
 
+	/* contains all shapes. lights as well */
+	t_hittable *hit_list[OBJECT_COUNT * 4];
+	int 		hit_idx;
+	/* contains just lights */
+	t_hittable *light_hit[OBJECT_COUNT];
+	int			light_hit_idx;
 	// data for the parser
 	int			_file_fd;
 	char		**_tokens;
@@ -62,10 +70,6 @@ typedef struct 	s_mrt
 	// hittable list
 	t_hittablelist world;
 	t_hittablelist lights;
-	// render function
-
-	// t_viewport	viewport;
-	// t_pixel		pixel;
 }				t_mrt;
 
 void	parse_input(char *filename, t_mrt *data);

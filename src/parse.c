@@ -10,9 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"  // get_next_line should be here
-#include <fcntl.h>  /* open() */
-#include <stdio.h>  /* perror() */
+#include "libft.h"  	// get_next_line should be here
+#include <bits/types/struct_itimerspec.h>
+#include <complex.h>
+#include <fcntl.h>  	/* open() */
+#include <stdio.h>  	/* perror() */
 #include "minirt.h"
 
 static void	free_split(char **split)
@@ -43,7 +45,6 @@ static int call_error(char *msg, char *prefix, t_objects *obj)
 		close(obj->_file_fd);
 	}
 	exit(1);
-	// TODO: may need to close open file first
 }
 
 static int	count_tokens(char **tokens)
@@ -82,7 +83,7 @@ double	ft_atod(char *str)
 		{
 			if (exponent != -1 || ft_isdigit(str[i + 1]) == 0)
 				break ;
-			exponent = i;	// use the variable to store dot index;
+			exponent = i;
 			str++;
 		}
 		else if (ft_isdigit(str[i]) == 0)
@@ -154,6 +155,7 @@ static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalize
 	return(vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
 
+/* Inits the ambient struct inside of t_mrt->t_camera */
 static void	get_ambient(t_mrt *data)
 {
 	static int	already_set;
@@ -168,6 +170,7 @@ static void	get_ambient(t_mrt *data)
 	already_set = 1;
 }
 
+/* Inits the camera struct inside of t_mrt */
 static void	get_camera(t_mrt *data)
 {
 	static int	already_set;
@@ -187,28 +190,36 @@ static void	get_camera(t_mrt *data)
 	already_set = 1;
 }
 
-/*
- * Puts the light into the t_light array and the pointer to it
- * into the hittable_list.
- *
- * This function is longer than others, because light didnrt have an init func.
+/* Makes a light object, which is a sphere with a light texture.
+ * Adds the sphere from the light struct to the regular hittable list.
+ * as well as the light one.
 */
-/* TODO: init function? */
 static void	get_light(t_objects *obj)
 {
 	static int	set_index;
+	int			diam;
+	t_color		color;
+	t_rgb		rgbcolor;
 	char		**tokens;
 
+	diam = 20;
 	tokens = obj->_tokens;
-	if (count_tokens(tokens) != 4)
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "sphere", obj);
+	if (count_tokens(tokens)!= 4 && count_tokens(tokens) != 5)
 		call_error("invalid token amount", "light", obj);
-	obj->lights[set_index].center = set_vec3(obj, 1, "light", 0);
-	obj->lights[set_index].brightness = ft_atod(tokens[2]);
-	if (obj->lights[set_index].brightness < 0. || obj->lights[set_index].brightness > 1.)
-		call_error("brightness must be normalized", "light", obj);
-	obj->lights[set_index].color = set_rgb(obj, 3, "color");
-	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->spheres[set_index];
+	rgbcolor = set_rgb(obj, 3, "light");
+	color = vec3multscalar(rgb_to_color(rgbcolor), 100 * ft_atod(tokens[2]));
+	solid_color_init(&obj->lights[set_index].color, color);
+	diffuse_light_init(&obj->lights[set_index].difflight, (t_texture*)&obj->lights[set_index].color);
+	if (count_tokens(tokens) == 5)
+		diam = ft_atod(tokens[4]);
+	sphere_mat(&obj->lights[set_index].body, set_vec3(obj, 1, "light", 0), \
+		diam, (t_material *)&obj->lights[set_index].difflight);
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].body;
 	obj->hit_idx++;
+	obj->light_hit[obj->light_hit_idx] = (t_hittable *)&obj->lights[set_index].body;
+	obj->light_hit_idx++;
 	set_index++;
 }
 
@@ -220,8 +231,8 @@ static void	get_sphere(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "sphere", obj);
-	if (count_tokens(tokens) != 4)
-		call_error("invalid token amount", "light", obj);
+	if (count_tokens(tokens) < 4)
+		call_error("needs at least 4 tokens", "light", obj);
 	sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), \
 		ft_atod(tokens[2]), set_rgb(obj, 3, "sphere"));
 	obj->hit_list[obj->hit_idx] = (t_hittable*)&obj->spheres[set_index];
@@ -270,7 +281,7 @@ static void	update_struct(t_mrt *data)
 		get_ambient(data);
 	else if (ft_strncmp("C", data->objects._tokens[0], 2) == 0)
 		get_camera(data);
-	else if (ft_strncmp("L", data->objects._tokens[0], 2) == 0)
+	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0)
 		get_light(&data->objects);
 	else if (ft_strncmp("sp", data->objects._tokens[0], 3) == 0)
 		get_sphere(&data->objects);
@@ -284,7 +295,7 @@ static void	update_struct(t_mrt *data)
 }
 
 /* replaces tabs and newlines, so thta ft_split can split
-on just the space */
+on just the space. removes comments as well */
 void	sanitize_line(char *line)
 {
 	int	i;
@@ -294,6 +305,12 @@ void	sanitize_line(char *line)
 	{
 		if (line[i] == '\t' || line[i] == '\n')
 			line[i] = ' ';
+		else if (line[i] == '#')
+		{
+			line[i] = ' ';
+			line[++i] = '\0';
+			return ;
+		}
 	}
 }
 
@@ -309,6 +326,7 @@ void	parse_input(char *filename, t_mrt *data)
     	perror(filename), exit(1);
     while ((line = get_next_line(data->objects._file_fd)) != NULL)
     {
+    	sanitize_line(line);
 		if (ft_strlen(line) == 1)
 		{
 			free(line);
@@ -324,6 +342,8 @@ void	parse_input(char *filename, t_mrt *data)
 		update_struct(data);
 		free_split(data->objects._tokens);
     }
+    data->world = hittablelist(data->objects.hit_list, data->objects.hit_idx);
+    data->lights = hittablelist(data->objects.light_hit, data->objects.light_hit_idx);
     if (close(data->objects._file_fd) == -1)
     	perror("MiniRT: close()");
 }

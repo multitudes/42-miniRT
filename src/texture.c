@@ -15,7 +15,6 @@
 #include "color.h"
 #include "interval.h"
 #include "rtw_stb_image.h"
-#include <stdio.h>
 #include "utils.h"
 #include "interval.h"
 
@@ -23,7 +22,7 @@ void	solid_color_init(t_solid_color *solid_color_texture, t_color albedo)
 {
 	solid_color_texture->base.value = solid_color_value;
 	solid_color_texture->color_albedo = albedo;
-}	
+}
 
 t_color solid_color_value(const void *self, double u, double v, const t_point3 *p)
 {
@@ -42,15 +41,11 @@ t_color solid_color_value(const void *self, double u, double v, const t_point3 *
 */
 void	checker_texture_init(t_checker_texture *checker_texture, double scale, t_solid_color *even, t_solid_color *odd)
 {
-	printf("checker_texture_init done ================ ");
 	checker_texture->base.value = checker_texture_value;
 	checker_texture->inv_scale = 1.0 / scale;
 	checker_texture->even = even;
 	checker_texture->odd = odd;
 }
-
-#include <math.h>
-#include <stdbool.h>
 
 // Function to compute spherical coordinates (u, v) from point p
 void get_spherical_uv(const t_point3 *p, double *u, double *v) {
@@ -89,7 +84,7 @@ t_color checker_texture_value(const void *self, double u, double v, const t_poin
 {
 	(void)u;
 	(void)v;
-	int xint = (int)floor(p->x * ((t_checker_texture*)self)->inv_scale);	
+	int xint = (int)floor(p->x * ((t_checker_texture*)self)->inv_scale);
 	int yint = (int)floor(p->y * ((t_checker_texture*)self)->inv_scale);
 	int zint = (int)floor(p->z * ((t_checker_texture*)self)->inv_scale);
 
@@ -113,11 +108,11 @@ t_color img_texture_value(const void *self, double u, double v, const t_point3 *
 	(void)p;
 	// If we have no texture data, then return solid cyan as a debugging aid.
 	t_img_texture *image;
-	
+
 	image = (t_img_texture *)self;
-	if (height(image->img) <= 0) 
+	if (height(image->img) <= 0)
 		return color(0, 1, 1);
-	
+
 	// Clamp input texture coordinates to [0,1] x [1,0]
 	u = clamp(interval(0, 1), u);
 	v = 1.0 - clamp(interval(0, 1), v); // Flip V to image coordinates
