@@ -214,6 +214,8 @@ static void	get_light(t_objects *obj)
 	diffuse_light_init(&obj->lights[set_index].difflight, (t_texture*)&obj->lights[set_index].color);
 	if (count_tokens(tokens) == 5)
 		diam = ft_atod(tokens[4]);
+	if (diam < 0)
+		call_error("diameter cannot be negative...", "sphere", obj);
 	sphere_mat(&obj->lights[set_index].body, set_vec3(obj, 1, "light", 0), \
 		diam, (t_material *)&obj->lights[set_index].difflight);
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].body;
@@ -227,14 +229,18 @@ static void	get_sphere(t_objects *obj)
 {
 	static int	set_index;
 	char		**tokens;
+	int			diam;
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "sphere", obj);
 	if (count_tokens(tokens) < 4)
-		call_error("needs at least 4 tokens", "light", obj);
+		call_error("needs at least 4 tokens", "sphere", obj);
+	diam = ft_atod(tokens[2]);
+	if (diam < 0)
+		call_error("diameter cannot be negative...", "sphere", obj);
 	sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), \
-		ft_atod(tokens[2]), set_rgb(obj, 3, "sphere"));
+		diam, set_rgb(obj, 3, "sphere"));
 	obj->hit_list[obj->hit_idx] = (t_hittable*)&obj->spheres[set_index];
 	obj->hit_idx++;
 	set_index++;
