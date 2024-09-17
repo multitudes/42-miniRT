@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 16:51:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/17 09:49:35 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include "pdf.h"
 #include <stdbool.h>
 #include <math.h>
+#include <time.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
 #define IMAGE_WIDTH 100
@@ -229,11 +230,13 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
     int             x;
 	int             y;
 	int 			i;
+	clock_t start_time, end_time;
+    double time_taken, fps;
     
     y = 0;
     x = 0;
 	i = 0;
-
+    start_time = clock();
     while (y < data->cam.image_height)
     {	
 		x = 0;
@@ -254,12 +257,19 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 			x++;
 			// add bar progress
         }
-		debug("%.3d of %.3d\r", y, data->cam.image_height);
+		// debug("%.3d of %.3d\r", y, data->cam.image_height);
+		
 		fflush(stderr);
 		y++;
 
     }
-	debug("\nDONE!\n");
+	    end_time = clock();
+
+    // Calculate time taken and FPS
+    time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
+    fps = 1.0 / time_taken;
+	debug("Frame rendered in %.2f seconds (FPS: %.2f)\n", time_taken, fps);
+	fflush(stderr);
 }
 
 /** 
