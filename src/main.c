@@ -140,6 +140,7 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	// mlx_get_window_size(data->mlx, &(data->cam.image_width), &(data->cam.image_height));
 	data->cam.image_width = new_width;
 	data->cam.image_height = new_height;
+	update_cam(&data->cam, new_width, new_height);
 	debug("Window resized to %d x %d", new_width, new_height);
 	if (data->image)
 	{
@@ -177,7 +178,7 @@ int main(int argc, char **argv)
 	/***************************** */
 	t_point3 center = point3(278, 278, -800);
 	t_vec3 direction = vec3(0,0,800);
-	data.cam = init_cam(center, direction, 60);
+ 	init_cam(&data.cam, center, direction, 60);
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
@@ -378,7 +379,7 @@ int main_earth(int argc, char **argv)
 	/***************************** */
 	t_point3 center = point3(0,4,4);
 	t_vec3 direction = vec3(0,-2,-2);
-	data.cam = init_cam(center, direction, 50);
+	init_cam(&data.cam, center, direction, 50);
 	data.cam.print((void*)(&(data.cam)));
 
 	/*## RESOLUTION ##############

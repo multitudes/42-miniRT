@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 19:32:52 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/17 18:09:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "ambient.h"
 
 typedef struct s_mrt t_mrt;
+
 typedef struct	s_camera
 {
 	// considered "public" 
@@ -34,8 +35,8 @@ typedef struct	s_camera
 	int 		samples_per_pixel;
 	int			max_depth;		   // Maximum number of ray bounces into scene
 
-	t_point3 	lookfrom;   		// Point camera is looking from
-    t_point3 	lookat;  			// Point camera is looking at
+	// t_point3 	lookfrom;   		// Point camera is looking from
+    // t_point3 	lookat;  			// Point camera is looking at
     t_vec3   	vup;     			// Camera-relative "up" direction
 	
 	// considered private
@@ -49,13 +50,13 @@ typedef struct	s_camera
 	
 } 				t_camera;
 
-t_camera 	init_cam(t_point3 center, t_vec3 direction, double hfov);
-void    	render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights);
-t_color		ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights);
-void 		write_color(t_mrt *data, int x, int y, t_color colorvector);
+void			init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov);
+void    		render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights);
+t_color			ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights);
+void 			write_color(t_mrt *data, int x, int y, t_color colorvector);
 void			print_camera(const void *self);
 unsigned int    color_gamma_corrected(t_color color);
-
+void 			update_cam(t_camera *cam, int new_width, int new_height);
 // t_ray		get_ray(t_camera *c, int u, int v);
 // t_vec3		sample_square();
 
