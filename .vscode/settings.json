@@ -22,6 +22,9 @@
 		"pdf.h": "c",
 		"*.tcc": "c",
 		"box.h": "c",
-		"quad.h": "c"
+		"quad.h": "c",
+		"algorithm": "c",
+		"random": "c",
+		"limits": "c"
 	}
 }

@@ -73,15 +73,15 @@ void	hook(void *param)
 		debug("DOWN key pressed");
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 	{
-		mrt->cam.center = rotate_camera(mrt->cam.center, 5);
-		mrt->cam.direction = calculate_direction(mrt->cam.center);
-		mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
+		// mrt->cam.center = rotate_camera(mrt->cam.center, 5);
+		// mrt->cam.direction = calculate_direction(mrt->cam.center);
+		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("LEFT key pressed");
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
-		mrt->cam.center = rotate_camera(mrt->cam.center, -5);
-		mrt->cam.direction = calculate_direction(mrt->cam.center);
-		mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
+		// mrt->cam.center = rotate_camera(mrt->cam.center, -5);
+		// mrt->cam.direction = calculate_direction(mrt->cam.center);
+		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("RIGHT key pressed");
 	}
 	render(mrt, &(mrt->world), &(mrt->lights));
@@ -200,6 +200,13 @@ int main(int argc, char **argv)
 	/***********************************/
 	/* 			light        		   */
 	/***********************************/
+
+	// L -40.0,50.0,0.0           (0.6) strength from 0 to 1 -  rgb (10,0,255)
+	// strength - 0.5 
+	// max 100 
+	// rgb (10,0,255) - color (0.5, 0, 1)  * max 200  * strength 
+	// color (100,100,100)
+	
 	t_diffuse_light difflight;
 	t_solid_color difflight_color;
 	solid_color_init(&difflight_color, color(40, 40, 40));

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/13 13:39:37 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/17 12:48:34 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ typedef struct 		s_metal
 	t_color 		albedo;  // Albedo specific to Metal material
 	double 			fuzz;     // Fuzziness of the metal
 }               	t_metal;
-
 
 /**
  * @brief Lambertian material structure
