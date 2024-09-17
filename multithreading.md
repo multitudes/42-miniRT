@@ -1,6 +1,43 @@
 ## Multi-threading
 
-for later... for the bonus
+You can determine the number of processors (or CPU cores) on your Linux Ubuntu system using several methods. Here are a few common ways:
+
+### Using `nproc` Command
+The `nproc` command prints the number of processing units available:
+```sh
+nproc
+```
+
+### Using `lscpu` Command
+The `lscpu` command provides detailed information about the CPU architecture, including the number of CPUs:
+```sh
+lscpu | grep '^CPU(s):'
+```
+
+### Using `/proc/cpuinfo`
+You can also check the `/proc/cpuinfo` file:
+```sh
+grep -c ^processor /proc/cpuinfo
+```
+
+### Using `htop` or `top`
+You can use system monitoring tools like `htop` or `top` to see the number of CPU cores in real-time:
+```sh
+htop
+```
+or
+```sh
+top
+```
+
+### Example
+Here is an example of using the `nproc` command:
+```sh
+$ nproc
+8
+```
+
+This output indicates that the system has 8 processing units available.
 
 ideas from gemini AI
 I'd be glad to provide a comprehensive response to the prompt, incorporating insights from the ratings and addressing potential issues:
