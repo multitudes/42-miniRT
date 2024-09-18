@@ -100,6 +100,7 @@ int init_window(t_mrt *data)
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
 		
 	}
+	ft_memset(data->image->pixels, 0, data->cam.image_width * data->cam.image_height * BPP);
 	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
 	{
 		mlx_close_window(data->mlx);
@@ -137,16 +138,10 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	t_mrt		*data;
 
 	data = (t_mrt *)params;
-	// mlx_get_window_size(data->mlx, &(data->cam.image_width), &(data->cam.image_height));
 	data->cam.image_width = new_width;
 	data->cam.image_height = new_height;
 	update_cam(&data->cam, new_width, new_height);
-	debug("Window resized to %d x %d", new_width, new_height);
-	if (data->image)
-	{
-		mlx_delete_image(data->mlx, data->image);
-	}
-
+	mlx_image_t *old_image = data->image;
 	data->image = mlx_new_image(data->mlx, new_width, new_height);
 	if (!data->image)
 	{
@@ -154,7 +149,6 @@ void	_resize_hook(int new_width, int new_height, void *params)
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
 		exit(EXIT_FAILURE);
 	}
-
 	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
 	{
 		mlx_close_window(data->mlx);
@@ -162,6 +156,10 @@ void	_resize_hook(int new_width, int new_height, void *params)
 		exit(EXIT_FAILURE);
 	}
 
+	if (old_image)
+	{
+		mlx_delete_image(data->mlx, old_image);
+	}
 
     debug("Window resized to %d x %d", new_width, new_height);
 	// render(data, )

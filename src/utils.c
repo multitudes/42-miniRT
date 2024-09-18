@@ -6,11 +6,15 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 12:36:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 10:58:42 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// #include "camera.h"
+
 #include "utils.h"
+#define CORES 16
+
 
 /**
  *  @brief Our random int generator.
@@ -38,6 +42,11 @@ double degrees_to_radians(double degrees)
  */
 int random_int(int min, int max) 
 {
+    if (CORES > 1)
+    {
+        unsigned int seed  = rand();
+        return min + rand_r(&seed) % (max - min);
+    }
     return min + rand_rt() % (max - min);
 }
 /*

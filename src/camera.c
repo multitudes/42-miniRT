@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/17 19:20:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 10:05:10 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 #include <stdbool.h>
 #include <math.h>
 #include <time.h>
+#include <pthread.h>
 
-#define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 100
+
 
 void update_cam(t_camera *cam, int new_width, int new_height)
 {
@@ -124,23 +124,12 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
         	return vec3add(ambient_material, reflected_color);
     	}
 	}
-	// debug("rec normal: %f %f %f\n", rec.normal.x, rec.normal.y, rec.normal.z);
 	recorded_pdf = srec.pdf_ptr;
 	hittable_pdf_init(&light_pdf, lights, &rec.p);
-
 	t_mixture_pdf mix_pdf;
-	
 	mixture_pdf_init(&mix_pdf, recorded_pdf, (t_pdf *)&light_pdf);
-	
 	scattered = ray(rec.p, mixture_pdf_generate(&mix_pdf));
 	double pdf_value = mixture_pdf_value(&mix_pdf, &scattered.dir);
-	// if (random_d() < 0.5)
-	// 	scattered = ray(rec.p, recorded_pdf->generate(recorded_pdf));
-	// else
-	// 	scattered = ray(rec.p, lights->obj_random(lights, &rec.p));
-	// double pdf_value1 = recorded_pdf->value(recorded_pdf, &scattered.dir);
-	// double pdf_value2 = lights->obj_pdf_value(lights, &rec.p, &scattered.dir);
-    // double pdf_value = 0.5 * pdf_value1 + 0.5 * pdf_value2;
 	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
 	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
 	t_color ambient = vec3divscalar(cam->ambient_light.color,1);
@@ -196,51 +185,126 @@ t_ray get_ray(t_camera cam, int i, int j)
 
 }
 
-void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
+void render_thread(void *args)
 {
-    int             x;
-	int             y;
-	int 			i;
 	clock_t start_time, end_time;
     double time_taken, fps;
-    
-    y = 0;
-    x = 0;
-	i = 0;
+	t_thread_data *thread_data;
+	thread_data = (t_thread_data *)args;
+	int y = thread_data->starty;
+	int x = 0;
+	int i = 0;
     start_time = clock();
-    while (y < data->cam.image_height)
+    while (y < thread_data->endy)
     {	
 		x = 0;
-        while (x < data->cam.image_width)
+        while (x < thread_data->data->cam.image_width)
         {
 			t_color pixel_color = color(0,0,0);
 			i = 0;
-			while (i < data->cam.samples_per_pixel)
+			while (i < thread_data->data->cam.samples_per_pixel)
 			{
-				t_ray r = get_ray(data->cam, x, y);
+				t_ray r = get_ray(thread_data->data->cam, x, y);
 
-				pixel_color = vec3add(pixel_color, ray_color(&(data->cam), &r, data->cam.max_depth ,world, lights));
+				pixel_color = vec3add(pixel_color, ray_color(&(thread_data->data->cam), &r, thread_data->data->cam.max_depth ,thread_data->world, thread_data->lights));
 				
 				i++;
 			}
 
-            write_color(data, x, y, vec3divscalar(pixel_color, data->cam.samples_per_pixel));
+            write_color(thread_data->data, x, y, vec3divscalar(pixel_color, thread_data->data->cam.samples_per_pixel));
 			x++;
-			// add bar progress
         }
-		// debug("%.3d of %.3d\r", y, data->cam.image_height);
-		
-		fflush(stderr);
 		y++;
 
     }
-	    end_time = clock();
+	
+	end_time = clock();
 
     // Calculate time taken and FPS
     time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
     fps = 1.0 / time_taken;
-	debug("Frame rendered in %.2f seconds (FPS: %.2f)\n", time_taken, fps);
+	debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
 	fflush(stderr);
+
+}
+
+
+/**
+ * @brief render the scene
+ */
+void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
+{
+    // int             x;
+	// int             y;
+	// int 			i;
+	// clock_t start_time, end_time;
+    // double time_taken, fps;
+    
+	pthread_t threads[CORES];
+	t_thread_data thread_data[CORES];
+
+    int sliceheight = data->cam.image_height / CORES;
+	int thread_idx = 0;
+	while (thread_idx < CORES)
+	{	
+		thread_data[thread_idx].data = data;
+		thread_data[thread_idx].thread_id = thread_idx;
+		thread_data[thread_idx].world = world;
+		thread_data[thread_idx].lights = lights;
+		thread_data[thread_idx].starty = thread_idx * sliceheight;
+		if (thread_idx == CORES - 1)
+			thread_data[thread_idx].endy = data->cam.image_height;
+		else
+			thread_data[thread_idx].endy = (thread_idx + 1) * sliceheight;
+		pthread_create(&threads[thread_idx], NULL, (void *)render_thread, &thread_data[thread_idx]);
+		thread_idx++;
+	}
+	
+	// y = 0;
+    // x = 0;
+	// i = 0;
+    // start_time = clock();
+    // while (y < data->cam.image_height)
+    // {	
+	// 	x = 0;
+    //     while (x < data->cam.image_width)
+    //     {
+	// 		t_color pixel_color = color(0,0,0);
+	// 		i = 0;
+	// 		while (i < data->cam.samples_per_pixel)
+	// 		{
+	// 			t_ray r = get_ray(data->cam, x, y);
+
+	// 			pixel_color = vec3add(pixel_color, ray_color(&(data->cam), &r, data->cam.max_depth ,world, lights));
+				
+	// 			i++;
+	// 		}
+
+    //         write_color(data, x, y, vec3divscalar(pixel_color, data->cam.samples_per_pixel));
+	// 		x++;
+	// 		// add bar progress
+    //     }
+	// 	// debug("%.3d of %.3d\r", y, data->cam.image_height);
+		
+	// 	fflush(stderr);
+	// 	y++;
+
+    // }
+	
+	// end_time = clock();
+
+    // // Calculate time taken and FPS
+    // time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
+    // fps = 1.0 / time_taken;
+	// debug("Frame rendered in %.2f seconds (FPS: %.2f)\n", time_taken, fps);
+	// fflush(stderr);
+
+	thread_idx = 0;
+	while (thread_idx < CORES)
+	{
+		pthread_join(threads[thread_idx], NULL);
+		thread_idx++;
+	}
 }
 
 /** 
