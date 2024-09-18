@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 13:55:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 14:02:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
  * the cylinder height
  * R,G,B colors in range [0,255]
 */
-void		cylinder_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
+void		cylinder_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
 {
 	c->base.hit = hit_cylinder;
 	c->base.pdf_value = obj_cylinder_pdf_value;
@@ -60,7 +60,7 @@ void		cylinder_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, d
  * the rt file will have the following format:
  * 	
  */
-void		cylinder_mat_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
+void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
 {
 	c->base.hit = hit_cylinder;
 	c->base.pdf_value = obj_cylinder_pdf_value;
@@ -74,7 +74,6 @@ void		cylinder_mat_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diamete
 	c->mat = mat;
 	c->rgb = rgb(0, 0, 0);
 	c->color = color(0, 0, 0);
-
 	c->print = &print_cylinder;
 }
 
@@ -89,7 +88,7 @@ void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double 
 	c->base.hit = hit_cylinder_capped;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
-	cylinder_u(&c->cylinder_u, center, axis, diameter, height, rgbcolor);
+	cylinder_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, rgbcolor);
 	// just need to create two vector parallel to the axis
 	t_vec3 u, v;
 	// make sure not parallel to the y axis
@@ -101,8 +100,8 @@ void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double 
     u = vec3multscalar(u, diameter / 2);
     v = vec3multscalar(v, diameter / 2);
 
-	disk_mat(&c->top, center, u, v, c->cylinder_u.mat);
-	disk_mat(&c->bottom, center, u, v, c->cylinder_u.mat);
+	disk_mat(&c->top, center, u, v, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, center, u, v, c->cylinder_uncapped.mat);
 	c->print = &print_cylinder_capped;
 }
 
@@ -111,7 +110,7 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, dou
 	c->base.hit = hit_cylinder_capped;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
-	cylinder_mat_u(&c->cylinder_u, center, axis, diameter, height, mat);
+	cylinder_mat_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, mat);
 	// just need to create two vector parallel to the axis
 	t_vec3 u, v;
 	// make sure not parallel to the y axis
@@ -123,33 +122,39 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, dou
     u = vec3multscalar(u, diameter / 2);
     v = vec3multscalar(v, diameter / 2);
 
-	disk_mat(&c->top, center, u, v, c->cylinder_u.mat);
-	disk_mat(&c->bottom, center, u, v, c->cylinder_u.mat);
+	disk_mat(&c->top, center, u, v, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, center, u, v, c->cylinder_uncapped.mat);
 	
 }
 
+/**
+ * @brief: check if the ray hits the cylinder capped object
+ * 
+ * This is essentially creating a hittable list with the cylinder and the two disks
+ * and using the hit function for the hittable list on them
+ */
 bool		hit_cylinder_capped(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec)
 {
 	const t_cylinder_capped *c = (t_cylinder_capped *)self;
 	t_hittablelist cylinder_hittable_list;
-
 	t_hittable *list[3];
-	
-	// add to list
-	list[0] = (t_hittable*)(&c->cylinder_u);
+
+	list[0] = (t_hittable*)(&c->cylinder_uncapped);
 	list[1] = (t_hittable*)(&c->top);
 	list[2] = (t_hittable*)(&c->bottom);
-
 	cylinder_hittable_list = hittablelist(list, 3);
-	
-
 	return hit_objects(&cylinder_hittable_list, r, closest, rec);
 }
 
+/**
+ * @brief print the cylinder capped object
+ * 
+ * The print will just print the cylinder which is a part of the capped cylinder
+ */
 void print_cylinder_capped(const void *self)
 {
 	const t_cylinder_capped *c = (const t_cylinder_capped *)self;
-	c->cylinder_u.print(&c->cylinder_u);
+	c->cylinder_uncapped.print(&c->cylinder_uncapped);
 }
 
 /**
@@ -164,13 +169,14 @@ void		print_cylinder(const void *self)
 
 }
 
+/**
+ * @brief: check if the ray hits the uncapped cylinder
+ * 
+ * The cylinder is an infinite object so we need to check if the intersection 
+ * is within the height of the cylinder
+ */
 bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec) {
     const t_cylinder *cyl = (t_cylinder*)self;
-
-	(void)cyl;
-	(void)r;
-	(void)ray_t;
-	(void)rec;
 
     // Calculate coefficients for the quadratic equation
     double a = r->dir.x * r->dir.x + r->dir.z * r->dir.z;
@@ -231,7 +237,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
         rec->normal = normal;
         set_face_normal(rec, r, rec->normal);
         rec->mat = cyl->mat;
-		get_cylinder_uv(rec->normal, &rec->u, &rec->v);
+		get_cylinder_uncappedv(rec->normal, &rec->u, &rec->v);
         return true;
     }
 
@@ -295,7 +301,7 @@ t_vec3 obj_cylinder_random(const void *self, const t_point3 *orig) {
     return unit_vector(direction);
 }
 
-void get_cylinder_uv(t_vec3 normal, double* u, double* v) 
+void get_cylinder_uncappedv(t_vec3 normal, double* u, double* v) 
 {
     double theta;
     double phi;

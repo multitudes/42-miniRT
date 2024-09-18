@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:57:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 13:53:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 13:58:53 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,15 @@ typedef struct	s_cylinder
 typedef struct	s_cylinder_capped
 {
 	t_hittable  	base;
-	t_cylinder		cylinder_u;
+	t_cylinder		cylinder_uncapped;
 	t_disk			top;
 	t_disk			bottom;
 	void			(*print)(const void* self);
 }				t_cylinder_capped;
 
 
-void		cylinder_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor);
-void		cylinder_mat_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat);
+void		cylinder_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor);
+void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat);
 void 		cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor);
 void		cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat);
 bool		hit_cylinder_capped(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
@@ -67,6 +67,6 @@ void		print_cylinder_capped(const void *self);
 bool		hit_cylinder(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
 double 		obj_cylinder_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir);
 t_vec3 		obj_cylinder_random(const void *self, const t_point3 *orig);
-void		get_cylinder_uv(t_vec3 normal, double* u, double* v); 
+void		get_cylinder_uncappedv(t_vec3 normal, double* u, double* v); 
 
 #endif
