@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 18:22:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 18:23:46 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void disk(t_disk *d, t_point3 center, t_vec3 normal, double radius, t_rgb rgbcol
  * @param v second vector of the disk
  * @param mat material of the disk
  */
-void disk(t_disk *d, t_point3 center, t_vec3 normal, double radius, t_material *mat)
+void disk_mat(t_disk *d, t_point3 center, t_vec3 normal, double radius, t_material *mat)
 {
  	d->base.hit = hit_disk;
     d->base.pdf_value = disk_pdf_value;

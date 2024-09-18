@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 15:23:37 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 18:27:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double 
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
     t_point3 bottom_center = vec3substr(center, vec3multscalar(axis, height / 2));
 
-	disk_mat(&c->top, top_center, u, v, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center, u, v, c->cylinder_uncapped.mat);
+	disk_mat(&c->top, top_center, axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, bottom_center,axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
 	c->print = &print_cylinder_capped;
 }
 
@@ -133,10 +133,8 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, dou
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
     t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -height / 2));
 
-	disk_mat(&c->top, top_center, u, v, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center, u, v, c->cylinder_uncapped.mat);
-
-	
+	disk_mat(&c->top, top_center, axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, bottom_center, axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
 }
 
 
@@ -239,6 +237,25 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 }
 
 /**
+ * @brief: check if the ray hits the cylinder capped object
+ * 
+ * This is essentially creating a hittable list with the cylinder and the two disks
+ * and using the hit function for the hittable list on them
+ */
+bool	hit_cylinder_capped(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec)
+{
+	const t_cylinder_capped *c = (t_cylinder_capped *)self;
+	t_hittablelist cylinder_hittable_list;
+	t_hittable *list[3];
+
+	list[0] = (t_hittable*)(&c->cylinder_uncapped);
+	list[1] = (t_hittable*)(&c->top);
+	list[2] = (t_hittable*)(&c->bottom);
+	cylinder_hittable_list = hittablelist(list, 3);
+	return hit_objects(&cylinder_hittable_list, r, closest, rec);
+}
+
+/**
  * @brief: Computes the PDF value for a uniform cylinder.
  * @param: self: Pointer to the object
  * @param: orig: Pointer to the t_point3 origin vector
@@ -307,23 +324,4 @@ void get_cylinder_uncappedv(t_vec3 normal, double* u, double* v)
     // Map theta and phi to UV coordinates
     *u = theta / (2 * PI);
     *v = phi / PI;
-}
-
-/**
- * @brief: check if the ray hits the cylinder capped object
- * 
- * This is essentially creating a hittable list with the cylinder and the two disks
- * and using the hit function for the hittable list on them
- */
-bool	hit_cylinder_capped(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec)
-{
-	const t_cylinder_capped *c = (t_cylinder_capped *)self;
-	t_hittablelist cylinder_hittable_list;
-	t_hittable *list[3];
-
-	list[0] = (t_hittable*)(&c->cylinder_uncapped);
-	list[1] = (t_hittable*)(&c->top);
-	list[2] = (t_hittable*)(&c->bottom);
-	cylinder_hittable_list = hittablelist(list, 3);
-	return hit_objects(&cylinder_hittable_list, r, closest, rec);
 }

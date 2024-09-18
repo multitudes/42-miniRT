@@ -220,11 +220,23 @@ int main(int argc, char **argv)
 	disk(&d0, point3(0, 0, 0), vec3(0,1,0), 100, rgb(166, 13, 103));
 	d0.print((void*)&d0);
 
-	t_disk d1;
-	disk(&d1, point3(0, 0, 0), vec3(0,1,0), 50, rgb(166, 13, 13));
+	t_color albedo = color(0.1, 0.8, 0.1);
+	double fuzz = 0.0;
+	t_metal metal;
+	metal_init(&metal, albedo, fuzz);
+	// t_disk d1;
+	// disk_mat(&d1, point3(0, 0, 0), vec3(0,1,0), 50, (t_material*)&metal);
+	// d1.print((void*)&d1);
+	
+	t_cylinder c0;
+	cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
+	
+	
 	list[0] = (t_hittable*)(&d0);
-	list[1] = (t_hittable*)(&d1);
-	d1.print((void*)&d1);
+	list[1] = (t_hittable*)(&c0);
+
+
+
 
 	const t_hittablelist world = hittablelist(list, 2);
 
