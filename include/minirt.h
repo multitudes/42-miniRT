@@ -47,12 +47,12 @@ typedef struct
 	t_plane		planes[OBJECT_COUNT];
 	t_cylinder	cylinders[OBJECT_COUNT];
 	t_quad		quads[OBJECT_COUNT];
-	// t_disk		disks[OBJECT_COUNT];
+	t_disk		disks[OBJECT_COUNT];
 	// t_triangle	triangles[OBJECT_COUNT];
 	// t_cones		cones[OBJECT_COUNT];
 
 	/* contains all shapes. lights as well */
-	t_hittable *hit_list[OBJECT_COUNT * 5];
+	t_hittable *hit_list[OBJECT_COUNT * 6];
 	int 		hit_idx;
 
 	/* contains just lights */

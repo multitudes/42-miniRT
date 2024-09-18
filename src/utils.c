@@ -14,10 +14,10 @@
 
 /**
  *  @brief Our random int generator.
- * 
+ *
  * @return unsigned int
  */
-unsigned int rand_rt() 
+unsigned int rand_rt()
 {
 	static unsigned int seed = 1;
     seed = (A * seed + C) % M;
@@ -27,7 +27,7 @@ unsigned int rand_rt()
 /*
  * Comverts degrees to radians.
  */
-double degrees_to_radians(double degrees) 
+double degrees_to_radians(double degrees)
 {
     return degrees * PI / 180.0;
 }
@@ -36,23 +36,28 @@ double degrees_to_radians(double degrees)
  * Returns a random int in [min,max).
  * max is excluded.
  */
-int random_int(int min, int max) 
+int random_int(int min, int max)
 {
-    return min + rand_rt() % (max - min);
+	int	diff;
+
+	diff = max - min;
+	if (diff <= 0)
+		diff = 1;
+	return min + rand_rt() % diff;
 }
 /*
  * Returns a random real in [0,1], 1 excluded.
  */
-double random_d() 
+double random_d()
 {
     return rand_rt() / (UINT32_MAX + 1.0);
 }
 
 /*
- * Returns a random real in [min,max) with min included 
+ * Returns a random real in [min,max) with min included
  * and max excluded.
  */
-double random_double(double min, double max) 
+double random_double(double min, double max)
 {
     return min + (max-min)*random_d();
 }

@@ -104,6 +104,9 @@ bool hit_disk(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record 
 	rec->mat = disk->mat;
 	set_face_normal(rec, r, disk->normal);
 
+	printf("hit disk\n");
+
+
 	return true;
 }
 

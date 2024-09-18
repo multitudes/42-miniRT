@@ -200,7 +200,7 @@ static void	get_light(t_objects *obj)
 	t_rgb		rgbcolor;
 	char		**tokens;
 
-	diam = 20;
+	diam = 100;
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "sphere", obj);
@@ -238,12 +238,7 @@ static void	get_sphere(t_objects *obj)
 	diam = ft_atod(tokens[2]);
 	if (diam < 0)
 		call_error("diameter cannot be negative...", "sphere", obj);
-
-	//check if the sphere is a:
-		// regular one (just color)
-		// image mapped (path to image)
-		// checker (two colors)
-	if (count_tokens(tokens) == 5)	// two colors - checker
+	if (count_tokens(tokens) == 5)
 	{
 		checker_texture_init(&obj->spheres[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].checker);
@@ -252,7 +247,6 @@ static void	get_sphere(t_objects *obj)
 	}
 	else if (count_tokens(tokens) == 4 && ft_strncmp(tokens[3], "img:", 4) == 0)
 	{
-		// has image
 		img_texture_init(&obj->spheres[set_index].img_texture, &tokens[3][4]);
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].img_texture);
 		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
@@ -318,6 +312,25 @@ static void	get_quad(t_objects *obj)
 	set_index++;
 }
 
+static void	get_disk(t_objects *obj)
+{
+	static int	set_index;
+	char		**tokens;
+
+	tokens = obj->_tokens;
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "disk", obj);
+	if (count_tokens(tokens) != 5)
+		call_error("invalid token amount", "disk", obj);
+
+	disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 0), \
+		set_vec3(obj, 3, "disk", 0), set_rgb(obj, 4, "disk"));
+
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->quads[set_index];
+	obj->hit_idx++;
+	set_index++;
+}
+
 static void	update_struct(t_mrt *data)
 {
 	if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
@@ -334,8 +347,8 @@ static void	update_struct(t_mrt *data)
 		get_cylinder(&data->objects);
 	else if (ft_strncmp("qd", data->objects._tokens[0], 3) == 0)
 		get_quad(&data->objects);
-	// else if (ft_strncmp("dsk", data->objects._tokens[0], 4) == 0)
-	// 	get_disk(&data->objects);
+	else if (ft_strncmp("dsk", data->objects._tokens[0], 4) == 0)
+		get_disk(&data->objects);
 	// else if (ft_strncmp("tr", data->objects._tokens[0], 3) == 0)
 	// 	get_triangle(&data->objects);
 	else
@@ -362,6 +375,9 @@ static void	sanitize_line(char *line)
 		}
 	}
 }
+
+/* TODO: error - when camera inits with 0,1,1 - segfault  ??? */
+/* TODO: im not sure that the disk works */
 
 /* in case or error, the parser calls exit() */
 void	parse_input(char *filename, t_mrt *data)
