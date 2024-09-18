@@ -34,6 +34,7 @@ typedef struct		s_sphere
 	{
 		t_checker_texture	checker;
 		t_solid_color 		texture;
+		t_img_texture		img_texture;
 	};
 	void (*print)(const void *self);
 }					t_sphere;

@@ -20,7 +20,7 @@ SRC_DIR			= 	src/
 LIBFTDIR 		= 	./lib/libft
 LIBMLX			= 	./lib/MLX42
 
-LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm 
+LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 LIBS 			+= 	$(LIBFTDIR)/libft.a
 
 # this is used in production to optimize the linking and remove unnecessary code aking the binary smaller
@@ -37,8 +37,7 @@ OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
 									utils.h ambient.h plane.h cylinder.h texture.h \
-									rtw_stb_image.h material.h onb.h pdf.h quad.h disk.h \
-									box.h triangle.h)
+									material.h onb.h pdf.h quad.h disk.h box.h triangle.h)
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
@@ -104,5 +103,3 @@ run:
 	@PATH=".$${PATH:+:$${PATH}}" && $(NAME) $(ARGS)
 
 .PHONY: all clean fclean re libmlx $(LIBFT)
-
-

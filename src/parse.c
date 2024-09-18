@@ -250,6 +250,14 @@ static void	get_sphere(t_objects *obj)
 		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
 			(t_material *) &obj->spheres[set_index].lambertian_mat);
 	}
+	else if (count_tokens(tokens) == 4 && ft_strncmp(tokens[3], "img:", 4) == 0)
+	{
+		// has image
+		img_texture_init(&obj->spheres[set_index].img_texture, &tokens[3][4]);
+		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].img_texture);
+		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
+			(t_material *) &obj->spheres[set_index].lambertian_mat);
+	}
 	else
 		sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), \
 			diam, set_rgb(obj, 3, "sphere"));

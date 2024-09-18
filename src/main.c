@@ -212,22 +212,25 @@ int init_window(t_mrt *data)
 // 	printf("_______________\n");
 // 	printf("size of t_triangle: %lu\n", sizeof(t_triangle));
 
-// 	/***********************************/
-// 	/* 			earth       		   */
-// 	/***********************************/
-// 	t_lambertian earth_surface;
-// 	t_rtw_image img;
-// 	init_rtw_image(&img,"rtw_image/earthmap.jpg");
-// 	t_img_texture img_texture;
-// 	img_texture_init(&img_texture, &img);
-// 	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
-// 	t_sphere s12;
-// 	sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
-// 	s12.print((void*)&s12);
+	// /***********************************/
+	// /* 			earth       		   */
+	// /***********************************/
+	// t_rtw_image img;
+	// init_rtw_image(&img,"rtw_image/earthmap.jpg");
+	// t_img_texture img_texture;
+	// img_texture_init(&img_texture, &img);
 
-// 	t_cylinder s13;
-// 	cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
-// 	s13.print((void*)&s13);
+
+
+	// t_lambertian earth_surface;
+	// lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
+	// t_sphere s12;
+	// sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
+	// s12.print((void*)&s12);
+
+	// t_cylinder s13;
+	// cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
+	// s13.print((void*)&s13);
 
 // 	t_hittable *list[13];
 // 	list[0] = (t_hittable*)(&s1);
