@@ -183,7 +183,88 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	// // render(data, )
 }
 
+// main cylinder tests
+
 int main(int argc, char **argv)
+{
+    t_mrt data;
+    (void)argv;
+	(void)argc;
+
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	t_point3 center = point3(0, 100, 400);
+	t_vec3 direction = vec3(0,0,-400);
+ 	init_cam(&data.cam, center, direction, 60);
+	data.cam.print((void*)(&(data.cam)));
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	t_ambient ambient_light = ambient(1, rgb(255,255,255));
+	data.cam.ambient_light = ambient_light;
+
+
+	ambient_light.print((void*)&ambient_light);
+
+
+	// world
+	// ================================================== world ==================================================
+	t_hittable *list[2];
+	// =============================================
+	// t_cylinder_capped c0;
+	// cylinder_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, rgb(166, 103, 13));
+	// c0.print((void*)&c0);
+	t_disk d0;
+	disk(&d0, point3(0, 0, 0), vec3(0,1,0), 100, rgb(166, 13, 103));
+	d0.print((void*)&d0);
+
+	t_disk d1;
+	disk(&d1, point3(0, 0, 0), vec3(0,1,0), 50, rgb(166, 13, 13));
+	list[0] = (t_hittable*)(&d0);
+	list[1] = (t_hittable*)(&d1);
+	d1.print((void*)&d1);
+
+	const t_hittablelist world = hittablelist(list, 2);
+
+
+
+	t_hittable *list_lights[2];
+	t_empty_material empty_material;
+	t_material *no_material = (t_material*)&empty_material;
+	t_quad l6;
+	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
+
+	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	t_sphere l2;
+	sphere_mat(&l2, point3( 0,250,-50 ), 120, (t_material*)&no_material);
+//0,250,-50 ), 120
+	list_lights[0] = (t_hittable*)(&l6);
+	list_lights[1] = (t_hittable*)(&l2);
+	const t_hittablelist lights = hittablelist(list_lights, 2);
+
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+
+	data.world = world;
+	data.lights = lights;
+
+	render(&data, &world, &lights);
+	
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
+}
+
+
+int main_main(int argc, char **argv)
 {
     t_mrt data;
     (void)argv;
@@ -287,7 +368,7 @@ int main(int argc, char **argv)
 	s7.print((void*)&s7);
 
 	t_disk s8;
-	disk(&s8, point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
+	disk(&s8, point3(500, 90, 190), vec3(0,0,1), 100, rgb(166, 53, 13));
 	s8.print((void*)&s8);
 
 // try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
@@ -329,7 +410,7 @@ int main(int argc, char **argv)
 	s12.print((void*)&s12);
 	
 	t_cylinder_capped s13;
-	cylinder_capped(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 200, rgb(166, 103, 13));
+	cylinder_capped(&s13, point3(350, 100, -300), vec3(0,1,0), 200, 50, rgb(166, 103, 13));
 	s13.print((void*)&s13);
 
 	list[0] = (t_hittable*)(&s1);
