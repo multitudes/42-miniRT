@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 12:30:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 13:55:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include "debug.h"
 
 /**
- * @brief: initializer for a cylinder
+ * @brief: initializer for a cylinder uncapped standard material
  * 
  * the rt file will have the following format:
  * cy 	50.0,0.0,20.6     0.0,0.0,1.0    14.2 21.42 	10,0,255
@@ -32,7 +32,6 @@
 */
 void		cylinder_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
 {
-
 	c->base.hit = hit_cylinder;
 	c->base.pdf_value = obj_cylinder_pdf_value;
 	c->base.random = obj_cylinder_random;
@@ -52,14 +51,17 @@ void		cylinder_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, d
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
  	c->mat = (t_material*)&(c->lambertian_mat); 
-
 	c->print = &print_cylinder;
-
 }
 
+/**
+ * @brief: initializer for a cylinder uncapped with a material
+ * 
+ * the rt file will have the following format:
+ * 	
+ */
 void		cylinder_mat_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
 {
-
 	c->base.hit = hit_cylinder;
 	c->base.pdf_value = obj_cylinder_pdf_value;
 	c->base.random = obj_cylinder_random;
@@ -74,9 +76,81 @@ void		cylinder_mat_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diamete
 	c->color = color(0, 0, 0);
 
 	c->print = &print_cylinder;
-
 }
 
+/**
+ * @brief: initializer for a cylinder capped with a standard material
+ * 
+ * the rt file will have the following format:
+ * 	
+ */
+void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
+{
+	c->base.hit = hit_cylinder_capped;
+	c->base.pdf_value = obj_pdf_value;
+	c->base.random = obj_random;
+	cylinder_u(&c->cylinder_u, center, axis, diameter, height, rgbcolor);
+	// just need to create two vector parallel to the axis
+	t_vec3 u, v;
+	// make sure not parallel to the y axis
+    u = vec3(1, 0, 0);
+	
+ 	v = unit_vector(cross(axis, u)); 
+    u = unit_vector(cross(v, axis)); 
+
+    u = vec3multscalar(u, diameter / 2);
+    v = vec3multscalar(v, diameter / 2);
+
+	disk_mat(&c->top, center, u, v, c->cylinder_u.mat);
+	disk_mat(&c->bottom, center, u, v, c->cylinder_u.mat);
+	c->print = &print_cylinder_capped;
+}
+
+void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
+{
+	c->base.hit = hit_cylinder_capped;
+	c->base.pdf_value = obj_pdf_value;
+	c->base.random = obj_random;
+	cylinder_mat_u(&c->cylinder_u, center, axis, diameter, height, mat);
+	// just need to create two vector parallel to the axis
+	t_vec3 u, v;
+	// make sure not parallel to the y axis
+    u = vec3(1, 0, 0);
+	
+ 	v = unit_vector(cross(axis, u)); 
+    u = unit_vector(cross(v, axis)); 
+
+    u = vec3multscalar(u, diameter / 2);
+    v = vec3multscalar(v, diameter / 2);
+
+	disk_mat(&c->top, center, u, v, c->cylinder_u.mat);
+	disk_mat(&c->bottom, center, u, v, c->cylinder_u.mat);
+	
+}
+
+bool		hit_cylinder_capped(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec)
+{
+	const t_cylinder_capped *c = (t_cylinder_capped *)self;
+	t_hittablelist cylinder_hittable_list;
+
+	t_hittable *list[3];
+	
+	// add to list
+	list[0] = (t_hittable*)(&c->cylinder_u);
+	list[1] = (t_hittable*)(&c->top);
+	list[2] = (t_hittable*)(&c->bottom);
+
+	cylinder_hittable_list = hittablelist(list, 3);
+	
+
+	return hit_objects(&cylinder_hittable_list, r, closest, rec);
+}
+
+void print_cylinder_capped(const void *self)
+{
+	const t_cylinder_capped *c = (const t_cylinder_capped *)self;
+	c->cylinder_u.print(&c->cylinder_u);
+}
 
 /**
  * @brief print the cylinder object
@@ -137,8 +211,6 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 			}
 		}
 	}
-
-
 	if (surrounds(&ray_t, t1)) {
 		t_vec3 point = point_at(r, t1);
 		if (cyl->min < point.y && point.y < cyl->max) {
@@ -165,6 +237,8 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 
     return false;
 }
+
+
 
 /**
  * @brief: Computes the PDF value for a uniform cylinder.
@@ -233,6 +307,6 @@ void get_cylinder_uv(t_vec3 normal, double* u, double* v)
     phi = acos(normal.y);
 
     // Map theta and phi to UV coordinates
-    *u = theta / (2 * M_PI);
-    *v = phi / M_PI;
+    *u = theta / (2 * PI);
+    *v = phi / PI;
 }

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 16:21:55 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 12:57:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 #include <stdio.h>
 #include "utils.h"
 
+/**
+ * @brief Initialize a disk object with a given position, normal, and radius.
+ * 
+ * @param d disk object
+ * @param q center of the disk
+ * @param u first vector of the disk
+ * @param v second vector of the disk
+ * @param rgbcolor color of the disk
+ */
 void	disk(t_disk *d, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
 {
 	d->base.hit = hit_disk;
@@ -27,10 +36,8 @@ void	disk(t_disk *d, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
     d->normal = unit_vector(n);
     d->d = dot(d->normal, q);
 	d->w = vec3divscalar(n, dot(n, n));
-	
 	d->rgb = rgbcolor;
     d->color = rgb_to_color(rgbcolor);
-
     // Initialize texture and material as I did for the quad
     solid_color_init(&(d->texture), d->color);
     lambertian_init_tex(&(d->lambertian_mat), (t_texture*)&(d->texture));
@@ -39,6 +46,15 @@ void	disk(t_disk *d, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
 
 }
 
+/**
+ * @brief Initialize a disk object with a given position, normal, and radius.
+ * 
+ * @param disk disk object
+ * @param q center of the disk
+ * @param u first vector of the disk
+ * @param v second vector of the disk
+ * @param mat material of the disk
+ */
 void disk_mat(t_disk *disk, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 {
 	disk->base.hit = hit_disk;
@@ -76,7 +92,6 @@ void		print_disk(const void *self)
 
 bool hit_disk(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec)
 {
-	// printf("hit_quad ----------------------********\n");
 	const t_disk *disk = (t_disk *)self;
 	double denom = dot(disk->normal, r->dir);
 	// no hit if ray is parallel to the quad
