@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 14:38:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 12:30:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void		cylinder_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, d
 	c->axis = axis;
 	c->radius = diameter / 2;
 	c->height = height;
+	c->min = -height / 2;
+	c->max = height / 2;
 	c->rgb = rgbcolor;
 	c->color = rgb_to_color(rgbcolor);
 	// i use the color to create a texture
@@ -65,6 +67,8 @@ void		cylinder_mat_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diamete
 	c->axis = axis;
 	c->radius = diameter / 2;
 	c->height = height;
+	c->min = -height / 2;
+	c->max = height / 2;
 	c->mat = mat;
 	c->rgb = rgb(0, 0, 0);
 	c->color = color(0, 0, 0);
@@ -123,8 +127,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
     // Check both intersections
 	if (surrounds(&ray_t, t0)) {
 		t_vec3 point = point_at(r, t0);
-		double y = point.y;
-		if (fabs(y - cyl->center.y) <= cyl->height / 2) {
+		if (cyl->min < point.y && point.y < cyl->max) {
 			// Check if this intersection point is closer to the origin
 			if (closest_t < 0 || t0 < closest_t) {
 				closest_t = t0;
@@ -138,8 +141,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 
 	if (surrounds(&ray_t, t1)) {
 		t_vec3 point = point_at(r, t1);
-		double y = point.y;
-		if (fabs(y - cyl->center.y) <= cyl->height / 2) {
+		if (cyl->min < point.y && point.y < cyl->max) {
 			// Check if this intersection point is closer to the origin
 			if (closest_t < 0 || t1 < closest_t) {
 				closest_t = t1;

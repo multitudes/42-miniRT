@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:57:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 14:36:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 12:22:44 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ typedef struct	s_cylinder
 	t_vec3			axis;
 	double			radius;
 	double			height;
+	double			min;
+	double			max;
 	t_color			color;
 	t_rgb			rgb;
 	t_material		*mat;

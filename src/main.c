@@ -323,7 +323,7 @@ int main(int argc, char **argv)
 	s12.print((void*)&s12);
 	
 	t_cylinder s13;
-	cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
+	cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 200, rgb(166, 103, 13));
 	s13.print((void*)&s13);
 
 	list[0] = (t_hittable*)(&s1);
