@@ -39,12 +39,16 @@ t_color solid_color_value(const void *self, double u, double v, const t_point3 *
 * even_color = color(0.5, 0.0, 0.5); // Purple
 * odd_color = color(1.0, 1.0, 1.0); // White
 */
-void	checker_texture_init(t_checker_texture *checker_texture, double scale, t_solid_color *even, t_solid_color *odd)
+void	checker_texture_init(t_checker_texture *checker_texture, double scale, t_rgb even_rgb, t_rgb odd_rgb)
 {
+	t_color	even_color;
+	t_color	odd_color;
 	checker_texture->base.value = checker_texture_value;
 	checker_texture->inv_scale = 1.0 / scale;
-	checker_texture->even = even;
-	checker_texture->odd = odd;
+	even_color = rgb_to_color(even_rgb);
+	odd_color = rgb_to_color(odd_rgb);
+	solid_color_init(&checker_texture->even, even_color);
+	solid_color_init(&checker_texture->odd, odd_color);
 }
 
 // Function to compute spherical coordinates (u, v) from point p
@@ -91,9 +95,9 @@ t_color checker_texture_value(const void *self, double u, double v, const t_poin
 
 	bool is_even = (xint + yint + zint) % 2 == 0;
 	if (is_even)
-		return (((t_checker_texture*)self)->even->color_albedo);
+		return (((t_checker_texture*)self)->even.color_albedo);
 	else
-		return (((t_checker_texture*)self)->odd->color_albedo);
+		return (((t_checker_texture*)self)->odd.color_albedo);
 }
 
 void	img_texture_init(t_img_texture *img_texture, t_rtw_image *img)

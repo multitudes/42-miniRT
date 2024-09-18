@@ -104,173 +104,169 @@ int init_window(t_mrt *data)
     return (TRUE);
 }
 
-int main_old(int argc, char **argv)
-{
-    t_mrt data;
-    (void)argv;
-	(void)argc;
+// int main_old(int argc, char **argv)
+// {
+//     t_mrt data;
+//     (void)argv;
+// 	(void)argc;
 
-	ft_memset(&data, 0, sizeof(t_mrt));
+// 	ft_memset(&data, 0, sizeof(t_mrt));
 
-	/***************************** */
-	/* 			camera 			   */
-	/***************************** */
-	t_point3 center = point3(278, 278, -800);
-	t_vec3 direction = vec3(0,0,800);
-	init_cam(&data.camera, center, direction, 60);
+// 	/***************************** */
+// 	/* 			camera 			   */
+// 	/***************************** */
+// 	t_point3 center = point3(278, 278, -800);
+// 	t_vec3 direction = vec3(0,0,800);
+// 	init_cam(&data.camera, center, direction, 60);
 
-	/***************************** */
-	/* 		ambient light		   */
-	/***************************** */
+// 	/***************************** */
+// 	/* 		ambient light		   */
+// 	/***************************** */
 
-	ambient(&data.camera.ambient, 1, rgb(110,110,110));
+// 	ambient(&data.camera.ambient, 1, rgb(110,110,110));
 
-	//red metallic
-	t_color albedo = color(0.8, 0.1, 0.1);
-	double fuzz = 0.0;
-	t_metal metal;
-	metal_init(&metal, albedo, fuzz);
+// 	//red metallic
+// 	t_color albedo = color(0.8, 0.1, 0.1);
+// 	double fuzz = 0.0;
+// 	t_metal metal;
+// 	metal_init(&metal, albedo, fuzz);
 
-	// red metallic sphere
-	t_sphere s1;
-	sphere_mat(&s1, point3(90, 190, 90), 180, (t_material*)&metal);
-	s1.print((void*)&s1);
+// 	// red metallic sphere
+// 	t_sphere s1;
+// 	sphere_mat(&s1, point3(90, 190, 90), 180, (t_material*)&metal);
+// 	s1.print((void*)&s1);
 
-	/***********************************/
-	/* 			light        		   */
-	/***********************************/
+// 	/***********************************/
+// 	/* 			light        		   */
+// 	/***********************************/
 
-	// ============ initing the light material =============
+// 	// ============ initing the light material =============
 
-	// color here actuall goes in the range of 0-1
-	// when it is color(40, 40, 40), it means that it is brighter than normal.
+// 	// color here actuall goes in the range of 0-1
+// 	// when it is color(40, 40, 40), it means that it is brighter than normal.
 
-	// but the light also takes an intenstity value.
-	// the intensity is a float from input.
-	// i will use it as a multiplier to 100, so 100 * float, which means, that
-	// max color will be color(100,100,100);
+// 	// but the light also takes an intenstity value.
+// 	// the intensity is a float from input.
+// 	// i will use it as a multiplier to 100, so 100 * float, which means, that
+// 	// max color will be color(100,100,100);
 
-	t_diffuse_light difflight;
-	t_solid_color difflight_color;
-	solid_color_init(&difflight_color, color(40, 40, 40));
-	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+// 	t_diffuse_light difflight;
+// 	t_solid_color difflight_color;
+// 	solid_color_init(&difflight_color, color(40, 40, 40));
+// 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
 
-	// blue light
-	t_diffuse_light difflight2;
-	t_solid_color difflight_color2;
-	solid_color_init(&difflight_color2, color(0, 0, 80));
-	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
+// 	// blue light
+// 	t_diffuse_light difflight2;
+// 	t_solid_color difflight_color2;
+// 	solid_color_init(&difflight_color2, color(0, 0, 80));
+// 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
 
-	// =====================================================
+// 	// =====================================================
 
-	// quad as light
-	t_quad s6;
-	quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
-	s6.print((void*)&s6);
+// 	// quad as light
+// 	t_quad s6;
+// 	quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+// 	s6.print((void*)&s6);
 
-	t_sphere s2;
-	sphere_mat(&s2, point3( 0,250,-50 ), 120, (t_material*)&difflight2);
-	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
+// 	t_sphere s2;
+// 	sphere_mat(&s2, point3( 0,250,-50 ), 120, (t_material*)&difflight2);
+// 	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
 
-	// adding another sphere
-	// red sphere
-	t_sphere s4;
-	sphere(&s4, vec3(400, 90, 190), 90, rgb(166, 13, 13));
-	s4.print((void*)&s4);
+// 	// adding another sphere
+// 	// red sphere
+// 	t_sphere s4;
+// 	sphere(&s4, vec3(400, 90, 190), 90, rgb(166, 13, 13));
+// 	s4.print((void*)&s4);
 
-	// add a quad just left of the s4 sphere
-	t_quad s5;
-	quad_rgb(&s5, point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
-	s5.print((void*)&s5);
+// 	// add a quad just left of the s4 sphere
+// 	t_quad s5;
+// 	quad_rgb(&s5, point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
+// 	s5.print((void*)&s5);
 
-	// add a plane just below the s4 sphere
-	t_plane s7;
-	plane(&s7, point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
-	s7.print((void*)&s7);
+// 	// add a plane just below the s4 sphere
+// 	t_plane s7;
+// 	plane(&s7, point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
+// 	s7.print((void*)&s7);
 
-	t_disk s8;
-	disk(&s8, point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
-	s8.print((void*)&s8);
+// 	t_disk s8;
+// 	disk(&s8, point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
+// 	s8.print((void*)&s8);
 
-	// try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
-	t_box s9;
-	box(&s9, point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
-	s9.print((void*)&s9);
+// 	// try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
+// 	t_box s9;
+// 	box(&s9, point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
+// 	s9.print((void*)&s9);
 
-	t_triangle s10;
-	triangle(&s10, point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
-	s10.print((void*)&s10);
+// 	t_triangle s10;
+// 	triangle(&s10, point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
+// 	s10.print((void*)&s10);
 
-	// checker texture sphere
-	t_lambertian lambertian_material;
-	t_checker_texture checker_texture1;
-	t_solid_color even1;
-	t_solid_color odd1;
-	solid_color_init(&even1, color(0.2, 0.3, 0.1));
-	solid_color_init(&odd1, color(0.9, 0.9, 0.9));
-	checker_texture_init(&checker_texture1, 20.0, &even1, &odd1);
-	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
-	t_sphere s11;
-	sphere_mat(&s11, point3(650, 300, 200), 100, (t_material*)&lambertian_material);
+// 	// checker texture sphere
+// 	t_lambertian lambertian_material;
+// 	t_checker_texture checker_texture1;
+// 	checker_texture_init(&checker_texture1, 20.0, color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+// 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
+// 	t_sphere s11;
+// 	sphere_mat(&s11, point3(650, 300, 200), 100, (t_material*)&lambertian_material);
 
-	printf("_______________\n");
-	printf("size of t_triangle: %lu\n", sizeof(t_triangle));
+// 	printf("_______________\n");
+// 	printf("size of t_triangle: %lu\n", sizeof(t_triangle));
 
-	/***********************************/
-	/* 			earth       		   */
-	/***********************************/
-	t_lambertian earth_surface;
-	t_rtw_image img;
-	init_rtw_image(&img,"rtw_image/earthmap.jpg");
-	t_img_texture img_texture;
-	img_texture_init(&img_texture, &img);
-	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
-	t_sphere s12;
-	sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
-	s12.print((void*)&s12);
+// 	/***********************************/
+// 	/* 			earth       		   */
+// 	/***********************************/
+// 	t_lambertian earth_surface;
+// 	t_rtw_image img;
+// 	init_rtw_image(&img,"rtw_image/earthmap.jpg");
+// 	t_img_texture img_texture;
+// 	img_texture_init(&img_texture, &img);
+// 	lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
+// 	t_sphere s12;
+// 	sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
+// 	s12.print((void*)&s12);
 
-	t_cylinder s13;
-	cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
-	s13.print((void*)&s13);
+// 	t_cylinder s13;
+// 	cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
+// 	s13.print((void*)&s13);
 
-	t_hittable *list[13];
-	list[0] = (t_hittable*)(&s1);
-	list[1] = (t_hittable*)(&s6);
-	list[2] = (t_hittable*)(&s2);
-	list[3] = (t_hittable*)(&s4);
-	list[4] = (t_hittable*)(&s5);
-	list[5] = (t_hittable*)(&s7);
-	list[6] = (t_hittable*)(&s8);
-	list[7] = (t_hittable*)(&s9);
-	list[8] = (t_hittable*)(&s10);
-	list[9] = (t_hittable*)(&s11);
-	list[10] = (t_hittable*)(&s12);
-	list[11] = (t_hittable*)(&s13);
+// 	t_hittable *list[13];
+// 	list[0] = (t_hittable*)(&s1);
+// 	list[1] = (t_hittable*)(&s6);
+// 	list[2] = (t_hittable*)(&s2);
+// 	list[3] = (t_hittable*)(&s4);
+// 	list[4] = (t_hittable*)(&s5);
+// 	list[5] = (t_hittable*)(&s7);
+// 	list[6] = (t_hittable*)(&s8);
+// 	list[7] = (t_hittable*)(&s9);
+// 	list[8] = (t_hittable*)(&s10);
+// 	list[9] = (t_hittable*)(&s11);
+// 	list[10] = (t_hittable*)(&s12);
+// 	list[11] = (t_hittable*)(&s13);
 
 
-	const t_hittablelist world = hittablelist(list, 12);
+// 	const t_hittablelist world = hittablelist(list, 12);
 
-	t_hittable *list_lights[2];
+// 	t_hittable *list_lights[2];
 
-	list_lights[0] = (t_hittable*)(&s6);
-	list_lights[1] = (t_hittable*)(&s2);
-	const t_hittablelist lights = hittablelist(list_lights, 2);
+// 	list_lights[0] = (t_hittable*)(&s6);
+// 	list_lights[1] = (t_hittable*)(&s2);
+// 	const t_hittablelist lights = hittablelist(list_lights, 2);
 
-    debug("Start of minirt %s", "helllo !! ");
-	if (!init_window(&data))
-		return (EXIT_FAILURE);
+//     debug("Start of minirt %s", "helllo !! ");
+// 	if (!init_window(&data))
+// 		return (EXIT_FAILURE);
 
-	data.world = world;
-	render(&data, &world, &lights);
+// 	data.world = world;
+// 	render(&data, &world, &lights);
 
 
-    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+//     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
-    mlx_loop(data.mlx);
-    ft_printf("\nbyebye!\n");
-    mlx_terminate(data.mlx);
-    return (EXIT_SUCCESS);
-}
+//     mlx_loop(data.mlx);
+//     ft_printf("\nbyebye!\n");
+//     mlx_terminate(data.mlx);
+//     return (EXIT_SUCCESS);
+// }
 
 int main(int argc, char **argv)
 {

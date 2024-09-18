@@ -13,6 +13,7 @@
 #ifndef SPHERE_H
 # define SPHERE_H
 
+#include "texture.h"
 #include "vec3.h"
 #include "ray.h"
 #include <stdbool.h>
@@ -29,7 +30,11 @@ typedef struct		s_sphere
 	t_rgb			rgb;
 	t_material		*mat;
 	t_lambertian 	lambertian_mat;
-	t_solid_color 	texture;
+	union
+	{
+		t_checker_texture	checker;
+		t_solid_color 		texture;
+	};
 	void (*print)(const void *self);
 }					t_sphere;
 

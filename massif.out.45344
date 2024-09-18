@@ -1,0 +1,83 @@
+desc: (none)
+cmd: ./miniRT
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=1531831
+mem_heap_B=40
+mem_heap_extra_B=16
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=1531871
+mem_heap_B=80
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=1531911
+mem_heap_B=120
+mem_heap_extra_B=48
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=1537776
+mem_heap_B=120
+mem_heap_extra_B=48
+mem_stacks_B=0
+heap_tree=peak
+n3: 120 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 40 0x4BDF679: XInitThreads (locking.c:614)
+  n1: 40 0x4005436: call_init (dl-init.c:74)
+   n1: 40 0x4005436: call_init (dl-init.c:26)
+    n1: 40 0x400552C: _dl_init (dl-init.c:121)
+     n0: 40 0x401D09F: ??? (in /usr/lib64/ld-linux-x86-64.so.2)
+ n1: 40 0x4BDF696: XInitThreads (locking.c:616)
+  n1: 40 0x4005436: call_init (dl-init.c:74)
+   n1: 40 0x4005436: call_init (dl-init.c:26)
+    n1: 40 0x400552C: _dl_init (dl-init.c:121)
+     n0: 40 0x401D09F: ??? (in /usr/lib64/ld-linux-x86-64.so.2)
+ n1: 40 0x4BDF6B3: XInitThreads (locking.c:621)
+  n1: 40 0x4005436: call_init (dl-init.c:74)
+   n1: 40 0x4005436: call_init (dl-init.c:26)
+    n1: 40 0x400552C: _dl_init (dl-init.c:121)
+     n0: 40 0x401D09F: ??? (in /usr/lib64/ld-linux-x86-64.so.2)
+#-----------
+snapshot=5
+#-----------
+time=1537776
+mem_heap_B=80
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=1537810
+mem_heap_B=40
+mem_heap_extra_B=16
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=1537844
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty

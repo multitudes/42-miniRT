@@ -50,6 +50,7 @@ typedef struct
 	/* contains all shapes. lights as well */
 	t_hittable *hit_list[OBJECT_COUNT * 4];
 	int 		hit_idx;
+
 	/* contains just lights */
 	t_hittable *light_hit[OBJECT_COUNT];
 	int			light_hit_idx;

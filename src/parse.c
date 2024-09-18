@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "libft.h"  	// get_next_line should be here
-#include <bits/types/struct_itimerspec.h>
-#include <complex.h>
 #include <fcntl.h>  	/* open() */
 #include <stdio.h>  	/* perror() */
 #include "minirt.h"
@@ -215,7 +213,7 @@ static void	get_light(t_objects *obj)
 	if (count_tokens(tokens) == 5)
 		diam = ft_atod(tokens[4]);
 	if (diam < 0)
-		call_error("diameter cannot be negative...", "sphere", obj);
+		call_error("diameter cannot be negative...", "light", obj);
 	sphere_mat(&obj->lights[set_index].body, set_vec3(obj, 1, "light", 0), \
 		diam, (t_material *)&obj->lights[set_index].difflight);
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].body;
@@ -231,6 +229,7 @@ static void	get_sphere(t_objects *obj)
 	char		**tokens;
 	int			diam;
 
+
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "sphere", obj);
@@ -239,8 +238,21 @@ static void	get_sphere(t_objects *obj)
 	diam = ft_atod(tokens[2]);
 	if (diam < 0)
 		call_error("diameter cannot be negative...", "sphere", obj);
-	sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), \
-		diam, set_rgb(obj, 3, "sphere"));
+
+	//check if the sphere is a:
+		// regular one (just color)
+		// image mapped (path to image)
+		// checker (two colors)
+	if (count_tokens(tokens) == 5)	// two colors - checker
+	{
+		checker_texture_init(&obj->spheres[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
+		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].checker);
+		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
+			(t_material *) &obj->spheres[set_index].lambertian_mat);
+	}
+	else
+		sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), \
+			diam, set_rgb(obj, 3, "sphere"));
 	obj->hit_list[obj->hit_idx] = (t_hittable*)&obj->spheres[set_index];
 	obj->hit_idx++;
 	set_index++;
