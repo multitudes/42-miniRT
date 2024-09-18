@@ -16,18 +16,19 @@
 #include <limits.h>
 #include <MLX42/MLX42.h>
 #include "camera.h"
+#include "disk.h"
 #include "hittable.h"
-#include "interval.h"
 #include "material.h"
+#include "quad.h"
 #include "sphere.h"
 #include "plane.h"
 #include "cylinder.h"
 #include "texture.h"
-#include "vec3.h"
+#include "triangle.h"
 
 # define TRUE 1
 # define FALSE 0
-# define OBJECT_COUNT 100
+# define OBJECT_COUNT 20
 
 /* struct that we didnt already have - used in the parser */
 typedef struct
@@ -45,15 +46,20 @@ typedef struct
 	t_sphere	spheres[OBJECT_COUNT];
 	t_plane		planes[OBJECT_COUNT];
 	t_cylinder	cylinders[OBJECT_COUNT];
+	t_quad		quads[OBJECT_COUNT];
+	// t_disk		disks[OBJECT_COUNT];
+	// t_triangle	triangles[OBJECT_COUNT];
 	// t_cones		cones[OBJECT_COUNT];
 
 	/* contains all shapes. lights as well */
-	t_hittable *hit_list[OBJECT_COUNT * 4];
+	t_hittable *hit_list[OBJECT_COUNT * 5];
 	int 		hit_idx;
 
 	/* contains just lights */
 	t_hittable *light_hit[OBJECT_COUNT];
 	int			light_hit_idx;
+
+
 	// data for the parser
 	int			_file_fd;
 	char		**_tokens;

@@ -3,17 +3,8 @@
 #include "minirt.h"
 #include "camera.h"
 #include "vec3.h"
-#include "hittable_list.h"
 #include <MLX42/MLX42.h>
 #include "utils.h"
-#include "color.h"
-#include "ambient.h"
-#include "quad.h"
-#include "plane.h"
-#include "disk.h"
-#include "box.h"
-#include "triangle.h"
-#include <time.h>
 
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
@@ -290,7 +281,6 @@ int main(int argc, char **argv)
 		return (EXIT_FAILURE);
 
 	render(&data, &data.world, &data.lights);
-
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 

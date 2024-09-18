@@ -301,6 +301,23 @@ static void	get_cylinder(t_objects *obj)
 	set_index++;
 }
 
+static void	get_quad(t_objects *obj)
+{
+	static int	set_index;
+	char		**tokens;
+
+	tokens = obj->_tokens;
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "quad", obj);
+	if (count_tokens(tokens) != 5)
+		call_error("invalid token amount", "quad", obj);
+	quad_rgb(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
+		set_vec3(obj, 3, "quad", 0), set_rgb(obj, 4, "quad"));
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->quads[set_index];
+	obj->hit_idx++;
+	set_index++;
+}
+
 static void	update_struct(t_mrt *data)
 {
 	if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
@@ -315,14 +332,20 @@ static void	update_struct(t_mrt *data)
 		get_plane(&data->objects);
 	else if (ft_strncmp("cy", data->objects._tokens[0], 3) == 0)
 		get_cylinder(&data->objects);
+	else if (ft_strncmp("qd", data->objects._tokens[0], 3) == 0)
+		get_quad(&data->objects);
+	// else if (ft_strncmp("dsk", data->objects._tokens[0], 4) == 0)
+	// 	get_disk(&data->objects);
+	// else if (ft_strncmp("tr", data->objects._tokens[0], 3) == 0)
+	// 	get_triangle(&data->objects);
 	else
-		call_error("invalid object identifier\n", data->objects._tokens[0], \
+		call_error("invalid object identifier", data->objects._tokens[0], \
 			&data->objects);
 }
 
 /* replaces tabs and newlines, so thta ft_split can split
 on just the space. removes comments as well */
-void	sanitize_line(char *line)
+static void	sanitize_line(char *line)
 {
 	int	i;
 
