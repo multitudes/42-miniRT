@@ -71,20 +71,27 @@ void	hook(void *param)
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
 		debug("DOWN key pressed");
+
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 	{
 		// mrt->cam.center = rotate_camera(mrt->cam.center, 5);
 		// mrt->cam.direction = calculate_direction(mrt->cam.center);
 		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("LEFT key pressed");
+		mrt->needs_render = true;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
 		// mrt->cam.center = rotate_camera(mrt->cam.center, -5);
 		// mrt->cam.direction = calculate_direction(mrt->cam.center);
 		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("RIGHT key pressed");
+		mrt->needs_render = true;
 	}
-	render(mrt, &(mrt->world), &(mrt->lights));
+	if (mrt->needs_render)
+	{
+		render(mrt, &(mrt->world), &(mrt->lights));
+		mrt->needs_render = false;
+	}
 }
 
 
@@ -141,7 +148,7 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	data->cam.image_height = new_height;
 	update_cam(&data->cam, new_width, new_height);
 	mlx_resize_image(data->image, new_width, new_height);
-
+	data->needs_render = true;
 	// t_mrt		*data;
 
 	// data = (t_mrt *)params;
@@ -283,7 +290,6 @@ int main(int argc, char **argv)
 	disk(&s8, point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
 	s8.print((void*)&s8);
 
-
 // try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
 	t_box s9;
 	box(&s9, point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
@@ -322,8 +328,8 @@ int main(int argc, char **argv)
 	sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
 	s12.print((void*)&s12);
 	
-	t_cylinder s13;
-	cylinder_uncapped(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 200, rgb(166, 103, 13));
+	t_cylinder_capped s13;
+	cylinder_capped(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 200, rgb(166, 103, 13));
 	s13.print((void*)&s13);
 
 	list[0] = (t_hittable*)(&s1);

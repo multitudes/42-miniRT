@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 14:02:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 14:03:44 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,8 +243,6 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 
     return false;
 }
-
-
 
 /**
  * @brief: Computes the PDF value for a uniform cylinder.

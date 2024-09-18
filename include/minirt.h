@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/17 16:27:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 14:40:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct 	s_mrt
 	void		*mlx;
 	void		*win_ptr;
 	mlx_image_t	*image;
+	bool needs_render;
 
 	t_camera cam;
 	t_ambient ambient_light;
