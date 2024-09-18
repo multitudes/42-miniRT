@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 10:05:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/18 11:55:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,12 +234,6 @@ void render_thread(void *args)
  */
 void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
 {
-    // int             x;
-	// int             y;
-	// int 			i;
-	// clock_t start_time, end_time;
-    // double time_taken, fps;
-    
 	pthread_t threads[CORES];
 	t_thread_data thread_data[CORES];
 
@@ -259,46 +253,6 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 		pthread_create(&threads[thread_idx], NULL, (void *)render_thread, &thread_data[thread_idx]);
 		thread_idx++;
 	}
-	
-	// y = 0;
-    // x = 0;
-	// i = 0;
-    // start_time = clock();
-    // while (y < data->cam.image_height)
-    // {	
-	// 	x = 0;
-    //     while (x < data->cam.image_width)
-    //     {
-	// 		t_color pixel_color = color(0,0,0);
-	// 		i = 0;
-	// 		while (i < data->cam.samples_per_pixel)
-	// 		{
-	// 			t_ray r = get_ray(data->cam, x, y);
-
-	// 			pixel_color = vec3add(pixel_color, ray_color(&(data->cam), &r, data->cam.max_depth ,world, lights));
-				
-	// 			i++;
-	// 		}
-
-    //         write_color(data, x, y, vec3divscalar(pixel_color, data->cam.samples_per_pixel));
-	// 		x++;
-	// 		// add bar progress
-    //     }
-	// 	// debug("%.3d of %.3d\r", y, data->cam.image_height);
-		
-	// 	fflush(stderr);
-	// 	y++;
-
-    // }
-	
-	// end_time = clock();
-
-    // // Calculate time taken and FPS
-    // time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-    // fps = 1.0 / time_taken;
-	// debug("Frame rendered in %.2f seconds (FPS: %.2f)\n", time_taken, fps);
-	// fflush(stderr);
-
 	thread_idx = 0;
 	while (thread_idx < CORES)
 	{

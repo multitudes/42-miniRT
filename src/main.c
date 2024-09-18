@@ -104,6 +104,7 @@ int init_window(t_mrt *data)
 	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
 	{
 		mlx_close_window(data->mlx);
+		mlx_terminate(data->mlx);
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
     }
 	debug("Window initialized");
@@ -135,34 +136,44 @@ is controlled differently in the background by the system.
 */
 void	_resize_hook(int new_width, int new_height, void *params) 
 {
-	t_mrt		*data;
-
-	data = (t_mrt *)params;
+	t_mrt *data = ((t_mrt *)params);
 	data->cam.image_width = new_width;
 	data->cam.image_height = new_height;
 	update_cam(&data->cam, new_width, new_height);
-	mlx_image_t *old_image = data->image;
-	data->image = mlx_new_image(data->mlx, new_width, new_height);
-	if (!data->image)
-	{
-		mlx_close_window(data->mlx);
-		ft_printf("%s\n", mlx_strerror(mlx_errno));
-		exit(EXIT_FAILURE);
-	}
-	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
-	{
-		mlx_close_window(data->mlx);
-		ft_printf("%s\n", mlx_strerror(mlx_errno));
-		exit(EXIT_FAILURE);
-	}
+	mlx_resize_image(data->image, new_width, new_height);
 
-	if (old_image)
-	{
-		mlx_delete_image(data->mlx, old_image);
-	}
+	// t_mrt		*data;
 
-    debug("Window resized to %d x %d", new_width, new_height);
-	// render(data, )
+	// data = (t_mrt *)params;
+	// data->cam.image_width = new_width;
+	// data->cam.image_height = new_height;
+	// update_cam(&data->cam, new_width, new_height);
+	// mlx_image_t *old_image = data->image;
+	// data->image = mlx_new_image(data->mlx, new_width, new_height);
+	// if (!data->image)
+	// {
+	// 	if (old_image)
+	// 		mlx_delete_image(data->mlx, old_image);
+	// 	mlx_close_window(data->mlx);
+	// 	mlx_terminate(data->mlx);
+	// 	ft_printf("%s\n", mlx_strerror(mlx_errno));
+	// 	exit(EXIT_FAILURE);
+	// }
+	// // render(data, &(data->world), &(data->lights));
+	// if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
+	// {
+	// 	if (old_image)
+	// 		mlx_delete_image(data->mlx, old_image);
+	// 	mlx_close_window(data->mlx);
+	// 	mlx_terminate(data->mlx);
+	// 	ft_printf("%s\n", mlx_strerror(mlx_errno));
+	// 	exit(EXIT_FAILURE);
+	// }
+	// if (old_image)
+	// 	mlx_delete_image(data->mlx, old_image);
+
+    // debug("Window resized to %d x %d", new_width, new_height);
+	// // render(data, )
 }
 
 int main(int argc, char **argv)
