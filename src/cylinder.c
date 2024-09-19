@@ -21,7 +21,7 @@
 
 /**
  * @brief: initializer for a cylinder
- * 
+ *
  * the rt file will have the following format:
  * cy 	50.0,0.0,20.6     0.0,0.0,1.0    14.2 21.42 	10,0,255
  * x,y,z coordinates of the center of the cylinder
@@ -49,7 +49,7 @@ void		cylinder_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, d
 	// i assign the material to the sphere as a pointer
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
- 	c->mat = (t_material*)&(c->lambertian_mat); 
+ 	c->mat = (t_material*)&(c->lambertian_mat);
 
 	c->print = &print_cylinder;
 
@@ -81,7 +81,7 @@ void		cylinder_mat_u(t_cylinder *c, t_point3 center, t_vec3 axis, double diamete
 void		print_cylinder(const void *self)
 {
 	const t_cylinder *c = (const t_cylinder *)self;
-	printf("cy\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\t%.f\t%d,%d,%d\n", 
+	printf("cy\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\t%.f\t%d,%d,%d\n",
 	c->center.x, c->center.y, c->center.z, c->axis.x, c->axis.y, c->axis.z, c->radius * 2, c->height, c->rgb.r, c->rgb.g, c->rgb.b);
 
 }
@@ -103,21 +103,20 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 
     // Solve the quadratic equation
     double discriminant = b * b - 4 * a * c;
-    if (discriminant < 0) {
-        return false;
-    }
+    if (discriminant < 0)
+    	return false;
 
-	rec->v = 0;
-	rec->u = 0;	
+    rec->v = 0;
+	rec->u = 0;
     double t0 = (-b - sqrt(discriminant)) / (2 * a);
     double t1 = (-b + sqrt(discriminant)) / (2 * a);
-	
+
     // return false;
 	  // Initialize variables to track the closest intersection point
     double closest_t = -1;
     t_vec3 closest_point;
     t_vec3 normal;
-    
+
 	bool hit = false;
 
     // Check both intersections
@@ -219,7 +218,7 @@ t_vec3 obj_cylinder_random(const void *self, const t_point3 *orig) {
     return unit_vector(direction);
 }
 
-void get_cylinder_uv(t_vec3 normal, double* u, double* v) 
+void get_cylinder_uv(t_vec3 normal, double* u, double* v)
 {
     double theta;
     double phi;

@@ -25,6 +25,8 @@
 #include "cylinder.h"
 #include "texture.h"
 #include "triangle.h"
+#include "cone.h"
+#include "box.h"
 
 # define TRUE 1
 # define FALSE 0
@@ -38,8 +40,10 @@ typedef struct
 	t_diffuse_light	difflight;
 }			t_light;
 
-/* added for the parser */
+/* for the parser */
 /* camera inside t_mrt, ambient inside camera */
+/*	All objects kept on the stack for faster execution
+	(and easier memory management....) */
 typedef struct
 {
 	t_light		lights[OBJECT_COUNT];
@@ -49,16 +53,16 @@ typedef struct
 	t_quad		quads[OBJECT_COUNT];
 	t_disk		disks[OBJECT_COUNT];
 	t_triangle	triangles[OBJECT_COUNT];
-	// t_cones		cones[OBJECT_COUNT];
+	t_cone		cones[OBJECT_COUNT];
+	t_box		boxes[OBJECT_COUNT];
 
 	/* contains all shapes. lights as well */
-	t_hittable *hit_list[OBJECT_COUNT * 7];
+	t_hittable *hit_list[OBJECT_COUNT * 9];
 	int 		hit_idx;
 
 	/* contains just lights */
 	t_hittable *light_hit[OBJECT_COUNT];
 	int			light_hit_idx;
-
 
 	// data for the parser
 	int			_file_fd;
