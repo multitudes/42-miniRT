@@ -35,7 +35,11 @@
 /* struct that we didnt already have - used in the parser */
 typedef struct
 {
-	t_sphere		body;
+	union
+	{
+		t_quad			q_body;
+		t_sphere		s_body;
+	};
 	t_solid_color	color;
 	t_diffuse_light	difflight;
 }			t_light;

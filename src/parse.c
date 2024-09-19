@@ -188,7 +188,34 @@ static void	get_camera(t_mrt *data)
 	already_set = 1;
 }
 
-/* Makes a light object, which is a sphere with a light texture.
+static void	quad_light(t_objects *obj)
+{
+	static int	set_index;
+	t_color		color;
+	t_rgb		rgbcolor;
+	char		**tokens;
+
+	tokens = &obj->_tokens[1];
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds_array size", "light", obj);
+	if (count_tokens(tokens) != 6)
+		call_error("invalid token amount", "q_light", obj);
+	rgbcolor = set_rgb(obj, 4, "q_light");
+	color = vec3multscalar(rgb_to_color(rgbcolor), 100*ft_atod(tokens[5]));
+	solid_color_init(&obj->lights[set_index].color, color);
+	diffuse_light_init(&obj->lights[set_index].difflight, (t_texture *)&obj->lights[set_index].color);
+	quad_mat(&obj->lights[set_index].q_body, set_vec3(obj, 2, "q_light", 0), \
+		set_vec3(obj, 3, "q_light", 0), set_vec3(obj, 4, "q_light", 0), \
+	 	(t_material *)&obj->lights[set_index].difflight);
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].q_body;
+	obj->hit_idx++;
+	obj->light_hit[obj->light_hit_idx] = (t_hittable *)&obj->lights[set_index].q_body;
+	obj->light_hit_idx++;
+	set_index++;
+}
+
+
+/* Makes a light object, which is a sphere or a quad with a light texture.
  * Adds the sphere from the light struct to the regular hittable list.
  * as well as the light one.
 */
@@ -200,27 +227,32 @@ static void	get_light(t_objects *obj)
 	t_rgb		rgbcolor;
 	char		**tokens;
 
-	diam = 100;
-	tokens = obj->_tokens;
-	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "sphere", obj);
-	if (count_tokens(tokens)!= 4 && count_tokens(tokens) != 5)
-		call_error("invalid token amount", "light", obj);
-	rgbcolor = set_rgb(obj, 3, "light");
-	color = vec3multscalar(rgb_to_color(rgbcolor), 100 * ft_atod(tokens[2]));
-	solid_color_init(&obj->lights[set_index].color, color);
-	diffuse_light_init(&obj->lights[set_index].difflight, (t_texture*)&obj->lights[set_index].color);
-	if (count_tokens(tokens) == 5)
-		diam = ft_atod(tokens[4]);
-	if (diam < 0)
-		call_error("diameter cannot be negative...", "light", obj);
-	sphere_mat(&obj->lights[set_index].body, set_vec3(obj, 1, "light", 0), \
-		diam, (t_material *)&obj->lights[set_index].difflight);
-	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].body;
-	obj->hit_idx++;
-	obj->light_hit[obj->light_hit_idx] = (t_hittable *)&obj->lights[set_index].body;
-	obj->light_hit_idx++;
-	set_index++;
+	if (ft_strncmp(obj->_tokens[1], "qd", 3) == 0)
+		quad_light(obj);
+	else
+	{
+		diam = 100;
+		tokens = obj->_tokens;
+		if (set_index >= OBJECT_COUNT)
+			call_error("exceeds array size", "light", obj);
+		if (count_tokens(tokens)!= 4 && count_tokens(tokens) != 5)
+			call_error("invalid token amount", "light", obj);
+		rgbcolor = set_rgb(obj, 3, "light");
+		color = vec3multscalar(rgb_to_color(rgbcolor), 100 * ft_atod(tokens[2]));
+		solid_color_init(&obj->lights[set_index].color, color);
+		diffuse_light_init(&obj->lights[set_index].difflight, (t_texture*)&obj->lights[set_index].color);
+		if (count_tokens(tokens) == 5)
+			diam = ft_atod(tokens[4]);
+		if (diam < 0)
+			call_error("diameter cannot be negative...", "light", obj);
+		sphere_mat(&obj->lights[set_index].s_body, set_vec3(obj, 1, "light", 0), \
+			diam, (t_material *)&obj->lights[set_index].difflight);
+		obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].s_body;
+		obj->hit_idx++;
+		obj->light_hit[obj->light_hit_idx] = (t_hittable *)&obj->lights[set_index].s_body;
+		obj->light_hit_idx++;
+		set_index++;
+	}
 }
 
 static void	get_sphere(t_objects *obj)
