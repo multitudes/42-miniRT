@@ -267,14 +267,12 @@ t_plane plane(t_point3 p, t_vec3 n, t_rgb rgbcolor) {
 - Plane Equation Constant: The `d` member is calculated using the dot product of the normal vector and the point on the plane, ensuring that the plane equation is satisfied.
 - Other Members: The remaining members (like `rgb`, `color`, `texture`, `mat`) are initialized similarly to the other structures. We use a default material with a Lambertian texture for our objects.
 
-## creating a triangle
-## Creating a Triangle Initializer
-
+# creating a triangle
 Understanding the Triangle Structure:
 
 A triangle can be defined by three vertices. The normal vector of the triangle can be calculated by taking the cross product of two edges.
 
-Triangle Initializer:
+Triangle Initializer in our code:
 
 ```c
 t_triangle triangle_rgb(t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolor) {
@@ -291,7 +289,6 @@ t_triangle triangle_rgb(t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolor) {
     tri.normal = unit_vector(cross(vec3substr(b, a), vec3substr(c, a)));
     tri.d = dot(tri.normal, a);
     tri.area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
-
     // Initialize texture and material as before
     solid_color_init(&(tri.texture), tri.color);
     lambertian_init_tex(&(tri.lambertian_mat), (t_texture*)&(tri.texture));
@@ -305,8 +302,7 @@ t_triangle triangle_rgb(t_point3 a, t_point3 b, t_point3 c, t_rgb rgbcolor) {
 - Normal: The normal vector is calculated using the cross product of the vectors `b - a` and `c - a`.
 - Area: The area of the triangle is calculated using the formula `0.5 * |a - b| * |c - a| * sin(θ)`, where θ is the angle between the vectors `a - b` and `c - a`. However, since we're dealing with a triangle in a plane, the sin(θ) term is always 1, so we can simplify it to `0.5 * |cross(a - b, c - a)|`.
 
-Hit Function for Triangle:
-
+- Hit Function for Triangle:
 This can be done using barycentric coordinates to check if the intersection point lies within the triangle's boundaries.
 
 ## Hitting a Triangle in Raytracing
