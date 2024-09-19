@@ -372,26 +372,26 @@ static void	get_triangle(t_objects *obj)
 // 	set_index++;
 // }
 
-// static void	get_box(t_objects *obj)
-// {
-// 	static int	set_index;
-// 	char		**tokens;
-// 	double		angle;
+/* cretes a box with the default box_rgb() */
+static void	get_box(t_objects *obj)
+{
+	static int	set_index;
+	char		**tokens;
 
-// 	tokens = obj->_tokens;
-// 	if (set_index >= OBJECT_COUNT)
-// 		call_error("exceeds array size", "cone", obj);
-// 	if (count_tokens(tokens) != 6)
-// 		call_error("invalid token amount", "cone", obj);
-// 	angle = ft_atod(tokens[3]);
-// 	if (angle <= 0 || angle >= 180)
-// 		call_error("angle must be in range (0.0, 180.0)", "cone", obj);
-// 	cone(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
-// 		angle, ft_atod(tokens[4]), set_rgb(obj, 5, "cone"));
-// 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cones[set_index];
-// 	obj->hit_idx++;
-// 	set_index++;
-// }
+	tokens = obj->_tokens;
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "box", obj);
+	if (count_tokens(tokens) != 4)
+		call_error("invalid token amount", "box", obj);
+
+	box_rgb(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), \
+		set_vec3(obj, 2, "box", 0), set_rgb(obj, 3, "box"));
+
+
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->boxes[set_index];
+	obj->hit_idx++;
+	set_index++;
+}
 
 static void	update_struct(t_mrt *data)
 {
@@ -413,10 +413,10 @@ static void	update_struct(t_mrt *data)
 		get_disk(&data->objects);
 	else if (ft_strncmp("tr", data->objects._tokens[0], 3) == 0)
 		get_triangle(&data->objects);
+	else if (ft_strncmp("box", data->objects._tokens[0], 4) == 0)
+		get_box(&data->objects);
 	// else if (ft_strncmp("co", data->objects._tokens[0], 3) == 0)
 	// 	get_cone(&data->objects);
-	// else if (ft_strncmp("box", data->objects._tokens[0], 4) == 0)
-	// 	get_box(&data->objects);
 	else
 		call_error("invalid object identifier", data->objects._tokens[0], \
 			&data->objects);
