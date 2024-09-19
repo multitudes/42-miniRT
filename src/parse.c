@@ -326,7 +326,27 @@ static void	get_disk(t_objects *obj)
 	disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 0), \
 		set_vec3(obj, 3, "disk", 0), set_rgb(obj, 4, "disk"));
 
-	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->quads[set_index];
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->disks[set_index];
+	obj->hit_idx++;
+	set_index++;
+}
+
+static void	get_triangle(t_objects *obj)
+{
+	static int	set_index;
+	char		**tokens;
+
+	tokens = obj->_tokens;
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "triangle", obj);
+	if (count_tokens(tokens) != 5)
+		call_error("invalid token amount", "triangle", obj);
+
+	triangle(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0), \
+		set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0), \
+		set_rgb(obj, 4, "triangle"));
+
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->triangles[set_index];
 	obj->hit_idx++;
 	set_index++;
 }
@@ -349,8 +369,8 @@ static void	update_struct(t_mrt *data)
 		get_quad(&data->objects);
 	else if (ft_strncmp("dsk", data->objects._tokens[0], 4) == 0)
 		get_disk(&data->objects);
-	// else if (ft_strncmp("tr", data->objects._tokens[0], 3) == 0)
-	// 	get_triangle(&data->objects);
+	else if (ft_strncmp("tr", data->objects._tokens[0], 3) == 0)
+		get_triangle(&data->objects);
 	else
 		call_error("invalid object identifier", data->objects._tokens[0], \
 			&data->objects);
