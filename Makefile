@@ -50,11 +50,11 @@ LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
 
 # OS specific flags
-UNAME 			= 	$(shell uname -s)
+UNAME 			= $(shell uname -s)
 ifeq ($(UNAME), Linux)
 	LIBS 		+=  -lbsd
 else ifeq ($(UNAME), Darwin)
-	# LIBS 		+=  -L/opt/homebrew/lib
+	LIBS 		+=  -L/opt/homebrew/lib
 endif
 
 all: libmlx $(LIBFT) $(NAME)
@@ -92,12 +92,12 @@ $(NAME): $(OBJS) $(HDRS)
 clean:
 	rm -f $(OBJS)
 	rm -rf $(OBJ_DIR)
-#$(MAKE) -C $(LIBFTDIR) clean
+# $(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
 	@rm -rf $(NAME)
-#$(MAKE) -C $(LIBFTDIR) fclean
-#@rm -rf $(LIBMLX)/build
+# $(MAKE) -C $(LIBFTDIR) fclean
+# @rm -rf $(LIBMLX)/build
 
 re: fclean all
 
