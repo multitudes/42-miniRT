@@ -190,6 +190,7 @@ int main(int argc, char **argv)
 		return (EXIT_FAILURE);
 
 	render(&data, &data.world, &data.lights);
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
     mlx_loop(data.mlx);
