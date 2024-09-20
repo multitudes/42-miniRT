@@ -25,6 +25,7 @@
 		"quad.h": "c",
 		"algorithm": "c",
 		"random": "c",
-		"limits": "c"
+		"limits": "c",
+		"disk.h": "c"
 	}
 }

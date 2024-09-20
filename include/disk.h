@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:07:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 18:24:03 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:56:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ typedef struct s_disk
 	void			(*print)(const void* self);
 }				t_disk;
 
-void	disk(t_disk *d, t_point3 center, t_vec3 normal, double radius, t_rgb rgbcolor);
-void disk_mat(t_disk *d, t_point3 center, t_vec3 normal, double radius, t_material *mat);
+void disk(t_disk *d, t_point3 center, t_vec3 normal, double diam, t_rgb rgbcolor);
+void disk_mat(t_disk *d, t_point3 center, t_vec3 normal, double diam, t_material *mat);
 void	print_disk(const void *self);
 bool	hit_disk(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec);
 bool	is_interior_disk(double a, double b, t_hit_record *rec, t_vec3 u, t_vec3 v);

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/16 17:38:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:55:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ static void	get_ambient(t_mrt *data)
 		call_error("this element can only be set once", "ambient", &data->objects);
 	if (count_tokens(tokens) != 3)
 		call_error("invalid token amount", "ambient", &data->objects);
-	ambient(&data->camera.ambient, ft_atod(tokens[1]), set_rgb(&data->objects, 2, "ambient"));
+	ambient(&data->cam.ambient, ft_atod(tokens[1]), set_rgb(&data->objects, 2, "ambient"));
 	already_set = 1;
 }
 
@@ -183,7 +183,7 @@ static void	get_camera(t_mrt *data)
 	hfov = ft_atod(tokens[3]);
 	if (hfov < 0. || hfov > 180.)
 		call_error("fov must be in range [0;180]", "camera", &data->objects);
-	init_cam(&data->camera, set_vec3(&data->objects, 1, "camera", 0), \
+	init_cam(&data->cam, set_vec3(&data->objects, 1, "camera", 0), \
 		set_vec3(&data->objects, 2, "camera", 1), hfov);
 	already_set = 1;
 }
@@ -319,7 +319,7 @@ static void	get_cylinder(t_objects *obj)
 		call_error("exceeds array size", "cylinder", obj);
 	if (count_tokens(tokens) != 6)
 		call_error("invalid token amount", "cylinder", obj);
-	cylinder_u(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
+	cylinder_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
 		set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
 		set_rgb(obj, 5, "cylinder"));
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];
@@ -355,8 +355,8 @@ static void	get_disk(t_objects *obj)
 	if (count_tokens(tokens) != 5)
 		call_error("invalid token amount", "disk", obj);
 
-	disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 0), \
-		set_vec3(obj, 3, "disk", 0), set_rgb(obj, 4, "disk"));
+	disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 1), \
+		ft_atod(tokens[3]), set_rgb(obj, 4, "disk"));
 
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->disks[set_index];
 	obj->hit_idx++;

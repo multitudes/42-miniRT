@@ -190,3 +190,5 @@ obj/box.o
 obj/box.o
 obj/disk.o
 obj/triangle.o
+obj/cone.o
+obj/parse.o
