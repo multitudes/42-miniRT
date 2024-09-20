@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:08:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 16:23:13 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/17 19:23:40 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,11 @@ double sphere_pdf_value(const void *self, const t_vec3 *dir)
 	return 1 / (4 * PI);
 }
 
-
+/** 
+ * @brief Initializes the cosine_pdf structure.
+ * 
+ * The cosine PDF is used to generate random directions for flat materials.
+*/
 void	cosine_pdf_init(t_cosine_pdf *cos_pdf, const t_vec3 *w)
 {
 	cos_pdf->base.value = cosine_pdf_value;
@@ -49,6 +53,13 @@ void	cosine_pdf_init(t_cosine_pdf *cos_pdf, const t_vec3 *w)
 	onb_build_from_w(&cos_pdf->uvw, w);
 }
 
+/** 
+ * @brief Computes the PDF value for a given direction.
+ * 
+ * This function computes the probability density function (PDF) value for a 
+ * given direction using the cosine of the angle between the direction and the
+ * normal vector of the surface.
+*/
 double cosine_pdf_value(const void *self, const t_vec3 *direction)
 {
 	t_cosine_pdf *cos_pdf = (t_cosine_pdf *)self;
@@ -56,6 +67,10 @@ double cosine_pdf_value(const void *self, const t_vec3 *direction)
 	return (fmax(0, cosine_theta / PI));
 }
 
+/**
+ * @brief Generates a random direction using the cosine PDF.
+ * 
+*/
 t_vec3 cosine_pdf_generate(void *self)
 {
 	t_cosine_pdf *cos_pdf = (t_cosine_pdf *)self;
@@ -100,30 +115,37 @@ t_vec3 hittable_pdf_generate(void *self)
 }
 
 void mixture_pdf_init(t_mixture_pdf *mixture_pdf, t_pdf *p0, t_pdf *p1)
-{
-	mixture_pdf->p[0] = *p0;
-	mixture_pdf->p[1] = *p1;
+{	
+	mixture_pdf->base.value = mixture_pdf_value;
+	mixture_pdf->base.generate = mixture_pdf_generate;
+	mixture_pdf->p1 = p0;
+	mixture_pdf->p2 = p1;
 }
 
 double	mixture_pdf_value(const void *self, const t_vec3 *direction)
 {
+	// debug("mixture_pdf_value");
 	t_mixture_pdf *mixture_pdf = (t_mixture_pdf *)self;
-	double first_pdf_value = mixture_pdf->p[0].value(&mixture_pdf->p[0], direction);
-	double second_pdf_value = mixture_pdf->p[1].value(&mixture_pdf->p[1], direction);
+	double first_pdf_value = mixture_pdf->p1->value(mixture_pdf->p1, direction);
+	double second_pdf_value = mixture_pdf->p2->value(mixture_pdf->p2, direction);
 	return 0.5 * first_pdf_value + 0.5 * second_pdf_value;
 }
 
 t_vec3	mixture_pdf_generate(void *self)
 {
-	// debug("mixture_pdf_generate");
 	t_mixture_pdf *mixture_pdf = (t_mixture_pdf *)self;
-	if (random_d() < 0.5)
-	{
-		t_pdf p = mixture_pdf->p[0];
-		return p.generate(&p);
-	}
-	else
-	{
-		return mixture_pdf->p[1].generate(&mixture_pdf->p[1]);
-	}
+    if (random_d() < 0.5) {
+		// debug("mixture_pdf_generate");
+		t_pdf *pdff = mixture_pdf->p1;
+		// debug("pdff: %p", pdff);	
+		t_vec3 v = pdff->generate(mixture_pdf->p1);
+		// debug("v: %f %f %f", v.x, v.y, v.z);
+        return v;
+    } else {
+		// debug("mixture_pdf_generate2");
+		t_pdf *pdff = mixture_pdf->p2;
+		// debug("pdff: %p", pdff);
+		t_vec3 v = pdff->generate(mixture_pdf->p2);
+        return v;
+    }
 }

@@ -3,167 +3,148 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/18 16:02:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/05/04 14:25:41 by lbrusa           ###   ########.fr       */
+/*   Created: 2023/12/07 21:25:23 by ralgaran          #+#    #+#             */
+/*   Updated: 2023/12/12 13:46:07 by ralgaran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*
-I had to add because valgrind complained about using a not initialised 
-variable. It was not true because I was initializing my final string
-in the next function but it has badly interpreted so I replaced my malloc
-with a ft_calloc from the libft (modified)
+/**
+* =====================================
+*	checks for newline in a string
+* =====================================
+* inputs -> string
+* ------------------------------------
+* success out -> 1 if found
+* error out -> 0 if not found
+* ------------------------------------
 */
-// void	*ft_calloc(size_t count, size_t size)
-// {
-// 	void	*p;
-// 	char	*tmp;
-// 	size_t	n;
-
-// 	if (count == 0 || size == 0)
-// 	{
-// 		count = 1;
-// 		size = 1;
-// 	}
-// 	if (count >= (SIZE_MAX / size))
-// 		return (NULL);
-// 	p = malloc(count * size);
-// 	if (p == NULL)
-// 		return (NULL);
-// 	n = count * size;
-// 	tmp = p;
-// 	while (n > 0)
-// 	{
-// 		*tmp++ = 0;
-// 		n--;
-// 	}
-// 	return (p);
-// }
-
-/*
- SYNOPSIS
- Allocates (with malloc(3)) and returns a new node.
- The member variable ’content’ is initialized with
- the value of the parameter ’content’.  The variable
- ’next’ is initialized to NULL.
- //	printf(" inside new === > %s\n",((char*)new->content));
- */
-t_blk	*_lstnew(void *content, ssize_t n)
+int	check_for_newline(char *str)
 {
-	t_blk	*new;
+	int	newline_found;
 
-	new = malloc(sizeof(t_blk));
-	if (new == NULL)
-		return (NULL);
-	new->content = malloc(sizeof(void *) * (n + 1));
-	if (new->content == NULL)
+	newline_found = 0;
+	while (*str && !newline_found)
 	{
-		free(new);
-		return (NULL);
+		if (*str == '\n')
+			newline_found = 1;
+		str++;
 	}
-	new->next = NULL;
-	new->size = n;
-	((char *)new->content)[n] = 0;
-	while (n-- > 0)
-		((char *)new->content)[n] = ((char *)(content))[n];
-	new->has_nl = _strchr_newline((char *) new->content);
-	return (new);
+	return (newline_found);
 }
 
-/*
-similar to strchr but specialized for a newline char
+/**
+* =====================================
+*	takes two buffers max and if they
+*	exist (if they are not NULL) and 
+*	frees them, and returns NULL.
+* =====================================
+* inputs -> buffer1, buffer2
+* ------------------------------------
+* success out -> NULL
+* error out -> -
+* ------------------------------------
 */
-ssize_t	_strchr_newline(char *str)
+void	*free_leaks(char *buffer, char *line)
 {
-	ssize_t	i;
+	if (buffer)
+		free(buffer);
+	if (line)
+		free(line);
+	return (NULL);
+}
 
-	i = 0;
-	while (str[i])
+/**
+* =====================================
+*	executes some final functions of read_text
+*	returns 0 if bytes_read < 0 (read failed)
+*	or 
+*	if bytes_read == 0 && !line_valid (file is empty)
+*	else makes remainder, frees buffer, returns 1
+* =====================================
+* inputs -> bytes_read, line_valid, buffer, remainder
+* ------------------------------------
+* success out -> 1
+* error out -> 0
+* ------------------------------------
+*/
+int	endgame(int bytes_read, int line_valid, char *buffer, char *remainder)
+{
+	if (bytes_read < 0)
+		return (0);
+	else if (bytes_read == 0 && !line_valid)
+		return (0);
+	else
 	{
-		if (str[i] == '\n')
-			return (i);
-		i++;
+		make_new_remainder(remainder, buffer);
+		free(buffer);
+		return (1);
 	}
-	return (-1);
 }
 
-/*
- app is for append! I had to shorten my line for norm!
- */
-ssize_t	_app(t_blk *line, char *str, ssize_t n)
+/**
+* ====================================
+* 	uses remainder and reads from a file,
+*	if needed, to make a line, which ends
+*	with a \n (if not last line). makes new remainder.
+* ====================================
+* inputs -> fd, remainder (static)
+* ------------------------------------
+* success out -> line (malloced)
+* error out -> NULL (EOF/ read() err./ malloc fail)
+* ------------------------------------
+*/
+char	*read_text(int fd, char *line, char *remainder)
 {
-	t_blk	*new;
+	int		line_valid;
+	int		bytes_read;
+	char	*buffer;
 
-	if (line == NULL)
-		return (0);
-	new = _lstnew(str, n);
-	if (new == NULL)
-		return (0);
-	line->size += new->size;
-	line->has_nl = _strchr_newline(str);
-	while (line->next != NULL)
-		line = line->next;
-	line->next = new;
-	return (1);
+	buffer = malloc ((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
+		return (NULL);
+	ft_strcpy(buffer, remainder);
+	line_valid = 0;
+	ft_strcpy_until_newline(line, buffer, &line_valid);
+	bytes_read = 1;
+	while (!(check_for_newline(line)) && bytes_read > 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read <= 0)
+			break ;
+		buffer[bytes_read] = '\0';
+		line = make_new_line(line, buffer);
+		line_valid = 1;
+	}
+	if (endgame(bytes_read, line_valid, buffer, remainder))
+		return (line);
+	return (free_leaks(buffer, line));
 }
 
-/*
- Function name get_next_line
- 
- Prototype  char *get_next_line(int fd);
- Parameters fd:  The file descriptor to read from
- External functs. read, malloc, free
- Turn in files
- get_next_line.c, get_next_line_utils.c,
- get_next_line.h
- Return value Read line:  correct behavior
- NULL: there is nothing else to read, or an error
- occurred
-
- Description:
- Write a function that returns a line read from a
- file descriptor
- params:
- fd: file descriptor to read from
- return: a string read from fd without the newline
- 
- line is a linked list collecting the strings ready to be
- outputted as a string when collated and a newline has been found
- initialized as a t_blk which 
- t_blk contains the total size of chars in the first link
- and also if the chain has a new line. I store this info so i 
- do not need to walk through the chain again.
- Used as static var automatically inits its contents to null.
- */
+/**
+* ====================================
+* 	returns a single line from a file
+*	(null terminated)
+* ====================================
+* inputs -> fd (file descriptor)
+* ------------------------------------
+* success out -> line (malloced)
+* error out -> NULL (EOF/ read() err./ malloc fail)
+* ------------------------------------
+*/
 char	*get_next_line(int fd)
 {
-	ssize_t			n;
-	char			*buf;
-	static t_blk	*line[OPEN_MAX];
+	static char	remainder[BUFFER_SIZE];
+	char		*line;
 
-	if (!_safety_check(fd, &buf, &n))
+	if (fd < 0 || fd > 1023)
 		return (NULL);
-	if (line[fd] == NULL || line[fd]->has_nl < 0)
-	{
-		n = read(fd, buf, BUFFER_SIZE);
-		while (n > 0)
-		{
-			buf[n] = 0;
-			if (line[fd] == NULL)
-			{
-				line[fd] = _lstnew(buf, n);
-				if (line[fd] == NULL && _fr(&line[fd], buf))
-					return (NULL);
-			}
-			else if (line[fd] && !_app(line[fd], buf, n) && _fr(&line[fd], buf))
-				return (NULL);
-			if (line[fd]->has_nl >= 0 || read_again(fd, &buf, &n) <= 0)
-				break ;
-		}
-	}
-	return (_get_line_and_stash(&line[fd], buf, n));
+	line = malloc(BUFFER_SIZE * sizeof(char));
+	if (!line)
+		return (NULL);
+	line = read_text(fd, line, remainder);
+	return (line);
 }

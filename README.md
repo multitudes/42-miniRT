@@ -179,16 +179,29 @@ https://graphicscodex.com/app/app.html
 Nice visualizing website:  
 https://www.desmos.com/calculator  
 
+
+Bump map  
+https://assetsvfx.gumroad.com/l/uHyhPT?layout=profile
+
+Get the outlines black and white - edge detection  
+https://en.wikipedia.org/wiki/Sobel_operator  
+
+
+
 ## GBD - GNU Debugger
 debug with 
 ```bash
-gdb -tui ./miniRT 
+gdb -tui ./miniRT
+set args scene/earth.rt 
 ```
 if the interface is scrambled ctrl-l to refresh the screen.  
 ```bash
 b main
 r
 p *variable
+n 
+//when segfault where command shows the trace
+where 
 ``` 
 
 ## trivia  

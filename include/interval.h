@@ -30,51 +30,11 @@ typedef struct	s_interval
  */
 t_interval interval(double min, double max);
 
-/*
- * Returns the size of the interval
- */
-inline double size(const t_interval *i)
-{
-	return (i->max - i->min);
-}
-
-/*
- * Will return true for values including boundaries
- */
-inline bool contains(const t_interval *i, double x)
-{
-	return (x >= i->min && x <= i->max);
-}
-
-/*
- * Will return true for values inside excluding boundaries
- */
-inline bool surrounds(const t_interval *i, double x)
-{
-	return (x > i->min && x < i->max);
-}
-
-/*
- * Returns an empty interval
- */
-inline t_interval empty_interval()
-{
-	return (t_interval){0, 0};
-}
-
-/*
- * Returns an interval that contains all values
- */
-inline t_interval universe_interval()
-{
-	return (t_interval){-INFINITY, INFINITY};
-}
-
-inline double	clamp(t_interval t, double x) 
-{
-	if (x < t.min) return t.min;
-	if (x > t.max) return t.max;
-	return x;
-}
+double size(const t_interval *i);
+bool contains(const t_interval *i, double x);
+bool surrounds(const t_interval *i, double x);
+t_interval empty_interval();
+t_interval universe_interval();
+double	clamp(t_interval t, double x);
 
 #endif

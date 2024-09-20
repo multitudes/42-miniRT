@@ -14,16 +14,15 @@
 #include "texture.h"
 #include "color.h"
 #include "interval.h"
-#include "rtw_stb_image.h"
-#include <stdio.h>
 #include "utils.h"
 #include "interval.h"
+#include <stdio.h>
 
 void	solid_color_init(t_solid_color *solid_color_texture, t_color albedo)
 {
 	solid_color_texture->base.value = solid_color_value;
 	solid_color_texture->color_albedo = albedo;
-}	
+}
 
 t_color solid_color_value(const void *self, double u, double v, const t_point3 *p)
 {
@@ -40,17 +39,17 @@ t_color solid_color_value(const void *self, double u, double v, const t_point3 *
 * even_color = color(0.5, 0.0, 0.5); // Purple
 * odd_color = color(1.0, 1.0, 1.0); // White
 */
-void	checker_texture_init(t_checker_texture *checker_texture, double scale, t_solid_color *even, t_solid_color *odd)
+void	checker_texture_init(t_checker_texture *checker_texture, double scale, t_rgb even_rgb, t_rgb odd_rgb)
 {
-	printf("checker_texture_init done ================ ");
+	t_color	even_color;
+	t_color	odd_color;
 	checker_texture->base.value = checker_texture_value;
 	checker_texture->inv_scale = 1.0 / scale;
-	checker_texture->even = even;
-	checker_texture->odd = odd;
+	even_color = rgb_to_color(even_rgb);
+	odd_color = rgb_to_color(odd_rgb);
+	solid_color_init(&checker_texture->even, even_color);
+	solid_color_init(&checker_texture->odd, odd_color);
 }
-
-#include <math.h>
-#include <stdbool.h>
 
 // Function to compute spherical coordinates (u, v) from point p
 void get_spherical_uv(const t_point3 *p, double *u, double *v) {
@@ -89,22 +88,34 @@ t_color checker_texture_value(const void *self, double u, double v, const t_poin
 {
 	(void)u;
 	(void)v;
-	int xint = (int)floor(p->x * ((t_checker_texture*)self)->inv_scale);	
+	int xint = (int)floor(p->x * ((t_checker_texture*)self)->inv_scale);
 	int yint = (int)floor(p->y * ((t_checker_texture*)self)->inv_scale);
 	int zint = (int)floor(p->z * ((t_checker_texture*)self)->inv_scale);
 
 
 	bool is_even = (xint + yint + zint) % 2 == 0;
 	if (is_even)
-		return (((t_checker_texture*)self)->even->color_albedo);
+		return (((t_checker_texture*)self)->even.color_albedo);
 	else
-		return (((t_checker_texture*)self)->odd->color_albedo);
+		return (((t_checker_texture*)self)->odd.color_albedo);
 }
 
-void	img_texture_init(t_img_texture *img_texture, t_rtw_image *img)
+void	img_texture_init(t_img_texture *img_texture, char *filename)
 {
 	img_texture->base.value = img_texture_value;
-	img_texture->img = img;
+	img_texture->bytes_per_pixel = 3;
+    img_texture->fdata = NULL;
+    img_texture->bdata = NULL;
+    img_texture->image_width = 0;
+    img_texture->image_height = 0;
+    img_texture->bytes_per_scanline = 0;
+	printf("filename = %s\n", filename);
+	if (load(img_texture, filename) == 0)
+	{
+		fprintf(stderr, "Failed to load image %s\n", filename);
+		exit(1);
+	}
+	printf("Image loaded\n");
 }
 
 t_color img_texture_value(const void *self, double u, double v, const t_point3 *p)
@@ -113,19 +124,19 @@ t_color img_texture_value(const void *self, double u, double v, const t_point3 *
 	(void)p;
 	// If we have no texture data, then return solid cyan as a debugging aid.
 	t_img_texture *image;
-	
+
 	image = (t_img_texture *)self;
-	if (height(image->img) <= 0) 
+	if (height(image) <= 0)
 		return color(0, 1, 1);
-	
+
 	// Clamp input texture coordinates to [0,1] x [1,0]
 	u = clamp(interval(0, 1), u);
 	v = 1.0 - clamp(interval(0, 1), v); // Flip V to image coordinates
 	// printf("u = %f,	 v = %f\n", u, v);
-	int i = (int)(u * width(image->img));
-	int j = (int)(v * height(image->img));
+	int i = (int)(u * width(image));
+	int j = (int)(v * height(image));
 	// pixel is a pointer to the first byte of the RGB triplet
-	unsigned char *pixel = pixel_data(image->img, i, j);
+	unsigned char *pixel = pixel_data(image, i, j);
 	// Scale color values to [0,1]
 	double color_scale = 1.0 / 255.0;
 	double r = *pixel * color_scale;

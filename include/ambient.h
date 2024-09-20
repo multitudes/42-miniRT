@@ -23,7 +23,7 @@ typedef struct 	s_ambient
 	void		(*print)(const void* self);
 }				t_ambient;
 
-t_ambient 	ambient(double ratio, t_rgb color);
-void		print_ambient(const void *self);
+void	ambient(t_ambient *result, double ratio, t_rgb color);
+void	print_ambient(const void *self);
 
 #endif

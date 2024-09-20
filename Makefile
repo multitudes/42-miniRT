@@ -8,7 +8,6 @@
 # $< is another special variable, representing the first prerequisite (dependency) of the rule. It is the source file.
 
 NAME 			= 	miniRT
-
 CC 				= 	cc
 
 CFLAGS 			= 	-Wextra -Wall -Werror
@@ -16,7 +15,7 @@ CFLAGS 			+= 	-Iinclude -Isrc -Ilib/external
 CFLAGS			+=  -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
 CFLAGS 			+=  -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
 CFLAGS 			+=  -DNDEBUG
-# CFLAGS 			+=  -g
+CFLAGS 			+=  -g
 # CFLAGS += -DDEBUG=1
 
 # directories
@@ -25,34 +24,35 @@ SRC_DIR			= 	src/
 LIBFTDIR 		= 	./lib/libft
 LIBMLX			= 	./lib/MLX42
 
-LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm 
+LIBS			=  	$(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 LIBS 			+= 	$(LIBFTDIR)/libft.a
 
 # this is used in production to optimize the linking and remove unnecessary code aking the binary smaller
-LDFLAGS			= 	-Wl,--gc-sections -Wl,-O2 -Wl,--as-needed -Wl,--strip-all
+#LDFLAGS			= 	-Wl,--gc-sections -Wl,-O2 -Wl,--as-needed -Wl,--strip-all
 
 INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
 											vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
-											texture.c material.c onb.c pdf.c quad.c hittable_list.c)
+											texture.c material.c onb.c pdf.c quad.c hittable_list.c \
+											disk.c box.c triangle.c parse.c cone.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
 									utils.h ambient.h plane.h cylinder.h texture.h \
-									rtw_stb_image.h material.h onb.h pdf.h quad.h )
+									material.h onb.h pdf.h quad.h disk.h box.h triangle.h)
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
 
 # OS specific flags
-UNAME 			= 	$(shell uname -s)
+UNAME 			= $(shell uname -s)
 ifeq ($(UNAME), Linux)
 	LIBS 		+=  -lbsd
 else ifeq ($(UNAME), Darwin)
-	# LIBS 		+=  -L/opt/homebrew/lib
+	LIBS 		+=  -L/opt/homebrew/lib
 endif
 
 all: libmlx $(LIBFT) $(NAME)
@@ -90,10 +90,10 @@ $(NAME): $(OBJS) $(HDRS)
 clean:
 	rm -f $(OBJS)
 	rm -rf $(OBJ_DIR)
-#$(MAKE) -C $(LIBFTDIR) clean
+# $(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
-	@rm -rf $(NAME)
+	rm -rf $(NAME)
 #$(MAKE) -C $(LIBFTDIR) fclean
 #@rm -rf $(LIBMLX)/build
 
@@ -107,5 +107,3 @@ run:
 	@PATH=".$${PATH:+:$${PATH}}" && $(NAME) $(ARGS)
 
 .PHONY: all clean fclean re libmlx $(LIBFT)
-
-

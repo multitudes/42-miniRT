@@ -6,13 +6,14 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/12 16:13:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/16 17:37:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SPHERE_H
 # define SPHERE_H
 
+#include "texture.h"
 #include "vec3.h"
 #include "ray.h"
 #include <stdbool.h>
@@ -29,23 +30,27 @@ typedef struct		s_sphere
 	t_rgb			rgb;
 	t_material		*mat;
 	t_lambertian 	lambertian_mat;
-	t_solid_color 	texture;
-	void			(*print)(const void* self);
+	union
+	{
+		t_checker_texture	checker;
+		t_solid_color 		texture;
+		t_img_texture		img_texture;
+	};
+	void (*print)(const void *self);
 }					t_sphere;
-
-
 
 /*
  * a sort of initializer for a sphere
  */
-t_sphere	sphere(t_point3 center, double diameter, t_rgb color);
-t_sphere 	sphere_mat(t_point3 center, double diameter, t_rgb rgbcolor, t_material *mat);
+void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb color);
+void	sphere_mat(t_sphere *s, t_point3 center, double diameter, t_material *mat);
 
 void		print_sphere(const void *self);
 void		print_sphere_mat(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool		hit_sphere(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
 void		get_sphere_uv(t_vec3 normal, double* u, double* v);
+t_rgb 		color_to_rgb(t_color color);
 
 /**
  * sphere_pdf_value - Computes the PDF value for a uniform sphere.
@@ -61,7 +66,6 @@ void		get_sphere_uv(t_vec3 normal, double* u, double* v);
  */
 double obj_sphere_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir);
 t_vec3 obj_sphere_random(const void *self, const t_point3 *orig);
-t_sphere sphere_old(t_point3 center, double radius, t_material *mat);
 // Function to generate a random direction within the sphere's volume
 t_vec3 random_to_sphere(double radius, double distance_squared);
 

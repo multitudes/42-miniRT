@@ -1,0 +1,8 @@
+C       278,278,-800            0,0,1         60
+A       1               255,255,255
+#R   400     400 # resolution widht and height
+#S   100      50 # samples per pixel and number of bounces
+sp      90,190,90               180             0,0,0   #metallic red
+qd   343,554,332    -130,0,0    0,0,-105  0,0,0       # light top quad
+sp      0,250,-50               120             16,13,166 # blue diffuse
+sp      400,90,190              90              166,13,13 # red diffuse
