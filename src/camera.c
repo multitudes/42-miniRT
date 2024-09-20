@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 11:55:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:11:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,8 @@ t_ray get_ray(t_camera cam, int i, int j)
 
 void render_thread(void *args)
 {
-	clock_t start_time, end_time;
-    double time_taken, fps;
+	clock_t start_time, end_time; // to remove eventually later
+    double time_taken, fps; 	// remove later
 	t_thread_data *thread_data;
 	thread_data = (t_thread_data *)args;
 	int y = thread_data->starty;
@@ -225,7 +225,10 @@ void render_thread(void *args)
     fps = 1.0 / time_taken;
 	debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
 	fflush(stderr);
-
+	// char fps_str[100];
+	// snprintf(fps_str, sizeof(fps_str), "Frame rendered in %.2f seconds (FPS: %.2f)", time_taken, fps);
+	// mlx_string_put(thread_data->data->mlx, thread_data->data->win_ptr, 10, 10, 0xFFFFFF, fps_str);
+	
 }
 
 
@@ -280,7 +283,7 @@ bool is_near_zero(double value) {
     return fabs(value) < EPSILON;
 }
 
-// Function to check if a ray intersects an axis-aligned line
+// probably i will not need this.. i just wanted to visualize the axes...
 bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
     // Check for intersection with x-axis (line along the x-axis)
     if (axis->x != 0 && axis->y == 0 && axis->z == 0) {

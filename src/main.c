@@ -114,6 +114,10 @@ int init_window(t_mrt *data)
 		mlx_terminate(data->mlx);
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
     }
+	// cursor, why not?
+	mlx_create_std_cursor(MLX_CURSOR_CROSSHAIR);
+	// mlx_texture_t* icon_image = mlx_xpm_file_to_image(data->mlx, "assets/42_icon.xpm", 0, 0);
+	// mlx_set_icon(data->mlx, icon_image);
 	debug("Window initialized");
     return (TRUE);
 }
@@ -230,7 +234,7 @@ int main(int argc, char **argv)
 	
 	t_cylinder c0;
 	cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
-	
+	// cylinder_mat_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, (t_material*)&metal);
 	
 	list[0] = (t_hittable*)(&d0);
 	list[1] = (t_hittable*)(&c0);
