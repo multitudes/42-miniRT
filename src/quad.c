@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 16:49:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:40:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,10 @@
 #include "color.h"
 
 
-// t_quad a = quad_rgb(....)
-// initaquad(data->obj>quad[0], a);
-// // data->obj>quad[0] = a
-
-void	quad_rgb(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
+/**
+ * @brief Initialize a quad object with a given position q, and two vectors u and v.
+ */
+void	quad_rgb(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor) 
 {
 	qd->base.hit = hit_quad;
 	qd->base.pdf_value = quad_pdf_value;

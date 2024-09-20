@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 17:14:47 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:53:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct
 	t_light		lights[OBJECT_COUNT];
 	t_sphere	spheres[OBJECT_COUNT];
 	t_plane		planes[OBJECT_COUNT];
-	t_cylinder	cylinders[OBJECT_COUNT];
+	t_cylinder_capped	cylinders[OBJECT_COUNT];
 	t_quad		quads[OBJECT_COUNT];
 	t_disk		disks[OBJECT_COUNT];
 	t_triangle	triangles[OBJECT_COUNT];
@@ -78,13 +78,19 @@ typedef struct 	s_mrt
 	void		*mlx;
 	void		*win_ptr;
 	mlx_image_t	*image;
+	bool needs_render;
 
-	t_camera	camera;
+	t_camera	cam;
 	t_objects	objects;
 
 	// hittable list
 	t_hittablelist world;
 	t_hittablelist lights;
+	// render function
+	void (*renderscene)(struct s_mrt *, const t_hittablelist *, const t_hittablelist *);
+
+	// t_viewport	viewport;
+	// t_pixel		pixel;
 }				t_mrt;
 
 void	parse_input(char *filename, t_mrt *data);

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 16:21:55 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:57:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,47 +14,82 @@
 #include "hittable.h"
 #include <stdio.h>
 #include "utils.h"
+#include "debug.h"
 
-void	disk(t_disk *d, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
+
+void disk(t_disk *d, t_point3 center, t_vec3 normal, double diam, t_rgb rgbcolor)
 {
-	d->base.hit = hit_disk;
-	d->base.pdf_value = disk_pdf_value;
-	d->base.random = disk_random;
-	d->q = q;
-	d->u = u;
-	d->v = v;
-	t_vec3 n = cross(u, v);
-    d->normal = unit_vector(n);
-    d->d = dot(d->normal, q);
-	d->w = vec3divscalar(n, dot(n, n));
+    d->base.hit = hit_disk;
+    d->base.pdf_value = disk_pdf_value;
+    d->base.random = disk_random;
+    d->center = center;
+	d->radius = diam /2;
+    d->normal = unit_vector(normal);
+    d->d = dot(d->normal, center);
 
-	d->rgb = rgbcolor;
+    // Create two orthogonal vectors u and v in the plane of the disk
+    t_vec3 u, v;
+    if (fabs(d->normal.x) > fabs(d->normal.y)) {
+        u = vec3(-d->normal.z, 0, d->normal.x);
+    } else {
+        u = vec3(0, d->normal.z, -d->normal.y);
+    }
+    u = unit_vector(u);
+    v = unit_vector(cross(d->normal, u));
+
+	u = vec3multscalar(u, diam / 2);
+	v = vec3multscalar(v, diam / 2);
+    d->u = u;
+    d->v = v;
+    d->w = vec3divscalar(cross(u, v), dot(cross(u, v), cross(u, v)));
+    d->rgb = rgbcolor;
     d->color = rgb_to_color(rgbcolor);
 
     // Initialize texture and material as I did for the quad
     solid_color_init(&(d->texture), d->color);
     lambertian_init_tex(&(d->lambertian_mat), (t_texture*)&(d->texture));
     d->mat = (t_material*)&(d->lambertian_mat);
-	d->print = print_disk;
-
+    d->print = print_disk;
 }
 
-void disk_mat(t_disk *disk, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
+/**
+ * @brief Initialize a disk object with a given position, normal, and radius.
+ * 
+ * @param disk disk object
+ * @param center center of the disk
+ * @param u first vector of the disk
+ * @param v second vector of the disk
+ * @param mat material of the disk
+ */
+void disk_mat(t_disk *d, t_point3 center, t_vec3 normal, double diam, t_material *mat)
 {
-	disk->base.hit = hit_disk;
-	disk->q = q;
-	disk->u = u;
-	disk->v = v;
-	disk->mat = mat;
-	t_vec3 n = cross(u, v);
-    disk->normal = unit_vector(n);
-    disk->d = dot(disk->normal, q);
-	disk->w = vec3divscalar(n, dot(n, n));
-	// colors depend of material and will be calc in the scatter function
-	disk->rgb = rgb(0, 0, 0);
-    disk->color = color(0, 0, 0);
-	disk->mat = mat;
-	disk->print = print_disk;
+ 	d->base.hit = hit_disk;
+    d->base.pdf_value = disk_pdf_value;
+    d->base.random = disk_random;
+    d->center = center;
+	d->radius = diam / 2;
+    d->normal = unit_vector(normal);
+    d->d = dot(d->normal, center);
+
+    // Create two orthogonal vectors u and v in the plane of the disk
+    t_vec3 u, v;
+    if (fabs(d->normal.x) > fabs(d->normal.y)) {
+        u = vec3(-d->normal.z, 0, d->normal.x);
+    } else {
+        u = vec3(0, d->normal.z, -d->normal.y);
+    }
+    u = unit_vector(u);
+    v = unit_vector(cross(d->normal, u));
+
+	u = vec3multscalar(u, diam / 2);
+	v = vec3multscalar(v, diam / 2);
+    d->u = u;
+    d->v = v;
+    d->w = vec3divscalar(cross(u, v), dot(cross(u, v), cross(u, v)));
+	d->rgb = rgb(0, 0, 0);	
+    d->color = color(0, 0, 0);
+	d->mat = mat;
+	d->print = print_disk;
 }
 
 /**
@@ -66,17 +101,16 @@ void disk_mat(t_disk *disk, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 void		print_disk(const void *self)
 {
 	const t_disk *d = (const t_disk *)self;
-	printf("disk\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n",
-	d->q.x, d->q.y, d->q.z,
-	d->u.x, d->u.y, d->u.z,
-	d->v.x, d->v.y, d->v.z,
+	printf("disk\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", 
+	d->center.x, d->center.y, d->center.z, 
+	d->u.x, d->u.y, d->u.z, 
+	d->v.x, d->v.y, d->v.z, 
 	d->rgb.r, d->rgb.g, d->rgb.b);
 }
 
 
 bool hit_disk(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec)
 {
-	// printf("hit_quad ----------------------********\n");
 	const t_disk *disk = (t_disk *)self;
 	double denom = dot(disk->normal, r->dir);
 	// no hit if ray is parallel to the quad
@@ -91,11 +125,12 @@ bool hit_disk(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record 
 	// Determine the hit point lies within the planar shape using its plane coordinates.
 	// t_point3	point_at(const t_ray *ray, double t)
 	t_point3 intersection = point_at(r, t);
-	t_vec3 planar_hitpt_vector = vec3substr(intersection, disk->q);
-	double alpha = dot(disk->w, cross(planar_hitpt_vector, disk->v));
-	double beta = dot(disk->w, cross(disk->u, planar_hitpt_vector));
-
-	if (!is_interior_disk(alpha, beta, rec, disk->u, disk->v))
+	t_vec3 planar_hitpt_vector = vec3substr(intersection, disk->center);
+	    // Determine the hit point lies within the planar shape using its plane coordinates.
+    double distance_squared = length_squared(planar_hitpt_vector);
+	
+    // Check if the intersection point is within the disk's radius
+    if (distance_squared > disk->radius * disk->radius)
 		return false;
 
 	// Ray hits the 2D shape; set the rest of the hit record and return true.
@@ -160,7 +195,7 @@ t_vec3 disk_random(const void *self, const t_point3 *orig)
     double theta = 2 * PI * random_double(0, 1);
 
     // Calculate the point on the disk corresponding to the random coordinates
-    t_vec3 p = vec3add(d->q, vec3add(vec3multscalar(d->u, r * cos(theta)), vec3multscalar(d->v, r * sin(theta))));
+    t_vec3 p = vec3add(d->center, vec3add(vec3multscalar(d->u, r * cos(theta)), vec3multscalar(d->v, r * sin(theta))));
 
     return vec3substr(p, *orig);
 }

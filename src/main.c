@@ -59,38 +59,52 @@ void	hook(void *param)
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
 		debug("DOWN key pressed");
+
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 	{
 		// mrt->cam.center = rotate_camera(mrt->cam.center, 5);
 		// mrt->cam.direction = calculate_direction(mrt->cam.center);
 		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("LEFT key pressed");
+		mrt->needs_render = true;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
 		// mrt->cam.center = rotate_camera(mrt->cam.center, -5);
 		// mrt->cam.direction = calculate_direction(mrt->cam.center);
 		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
 		debug("RIGHT key pressed");
+		mrt->needs_render = true;
 	}
-
+	if (mrt->needs_render)
+	{
+		render(mrt, &(mrt->world), &(mrt->lights));
+		mrt->needs_render = false;
+	}
 }
+
 
 int init_window(t_mrt *data)
 {
-    data->mlx = mlx_init(data->camera.image_width, data->camera.image_height, WINDOW_TITLE, false);
+    data->mlx = mlx_init(data->cam.image_width, data->cam.image_height, WINDOW_TITLE, true);
 	if (data->mlx == NULL)
 		return (FALSE);
-	data->image = mlx_new_image(data->mlx, data->camera.image_width, data->camera.image_height);
+	data->image = mlx_new_image(data->mlx, data->cam.image_width, data->cam.image_height);
 	if (!(data->image))
 	{
 		mlx_close_window(data->mlx);
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
 	}
+	ft_memset(data->image->pixels, 0, data->cam.image_width * data->cam.image_height * BPP);
 	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
 	{
 		mlx_close_window(data->mlx);
+		mlx_terminate(data->mlx);
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
     }
+	// cursor, why not?
+	mlx_create_std_cursor(MLX_CURSOR_CROSSHAIR);
+	// mlx_texture_t* icon_image = mlx_xpm_file_to_image(data->mlx, "assets/42_icon.xpm", 0, 0);
+	// mlx_set_icon(data->mlx, icon_image);
 	debug("Window initialized");
     return (TRUE);
 }
@@ -103,164 +117,59 @@ int init_window(t_mrt *data)
 
 // 	ft_memset(&data, 0, sizeof(t_mrt));
 
-// 	/***************************** */
-// 	/* 			camera 			   */
-// 	/***************************** */
-// 	t_point3 center = point3(278, 278, -800);
-// 	t_vec3 direction = vec3(0,0,800);
-// 	init_cam(&data.camera, center, direction, 60);
 
-// 	/***************************** */
-// 	/* 		ambient light		   */
-// 	/***************************** */
+/*
+This is the callback of 
+mlx_resize_hook(params.mlx, &_resize_hook, (void*)&params);
+The prototype of the function is given already. 
+I receive the new height and width from the system. 
+This works when resizing the window with the handles and also when going in 
+fullscreen mode for some reason, even if the full screen mode 
+is controlled differently in the background by the system.  
+*/
+void	_resize_hook(int new_width, int new_height, void *params) 
+{
+	t_mrt *data = ((t_mrt *)params);
+	data->cam.image_width = new_width;
+	data->cam.image_height = new_height;
+	update_cam(&data->cam, new_width, new_height);
+	mlx_resize_image(data->image, new_width, new_height);
+	data->needs_render = true;
+	// t_mrt		*data;
 
-// 	ambient(&data.camera.ambient, 1, rgb(110,110,110));
+	// data = (t_mrt *)params;
+	// data->cam.image_width = new_width;
+	// data->cam.image_height = new_height;
+	// update_cam(&data->cam, new_width, new_height);
+	// mlx_image_t *old_image = data->image;
+	// data->image = mlx_new_image(data->mlx, new_width, new_height);
+	// if (!data->image)
+	// {
+	// 	if (old_image)
+	// 		mlx_delete_image(data->mlx, old_image);
+	// 	mlx_close_window(data->mlx);
+	// 	mlx_terminate(data->mlx);
+	// 	ft_printf("%s\n", mlx_strerror(mlx_errno));
+	// 	exit(EXIT_FAILURE);
+	// }
+	// // render(data, &(data->world), &(data->lights));
+	// if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
+	// {
+	// 	if (old_image)
+	// 		mlx_delete_image(data->mlx, old_image);
+	// 	mlx_close_window(data->mlx);
+	// 	mlx_terminate(data->mlx);
+	// 	ft_printf("%s\n", mlx_strerror(mlx_errno));
+	// 	exit(EXIT_FAILURE);
+	// }
+	// if (old_image)
+	// 	mlx_delete_image(data->mlx, old_image);
 
-// 	//red metallic
-// 	t_color albedo = color(0.8, 0.1, 0.1);
-// 	double fuzz = 0.0;
-// 	t_metal metal;
-// 	metal_init(&metal, albedo, fuzz);
+    // debug("Window resized to %d x %d", new_width, new_height);
+	// // render(data, )
+}
 
-// 	// red metallic sphere
-// 	t_sphere s1;
-// 	sphere_mat(&s1, point3(90, 190, 90), 180, (t_material*)&metal);
-// 	s1.print((void*)&s1);
-
-// 	/***********************************/
-// 	/* 			light        		   */
-// 	/***********************************/
-
-// 	// ============ initing the light material =============
-
-// 	// color here actuall goes in the range of 0-1
-// 	// when it is color(40, 40, 40), it means that it is brighter than normal.
-
-// 	// but the light also takes an intenstity value.
-// 	// the intensity is a float from input.
-// 	// i will use it as a multiplier to 100, so 100 * float, which means, that
-// 	// max color will be color(100,100,100);
-
-// 	t_diffuse_light difflight;
-// 	t_solid_color difflight_color;
-// 	solid_color_init(&difflight_color, color(40, 40, 40));
-// 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
-
-// 	// blue light
-// 	t_diffuse_light difflight2;
-// 	t_solid_color difflight_color2;
-// 	solid_color_init(&difflight_color2, color(0, 0, 80));
-// 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
-
-// 	// =====================================================
-
-// 	// quad as light
-// 	t_quad s6;
-// 	quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
-// 	s6.print((void*)&s6);
-
-// 	t_sphere s2;
-// 	sphere_mat(&s2, point3( 0,250,-50 ), 120, (t_material*)&difflight2);
-// 	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
-
-// 	// adding another sphere
-// 	// red sphere
-// 	t_sphere s4;
-// 	sphere(&s4, vec3(400, 90, 190), 90, rgb(166, 13, 13));
-// 	s4.print((void*)&s4);
-
-// 	// add a quad just left of the s4 sphere
-// 	t_quad s5;
-// 	quad_rgb(&s5, point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
-// 	s5.print((void*)&s5);
-
-// 	// add a plane just below the s4 sphere
-// 	t_plane s7;
-// 	plane(&s7, point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
-// 	s7.print((void*)&s7);
-
-// 	t_disk s8;
-// 	disk(&s8, point3(500, 90, 190), vec3(0,0,150), vec3(0,150,0), rgb(166, 53, 13));
-// 	s8.print((void*)&s8);
-
-// 	// try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
-// 	t_box s9;
-// 	box(&s9, point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
-// 	s9.print((void*)&s9);
-
-// 	t_triangle s10;
-// 	triangle(&s10, point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
-// 	s10.print((void*)&s10);
-
-// 	// checker texture sphere
-// 	t_lambertian lambertian_material;
-// 	t_checker_texture checker_texture1;
-// 	checker_texture_init(&checker_texture1, 20.0, color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
-// 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
-// 	t_sphere s11;
-// 	sphere_mat(&s11, point3(650, 300, 200), 100, (t_material*)&lambertian_material);
-
-// 	printf("_______________\n");
-// 	printf("size of t_triangle: %lu\n", sizeof(t_triangle));
-
-	// /***********************************/
-	// /* 			earth       		   */
-	// /***********************************/
-	// t_rtw_image img;
-	// init_rtw_image(&img,"rtw_image/earthmap.jpg");
-	// t_img_texture img_texture;
-	// img_texture_init(&img_texture, &img);
-
-
-
-	// t_lambertian earth_surface;
-	// lambertian_init_tex(&earth_surface, (t_texture*)&img_texture);
-	// t_sphere s12;
-	// sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
-	// s12.print((void*)&s12);
-
-	// t_cylinder s13;
-	// cylinder_u(&s13, point3(350, 100, -400), vec3(0,1,0), 100, 100, rgb(166, 103, 13));
-	// s13.print((void*)&s13);
-
-// 	t_hittable *list[13];
-// 	list[0] = (t_hittable*)(&s1);
-// 	list[1] = (t_hittable*)(&s6);
-// 	list[2] = (t_hittable*)(&s2);
-// 	list[3] = (t_hittable*)(&s4);
-// 	list[4] = (t_hittable*)(&s5);
-// 	list[5] = (t_hittable*)(&s7);
-// 	list[6] = (t_hittable*)(&s8);
-// 	list[7] = (t_hittable*)(&s9);
-// 	list[8] = (t_hittable*)(&s10);
-// 	list[9] = (t_hittable*)(&s11);
-// 	list[10] = (t_hittable*)(&s12);
-// 	list[11] = (t_hittable*)(&s13);
-
-
-// 	const t_hittablelist world = hittablelist(list, 12);
-
-// 	t_hittable *list_lights[2];
-
-// 	list_lights[0] = (t_hittable*)(&s6);
-// 	list_lights[1] = (t_hittable*)(&s2);
-// 	const t_hittablelist lights = hittablelist(list_lights, 2);
-
-//     debug("Start of minirt %s", "helllo !! ");
-// 	if (!init_window(&data))
-// 		return (EXIT_FAILURE);
-
-// 	data.world = world;
-// 	render(&data, &world, &lights);
-
-
-//     mlx_loop_hook(data.mlx, &hook, (void *)&data);
-
-//     mlx_loop(data.mlx);
-//     ft_printf("\nbyebye!\n");
-//     mlx_terminate(data.mlx);
-//     return (EXIT_SUCCESS);
-// }
+// main cylinder tests
 
 int main(int argc, char **argv)
 {
@@ -281,12 +190,111 @@ int main(int argc, char **argv)
 		return (EXIT_FAILURE);
 
 	render(&data, &data.world, &data.lights);
-
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
     mlx_loop(data.mlx);
+
     ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
 
     return (EXIT_SUCCESS);
+
+
 }
+
+
+// int main_mixtest(int argc, char **argv)
+// {
+//     t_mrt data;
+//     (void)argv;
+// 	(void)argc;
+
+// 	/***************************** */
+// 	/* 			camera 			   */	
+// 	/***************************** */
+// 	t_point3 center = point3(378, 378, -1800);
+// 	t_vec3 direction = vec3(0,0,800);
+// 	data.cam = init_cam(center, direction, 40);
+// 	data.cam.print((void*)(&(data.cam)));
+
+// 	/***************************** */
+// 	/* 		ambient light		   */	
+// 	/***************************** */
+// 	t_ambient ambient_light = ambient(0.0, rgb(255,255,255));
+// 	data.ambient_light = ambient_light;
+
+// 	ambient_light.print((void*)&ambient_light);
+
+// 	// world
+// 	t_hittable *list[10];
+
+// 	// red sphere
+// 	t_sphere s1;
+// 	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
+// 	s1.print((void*)&s1);
+
+// 	/***********************************/
+// 	/* 			light        		   */
+// 	/***********************************/
+// 	t_diffuse_light difflight;
+// 	t_solid_color difflight_color;
+// 	solid_color_init(&difflight_color, color(40, 40, 40));
+// 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+// 	t_diffuse_light difflight2;
+// 	t_solid_color difflight_color2;
+// 	solid_color_init(&difflight_color2, color(0, 0, 80));
+// 	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
+// 	// t_quad s6 = quad(point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+// 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+// 	t_sphere s2;
+// 	sphere_mat(&s2, point3( 90,190,90 ), 30, (t_material*)&difflight2);
+// 	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
+
+// 	t_sphere s4;
+// 	sphere(&s4, vec3(1, 0.0, -1.0), 1, rgb(255,255,254));
+
+
+// 	t_sphere s5;
+// 	sphere(&s5, vec3(0, 0, -1.2), 1, rgb(128,0,0));
+// 	s1.print((void*)&s1);
+// 	t_sphere s8;
+// 	sphere(&s8, vec3(0, -100.5, -1), 200, rgb(0,128,0));
+// 	s2.print((void*)&s2);
+// 	t_sphere s7;
+// 	sphere(&s7, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+
+
+// 	list[0] = (t_hittable*)(&s1);
+// 	// list[1] = (t_hittable*)(&s6);
+// 	list[1] = (t_hittable*)(&s2);
+// 	list[2] = (t_hittable*)(&s4);
+// 	list[3] = (t_hittable*)(&s5);
+// 	list[4] = (t_hittable*)(&s7);
+// 	list[5] = (t_hittable*)(&s8);
+
+// 	const t_hittablelist world = hittablelist(list, 6);
+
+// 	t_hittable *list_lights[1];
+// 	list_lights[0] = (t_hittable*)(&s2);
+// 	// list_lights[1] = (t_hittable*)(&s6);
+// 	const t_hittablelist lights = hittablelist(list_lights, 1);
+
+//     debug("Start of minirt %s", "helllo !! ");
+// 	if (!init_window(&data))
+// 		return (EXIT_FAILURE);
+
+// 	data.world.list = world.list;
+// 	data.world.size = world.size;
+// 	data.lights.list = lights.list;
+// 	data.lights.size = lights.size;
+// 	render(&data, &world, &lights);
+
+//     mlx_loop_hook(data.mlx, &hook, (void *)&data);
+
+//     mlx_loop(data.mlx);
+//     ft_printf("\nbyebye!\n");
+//     mlx_terminate(data.mlx);
+
+//     return (EXIT_SUCCESS);
+// }
+

@@ -6,28 +6,23 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/13 13:39:37 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:30:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MATERIAL_H
 # define MATERIAL_H
 
-#include "hittable_list.h"
-#include "texture.h"
-#include "ray.h"
-#include "pdf.h"
-#include "color.h"
-#include "vec3.h"
+# include "hittable_list.h"
+# include "texture.h"
+# include "ray.h"
+# include "pdf.h"
+# include "color.h"
+# include "vec3.h"
 
 typedef struct s_scatter_record t_scatter_record;
 typedef struct s_hit_record t_hit_record;
 typedef struct s_ray t_ray;
-// typedef struct s_pdf t_pdf;
-// typedef struct s_cosine_pdf t_cosine_pdf;
-// typedef struct s_sphere_pdf t_sphere_pdf;
-// typedef struct s_hittable_pdf t_hittable_pdf;
-// typedef struct s_mixture_pdf t_mixture_pdf;
 
 /**
  * @brief Material structure
@@ -45,7 +40,6 @@ typedef struct 		s_material
 	double 			(*scattering_pdf)(void *self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
 }					t_material;
 
-//forward declaration
 typedef struct 		s_hit_record t_hit_record;
 typedef struct 		s_texture t_texture;
 
@@ -62,7 +56,7 @@ typedef struct 		s_texture t_texture;
  * to reside somewhere therefore I need to keep them in the
  * struct to be able to reference them.
  */
-typedef struct 	s_scatter_record
+typedef struct 		s_scatter_record 
 {
     t_color 		attenuation;
     t_pdf 			*pdf_ptr;
@@ -72,7 +66,7 @@ typedef struct 	s_scatter_record
 	t_sphere_pdf 	sphere_pdf;
 	t_hittable_pdf 	hittable_pdf;
 	t_mixture_pdf 	mixture_pdf;
-} 				t_scatter_record;
+} 					t_scatter_record;
 
 typedef struct 		s_metal
 {
@@ -104,27 +98,19 @@ typedef struct 		s_empty_material
 	t_material		base;
 }					t_empty_material;
 
-void		set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);
-
-bool		noscatter(void *self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec);
-t_color		emitzero(void *self, t_hit_record rec, double u, double v, t_point3 p);
-double		scattering_pdf_zero(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
-
-void		empty_material_init(t_empty_material *empty_material);
-
-void		lambertian_init(t_lambertian *lambertian_material, t_color albedo);
-void		lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex);
-
-void		diffuse_light_init(t_diffuse_light *diffuse_light, t_texture *tex);
-
-void 		init_scatter_record(t_scatter_record *srec);
-
-bool		lambertian_scatter(void* self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec); ;
-double 		lambertian_scattering_pdf(void* self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
-
-void		metal_init(t_metal *metal, t_color albedo, double fuzz);
-bool		metal_scatter(void *self, t_ray* r_in, t_hit_record *rec, t_scatter_record *srec);
-
-t_color		emitlight(void *self, t_hit_record rec, double u, double v, t_point3 p);
+void	set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_normal);
+bool	noscatter(void *self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec);
+t_color	emitzero(void *self, t_hit_record rec, double u, double v, t_point3 p);
+double 	scattering_pdf_zero(void *self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
+void 	empty_material_init(t_empty_material *empty_material);
+void 	lambertian_init(t_lambertian *lambertian_material, t_color albedo);
+void	lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex);
+void	diffuse_light_init(t_diffuse_light *diffuse_light, t_texture *tex);
+void 	init_scatter_record(t_scatter_record *srec);
+bool	lambertian_scatter(void *self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec); ;
+double	lambertian_scattering_pdf(void	*self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
+void	metal_init(t_metal *metal, t_color albedo, double fuzz);
+bool	metal_scatter(void *self, t_ray *r_in, t_hit_record *rec, t_scatter_record *srec);
+t_color	emitlight(void *self, t_hit_record rec, double u, double v, t_point3 p);
 
 #endif

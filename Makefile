@@ -11,6 +11,10 @@ NAME 			= 	miniRT
 CC 				= 	cc
 
 CFLAGS 			= 	-Wextra -Wall -Werror
+CFLAGS 			+= 	-Iinclude -Isrc -Ilib/external
+CFLAGS			+=  -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
+CFLAGS 			+=  -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+CFLAGS 			+=  -DNDEBUG
 CFLAGS 			+=  -g
 # CFLAGS += -DDEBUG=1
 
@@ -44,11 +48,11 @@ LIBFT 			= $(LIBFTDIR)/libft.a
 LIBFT_LIB 		= -Llibft -lft
 
 # OS specific flags
-UNAME 			= 	$(shell uname -s)
+UNAME 			= $(shell uname -s)
 ifeq ($(UNAME), Linux)
 	LIBS 		+=  -lbsd
 else ifeq ($(UNAME), Darwin)
-	# LIBS 		+=  -L/opt/homebrew/lib
+	LIBS 		+=  -L/opt/homebrew/lib
 endif
 
 all: libmlx $(LIBFT) $(NAME)
@@ -86,7 +90,7 @@ $(NAME): $(OBJS) $(HDRS)
 clean:
 	rm -f $(OBJS)
 	rm -rf $(OBJ_DIR)
-#$(MAKE) -C $(LIBFTDIR) clean
+# $(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
 	rm -rf $(NAME)

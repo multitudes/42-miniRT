@@ -6,11 +6,15 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 12:36:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 13:43:44 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// #include "camera.h"
+
 #include "utils.h"
+#define CORES 16
+
 
 /**
  *  @brief Our random int generator.
@@ -19,7 +23,7 @@
  */
 unsigned int rand_rt()
 {
-	static unsigned int seed = 1;
+	static __thread unsigned int seed = 1;
     seed = (A * seed + C) % M;
     return seed;
 }
@@ -43,7 +47,12 @@ int random_int(int min, int max)
 	diff = max - min;
 	if (diff <= 0)
 		diff = 1;
-	return min + rand_rt() % diff;
+    if (CORES > 1)
+    {
+        unsigned int seed  = rand();
+        return min + rand_r(&seed) % diff; // maybe remove and use our random func
+    }
+    return min + rand_rt() % diff;
 }
 /*
  * Returns a random real in [0,1], 1 excluded.
