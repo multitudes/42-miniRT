@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/20 13:20:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/20 15:02:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ unsigned int rand_rt()
 {
 	static __thread unsigned int seed = 1;
     seed = (A * seed + C) % M;
-    return seed;
+    return (seed);
 }
 
 /*
