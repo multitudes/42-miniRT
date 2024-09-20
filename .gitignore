@@ -184,3 +184,6 @@ obj/texture.o
 obj/hittable_list.o
 obj/pdf.o
 obj/quad.o
+obj/box.o
+obj/disk.o
+obj/triangle.o
