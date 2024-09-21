@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ambient.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:52:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/06 12:34:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/21 20:10:22 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ typedef struct 	s_ambient
 	void		(*print)(const void* self);
 }				t_ambient;
 
-t_ambient 	ambient(double ratio, t_rgb color);
-void		print_ambient(const void *self);
+void	ambient(t_ambient *result, double ratio, t_rgb rgb);
+void	print_ambient(const void *self);
 
 #endif
