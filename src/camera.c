@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/20 15:22:50 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/21 18:16:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@
 #include <math.h>
 #include <time.h>
 #include <pthread.h>
-
-
 
 void update_cam(t_camera *cam, int new_width, int new_height)
 {
@@ -262,6 +260,8 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 		pthread_join(threads[thread_idx], NULL);
 		thread_idx++;
 	}
+	if (data->needs_render)
+		data->needs_render = false;
 }
 
 /** 

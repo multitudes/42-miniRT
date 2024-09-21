@@ -153,7 +153,6 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	update_cam(&data->cam, new_width, new_height);
 	mlx_resize_image(data->image, new_width, new_height);
 	data->needs_render = true;
-	
 }
 
 // main cylinder tests
@@ -178,9 +177,7 @@ int main_cyl(int argc, char **argv)
 	t_ambient ambient_light = ambient(1, rgb(255,255,255));
 	data.cam.ambient_light = ambient_light;
 
-
 	ambient_light.print((void*)&ambient_light);
-
 
 	// world
 	// ================================================== world ==================================================
@@ -204,18 +201,11 @@ int main_cyl(int argc, char **argv)
 	// t_cylinder c0;
 	// cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
 	// cylinder_mat_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, (t_material*)&metal);
-	
-
 
 	// list[0] = (t_hittable*)(&d0);
 	// list[1] = (t_hittable*)(&c0);
 
-
-
-
 	const t_hittablelist world = hittablelist(list, 2);
-
-
 
 	t_hittable *list_lights[2];
 	t_empty_material empty_material;
@@ -226,7 +216,6 @@ int main_cyl(int argc, char **argv)
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
 	t_sphere l2;
 	sphere_mat(&l2, point3( 0,250,-50 ), 120, (t_material*)&no_material);
-
 
 //0,250,-50 ), 120
 	list_lights[0] = (t_hittable*)(&l6);
@@ -253,7 +242,7 @@ int main_cyl(int argc, char **argv)
 }
 
 
-int main_main(int argc, char **argv)
+int main(int argc, char **argv)
 {
     t_mrt data;
     (void)argv;
@@ -291,12 +280,23 @@ int main_main(int argc, char **argv)
 
 	// world
 	// ================================================== world ==================================================
-	t_hittable *list[13];
+	t_hittable *list[15];
 	// ================================================== world ==================================================
 	
 	// red sphere
 	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	
+
+	// checker texture sphere
+	t_lambertian lambertian_material;
+	t_checker_texture checker_texture1;
+	t_solid_color even1;
+	t_solid_color odd1;
+	solid_color_init(&even1, color(0.1, 0.1, 0.1));
+	solid_color_init(&odd1, color(0.9, 0.9, 0.9));
+	checker_texture_init(&checker_texture1, 40.0, &even1, &odd1);
+	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
+
 	//red metallic 
 	t_color albedo = color(0.8, 0.1, 0.1);
 	double fuzz = 0.0;
@@ -353,7 +353,7 @@ int main_main(int argc, char **argv)
 
 	// add a plane just below the s4 sphere
 	t_plane s7;
-	plane(&s7, point3(400, 0, 190), vec3(0,1,0), rgb(166, 13, 13));
+	plane_mat(&s7, point3(400, 0, 190), vec3(0,1,0), (t_material*)&lambertian_material);
 	s7.print((void*)&s7);
 
 	t_disk s8;
@@ -369,21 +369,16 @@ int main_main(int argc, char **argv)
 	triangle(&s10, point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
 	s10.print((void*)&s10);
 	
-	// checker texture sphere
-	t_lambertian lambertian_material;
-	t_checker_texture checker_texture1;
-	t_solid_color even1;
-	t_solid_color odd1;
-	solid_color_init(&even1, color(0.2, 0.3, 0.1));
-	solid_color_init(&odd1, color(0.9, 0.9, 0.9));
-	checker_texture_init(&checker_texture1, 20.0, &even1, &odd1);
-	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
 	t_sphere s11;
 	sphere_mat(&s11, point3(650, 300, 200), 100, (t_material*)&lambertian_material);
 
-	printf("_______________\n");
-	printf("size of t_triangle: %lu\n", sizeof(t_triangle));
+	t_plane pl12;
+	plane_mat(&pl12, point3(0, 0, -400), vec3(0,0,1), (t_material*)&lambertian_material);
+	pl12.print((void*)&pl12);
 
+	t_plane pl13;
+	plane_mat(&pl13, point3(-600, 0, 0), vec3(1,0,0), (t_material*)&lambertian_material);
+	pl12.print((void*)&pl12);
 
 	/***********************************/
 	/* 			earth       		   */
@@ -414,8 +409,10 @@ int main_main(int argc, char **argv)
 	list[9] = (t_hittable*)(&s11);
 	list[10] = (t_hittable*)(&s12);
 	list[11] = (t_hittable*)(&s13);
+	list[12] = (t_hittable*)(&pl12);
+	list[13] = (t_hittable*)(&pl13);
 
-	const t_hittablelist world = hittablelist(list, 12);
+	const t_hittablelist world = hittablelist(list, 14);
 
 	t_hittable *list_lights[2];
 
@@ -667,7 +664,7 @@ l	   343,354,332              0.9          0,0,255    200
 
 
 */
-int main()
+int main_blue_red()
 {
 
 	t_mrt data;
@@ -856,3 +853,10 @@ int main_redlight(int argc, char **argv)
     return (EXIT_SUCCESS);
 }
 
+// plane test
+int main_()
+{
+
+	return (0);
+
+}
