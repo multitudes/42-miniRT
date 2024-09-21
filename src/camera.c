@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/21 13:06:35 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/21 15:43:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void gaussian_blur(t_mrt *data);
 
 void update_cam_orientation(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
+	cam->hfov = hfov;
 	cam->center = center;
 	cam->direction = direction;
     t_point3 lookat = vec3add(cam->center, cam->direction);
@@ -288,6 +289,7 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 	}
 	debug("All threads have finished rendering the frame!\n");
 	// gaussian_blur(data);
+	data->needs_render = false;
 }
 
 /**
@@ -352,10 +354,17 @@ bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
 }
 
 
+unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
+{
+	uint8_t	*dst;
+
+	dst = data->pixels + (y * data->width + x * (sizeof(int32_t) / 8));
+	return (*(unsigned int *)dst);
+}
 
 /**
- * not working right now but interesting test...
- * the blue is red and it is too fuzzy. tried two different kernels
+ * not working right now but interesting test... just playing around
+ * 
  */
 void gaussian_blur(t_mrt *data) {
     debug("Applying Gaussian blur to the image...\n");
@@ -405,9 +414,8 @@ double kernel[3][3] = {
                     int py = y + ky;
 
                     if (px >= 0 && px < width && py >= 0 && py < height) {
-                        uint32_t color = *(uint32_t *)(image->pixels + (py * width + px) * 4);
-                        t_rgb rgb = { (color >> 16) & 0xFF, (color >> 8) & 0xFF, color & 0xFF };
-                        t_color pixel_color = rgb_to_color(rgb);
+                        uint8_t *pixel = (uint8_t *)(image->pixels + (py * width + px) * 4);
+                        t_color pixel_color = rgb_to_color((t_rgb){pixel[0], pixel[1], pixel[2]});
 
                         accumulated_color.r += pixel_color.r * kernel[ky + kernel_half][kx + kernel_half];
                         accumulated_color.g += pixel_color.g * kernel[ky + kernel_half][kx + kernel_half];
