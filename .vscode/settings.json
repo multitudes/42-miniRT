@@ -26,6 +26,7 @@
 		"algorithm": "c",
 		"random": "c",
 		"limits": "c",
-		"disk.h": "c"
+		"disk.h": "c",
+		"math.h": "c"
 	}
 }

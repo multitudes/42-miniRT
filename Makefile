@@ -14,9 +14,9 @@ CFLAGS 			= 	-Wextra -Wall -Werror
 CFLAGS 			+= 	-Iinclude -Isrc -Ilib/external
 CFLAGS			+=  -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
 CFLAGS 			+=  -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
-CFLAGS 			+=  -DNDEBUG
-CFLAGS 			+=  -g
-# CFLAGS += -DDEBUG=1
+# CFLAGS 			+=  -DNDEBUG
+# CFLAGS 			+=  -g
+
 
 # directories
 OBJ_DIR			= 	obj/

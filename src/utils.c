@@ -6,14 +6,14 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/20 13:43:44 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/21 11:09:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "camera.h"
 
 #include "utils.h"
-#define CORES 16
+
 
 
 /**
