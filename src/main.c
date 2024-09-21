@@ -161,37 +161,77 @@ int main_blue_red();
 int main_redlight(int argc, char **argv);
 int main_cyl(int argc, char **argv);
 
+
+void render_from_file(char *filename)
+{
+    t_mrt data;
+
+	// if (argc != 2)
+	// {
+	// 	write(2, "Error\nProgram expects an .rt file as input!\n", 44);
+	// 	return (EXIT_FAILURE);
+	// }
+	ft_memset(&data, 0, sizeof(t_mrt));
+	parse_input(filename, &data);
+
+
+    debug("Start of minirt %s", "helllo !! ");
+
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+
+	render(&data, &data.world, &data.lights);
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+
+    mlx_loop(data.mlx);
+
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    exit (EXIT_SUCCESS);
+}
+
+
 int main(int argc, char **argv)
 {
    
     (void)argv;
 	(void)argc;
 
-	int scene = 6;
-	switch (scene)
+	if (argc > 1)
 	{
-	case 1:
-		main_redlight(argc, argv);
-		break;
-	case 2:
-		main_earth(argc, argv);
-		break;
-	case 3:
-		main_blue_red();
-		break;
-	case 4:
-		main_checkerfloors();
-		break;
-	case 5:
-		main_redlight(argc, argv);
-		break;
-	case 6:
-		main_cyl(argc, argv);
-		break;
-	default:
-		break;
+		render_from_file(argv[1]);
+
 	}
-	return (EXIT_SUCCESS);
+	else 
+	{
+		int scene = 6;
+		switch (scene)
+		{
+		case 1:
+			main_redlight(argc, argv);
+			break;
+		case 2:
+			main_earth(argc, argv);
+			break;
+		case 3:
+			main_blue_red();
+			break;
+		case 4:
+			main_checkerfloors();
+			break;
+		case 5:
+			main_redlight(argc, argv);
+			break;
+		case 6:
+			main_cyl(argc, argv);
+			break;
+		default:
+			break;
+		}
+		return (EXIT_SUCCESS);
+	}
 }
 	
 int main_checkerfloors() 
