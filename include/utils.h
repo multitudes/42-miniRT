@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 18:27:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/21 11:08:58 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "camera.h"
 
 #ifndef PI
 # define PI 3.1415926535897932385

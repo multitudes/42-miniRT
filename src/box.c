@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:40:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 16:49:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/21 11:19:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,18 @@
 #include "hittable_list.h"
 #include "hittable.h"
 
+/**
+ * @brief Creates a box with a rgbcolor
+ * 
+ * @param t_box box
+ * @param t_point3 a
+ * @param t_point3 b
+ * @param t_rgb rgb
+ * 
+ * this is the default initialiser for a box which takes a point a and b
+ * and a rgb color. 
+ * 
+ */
 void box_rgb(t_box *box, t_point3 a, t_point3 b, t_rgb rgb)
 {
     box->a = a;

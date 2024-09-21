@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/20 14:00:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/21 13:07:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <pthread.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 800
+#define IMAGE_WIDTH 400
 #define CORES 16
 
 typedef struct s_mrt t_mrt;
@@ -72,8 +72,7 @@ void 			write_color(t_mrt *data, int x, int y, t_color colorvector);
 void			print_camera(const void *self);
 unsigned int    color_gamma_corrected(t_color color);
 void 			update_cam(t_camera *cam, int new_width, int new_height);
-// t_ray		get_ray(t_camera *c, int u, int v);
-// t_vec3		sample_square();
+void update_cam_orientation(t_camera *cam, t_point3 center, t_vec3 direction, double hfov);
 
 
 #endif

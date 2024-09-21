@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/20 13:50:22 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/21 15:43:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,33 @@
 #include <math.h>
 #include <time.h>
 #include <pthread.h>
+#include <stdint.h>
 
+void gaussian_blur(t_mrt *data);
 
+void update_cam_orientation(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
+{
+	cam->hfov = hfov;
+	cam->center = center;
+	cam->direction = direction;
+    t_point3 lookat = vec3add(cam->center, cam->direction);
+	double focal_length = length(vec3substr(cam->center, lookat));
+	double theta = degrees_to_radians(cam->hfov);
+    double h = tan(theta/2);
+	double viewport_width = 2 * h * focal_length;
+    double viewport_height = viewport_width * ((double)cam->image_height/cam->image_width);
+    cam->w = unit_vector(vec3substr(cam->center, lookat));
+    cam->u = unit_vector(cross(cam->vup, cam->w));
+    cam->v = cross(cam->w, cam->u);
+    t_vec3 viewport_u = vec3multscalar(cam->u, viewport_width);
+	t_vec3 viewport_v = vec3multscalar(vec3negate(cam->v), viewport_height);
+	cam->pixel_delta_u = vec3divscalar(viewport_u, cam->image_width);
+	cam->pixel_delta_v = vec3divscalar(viewport_v, cam->image_height);
+	t_point3 part1 = vec3substr(cam->center, vec3multscalar(cam->w, focal_length));
+	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
+	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
+	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
+}
 
 void update_cam(t_camera *cam, int new_width, int new_height)
 {
@@ -262,6 +287,9 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 		pthread_join(threads[thread_idx], NULL);
 		thread_idx++;
 	}
+	debug("All threads have finished rendering the frame!\n");
+	// gaussian_blur(data);
+	data->needs_render = false;
 }
 
 /**
@@ -323,4 +351,93 @@ bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
 
     // If none of the conditions match, the ray does not intersect the line
     return false;
+}
+
+
+unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
+{
+	uint8_t	*dst;
+
+	dst = data->pixels + (y * data->width + x * (sizeof(int32_t) / 8));
+	return (*(unsigned int *)dst);
+}
+
+/**
+ * not working right now but interesting test... just playing around
+ * 
+ */
+void gaussian_blur(t_mrt *data) {
+    debug("Applying Gaussian blur to the image...\n");
+    int width = data->cam.image_width;
+    int height = data->cam.image_height;
+    mlx_image_t *image = data->image;
+    mlx_image_t *blurred_image = mlx_new_image(data->mlx, width, height);
+
+    // int kernel_size = 5;
+    // int kernel_half = kernel_size / 2;
+    // double kernel[5][5] = {
+    //     {1/273.0, 4/273.0, 7/273.0, 4/273.0, 1/273.0},
+    //     {4/273.0, 16/273.0, 26/273.0, 16/273.0, 4/273.0},
+    //     {7/273.0, 26/273.0, 41/273.0, 26/273.0, 7/273.0},
+    //     {4/273.0, 16/273.0, 26/273.0, 16/273.0, 4/273.0},
+    //     {1/273.0, 4/273.0, 7/273.0, 4/273.0, 1/273.0}
+    // };
+
+// int kernel_size = 3;
+// int kernel_half = kernel_size / 2;
+// double kernel[3][3] = {
+//     {1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0},
+//     {2.0 / 16.0, 4.0 / 16.0, 2.0 / 16.0},
+//     {1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0}
+// };
+// int kernel_size = 3;
+// int kernel_half = kernel_size / 2;
+// double kernel[3][3] = {
+//     {-1.0, -2.0, -1.0},
+//     {0.0, 0.0, 0.0},
+//     {1.0, 2.0, 1.0}
+// };
+int kernel_size = 3;
+int kernel_half = kernel_size / 2;
+double kernel[3][3] = {
+    {0.0, 0.25, 0.0},
+    {0.25, 0.50, 0.25},
+    {0.0, 0.25, 0.0}
+};
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            t_color accumulated_color = color(0.0, 0.0, 0.0);
+
+            for (int ky = -kernel_half; ky <= kernel_half; ky++) {
+                for (int kx = -kernel_half; kx <= kernel_half; kx++) {
+                    int px = x + kx;
+                    int py = y + ky;
+
+                    if (px >= 0 && px < width && py >= 0 && py < height) {
+                        uint8_t *pixel = (uint8_t *)(image->pixels + (py * width + px) * 4);
+                        t_color pixel_color = rgb_to_color((t_rgb){pixel[0], pixel[1], pixel[2]});
+
+                        accumulated_color.r += pixel_color.r * kernel[ky + kernel_half][kx + kernel_half];
+                        accumulated_color.g += pixel_color.g * kernel[ky + kernel_half][kx + kernel_half];
+                        accumulated_color.b += pixel_color.b * kernel[ky + kernel_half][kx + kernel_half];
+                    }
+                }
+            }
+
+            // Clamp accumulated color values to the range 0-1
+            accumulated_color.r = fmax(0.0, fmin(accumulated_color.r, 1.0));
+            accumulated_color.g = fmax(0.0, fmin(accumulated_color.g, 1.0));
+            accumulated_color.b = fmax(0.0, fmin(accumulated_color.b, 1.0));
+
+            t_rgb final_rgb = color_to_rgb(accumulated_color);
+            uint32_t blurred_color = (final_rgb.r << 24) | (final_rgb.g << 16) | (final_rgb.b << 8) | 0xFF;
+            mlx_put_pixel(blurred_image, x, y, blurred_color);
+        }
+    }
+
+    // Replace the original image with the blurred image
+    mlx_delete_image(data->mlx, data->image);
+    data->image = blurred_image;
+    mlx_image_to_window(data->mlx, blurred_image, 0, 0);
+    debug("Gaussian blur applied to the image!\n");
 }
