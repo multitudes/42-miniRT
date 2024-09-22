@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 16:11:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 17:43:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,19 @@ void	checker_texture_init(t_checker_texture *checker_texture, double scale, t_so
 #include <math.h>
 #include <stdbool.h>
 
-// Function to compute spherical coordinates (u, v) from point p
-void get_spherical_uv(const t_point3 *p, double *u, double *v) {
+/**
+ * @brief Get the spherical uv coordinates
+ * 
+ * @param p The point in 3D space
+ * @param u The u texture coordinate
+ * @param v The v texture coordinate
+ * Used in the sphere texture mapping. I take the intersection point
+ * mapped to the unit sphere and return the spherical coordinates
+ * of the point which will be used to get the color of the texture
+ * in the accompanying image texture.
+ */
+void get_spherical_uv(const t_point3 *p, double *u, double *v) 
+{
     double phi = atan2(p->z, p->x);   // Azimuthal angle
     double theta = acos(p->y);        // Polar angle
 
@@ -60,30 +71,17 @@ void get_spherical_uv(const t_point3 *p, double *u, double *v) {
     *v = theta / PI;                // v is in the range [0, 1]
 }
 
-// // Modified checker texture function
-// t_color checker_texture_value(const void *self, double u, double v, const t_point3 *p) {
-//     // Compute spherical coordinates (u, v) based on the point p
-//     get_spherical_uv(p, &u, &v);
-
-//     // Scale the texture coordinates
-//     double scaled_u = u * ((t_checker_texture*)self)->inv_scale;
-//     double scaled_v = v * ((t_checker_texture*)self)->inv_scale;
-
-//     // Determine if we are in an even or odd square of the checker pattern
-//     int u_int = (int)floor(scaled_u);
-//     int v_int = (int)floor(scaled_v);
-
-//     bool is_even = (u_int + v_int) % 2 == 0;
-
-//     // Return the corresponding color
-//     if (is_even)
-//         return ((t_checker_texture*)self)->even->color_albedo;
-//     else
-//         return ((t_checker_texture*)self)->odd->color_albedo;
-// }
-
-
-
+/**
+ * @brief Get the color of the texture at the given coordinates
+ * 
+ * @param self The texture object
+ * @param u The u texture coordinate unused because we are using spherical 
+ * solid coordinates
+ * @param v The v texture coordinate (unused see above)
+ * @param p The point in 3D space
+ * @return t_color The color of the texture at point of intersection
+ * imagining the sphere build as solid blocks of color
+ */
 t_color checker_texture_value(const void *self, double u, double v, const t_point3 *p)
 {
 	(void)u;
@@ -92,7 +90,6 @@ t_color checker_texture_value(const void *self, double u, double v, const t_poin
 	int yint = (int)floor(p->y * ((t_checker_texture*)self)->inv_scale);
 	int zint = (int)floor(p->z * ((t_checker_texture*)self)->inv_scale);
 
-
 	bool is_even = (xint + yint + zint) % 2 == 0;
 	if (is_even)
 		return (((t_checker_texture*)self)->even->color_albedo);
@@ -100,11 +97,18 @@ t_color checker_texture_value(const void *self, double u, double v, const t_poin
 		return (((t_checker_texture*)self)->odd->color_albedo);
 }
 
+/**
+ * @brief Initialize an image texture with the given image
+ * 
+ * @param img_texture The image texture object
+ * @param img The image to use as texture from the t_rtw_image struct
+ */
 void	img_texture_init(t_img_texture *img_texture, t_rtw_image *img)
 {
 	img_texture->base.value = img_texture_value;
 	img_texture->img = img;
 }
+
 /**
  * @brief Get the color of the texture at the given coordinates
  * 
