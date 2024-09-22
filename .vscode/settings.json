@@ -49,6 +49,7 @@
 		"utility": "c",
 		"typeinfo": "c",
 		"vector": "c",
-		"compare": "c"
+		"compare": "c",
+		"pthread.h": "c"
 	}
 }

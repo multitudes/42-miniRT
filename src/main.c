@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{
-		int scene = 4;
+		int scene = 1;
 		switch (scene)
 		{
 		case 1:
@@ -79,66 +79,98 @@ void	exit_gracefully(mlx_t *mlx)
 }
 
 
-//keep y the same rotate around the y axis
-t_point3 rotate_camera(t_point3 camera, double angle_degrees) {
-    double angle_radians = degrees_to_radians(angle_degrees);
+// //keep y the same rotate around the y axis
+// t_point3 rotate_camera(t_point3 camera, double angle_degrees) {
+//     double angle_radians = degrees_to_radians(angle_degrees);
     
-    // Keep the y coordinate the same
-    double new_y = camera.y;
+//     // Keep the y coordinate the same
+//     double new_y = camera.y;
     
-    // Calculate the new x and z using the rotation matrix
-    double new_x = camera.x * cos(angle_radians) - camera.z * sin(angle_radians);
-    double new_z = camera.x * sin(angle_radians) + camera.z * cos(angle_radians);
+//     // Calculate the new x and z using the rotation matrix
+//     double new_x = camera.x * cos(angle_radians) - camera.z * sin(angle_radians);
+//     double new_z = camera.x * sin(angle_radians) + camera.z * cos(angle_radians);
     
-    // Return the new camera position
-    return point3(new_x, new_y, new_z);
+//     // Return the new camera position
+//     return point3(new_x, new_y, new_z);
+// }
+
+
+// // Function to calculate the new camera direction vector (pointing toward the origin)
+// t_point3 calculate_direction(t_point3 camera_pos) {
+//     // Direction vector from the camera to the origin (0, 0, 0)
+//     t_point3 direction = point3(-camera_pos.x, -camera_pos.y, -camera_pos.z);
+    
+//     // Normalize the direction vector
+//     return unit_vector(direction);
+// }
+
+void translate_camera(t_camera *cam, t_vec3 translation) {
+    cam->center = vec3add(cam->center, translation);
+    update_cam(cam, cam->image_width, cam->image_height);
 }
 
+void move_camera_forward(t_camera *cam, double distance) {
+    t_vec3 translation = vec3multscalar(cam->w, distance);
+    translate_camera(cam, translation);
+}
 
-// Function to calculate the new camera direction vector (pointing toward the origin)
-t_point3 calculate_direction(t_point3 camera_pos) {
-    // Direction vector from the camera to the origin (0, 0, 0)
-    t_point3 direction = point3(-camera_pos.x, -camera_pos.y, -camera_pos.z);
-    
-    // Normalize the direction vector
-    return unit_vector(direction);
+void move_camera_right(t_camera *cam, double distance) {
+    t_vec3 translation = vec3multscalar(cam->u, distance);
+    translate_camera(cam, translation);
+}
+
+void move_camera_up(t_camera *cam, double distance) {
+    t_vec3 translation = vec3multscalar(cam->v, distance);
+    translate_camera(cam, translation);
 }
 
 void	hook(void *param)
 {
 	mlx_t		*mlx;
-	t_mrt		*mrt;
+	t_mrt		*data;
 
-	mrt = (t_mrt *)param;
-	mlx = mrt->mlx;
+	data = (t_mrt *)param;
+	mlx = data->mlx;
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		exit_gracefully(mlx);
 	if (mlx_is_key_down(mlx, MLX_KEY_UP))
 	{
+		move_camera_up(&(data->cam), data->cam.image_height / 10);
 		debug("UP key pressed");
+		data->needs_render = true;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+	{
+		move_camera_up(&(data->cam), -data->cam.image_height / 10 );
 		debug("DOWN key pressed");
-
+		data->needs_render = true;
+	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 	{
-		// mrt->cam.center = rotate_camera(mrt->cam.center, 5);
-		// mrt->cam.direction = calculate_direction(mrt->cam.center);
-		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
+		move_camera_right(&(data->cam), -data->cam.image_width / 10);
 		debug("LEFT key pressed");
-		mrt->needs_render = true;
+		data->needs_render = true;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
-		// mrt->cam.center = rotate_camera(mrt->cam.center, -5);
-		// mrt->cam.direction = calculate_direction(mrt->cam.center);
-		// mrt->renderscene(mrt, &(mrt->world), &(mrt->lights));
+		move_camera_right(&(data->cam), data->cam.image_width / 10);
 		debug("RIGHT key pressed");
-		mrt->needs_render = true;
+		data->needs_render = true;
 	}
-	if (mrt->needs_render)
+	if (mlx_is_key_down(mlx, MLX_KEY_SPACE)){
+		move_camera_forward(&(data->cam), -data->cam.image_width / 10);
+		debug("S key pressed");
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
-		render(mrt, &(mrt->world), &(mrt->lights));
-		mrt->needs_render = false;
+		move_camera_forward(&(data->cam), data->cam.image_width / 10);
+		debug("W key pressed");
+		data->needs_render = true;
+	}
+	if (data->needs_render)
+	{
+		render(data, &(data->world), &(data->lights));
+		data->needs_render = false;
 	}
 }
 
