@@ -6,13 +6,15 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:13:20 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 11:42:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 11:53:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rotated.h"
 #include "utils.h"
 
+// this is as per book translated from c++ but 
+// i am looking for a better way to implement this
 t_rotated_y	rotated_y(t_hittable *obj, double angle)
 {
 	double radians; 

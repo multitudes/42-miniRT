@@ -206,7 +206,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{
-		int scene = 3;
+		int scene = 1;
 		switch (scene)
 		{
 		case 1:

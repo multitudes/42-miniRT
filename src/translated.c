@@ -6,13 +6,15 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:52:57 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 11:42:55 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 11:52:58 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "translated.h"
 #include "utils.h"
 
+// this is as per book translated from c++ but 
+// i am looking for a better way to implement this
 t_translated translated(t_hittable *obj, t_vec3 offset)
 {
 	t_translated translated;

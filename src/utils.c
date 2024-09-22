@@ -6,28 +6,40 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/21 18:14:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 12:31:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "camera.h"
 
 #include "utils.h"
+#include <time.h>
 #define CORES 16
-
+#define RANDOM_SYSTEM 0
 
 /**
  *  @brief Our random int generator.
  * 
  * @return unsigned int
  */
+#if RANDOM_SYSTEM == 0
 unsigned int rand_rt() 
 {
 	static __thread unsigned int seed = 1;
     seed = (A * seed + C) % M;
     return (seed);
 }
-
+#else
+unsigned int rand_rt() 
+{
+    static __thread int initialized = 0;
+    if (!initialized) {
+        srand(time(NULL) ^ (uintptr_t)&initialized); // Seed the random number generator with a unique seed per thread
+        initialized = 1;
+    }
+    return rand();
+}
+#endif
 /*
  * Comverts degrees to radians.
  */

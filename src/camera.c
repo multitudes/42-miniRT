@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 11:06:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 12:20:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void update_cam(t_camera *cam, int new_width, int new_height)
 
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov) 
 {
-	cam->samples_per_pixel = 200;
-	cam->max_depth = 200;
+	cam->samples_per_pixel = 100;
+	cam->max_depth = 100;
 	cam->aspect_ratio = ASPECT_RATIO;
 	cam->image_width = IMAGE_WIDTH; 
 	cam->image_height = IMAGE_WIDTH / cam->aspect_ratio;
@@ -124,7 +124,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// }
 	if (srec.skip_pdf)
 	{
-        	return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+        return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 	}
 	recorded_pdf = srec.pdf_ptr;
 	hittable_pdf_init(&light_pdf, lights, &rec.p);
@@ -180,7 +180,6 @@ t_ray get_ray(t_camera cam, int i, int j)
 	t_vec3 ju = vec3multscalar(cam.pixel_delta_v, j + offset.y);
 	t_vec3 partial = vec3add(iu, ju); 
 	t_point3 pixel_sample = vec3add(cam.pixel00_loc, partial);
-
 	t_point3 ray_origin = cam.center;
 	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin); 
 	return ray(ray_origin, ray_direction);
