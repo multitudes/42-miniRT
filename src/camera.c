@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 12:20:09 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 14:00:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 	cam->max_depth = 100;
 	cam->aspect_ratio = ASPECT_RATIO;
 	cam->image_width = IMAGE_WIDTH; 
-	cam->image_height = IMAGE_WIDTH / cam->aspect_ratio;
+	cam->image_height = (int)(IMAGE_WIDTH / cam->aspect_ratio);
 	cam->image_height = (cam->image_height < 1) ? 1 : cam->image_height;
 	cam->center = center;
 	cam->direction = direction;
@@ -144,11 +144,15 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 unsigned int    color_gamma_corrected(t_color color)
 {
-	t_interval intensity = interval(0.0,0.999);
-	int r = clamp(intensity, linear_to_gamma(color.r)) * 255;
-	int g = clamp(intensity, linear_to_gamma(color.g)) * 255;
-	int b = clamp(intensity, linear_to_gamma(color.b)) * 255;
-    return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
+	t_interval intensity;
+	
+	intensity = interval(0.0,0.999);
+	t_rgb a;
+	a = color_to_rgb((t_color){
+		.r = clamp(intensity, linear_to_gamma(color.r)), 
+		.g = clamp(intensity, linear_to_gamma(color.g)), 
+		.b = clamp(intensity, linear_to_gamma(color.b))});
+    return (rgb_to_uint(a));
 }
 
 /*
@@ -157,7 +161,7 @@ and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib!
 */
 void write_color(t_mrt *data, int x, int y, t_color colorvector)
 {
-    int color = color_gamma_corrected(colorvector);
+    unsigned int color = color_gamma_corrected(colorvector);
     int offset;
     mlx_image_t *image;
     uint8_t *pixel;

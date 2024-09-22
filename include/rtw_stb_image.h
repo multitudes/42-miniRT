@@ -25,7 +25,4 @@ int				load(t_rtw_image *img, const char* filename);
 int				clamp_rtw(int x, int low, int high);
 void			free_rtw_image(t_rtw_image *img);
 
-
-
-
 #endif

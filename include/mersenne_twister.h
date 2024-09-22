@@ -1,29 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ambient.h                                          :+:      :+:    :+:   */
+/*   mersenne_twister.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/06 11:52:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 13:17:54 by lbrusa           ###   ########.fr       */
+/*   Created: 2024/09/22 13:08:22 by lbrusa            #+#    #+#             */
+/*   Updated: 2024/09/22 13:19:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AMBIENT_H
-# define AMBIENT_H
+#ifndef MERSENNE_TWISTER_H
+# define MERSENNE_TWISTER_H
 
-#include "color.h"
+#include <stdint.h>
 
-typedef struct 	s_ambient
-{
-	double		ratio;
-	t_rgb		rgbcolor;
-	t_color		color;
-	void		(*print)(const void* self);
-}				t_ambient;
-
-void	ambient(t_ambient *result, double ratio, t_rgb rgb);
-void	print_ambient(const void *self);
+void mt_init_genrand(uint32_t s);
+uint32_t mt_genrand_int32(void);
 
 #endif

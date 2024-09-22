@@ -15,7 +15,37 @@ CFLAGS 			= 	-Wextra -Wall -Werror
 CFLAGS 			+= 	-Iinclude -Isrc -Ilib/external
 CFLAGS			+=  -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
 CFLAGS 			+=  -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+# general compile flags
+CFLAGS += -std=c11
+# compile warning flags
+CFLAGS += -Wall
+CFLAGS += -Wextra
+CFLAGS += -Werror
+# CFLAGS += -pedantic
+# CFLAGS += -Wconversion
+CFLAGS += -Wunreachable-code
+# CFLAGS += -Wshadow
+CFLAGS += -Wno-overlength-strings
+# performance flags (don't do much tbh)
+CFLAGS += -Ofast
+CFLAGS += -march=native
+CFLAGS += -fno-signed-zeros
+CFLAGS += -funroll-loops
+# Unsafe performance flags
+CFLAGS += -fomit-frame-pointer
+CFLAGS += -ffast-math
+CFLAGS += -fno-math-errno
+CFLAGS += -funsafe-math-optimizations
+CFLAGS += -fassociative-math
+CFLAGS += -freciprocal-math
+CFLAGS += -ffinite-math-only
+CFLAGS += -fno-signed-zeros
+CFLAGS += -fno-trapping-math
+CFLAGS += -frounding-math
+
+
 # CFLAGS 			+=  -DNDEBUG
+
 CFLAGS 			+=  -g
 # CFLAGS += -DDEBUG=1
 
@@ -37,13 +67,13 @@ INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
 											vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
 											texture.c material.c onb.c pdf.c quad.c hittable_list.c \
-											disk.c box.c triangle.c rotated.c translated.c)
+											disk.c box.c triangle.c rotated.c translated.c mersenne_twister.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
 									utils.h ambient.h plane.h cylinder.h texture.h \
 									rtw_stb_image.h material.h onb.h pdf.h quad.h disk.h \
-									box.h triangle.h rotated.h translated.h)
+									box.h triangle.h rotated.h translated.h mersenne_twister.h)
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a

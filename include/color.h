@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:47:37 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 15:01:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 14:02:35 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,17 @@
  */
 typedef struct 	s_rgb 
 {
-    uint8_t 	r;
-    uint8_t 	g;
-    uint8_t 	b;
+    uint32_t 	r;
+    uint32_t 	g;
+    uint32_t 	b;
 } 				t_rgb;
 
-t_color 	color(double, double, double);
-t_rgb 		rgb(int r, int g, int b);
-double 		linear_to_gamma(double linear_component);
-t_color		color_random();
-t_color		color_random_min_max(double min, double max);
-t_color		rgb_to_color(t_rgb rgbcolor);
+t_color 	    color(double, double, double);
+t_rgb           rgb(uint32_t r, uint32_t g, uint32_t b);
+double 		    linear_to_gamma(double linear_component);
+t_color		    color_random();
+t_color		    color_random_min_max(double min, double max);
+t_color		    rgb_to_color(t_rgb rgbcolor);
+t_rgb           color_to_rgb(t_color color);
+unsigned int    rgb_to_uint(t_rgb rgbcolor);
 #endif

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 12:31:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 14:09:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,17 @@ double degrees_to_radians(double degrees)
 }
 
 /*
- * Returns a random int in [min,max).
+ * @brief Returns a random int in [min,max).
+ * 
  * max is excluded.
  */
 int random_int(int min, int max) 
 {
-    if (CORES > 1)
-    {
-        unsigned int seed  = rand();
-        return min + rand_r(&seed) % (max - min);
-    }
     return min + rand_rt() % (max - min);
 }
+
 /*
- * Returns a random real in [0,1], 1 excluded.
+ * @brief Returns a random real in [0,1), 1 excluded.
  */
 double random_d() 
 {
@@ -70,7 +67,7 @@ double random_d()
 }
 
 /*
- * Returns a random real in [min,max) with min included 
+ * @brief Returns a random real in [min,max) 
  * and max excluded.
  */
 double random_double(double min, double max) 

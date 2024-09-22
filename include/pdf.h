@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:05:52 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/17 19:17:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 13:19:55 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,5 @@ t_vec3 hittable_pdf_generate(void *self);
 void mixture_pdf_init(t_mixture_pdf *mixture_pdf, t_pdf *p0, t_pdf *p1);
 double mixture_pdf_value(const void *self, const t_vec3 *direction);
 t_vec3 mixture_pdf_generate(void *self);
-
-
-
 
 #endif

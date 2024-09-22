@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   translated.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:46:22 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/07/26 10:56:46 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 13:20:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,3 @@ t_translated	translated(t_hittable *obj, t_vec3 offset);
 bool			hit_translated(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec);
 
 #endif
-

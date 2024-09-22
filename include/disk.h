@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:07:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 18:24:03 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 13:19:22 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include "ray.h"
 #include "hittable.h"
 #include "color.h"
-
 
 typedef struct s_disk
 {
@@ -49,12 +48,3 @@ double 	disk_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir
 t_vec3 	disk_random(const void *self, const t_point3 *orig);
 
 #endif
-
-/*
-another struct for disk can be
-    t_object base;
-    t_point3 center;
-    t_vec3 normal;
-    double radius;
-    t_material *mat;
-*/
