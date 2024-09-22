@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 14:00:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 16:11:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,12 @@ void update_cam(t_camera *cam, int new_width, int new_height)
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov) 
 {
 	cam->samples_per_pixel = 100;
-	cam->max_depth = 100;
+	cam->max_depth = 200;
 	cam->aspect_ratio = ASPECT_RATIO;
 	cam->image_width = IMAGE_WIDTH; 
 	cam->image_height = (int)(IMAGE_WIDTH / cam->aspect_ratio);
-	cam->image_height = (cam->image_height < 1) ? 1 : cam->image_height;
+	if (cam->image_height < 1)
+		cam->image_height = 1;
 	cam->center = center;
 	cam->direction = direction;
 	cam->hfov = clamp(interval(1, 170), hfov);
