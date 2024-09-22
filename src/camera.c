@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/21 18:16:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 11:06:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,22 +105,26 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	if (depth <= 0)
         return color(0,0,0);
-	if (!world->hit_objects(world, r, interval(0.001, 10000), &rec))
-		return color(0.0005,0.0005,0.0005);
+	if (!world->hit_objects(world, r, interval(0.001, 100000), &rec))
+		return color(0.05,0.05,0.05);
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 	init_scatter_record(&srec);
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 		return color_from_emission;
 	t_ray scattered = srec.skip_pdf_ray;
+	// if (srec.skip_pdf)
+	// {
+	// 	if (srec.skip_pdf) {
+	// 		t_color ambient_light = cam->ambient_light.color;
+	// 		t_metal *metal = (t_metal *)rec.mat;
+	// 		t_color ambient_material = vec3mult(metal->albedo, ambient_light);
+    //    		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+    //     	return vec3add(ambient_material, reflected_color);
+    // 	}
+	// }
 	if (srec.skip_pdf)
 	{
-		if (srec.skip_pdf) {
-			t_color ambient_light = cam->ambient_light.color;
-			t_metal *metal = (t_metal *)rec.mat;
-			t_color ambient_material = vec3mult(metal->albedo, ambient_light);
-       		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-        	return vec3add(ambient_material, reflected_color);
-    	}
+        	return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 	}
 	recorded_pdf = srec.pdf_ptr;
 	hittable_pdf_init(&light_pdf, lights, &rec.p);

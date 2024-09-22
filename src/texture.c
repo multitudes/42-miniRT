@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/11 09:35:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 10:13:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ t_color solid_color_value(const void *self, double u, double v, const t_point3 *
 */
 void	checker_texture_init(t_checker_texture *checker_texture, double scale, t_solid_color *even, t_solid_color *odd)
 {
-	printf("checker_texture_init done ================ ");
 	checker_texture->base.value = checker_texture_value;
 	checker_texture->inv_scale = 1.0 / scale;
 	checker_texture->even = even;

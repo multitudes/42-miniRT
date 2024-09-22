@@ -37,13 +37,13 @@ INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
 											vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
 											texture.c material.c onb.c pdf.c quad.c hittable_list.c \
-											disk.c box.c triangle.c)
+											disk.c box.c triangle.c rotated.c translated.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
 									utils.h ambient.h plane.h cylinder.h texture.h \
 									rtw_stb_image.h material.h onb.h pdf.h quad.h disk.h \
-									box.h triangle.h)
+									box.h triangle.h rotated.h translated.h)
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
