@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 14:33:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 19:57:05 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,15 @@ typedef struct	s_thread_data
 
 typedef struct	s_camera
 {
-	// considered "public" 
-    t_point3 	center;         // Camera center
+    t_point3 	center;
 	t_vec3		direction;
 	double 		aspect_ratio;
 	int 		image_width;
-	int    		image_height;   // Rendered image height
-	t_vec3   	u, v, w;              // Camera frame basis vectors
-	double		hfov;			   // hotizontal Field of view
-
+	int    		image_height;
+	t_vec3   	u, v, w;
+	double		hfov;
 	int 		samples_per_pixel;
-	int			max_depth;		   // Maximum number of ray bounces into scene
+	int			max_depth;
 
 	// t_point3 	lookfrom;   		// Point camera is looking from
     // t_point3 	lookat;  			// Point camera is looking at
@@ -74,6 +72,7 @@ void 			write_color(t_mrt *data, int x, int y, t_color colorvector);
 void			print_camera(const void *self);
 unsigned int    color_gamma_corrected(t_color color);
 void 			update_cam(t_camera *cam, int new_width, int new_height);
+void 			update_cam_orientation(t_camera *cam);
 // t_ray		get_ray(t_camera *c, int u, int v);
 // t_vec3		sample_square();
 

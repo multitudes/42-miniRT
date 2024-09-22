@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 13:19:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 19:22:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@
 
 # define TRUE 1
 # define FALSE 0
+
+
+typedef struct {
+    int mouse_pressed;
+    double last_x;
+    double last_y;
+} t_mouse_state;
 
 typedef struct 	s_mrt 
 {
@@ -45,6 +52,7 @@ typedef struct 	s_mrt
 	// render function
 	void (*renderscene)(struct s_mrt *, const t_hittablelist *, const t_hittablelist *);
 
+	t_mouse_state mouse_state;
 	// t_viewport	viewport;
 	// t_pixel		pixel;
 }				t_mrt;

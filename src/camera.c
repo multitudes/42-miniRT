@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 16:45:18 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 20:31:22 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,33 @@
 #include <math.h>
 #include <time.h>
 #include <pthread.h>
+
+/**
+ * @brief update a camera object when the orientation changes
+ */
+void update_cam_orientation(t_camera *cam)
+{
+    // Calculate the lookat point based on the new direction
+    t_point3 lookat = vec3add(cam->center, cam->direction);
+
+    // Recalculate the camera parameters
+    double focal_length = length(vec3substr(cam->center, lookat));
+    double theta = degrees_to_radians(cam->hfov);
+    double h = tan(theta / 2);
+    double viewport_width = 2 * h * focal_length;
+    double viewport_height = viewport_width * ((double)cam->image_height / cam->image_width);
+
+    t_vec3 viewport_u = vec3multscalar(cam->u, viewport_width);
+    t_vec3 viewport_v = vec3multscalar(vec3negate(cam->v), viewport_height);
+    cam->pixel_delta_u = vec3divscalar(viewport_u, cam->image_width);
+    cam->pixel_delta_v = vec3divscalar(viewport_v, cam->image_height);
+
+    t_point3 part1 = vec3substr(cam->center, vec3multscalar(cam->w, focal_length));
+    t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
+    t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
+    cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
+}
+
 
 void update_cam(t_camera *cam, int new_width, int new_height)
 {

@@ -70,6 +70,85 @@ int main(int argc, char **argv)
 	}
 }
 
+// Function to create a rotation matrix for the y-axis
+void create_yaw_rotation_matrix(double angle, double matrix[3][3]) {
+    double cos_angle = cos(angle);
+    double sin_angle = sin(angle);
+
+    matrix[0][0] = cos_angle;
+    matrix[0][1] = 0;
+    matrix[0][2] = -sin_angle;
+
+    matrix[1][0] = 0;
+    matrix[1][1] = 1;
+    matrix[1][2] = 0;
+
+    matrix[2][0] = sin_angle;
+    matrix[2][1] = 0;
+    matrix[2][2] = cos_angle;
+}
+
+// Function to apply a rotation matrix to a vector
+t_vec3 apply_rotation_matrix(t_vec3 vec, double matrix[3][3]) {
+    t_vec3 result;
+    result.x = matrix[0][0] * vec.x + matrix[0][1] * vec.y + matrix[0][2] * vec.z;
+    result.y = matrix[1][0] * vec.x + matrix[1][1] * vec.y + matrix[1][2] * vec.z;
+    result.z = matrix[2][0] * vec.x + matrix[2][1] * vec.y + matrix[2][2] * vec.z;
+    return result;
+}
+
+// Function to rotate the camera around the y-axis
+void rotate_camera_yaw(t_camera *cam, double deltax) {
+    double sensitivity = 0.00012;
+    double angle = deltax * sensitivity;
+	printf("angle = %f\n", angle);
+    double rotation_matrix[3][3];
+    create_yaw_rotation_matrix(angle, rotation_matrix);
+    cam->u = apply_rotation_matrix(cam->u, rotation_matrix);
+    cam->v = apply_rotation_matrix(cam->v, rotation_matrix);
+    cam->w = apply_rotation_matrix(cam->w, rotation_matrix);
+ 	cam->direction = vec3add(vec3add(vec3multscalar(cam->u, cam->direction.x), \
+					vec3multscalar(cam->v, cam->direction.y)), \
+					vec3multscalar(cam->w, cam->direction.z));
+}
+
+
+void mouse_button_callback(mouse_key_t button, action_t action, modifier_key_t mods, void* param) {
+    t_mrt* data = (t_mrt *)param;
+	(void)mods;
+    if (button == MLX_MOUSE_BUTTON_LEFT) {
+        if (action == MLX_PRESS) {
+			printf("Mouse pressed\n");
+			data->mouse_state.last_x = data->mouse_state.last_y = 0;
+			data->mouse_state.mouse_pressed = 1;
+        } else if (action == MLX_RELEASE) {
+			data->mouse_state.mouse_pressed = 0;
+			printf("Mouse released\n");
+			// update_cam_orientation(&(data->cam));
+			data->needs_render = true;
+        }
+    }
+}
+
+void mouse_move_callback(double xpos, double ypos, void* param) {
+    t_mrt* data = (t_mrt *)param;
+
+    if (data->mouse_state.mouse_pressed) {
+        double deltax = xpos - data->mouse_state.last_x;
+        double deltay = ypos - data->mouse_state.last_y;
+
+        // Update the camera direction 
+        printf("Mouse moved: deltax = %f, deltay = %f\n", deltax, deltay);
+		rotate_camera_yaw(&(data->cam), deltax);
+		update_cam_orientation(&(data->cam));
+        data->mouse_state.last_x = xpos;
+        data->mouse_state.last_y = ypos;
+
+		// data->needs_render = true;
+    }
+}
+
+
 void	exit_gracefully(mlx_t *mlx)
 {
 	ft_printf("byebye!\n");
@@ -78,31 +157,6 @@ void	exit_gracefully(mlx_t *mlx)
 	exit(EXIT_SUCCESS);
 }
 
-
-// //keep y the same rotate around the y axis
-// t_point3 rotate_camera(t_point3 camera, double angle_degrees) {
-//     double angle_radians = degrees_to_radians(angle_degrees);
-    
-//     // Keep the y coordinate the same
-//     double new_y = camera.y;
-    
-//     // Calculate the new x and z using the rotation matrix
-//     double new_x = camera.x * cos(angle_radians) - camera.z * sin(angle_radians);
-//     double new_z = camera.x * sin(angle_radians) + camera.z * cos(angle_radians);
-    
-//     // Return the new camera position
-//     return point3(new_x, new_y, new_z);
-// }
-
-
-// // Function to calculate the new camera direction vector (pointing toward the origin)
-// t_point3 calculate_direction(t_point3 camera_pos) {
-//     // Direction vector from the camera to the origin (0, 0, 0)
-//     t_point3 direction = point3(-camera_pos.x, -camera_pos.y, -camera_pos.z);
-    
-//     // Normalize the direction vector
-//     return unit_vector(direction);
-// }
 
 void translate_camera(t_camera *cam, t_vec3 translation) {
     cam->center = vec3add(cam->center, translation);
@@ -129,8 +183,10 @@ void	hook(void *param)
 	mlx_t		*mlx;
 	t_mrt		*data;
 
+
 	data = (t_mrt *)param;
 	mlx = data->mlx;
+
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		exit_gracefully(mlx);
 	if (mlx_is_key_down(mlx, MLX_KEY_UP))
@@ -211,11 +267,15 @@ bool init_data(t_mrt *data)
     data->win_ptr = NULL;
     data->image = NULL;
 	data->renderscene = render;
+	data->needs_render = true;
+	data->mouse_state.mouse_pressed = 0;
+	data->mouse_state.last_x = 0;
+	data->mouse_state.last_y = 0;
+
 	if (BONUS)
 		mt_init_genrand(time(NULL));
     return (true);
 }
-
 
 /*
 This is the callback of 
@@ -235,9 +295,6 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	mlx_resize_image(data->image, (uint32_t)new_width, (uint32_t)new_height);
 	data->needs_render = true;
 }
-
-
-
 
 void render_from_file(char *filename)
 {
@@ -804,6 +861,7 @@ int main_blue_red()
 int main_redlight(int argc, char **argv)
 {
     t_mrt data;
+	init_data(&data);
     (void)argv;
 	(void)argc;
 
@@ -853,8 +911,7 @@ int main_redlight(int argc, char **argv)
 	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
 
 	t_sphere s4;
-	sphere(&s4, vec3(350, 350, 250), 160, rgb(255,0,254));
-
+	sphere(&s4, vec3(350, 350, 250), 160, rgb(10,0,0));
 
 	t_sphere s5;
 	sphere(&s5, vec3(0, 0, -1.2), 1, rgb(128,0,0));
@@ -866,7 +923,6 @@ int main_redlight(int argc, char **argv)
 	sphere(&s7, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
 	s7.print((void*)&s7);
 
-
 	list[0] = (t_hittable*)(&s1); // red sphere
 	list[1] = (t_hittable*)(&s6);  // light quad
 	// list[1] = (t_hittable*)(&s2);
@@ -876,7 +932,6 @@ int main_redlight(int argc, char **argv)
 	list[5] = (t_hittable*)(&s8);
 
 	const t_hittablelist world = hittablelist(list, 6);
-
 
 	t_empty_material empty_material;
 	t_material *no_material = (t_material*)&empty_material;
@@ -901,6 +956,10 @@ int main_redlight(int argc, char **argv)
 	data.lights = lights;
 
 	render(&data, &world, &lights);
+ 	mlx_mouse_hook(data.mlx, mouse_button_callback, (void *)&data);
+    mlx_cursor_hook(data.mlx, mouse_move_callback, (void *)&data);
+
+
 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
     mlx_loop(data.mlx);
