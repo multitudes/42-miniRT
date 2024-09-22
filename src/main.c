@@ -166,7 +166,7 @@ void render_from_file(char *filename)
 {
     t_mrt data;
 
-	// if (argc != 2)
+	// if (argc > 2)
 	// {
 	// 	write(2, "Error\nProgram expects an .rt file as input!\n", 44);
 	// 	return (EXIT_FAILURE);
@@ -199,10 +199,9 @@ int main(int argc, char **argv)
     (void)argv;
 	(void)argc;
 
-	if (argc > 1)
+	if (argc > 1 && argc < 3)
 	{
 		render_from_file(argv[1]);
-
 	}
 	else 
 	{
