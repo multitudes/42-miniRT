@@ -16,6 +16,7 @@
 #include "box.h"
 #include "triangle.h"
 #include <time.h>
+#include "mersenne_twister.h"
 
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
@@ -131,7 +132,8 @@ bool init_data(t_mrt *data)
     data->win_ptr = NULL;
     data->image = NULL;
 	data->renderscene = render;
-
+	if (BONUS)
+		mt_init_genrand(time(NULL));
     return (true);
 }
 

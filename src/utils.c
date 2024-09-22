@@ -6,16 +6,15 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 14:09:47 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 14:39:15 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "camera.h"
-
 #include "utils.h"
+#include "mersenne_twister.h"
 #include <time.h>
 #define CORES 16
-#define RANDOM_SYSTEM 0
+#define RANDOM_SYSTEM 2
 
 /**
  *  @brief Our random int generator.
@@ -29,7 +28,7 @@ unsigned int rand_rt()
     seed = (A * seed + C) % M;
     return (seed);
 }
-#else
+#elif RANDOM_SYSTEM == 1
 unsigned int rand_rt() 
 {
     static __thread int initialized = 0;
@@ -39,7 +38,13 @@ unsigned int rand_rt()
     }
     return rand();
 }
+#elif RANDOM_SYSTEM == 2
+unsigned int rand_rt()
+{
+    return mt_genrand_int32();
+}
 #endif
+
 /*
  * Comverts degrees to radians.
  */

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 13:18:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 14:33:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #define ASPECT_RATIO (double)16.0/16.0
 #define IMAGE_WIDTH 200
 #define CORES 16
+#define BONUS 1
 
 typedef struct s_mrt t_mrt;
 

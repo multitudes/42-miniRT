@@ -11,43 +11,20 @@ NAME 			= 	miniRT
 
 CC 				= 	cc
 
-CFLAGS 			= 	-Wextra -Wall -Werror
-CFLAGS 			+= 	-Iinclude -Isrc -Ilib/external
-CFLAGS			+=  -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
-CFLAGS 			+=  -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
-# general compile flags
-CFLAGS += -std=c11
-# compile warning flags
-CFLAGS += -Wall
-CFLAGS += -Wextra
-CFLAGS += -Werror
-# CFLAGS += -pedantic
-# CFLAGS += -Wconversion
-CFLAGS += -Wunreachable-code
-# CFLAGS += -Wshadow
-CFLAGS += -Wno-overlength-strings
-# performance flags (don't do much tbh)
-CFLAGS += -Ofast
-CFLAGS += -march=native
-CFLAGS += -fno-signed-zeros
-CFLAGS += -funroll-loops
-# Unsafe performance flags
-CFLAGS += -fomit-frame-pointer
-CFLAGS += -ffast-math
-CFLAGS += -fno-math-errno
-CFLAGS += -funsafe-math-optimizations
-CFLAGS += -fassociative-math
-CFLAGS += -freciprocal-math
-CFLAGS += -ffinite-math-only
-CFLAGS += -fno-signed-zeros
-CFLAGS += -fno-trapping-math
-CFLAGS += -frounding-math
-
-
-# CFLAGS 			+=  -DNDEBUG
-
+CFLAGS 			:= -Wall
+CFLAGS 			+= -Wextra
+CFLAGS 			+= -Werror
+CFLAGS 			+= -Iinclude 
+CFLAGS			+= -Isrc 
+CFLAGS			+= -Ilib/external
+CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
+CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math 
+CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
+CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
 CFLAGS 			+=  -g
-# CFLAGS += -DDEBUG=1
+CFLAGS 			+=  -DNDEBUG
+
 
 # directories
 OBJ_DIR			= 	obj/

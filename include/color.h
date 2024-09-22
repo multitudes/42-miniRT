@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:47:37 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 14:02:35 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 14:30:26 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,5 @@ t_color		    color_random_min_max(double min, double max);
 t_color		    rgb_to_color(t_rgb rgbcolor);
 t_rgb           color_to_rgb(t_color color);
 unsigned int    rgb_to_uint(t_rgb rgbcolor);
+
 #endif
