@@ -23,6 +23,53 @@
 #define TRUE 1
 #define FALSE 0
 
+int main_checkerfloors();
+int main_earth(int argc, char **argv);
+int main_blue_red();
+int main_redlight(int argc, char **argv);
+int main_cyl(int argc, char **argv);
+void render_from_file(char *filename);
+
+int main(int argc, char **argv)
+{
+   
+    (void)argv;
+	(void)argc;
+
+	if (argc > 1 && argc < 3)
+	{
+		render_from_file(argv[1]);
+	}
+	else 
+	{
+		int scene = 4;
+		switch (scene)
+		{
+		case 1:
+			main_redlight(argc, argv);
+			break;
+		case 2:
+			main_earth(argc, argv);
+			break;
+		case 3:
+			main_blue_red();
+			break;
+		case 4:
+			main_checkerfloors();
+			break;
+		case 5:
+			main_redlight(argc, argv);
+			break;
+		case 6:
+			main_cyl(argc, argv);
+			break;
+		default:
+			break;
+		}
+		return (EXIT_SUCCESS);
+	}
+}
+
 void	exit_gracefully(mlx_t *mlx)
 {
 	ft_printf("byebye!\n");
@@ -158,11 +205,7 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	data->needs_render = true;
 }
 
-int main_checkerfloors();
-int main_earth(int argc, char **argv);
-int main_blue_red();
-int main_redlight(int argc, char **argv);
-int main_cyl(int argc, char **argv);
+
 
 
 void render_from_file(char *filename)
@@ -197,45 +240,6 @@ void render_from_file(char *filename)
 }
 
 
-int main(int argc, char **argv)
-{
-   
-    (void)argv;
-	(void)argc;
-
-	if (argc > 1 && argc < 3)
-	{
-		render_from_file(argv[1]);
-	}
-	else 
-	{
-		int scene = 2;
-		switch (scene)
-		{
-		case 1:
-			main_redlight(argc, argv);
-			break;
-		case 2:
-			main_earth(argc, argv);
-			break;
-		case 3:
-			main_blue_red();
-			break;
-		case 4:
-			main_checkerfloors();
-			break;
-		case 5:
-			main_redlight(argc, argv);
-			break;
-		case 6:
-			main_cyl(argc, argv);
-			break;
-		default:
-			break;
-		}
-		return (EXIT_SUCCESS);
-	}
-}
 	
 int main_checkerfloors() 
 {
@@ -693,7 +697,7 @@ int main_blue_red()
 	t_metal metal;
 	metal_init(&metal, color(0.8, 0, 0), 0.3);
 	
-	
+	// red metallic sphere
 	t_sphere s1;
 	sphere_mat(&s1, vec3(190, 90, 190), 180, (t_material*)&metal);
 	s1.print((void*)&s1);
@@ -732,9 +736,10 @@ int main_blue_red()
 	// sphere_mat(&l2, point3( 343,354,132 ), 200, (t_material*)&no_material);
 	// t_quad l2;
 	// quad_mat(&l2, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
-	t_disk l2;
-	disk_mat(&l2, point3(343,554,332), vec3(0,0,1), 10, (t_material*)&no_material);
-
+	// t_disk l2;
+	// disk_mat(&l2, point3(343,554,332), vec3(0,0,1), 10, (t_material*)&no_material);
+	t_quad l2;
+	quad_mat(&l2, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 
 	list_lights[0] = (t_hittable*)(&l2);
 	// list_lights[1] = (t_hittable*)(&l2);
@@ -783,11 +788,13 @@ int main_redlight(int argc, char **argv)
 	/* 		ambient light		   */	
 	/***************************** */
 	ambient(&data.cam.ambient_light, 0.1, rgb(110,100,100));
+	data.cam.ambient_light.print((void*)&data.cam.ambient_light);
 
-	// world
+
+	// world ================================================== world ==================================================
 	t_hittable *list[10];
 
-	// red sphere
+	// red sphere 
 	t_sphere s1;
 	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	s1.print((void*)&s1);
@@ -799,6 +806,7 @@ int main_redlight(int argc, char **argv)
 	t_solid_color difflight_color;
 	solid_color_init(&difflight_color, color(40, 40, 40));
 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+
 	t_diffuse_light blue;
 	t_solid_color difflight_color2;
 	solid_color_init(&difflight_color2, color(0, 0, 80));
@@ -806,6 +814,8 @@ int main_redlight(int argc, char **argv)
 
 	t_quad s6;
 	quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	s6.print((void*)&s6);
+
 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
 	t_sphere s2;
 	sphere_mat(&s2, point3( 90,190,90 ), 60, (t_material*)&blue);
@@ -817,12 +827,13 @@ int main_redlight(int argc, char **argv)
 
 	t_sphere s5;
 	sphere(&s5, vec3(0, 0, -1.2), 1, rgb(128,0,0));
-	s1.print((void*)&s1);
+	s5.print((void*)&s5);
 	t_sphere s8;
 	sphere(&s8, vec3(0, -100.5, -1), 200, rgb(0,128,0));
-	s2.print((void*)&s2);
+	s8.print((void*)&s8);
 	t_sphere s7;
 	sphere(&s7, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+	s7.print((void*)&s7);
 
 
 	list[0] = (t_hittable*)(&s1);
@@ -841,6 +852,8 @@ int main_redlight(int argc, char **argv)
 	t_sphere l2;
 	sphere_mat(&l2, point3( 343,554,332 ), 10, (t_material*)&no_material);
 
+	// t_quad s6;
+	// quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
 	t_quad l6;
 	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 

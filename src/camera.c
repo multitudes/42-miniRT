@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 16:11:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 16:22:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 
 	if (depth <= 0)
         return color(0,0,0);
-	if (!world->hit_objects(world, r, interval(0.001, 100000), &rec))
+	if (!world->hit_objects(world, r, interval(0.001, 10000), &rec))
 		return color(0.05,0.05,0.05);
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 	init_scatter_record(&srec);
