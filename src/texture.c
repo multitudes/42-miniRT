@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 10:13:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 16:11:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,31 +105,28 @@ void	img_texture_init(t_img_texture *img_texture, t_rtw_image *img)
 	img_texture->base.value = img_texture_value;
 	img_texture->img = img;
 }
-
+/**
+ * @brief Get the color of the texture at the given coordinates
+ * 
+ * @param self The texture object
+ * @param u The u texture coordinate
+ * @param v The v texture coordinate
+ * @param p The point in 3D space
+ * @return t_color The color of the texture at the given coordinates
+ * 
+ * If we have no texture data, then return solid cyan as a debugging aid.
+ * The pixel is a pointer to the first byte of the RGB triplet.
+ */
 t_color img_texture_value(const void *self, double u, double v, const t_point3 *p)
 {
-	// unused!
 	(void)p;
-	// If we have no texture data, then return solid cyan as a debugging aid.
 	t_img_texture *image;
 	
 	image = (t_img_texture *)self;
 	if (height(image->img) <= 0) 
 		return color(0, 1, 1);
-	
-	// Clamp input texture coordinates to [0,1] x [1,0]
-	u = clamp(interval(0, 1), u);
-	v = 1.0 - clamp(interval(0, 1), v); // Flip V to image coordinates
-	// printf("u = %f,	 v = %f\n", u, v);
-	int i = (int)(u * width(image->img));
-	int j = (int)(v * height(image->img));
-	// pixel is a pointer to the first byte of the RGB triplet
-	unsigned char *pixel = pixel_data(image->img, i, j);
-	// Scale color values to [0,1]
-	double color_scale = 1.0 / 255.0;
-	double r = *pixel * color_scale;
-	double g = *(++pixel) * color_scale;
-	double b = *(++pixel) * color_scale;
-	// printf("r = %f, g = %f, b = %f\n", r, g, b);
-	return color(r, g, b);
+	int i = (int)(clamp(interval(0, 1), u) * width(image->img));
+	int j = (int)((1.0 - clamp(interval(0, 1), v)) * height(image->img));
+	uint8_t *pixel = pixel_data(image->img, i, j);
+	return rgb_to_color(rgb(*pixel, *(pixel + 1), *(pixel + 2)));
 }
