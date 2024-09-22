@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 20:31:22 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 20:47:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,18 @@
  */
 void update_cam_orientation(t_camera *cam)
 {
+	// cam->direction = vec3negate(unit_vector(cam->w));
     // Calculate the lookat point based on the new direction
     t_point3 lookat = vec3add(cam->center, cam->direction);
-
-    // Recalculate the camera parameters
     double focal_length = length(vec3substr(cam->center, lookat));
     double theta = degrees_to_radians(cam->hfov);
     double h = tan(theta / 2);
     double viewport_width = 2 * h * focal_length;
     double viewport_height = viewport_width * ((double)cam->image_height / cam->image_width);
+
+    cam->w = unit_vector(vec3substr(cam->center, lookat));
+    cam->u = unit_vector(cross(cam->vup, cam->w));
+    cam->v = cross(cam->w, cam->u);
 
     t_vec3 viewport_u = vec3multscalar(cam->u, viewport_width);
     t_vec3 viewport_v = vec3multscalar(vec3negate(cam->v), viewport_height);

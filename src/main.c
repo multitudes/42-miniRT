@@ -72,44 +72,49 @@ int main(int argc, char **argv)
 
 // Function to create a rotation matrix for the y-axis
 void create_yaw_rotation_matrix(double angle, double matrix[3][3]) {
-    double cos_angle = cos(angle);
-    double sin_angle = sin(angle);
+    double cos_angle = cos(degrees_to_radians(angle));
+    double sin_angle;
+	sin_angle = sin(degrees_to_radians(angle));
 
+
+	printf("cos_angle = %f, sin_angle = %f\n", cos_angle, sin_angle);
     matrix[0][0] = cos_angle;
     matrix[0][1] = 0;
-    matrix[0][2] = -sin_angle;
+    matrix[0][2] = sin_angle;
 
     matrix[1][0] = 0;
     matrix[1][1] = 1;
     matrix[1][2] = 0;
 
-    matrix[2][0] = sin_angle;
+    matrix[2][0] = -sin_angle;
     matrix[2][1] = 0;
     matrix[2][2] = cos_angle;
 }
 
 // Function to apply a rotation matrix to a vector
-t_vec3 apply_rotation_matrix(t_vec3 vec, double matrix[3][3]) {
+t_vec3 apply_rotation_matrix(t_vec3 dir, double matrix[3][3])
+{
     t_vec3 result;
-    result.x = matrix[0][0] * vec.x + matrix[0][1] * vec.y + matrix[0][2] * vec.z;
-    result.y = matrix[1][0] * vec.x + matrix[1][1] * vec.y + matrix[1][2] * vec.z;
-    result.z = matrix[2][0] * vec.x + matrix[2][1] * vec.y + matrix[2][2] * vec.z;
+	
+    result.x = matrix[0][0] * dir.x + matrix[0][1] * dir.y + matrix[0][2] * dir.z;
+    result.y = matrix[1][0] * dir.x + matrix[1][1] * dir.y + matrix[1][2] * dir.z;
+    result.z = matrix[2][0] * dir.x + matrix[2][1] * dir.y + matrix[2][2] * dir.z;
     return result;
 }
 
 // Function to rotate the camera around the y-axis
 void rotate_camera_yaw(t_camera *cam, double deltax) {
-    double sensitivity = 0.00012;
+    double sensitivity = 0.0022;
     double angle = deltax * sensitivity;
 	printf("angle = %f\n", angle);
     double rotation_matrix[3][3];
     create_yaw_rotation_matrix(angle, rotation_matrix);
-    cam->u = apply_rotation_matrix(cam->u, rotation_matrix);
-    cam->v = apply_rotation_matrix(cam->v, rotation_matrix);
-    cam->w = apply_rotation_matrix(cam->w, rotation_matrix);
- 	cam->direction = vec3add(vec3add(vec3multscalar(cam->u, cam->direction.x), \
-					vec3multscalar(cam->v, cam->direction.y)), \
-					vec3multscalar(cam->w, cam->direction.z));
+    // cam->u = apply_rotation_matrix(cam->u, rotation_matrix);
+    // cam->v = apply_rotation_matrix(cam->v, rotation_matrix);
+    // cam->w = apply_rotation_matrix(cam->w, rotation_matrix);
+	cam->direction = apply_rotation_matrix(cam->direction, rotation_matrix);
+
+	update_cam_orientation(cam);
 }
 
 
@@ -124,7 +129,7 @@ void mouse_button_callback(mouse_key_t button, action_t action, modifier_key_t m
         } else if (action == MLX_RELEASE) {
 			data->mouse_state.mouse_pressed = 0;
 			printf("Mouse released\n");
-			// update_cam_orientation(&(data->cam));
+			update_cam_orientation(&(data->cam));
 			data->needs_render = true;
         }
     }
