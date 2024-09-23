@@ -11,19 +11,16 @@ NAME 			= 	miniRT
 
 CC 				= 	cc
 
-CFLAGS 			:= -Wall
-CFLAGS 			+= -Wextra
-CFLAGS 			+= -Werror
+CFLAGS 			:= -Wall -Wextra -Werror
 CFLAGS 			+= -Iinclude 
-CFLAGS			+= -Isrc 
-CFLAGS			+= -Ilib/external
+CFLAGS			+= -Isrc -Ilib/external
 CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
 CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
 CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math 
 CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
 CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
 CFLAGS 			+=  -g
-CFLAGS 			+=  -DNDEBUG
+# CFLAGS 			+=  -DNDEBUG
 
 
 # directories
@@ -63,6 +60,10 @@ ifeq ($(UNAME), Linux)
 else ifeq ($(UNAME), Darwin)
 	LIBS 		+=  -L/opt/homebrew/lib
 endif
+
+# to look up later - should detect the changes in libft and recompile
+# MAKEFILES := lib/libft/Makefile
+# include $(MAKEFILES)
 
 all: libmlx $(LIBFT) $(NAME)
 

@@ -18,6 +18,7 @@
 #include <time.h>
 #include "mersenne_twister.h"
 
+#define ROTATION_DEG 0.1
 #define WINDOW_TITLE "miniRT"
 #define BPP sizeof(int32_t)
 #define TRUE 1
@@ -28,7 +29,12 @@ int main_earth(int argc, char **argv);
 int main_blue_red();
 int main_redlight(int argc, char **argv);
 int main_cyl(int argc, char **argv);
+int main_camera_center();
 void render_from_file(char *filename);
+int init_window(t_mrt *data);
+bool init_data(t_mrt *data);
+void	_resize_hook(int new_width, int new_height, void *params);
+void	hook(void *param);
 
 int main(int argc, char **argv)
 {
@@ -42,7 +48,8 @@ int main(int argc, char **argv)
 	}
 	else 
 	{
-		int scene = 1;
+		int scene = 7;
+
 		switch (scene)
 		{
 		case 1:
@@ -63,6 +70,9 @@ int main(int argc, char **argv)
 		case 6:
 			main_cyl(argc, argv);
 			break;
+		case 7:
+			main_camera_center();
+			break;
 		default:
 			break;
 		}
@@ -70,88 +80,172 @@ int main(int argc, char **argv)
 	}
 }
 
-// Function to create a rotation matrix for the y-axis
-void create_yaw_rotation_matrix(double angle, double matrix[3][3]) {
-    double cos_angle = cos(degrees_to_radians(angle));
-    double sin_angle;
-	sin_angle = sin(degrees_to_radians(angle));
+int	main_camera_center()
+{
+    t_mrt data;
+	init_data(&data);
+
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	t_point3 center = point3(0, 0, 0);
+	t_vec3 direction = vec3(0,300,0);
+	init_cam(&data.cam, center, direction, 120);
+	data.cam.print((void*)(&(data.cam)));
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	ambient(&data.cam.ambient_light, 0.3, rgb(110,100,100));
+	data.cam.ambient_light.print((void*)&data.cam.ambient_light);
+
+	/***********************************/
+	/* 			light        		   */
+	/***********************************/
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(100, 100, 100));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+
+	// world ================================================== world ==================================================
+	t_hittable *list[10];
+
+	// red sphere 
+	t_sphere s1;
+	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	s1.print((void*)&s1);
+
+// light top
+	t_quad s6;
+	quad_mat(&s6, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&difflight);
+	s6.print((void*)&s6);
+
+	list[0] = (t_hittable*)(&s1); // red sphere
+	list[1] = (t_hittable*)(&s6);  // light quad
+
+	const t_hittablelist world = hittablelist(list, 2);
+
+	t_empty_material no_material;
+	empty_material_init(&no_material);
 
 
-	printf("cos_angle = %f, sin_angle = %f\n", cos_angle, sin_angle);
-    matrix[0][0] = cos_angle;
-    matrix[0][1] = 0;
-    matrix[0][2] = sin_angle;
-
-    matrix[1][0] = 0;
-    matrix[1][1] = 1;
-    matrix[1][2] = 0;
-
-    matrix[2][0] = -sin_angle;
-    matrix[2][1] = 0;
-    matrix[2][2] = cos_angle;
+	t_quad l6;
+	quad_mat(&l6, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&no_material);
+	t_hittable *list_lights[1];
+	list_lights[0] = (t_hittable*)(&l6);
+	const t_hittablelist lights = hittablelist(list_lights, 1);
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+	data.world= world;
+	data.lights = lights;
+	render(&data, &world, &lights);
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+    return (EXIT_SUCCESS);
 }
 
-// Function to apply a rotation matrix to a vector
-t_vec3 apply_rotation_matrix(t_vec3 dir, double matrix[3][3])
-{
+// Function to create a rotation matrix for the y-axis (yaw) in 4x4 format
+void create_yaw_rotation_matrix(double angle, double matrix[4][4]) {
+    double cos_angle = cos(angle);
+    double sin_angle = sin(angle);
+
+    debug("cos_angle = %f, sin_angle = %f\n", cos_angle, sin_angle);
+
+    matrix[0][0] = cos_angle; matrix[0][1] = 0;         matrix[0][2] = sin_angle; matrix[0][3] = 0;
+    matrix[1][0] = 0;         matrix[1][1] = 1;         matrix[1][2] = 0;         matrix[1][3] = 0;
+    matrix[2][0] = -sin_angle; matrix[2][1] = 0;         matrix[2][2] = cos_angle; matrix[2][3] = 0;
+    matrix[3][0] = 0;         matrix[3][1] = 0;         matrix[3][2] = 0;         matrix[3][3] = 1;
+}
+
+// Function to apply a 4x4 rotation matrix to a vector
+t_vec3 apply_rotation_matrix(t_vec3 dir, double matrix[4][4]) {
     t_vec3 result;
-	
-    result.x = matrix[0][0] * dir.x + matrix[0][1] * dir.y + matrix[0][2] * dir.z;
-    result.y = matrix[1][0] * dir.x + matrix[1][1] * dir.y + matrix[1][2] * dir.z;
-    result.z = matrix[2][0] * dir.x + matrix[2][1] * dir.y + matrix[2][2] * dir.z;
+    result.x = matrix[0][0] * dir.x + matrix[0][1] * dir.y + matrix[0][2] * dir.z + matrix[0][3];
+    result.y = matrix[1][0] * dir.x + matrix[1][1] * dir.y + matrix[1][2] * dir.z + matrix[1][3];
+    result.z = matrix[2][0] * dir.x + matrix[2][1] * dir.y + matrix[2][2] * dir.z + matrix[2][3];
     return result;
 }
 
-// Function to rotate the camera around the y-axis
-void rotate_camera_yaw(t_camera *cam, double deltax) {
-    double sensitivity = 0.0022;
-    double angle = deltax * sensitivity;
-	printf("angle = %f\n", angle);
-    double rotation_matrix[3][3];
-    create_yaw_rotation_matrix(angle, rotation_matrix);
-    // cam->u = apply_rotation_matrix(cam->u, rotation_matrix);
-    // cam->v = apply_rotation_matrix(cam->v, rotation_matrix);
-    // cam->w = apply_rotation_matrix(cam->w, rotation_matrix);
-	cam->direction = apply_rotation_matrix(cam->direction, rotation_matrix);
+// Function to create a pitch rotation matrix (around the x-axis)
+void create_pitch_rotation_matrix(double angle, double matrix[4][4]) {
+    double cos_angle = cos(angle);
+    double sin_angle = sin(angle);
 
+    matrix[0][0] = 1; matrix[0][1] = 0;         matrix[0][2] = 0;          matrix[0][3] = 0;
+    matrix[1][0] = 0; matrix[1][1] = cos_angle; matrix[1][2] = -sin_angle; matrix[1][3] = 0;
+    matrix[2][0] = 0; matrix[2][1] = sin_angle; matrix[2][2] = cos_angle;  matrix[2][3] = 0;
+    matrix[3][0] = 0; matrix[3][1] = 0;         matrix[3][2] = 0;          matrix[3][3] = 1;
+}
+
+
+
+// Function to rotate the camera around the y-axis
+void rotate_camera_yaw(t_camera *cam, double angle) {
+
+	debug("angle = %f\n", angle);
+    double rotation_matrix[4][4];
+    create_yaw_rotation_matrix(angle, rotation_matrix);
+	t_point3 original_center = cam->center;
+	debug("camera center point before = %f %f %f\n", cam->center.x, cam->center.y, cam->center.z);
+    // Translate the camera's center to the origin
+    cam->direction = vec3add(cam->direction, vec3negate(original_center));
+    // Apply the rotation
+    cam->direction = apply_rotation_matrix(cam->direction, rotation_matrix);
+    // Translate the camera's center back to its original position
+    cam->direction = vec3add(cam->direction, original_center);
 	update_cam_orientation(cam);
 }
 
+void rotate_camera_pitch(t_camera *cam, double angle) {
 
-void mouse_button_callback(mouse_key_t button, action_t action, modifier_key_t mods, void* param) {
-    t_mrt* data = (t_mrt *)param;
-	(void)mods;
-    if (button == MLX_MOUSE_BUTTON_LEFT) {
-        if (action == MLX_PRESS) {
-			printf("Mouse pressed\n");
-			data->mouse_state.last_x = data->mouse_state.last_y = 0;
-			data->mouse_state.mouse_pressed = 1;
-        } else if (action == MLX_RELEASE) {
-			data->mouse_state.mouse_pressed = 0;
-			printf("Mouse released\n");
-			update_cam_orientation(&(data->cam));
-			data->needs_render = true;
-        }
-    }
+    debug("angle = %f\n", angle);
+    double rotation_matrix[4][4];
+    create_pitch_rotation_matrix(angle, rotation_matrix);
+	t_point3 original_center = cam->center;
+	debug("camera center point before = %f %f %f\n", cam->center.x, cam->center.y, cam->center.z);
+    cam->direction = vec3add(cam->direction, vec3negate(original_center));
+    cam->direction = apply_rotation_matrix(cam->direction, rotation_matrix);
+    cam->direction = vec3add(cam->direction, original_center);
+    update_cam_orientation(cam);
 }
+// void mouse_button_callback(mouse_key_t button, action_t action, modifier_key_t mods, void* param) {
+//     t_mrt* data = (t_mrt *)param;
+// 	(void)mods;
+//     if (button == MLX_MOUSE_BUTTON_LEFT) {
+//         if (action == MLX_PRESS) {
+// 			debug("Mouse pressed\n");
+// 			data->mouse_state.last_x = data->mouse_state.last_y = 0;
+// 			data->mouse_state.mouse_pressed = 1;
+//         } else if (action == MLX_RELEASE) {
+// 			data->mouse_state.mouse_pressed = 0;
+// 			debug("Mouse released\n");
+// 			update_cam_orientation(&(data->cam));
+// 			data->needs_render = true;
+//         }
+//     }
+// }
 
-void mouse_move_callback(double xpos, double ypos, void* param) {
-    t_mrt* data = (t_mrt *)param;
+// void mouse_move_callback(double xpos, double ypos, void* param) {
+//     t_mrt* data = (t_mrt *)param;
 
-    if (data->mouse_state.mouse_pressed) {
-        double deltax = xpos - data->mouse_state.last_x;
-        double deltay = ypos - data->mouse_state.last_y;
+//     if (data->mouse_state.mouse_pressed) {
+//         double deltax = xpos - data->mouse_state.last_x;
+//         double deltay = ypos - data->mouse_state.last_y;
 
-        // Update the camera direction 
-        printf("Mouse moved: deltax = %f, deltay = %f\n", deltax, deltay);
-		rotate_camera_yaw(&(data->cam), deltax);
-		update_cam_orientation(&(data->cam));
-        data->mouse_state.last_x = xpos;
-        data->mouse_state.last_y = ypos;
+//         // Update the camera direction 
+//         debug("Mouse moved: deltax = %f, deltay = %f\n", deltax, deltay);
+// 		rotate_camera_yaw(&(data->cam), deltax);
+// 		update_cam_orientation(&(data->cam));
+//         data->mouse_state.last_x = xpos;
+//         data->mouse_state.last_y = ypos;
 
-		// data->needs_render = true;
-    }
-}
+// 		// data->needs_render = true;
+//     }
+// }
 
 
 void	exit_gracefully(mlx_t *mlx)
@@ -194,27 +288,71 @@ void	hook(void *param)
 
 	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
 		exit_gracefully(mlx);
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_CONTROL) || mlx_is_key_down(mlx, MLX_KEY_RIGHT_CONTROL))
+    {
+        if (mlx_is_key_down(mlx, MLX_KEY_UP))
+        {
+            debug("Ctrl + Arrow Up pressed\n");
+			rotate_camera_pitch(&(data->cam), degrees_to_radians(ROTATION_DEG) );
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+        {
+            debug("Ctrl + Arrow down pressed\n");
+            rotate_camera_pitch(&(data->cam), degrees_to_radians(-ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+		{
+			debug("Ctrl + Arrow left pressed\n");
+			rotate_camera_yaw(&(data->cam),  degrees_to_radians(ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+		{
+			debug("Ctrl + Arrow right pressed\n");
+			rotate_camera_yaw(&(data->cam), degrees_to_radians(-ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_F1))
+		{
+			// reset camera to original position
+			debug("F1 pressed\n");
+			data->cam.center = data->cam.original_pos;
+			data->cam.direction = data->cam.original_dir;
+			update_cam_orientation(&data->cam);
+			data->needs_render = true;
+		}
+    }
 	if (mlx_is_key_down(mlx, MLX_KEY_UP))
 	{
 		move_camera_up(&(data->cam), data->cam.image_height / 10);
 		debug("UP key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
 		data->needs_render = true;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
 	{
 		move_camera_up(&(data->cam), -data->cam.image_height / 10 );
 		debug("DOWN key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
 		data->needs_render = true;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 	{
 		move_camera_right(&(data->cam), -data->cam.image_width / 10);
 		debug("LEFT key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
 		data->needs_render = true;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
 		move_camera_right(&(data->cam), data->cam.image_width / 10);
 		debug("RIGHT key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
 		data->needs_render = true;
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE)){
@@ -361,13 +499,13 @@ int main_checkerfloors()
 	# | width  | height | ######
 	############################
 	*/
-	printf("R   %d     %d\n", data.cam.image_width, data.cam.image_height);
+	debug("R   %d     %d\n", data.cam.image_width, data.cam.image_height);
 
 	/*## SAMPLING #####################
 	# 	samples per pixel | bounces ###
 	###################################
 	*/
-	printf("S   %d      %d\n", data.cam.samples_per_pixel, data.cam.max_depth);
+	debug("S   %d      %d\n", data.cam.samples_per_pixel, data.cam.max_depth);
 
 
 	// world
@@ -961,8 +1099,8 @@ int main_redlight(int argc, char **argv)
 	data.lights = lights;
 
 	render(&data, &world, &lights);
- 	mlx_mouse_hook(data.mlx, mouse_button_callback, (void *)&data);
-    mlx_cursor_hook(data.mlx, mouse_move_callback, (void *)&data);
+ 	// mlx_mouse_hook(data.mlx, mouse_button_callback, (void *)&data);
+    // mlx_cursor_hook(data.mlx, mouse_move_callback, (void *)&data);
 
 
 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);

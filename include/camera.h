@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 19:57:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/23 17:07:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ typedef struct	s_camera
     t_vec3		pixel_delta_u;  // Offset to pixel to the right
     t_vec3		pixel_delta_v;  // Offset to pixel below
 
+	t_point3	original_pos;
+	t_vec3		original_dir;
 	t_ambient  ambient_light;
 	pthread_t threads[CORES];
 	t_thread_data thread_data[CORES];

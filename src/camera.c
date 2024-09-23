@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 20:47:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/23 17:49:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ void update_cam(t_camera *cam, int new_width, int new_height)
 
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov) 
 {
+	if (cam->direction.x == 0 && cam->direction.z == 0)
+		cam->direction.x += 0.1;
+	cam->original_dir = direction;
+	cam->original_pos = center;
 	cam->samples_per_pixel = 100;
 	cam->max_depth = 200;
 	cam->aspect_ratio = ASPECT_RATIO;
@@ -90,8 +94,13 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 	if (cam->image_height < 1)
 		cam->image_height = 1;
 	cam->center = center;
-	cam->direction = direction;
+	cam->direction = unit_vector(cam->direction );
+	t_point3 lookat = vec3add(cam->center, cam->direction);
 	cam->hfov = clamp(interval(1, 170), hfov);
+	ambient(&cam->ambient_light, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
+    cam->w = unit_vector(vec3substr(cam->center, lookat));
+    cam->u = unit_vector(cross(cam->vup, cam->w));
+    cam->v = cross(cam->w, cam->u);
 	cam->vup = vec3(0,1,0);
 	cam->print = print_camera;
 	update_cam(cam, cam->image_width, cam->image_height);
@@ -259,8 +268,8 @@ void render_thread(void *args)
     // Calculate time taken and FPS
     time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
     fps = 1.0 / time_taken;
-	debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
-	fflush(stderr);
+	// debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
+	// fflush(stderr);
 	// char fps_str[100];
 	// snprintf(fps_str, sizeof(fps_str), "Frame rendered in %.2f seconds (FPS: %.2f)", time_taken, fps);
 	// mlx_string_put(thread_data->data->mlx, thread_data->data->win_ptr, 10, 10, 0xFFFFFF, fps_str);
