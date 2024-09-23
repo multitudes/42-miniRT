@@ -188,20 +188,22 @@ static void	get_camera(t_mrt *data)
 	already_set = 1;
 }
 
+/*
+ * usage:
+ * "l" "qd" [starting point] [side_vector1] [side_vector2] [rgb color] [intensity]
+*/
 static void	quad_light(t_objects *obj)
 {
 	static int	set_index;
 	t_color		color;
 	t_rgb		rgbcolor;
-	char		**tokens;
 
-	tokens = &obj->_tokens[1];
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds_array size", "light", obj);
-	if (count_tokens(tokens) != 6)
+	if (count_tokens(obj->_tokens) != 6)
 		call_error("invalid token amount", "q_light", obj);
-	rgbcolor = set_rgb(obj, 4, "q_light");
-	color = vec3multscalar(rgb_to_color(rgbcolor), 100*ft_atod(tokens[5]));
+	rgbcolor = set_rgb(obj, 5, "q_light");
+	color = vec3multscalar(rgb_to_color(rgbcolor), 100*ft_atod(obj->_tokens[6]));
 	solid_color_init(&obj->lights[set_index].color, color);
 	diffuse_light_init(&obj->lights[set_index].difflight, (t_texture *)&obj->lights[set_index].color);
 	quad_mat(&obj->lights[set_index].q_body, set_vec3(obj, 2, "q_light", 0), \
