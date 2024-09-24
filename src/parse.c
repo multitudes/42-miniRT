@@ -154,6 +154,7 @@ static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalize
 }
 
 /* Inits the ambient struct inside of t_mrt->t_camera.
+ * usage:
  * "A" [intesity([0.0;1.0])] [rgb color]
 */
 static void	get_ambient(t_mrt *data)
@@ -456,11 +457,8 @@ static void	get_box(t_objects *obj)
 		call_error("exceeds array size", "box", obj);
 	if (count_tokens(tokens) != 4)
 		call_error("invalid token amount", "box", obj);
-
 	box_rgb(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), \
 		set_vec3(obj, 2, "box", 0), set_rgb(obj, 3, "box"));
-
-
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->boxes[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -468,10 +466,10 @@ static void	get_box(t_objects *obj)
 
 static void	update_struct(t_mrt *data)
 {
-	if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
-		get_ambient(data);
-	else if (ft_strncmp("C", data->objects._tokens[0], 2) == 0)
+	if (ft_strncmp("C", data->objects._tokens[0], 2) == 0)
 		get_camera(data);
+	else if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
+		get_ambient(data);
 	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0)
 		get_light(&data->objects);
 	else if (ft_strncmp("sp", data->objects._tokens[0], 3) == 0)
@@ -545,12 +543,9 @@ void	parse_input(char *filename, t_mrt *data)
 		update_struct(data);
 		free_split(data->objects._tokens);
     }
+   	data->objects._tokens = NULL;
     if (data->cam.aspect_ratio == 0)
-    {
-    	data->objects._tokens = NULL;
 	   	call_error("There has to be a camera object!!!", "parse_input", &data->objects);
-    }
-
     data->world = hittablelist(data->objects.hit_list, data->objects.hit_idx);
     data->lights = hittablelist(data->objects.light_hit, data->objects.light_hit_idx);
     if (close(data->objects._file_fd) == -1)
