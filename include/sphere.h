@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 13:37:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:19:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct		s_sphere
 	t_rgb			rgb;
 	t_material		*mat;
 	t_lambertian 	lambertian_mat;
+	t_metal			metal_mat;
 	t_solid_color 	texture;
 	void			(*print)(const void* self);
 }					t_sphere;

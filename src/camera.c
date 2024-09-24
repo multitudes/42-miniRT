@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/23 17:49:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 08:45:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,13 @@
  */
 void update_cam_orientation(t_camera *cam)
 {
-	// cam->direction = vec3negate(unit_vector(cam->w));
-    // Calculate the lookat point based on the new direction
+	cam->direction = vec3negate(cam->w);
     t_point3 lookat = vec3add(cam->center, cam->direction);
     double focal_length = length(vec3substr(cam->center, lookat));
     double theta = degrees_to_radians(cam->hfov);
     double h = tan(theta / 2);
     double viewport_width = 2 * h * focal_length;
     double viewport_height = viewport_width * ((double)cam->image_height / cam->image_width);
-
-    cam->w = unit_vector(vec3substr(cam->center, lookat));
-    cam->u = unit_vector(cross(cam->vup, cam->w));
-    cam->v = cross(cam->w, cam->u);
 
     t_vec3 viewport_u = vec3multscalar(cam->u, viewport_width);
     t_vec3 viewport_v = vec3multscalar(vec3negate(cam->v), viewport_height);
@@ -56,7 +51,7 @@ void update_cam_orientation(t_camera *cam)
 }
 
 
-void update_cam(t_camera *cam, int new_width, int new_height)
+void update_cam_resize(t_camera *cam, int new_width, int new_height)
 {
 	cam->image_width = new_width;
 	cam->image_height = new_height;
@@ -103,7 +98,7 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
     cam->v = cross(cam->w, cam->u);
 	cam->vup = vec3(0,1,0);
 	cam->print = print_camera;
-	update_cam(cam, cam->image_width, cam->image_height);
+	update_cam_resize(cam, cam->image_width, cam->image_height);
 }
 
 /**
