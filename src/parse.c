@@ -545,6 +545,12 @@ void	parse_input(char *filename, t_mrt *data)
 		update_struct(data);
 		free_split(data->objects._tokens);
     }
+    if (data->cam.aspect_ratio == 0)
+    {
+    	data->objects._tokens = NULL;
+	   	call_error("There has to be a camera object!!!", "parse_input", &data->objects);
+    }
+
     data->world = hittablelist(data->objects.hit_list, data->objects.hit_idx);
     data->lights = hittablelist(data->objects.light_hit, data->objects.light_hit_idx);
     if (close(data->objects._file_fd) == -1)
