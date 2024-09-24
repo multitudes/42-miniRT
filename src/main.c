@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 15:35:34 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 16:32:40 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 #define FALSE 0
 
 int main_checkerfloors();
-int main_earth(int argc, char **argv);
+int main_earth_nolight(int argc, char **argv);
 int main_blue_red();
 int main_lights_three_lambertian();
 int main_cyl_uncapped_disk(int argc, char **argv);
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{	
-		int scene = 6;
+		int scene = 4;
 
 		switch (scene)	
 		{
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 			main_lights_three_lambertian(argc, argv);
 			break;
 		case 2:
-			main_earth(argc, argv);
+			main_earth_nolight(argc, argv);
 			break;
 		case 3:
 			main_blue_red();
@@ -139,7 +139,6 @@ int	main_camera_center()
 
 	t_empty_material no_material;
 	empty_material_init(&no_material);
-
 
 	t_quad l6;
 	quad_mat(&l6, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&no_material);
@@ -379,16 +378,15 @@ int main_blue_red()
 	/***************************** */
 	/* 			camera 			   */	
 	/***************************** */
-	// -401.346268 265.682225 -88.194043
-	t_point3 center = point3(-405, 265, 139);
+	t_point3 center = point3(214, 265, -289);
 	t_vec3 direction = vec3(0,0,1);
  	init_cam(&data.cam, center, direction, 70);
 	data.cam.print((void*)(&(data.cam)));
 
-		/***************************** */
+	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	ambient(&data.cam.ambient,0.2, rgb(110,110,110));
+	ambient(&data.cam.ambient,0.0, rgb(110,110,110));
 	data.cam.ambient.print((void*)&	data.cam.ambient);
 
 	t_diffuse_light difflight;
@@ -399,7 +397,7 @@ int main_blue_red()
 	// blue light
 	t_diffuse_light blue;
 	t_solid_color diff_lightblue;
-	solid_color_init(&diff_lightblue, color(0, 0, 2));
+	solid_color_init(&diff_lightblue, color(0, 0, 2222));
 	diffuse_light_init(&blue, (t_texture*)&diff_lightblue);
 
 		// world
@@ -425,6 +423,7 @@ int main_blue_red()
 	// sphere_mat(&s3, point3( 343,354,332 ), 200, (t_material*)&difflight);
 	t_quad s3;
 	quad_mat(&s3, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&blue);
+	s3.print((void*)&s3);
 	// t_disk s3;
 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&difflight);
 	
@@ -442,7 +441,9 @@ int main_blue_red()
 	const t_hittablelist world = hittablelist(list, 2);
 
 	t_hittable *list_lights[1];
+
 	t_empty_material empty_material;
+	empty_material_init(&empty_material);
 	t_material *no_material = (t_material*)&empty_material;
 
 	// t_sphere l1;
@@ -534,20 +535,22 @@ int main_lights_three_lambertian()
 
 	t_sphere s4;
 	sphere(&s4, vec3(350, 350, 250), 160, rgb(10,0,0));
+	s4.print((void*)&s4);
 
 	t_sphere s5;
-	sphere(&s5, vec3(0, 0, -1.2), 1, rgb(128,0,0));
+	sphere(&s5, vec3(100, 0, -101.2), 350, rgb(128,0,0));
 	s5.print((void*)&s5);
+	
 	t_sphere s8;
 	sphere(&s8, vec3(0, -100.5, -1), 200, rgb(0,128,0));
 	s8.print((void*)&s8);
+	
 	t_sphere s7;
-	sphere(&s7, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
+	sphere(&s7, vec3(-1, 0.0, -1.0), 150, rgb(128,128,0));
 	s7.print((void*)&s7);
 
 	list[0] = (t_hittable*)(&s1); // red sphere
 	list[1] = (t_hittable*)(&s6);  // light quad
-
 	list[2] = (t_hittable*)(&s4);
 	list[3] = (t_hittable*)(&s5);
 	list[4] = (t_hittable*)(&s7);
@@ -696,15 +699,15 @@ int main_checkerfloors()
 	/* 			camera 			   */	
 	/***************************** */
 	//-422.000000 307.999863 -71.947640
-	t_point3 center = point3(-422.000000,307.999863, -71.947640);
-	t_vec3 direction = vec3(0,0,800);
+	t_point3 center = point3(74, 212, -390);
+	t_vec3 direction = vec3(0,0,1);
  	init_cam(&data.cam, center, direction, 60);
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	ambient(&data.cam.ambient, 1, rgb(110,110,110));
+	ambient(&data.cam.ambient, 0.5, rgb(110,110,110));
 	data.cam.ambient.print((void*)&data.cam.ambient);
 
 
@@ -879,7 +882,7 @@ int main_checkerfloors()
 }
 
 
-int main_earth(int argc, char **argv)
+int main_earth_nolight(int argc, char **argv)
 {
     t_mrt data;
     (void)argv;
