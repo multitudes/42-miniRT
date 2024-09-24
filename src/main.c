@@ -6,12 +6,13 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 12:01:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 14:32:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "debug.h"
 #include "libft.h"
+#include "texture.h"
 #include "minirt.h"
 #include "camera.h"
 #include "vec3.h"
@@ -26,6 +27,7 @@
 #include "triangle.h"
 #include <time.h>
 #include "mersenne_twister.h"
+#include "rtw_stb_image.h"
 
 #define ROTATION_DEG 0.005
 #define WINDOW_TITLE "miniRT"
@@ -64,7 +66,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{
-		int scene = 7;
+		int scene = 2;
 
 		switch (scene)
 		{
@@ -450,102 +452,102 @@ void	hook(void *param)
 	data = (t_mrt *)param;
 	mlx = data->mlx;
 
-	// if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-	// 	exit_gracefully(mlx);
-	// if (mlx_is_key_down(mlx, MLX_KEY_LEFT_CONTROL) || mlx_is_key_down(mlx, MLX_KEY_RIGHT_CONTROL))
-    // {
-    //     if (mlx_is_key_down(mlx, MLX_KEY_UP))
-    //     {
-    //         debug("Ctrl + Arrow Up pressed\n");
-	// 		debug("camera center point before = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * ROTATION_DEG) );
-	// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-    //     {
-    //         debug("Ctrl + Arrow down pressed\n");
-	// 					debug("camera center point before = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-    //         rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
-	// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-	// 	{
-	// 		debug("Ctrl + Arrow left pressed\n");
-	// 		rotate_camera_yaw(&(data->cam),  degrees_to_radians(data->cam.hfov * ROTATION_DEG));
-	// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-	// 	{
-	// 		debug("Ctrl + Arrow right pressed\n");
-	// 		rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
-	// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_F1))
-	// 	{
-	// 		// reset camera to original position
-	// 		debug("F1 pressed\n");
-	// 		data->cam.center = data->cam.original_pos;
-	// 		data->cam.direction = data->cam.original_dir;
-	// 		update_cam_orientation(&data->cam);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_F))
-	// 	{
-	// 		data->cam.hfov += 1;
-	// 		update_cam_orientation(&data->cam);
-	// 		data->needs_render = true;
-	// 		debug("F key pressed %f\n", data->cam.hfov);
-	// 	}
-    // }
-	// if (mlx_is_key_down(mlx, MLX_KEY_F))
-	// {
-	// 	data->cam.hfov -= 1;
-	// 	update_cam_orientation(&data->cam);
-	// 	data->needs_render = true;
-	// 	debug("F key pressed %f\n", data->cam.hfov);
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_UP))
-	// {
-	// 	move_camera_up(&(data->cam), data->cam.image_height / 20);
-	// 	debug("UP key pressed");
-	// 	debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-	// {
-	// 	move_camera_up(&(data->cam), -data->cam.image_height / 20 );
-	// 	debug("DOWN key pressed");
-	// 	debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-	// {
-	// 	move_camera_right(&(data->cam), -data->cam.image_width / 20);
-	// 	debug("LEFT key pressed");
-	// 	debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
-	// 	move_camera_right(&(data->cam), data->cam.image_width / 20);
-	// 	debug("RIGHT key pressed");
-	// 	debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_SPACE)){
-	// 	move_camera_forward(&(data->cam), -data->cam.image_width / 20);
-	// 	debug("S key pressed");
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
-	// {
-	// 	move_camera_forward(&(data->cam), data->cam.image_width / 10);
-	// 	debug("W key pressed");
-	// 	data->needs_render = true;
-	// }
+	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
+		exit_gracefully(mlx);
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_CONTROL) || mlx_is_key_down(mlx, MLX_KEY_RIGHT_CONTROL))
+    {
+        if (mlx_is_key_down(mlx, MLX_KEY_UP))
+        {
+            debug("Ctrl + Arrow Up pressed\n");
+			debug("camera center point before = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * ROTATION_DEG) );
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+        {
+            debug("Ctrl + Arrow down pressed\n");
+						debug("camera center point before = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+            rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+		{
+			debug("Ctrl + Arrow left pressed\n");
+			rotate_camera_yaw(&(data->cam),  degrees_to_radians(data->cam.hfov * ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+		{
+			debug("Ctrl + Arrow right pressed\n");
+			rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_F1))
+		{
+			// reset camera to original position
+			debug("F1 pressed\n");
+			data->cam.center = data->cam.original_pos;
+			data->cam.direction = data->cam.original_dir;
+			update_cam_orientation(&data->cam);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_F))
+		{
+			data->cam.hfov += 1;
+			update_cam_orientation(&data->cam);
+			data->needs_render = true;
+			debug("F key pressed %f\n", data->cam.hfov);
+		}
+    }
+	if (mlx_is_key_down(mlx, MLX_KEY_F))
+	{
+		data->cam.hfov -= 1;
+		update_cam_orientation(&data->cam);
+		data->needs_render = true;
+		debug("F key pressed %f\n", data->cam.hfov);
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_UP))
+	{
+		move_camera_up(&(data->cam), data->cam.image_height / 20);
+		debug("UP key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+	{
+		move_camera_up(&(data->cam), -data->cam.image_height / 20 );
+		debug("DOWN key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+	{
+		move_camera_right(&(data->cam), -data->cam.image_width / 20);
+		debug("LEFT key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
+		move_camera_right(&(data->cam), data->cam.image_width / 20);
+		debug("RIGHT key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_SPACE)){
+		move_camera_forward(&(data->cam), -data->cam.image_width / 20);
+		debug("S key pressed");
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
+	{
+		move_camera_forward(&(data->cam), data->cam.image_width / 10);
+		debug("W key pressed");
+		data->needs_render = true;
+	}
 	if (data->needs_render)
 	{
 		data->needs_render = false;
@@ -1073,6 +1075,340 @@ int main_cyl(int argc, char **argv)
 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
+}
+
+
+	
+int main_checkerfloors() 
+{
+	t_mrt data;
+	if (!init_data(&data))
+		return (1);
+	
+	
+
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	//-422.000000 307.999863 -71.947640
+	t_point3 center = point3(-422.000000,307.999863, -71.947640);
+	t_vec3 direction = vec3(0,0,800);
+ 	init_cam(&data.cam, center, direction, 60);
+	data.cam.print((void*)(&(data.cam)));
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	ambient(&data.cam.ambient, 1, rgb(110,110,110));
+	data.cam.ambient.print((void*)&data.cam.ambient);
+
+
+	// world
+	// ================================================== world ==================================================
+	t_hittable *list[15];
+	// ================================================== world ==================================================
+	
+	// red sphere
+	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	
+
+	// checker texture sphere
+	t_lambertian lambertian_material;
+	t_checker_texture checker_texture1;
+	t_rgb even1 = color_to_rgb(color(0.2, 0.3, 0.1));
+	t_rgb odd1 = color_to_rgb(color(0.9, 0.9, 0.9));
+	checker_texture_init(&checker_texture1, 40.0, even1, odd1);
+	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
+
+	//red metallic 
+	t_color albedo = color(0.8, 0.1, 0.1);
+	double fuzz = 0.0;
+	t_metal metal;
+	metal_init(&metal, albedo, fuzz);
+	
+	// red metallic sphere
+	t_sphere s1;
+	sphere_mat(&s1, point3( 90,190,90 ), 180, (t_material*)&metal);
+	s1.print((void*)&s1);
+
+	/***********************************/
+	/* 			light        		   */
+	/***********************************/
+
+	// L -40.0,50.0,0.0           (0.6) strength from 0 to 1 -  rgb (10,0,255)
+	// strength - 0.5 
+	// max 100 
+	// rgb (10,0,255) - color (0.5, 0, 1)  * max 200  * strength 
+	// color (100,100,100)
+
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(40, 40, 40));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+
+	// blue light
+	t_diffuse_light difflight2;
+	t_solid_color difflight_color2;
+	solid_color_init(&difflight_color2, color(0, 0, 80));
+	diffuse_light_init(&difflight2, (t_texture*)&difflight_color2);
+
+	// quad as light
+	t_quad s6;
+	quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
+	s6.print((void*)&s6);
+
+	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	// t_sphere s2 = sphere(vec3(0,250,-50), 120, rgb(16, 13, 166));
+	t_sphere s2;
+	sphere_mat(&s2, point3( 0,250,-50 ), 120, (t_material*)&difflight2);
+	s2.print((void*)&s2);
+	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
+
+	// adding another sphere
+	// red sphere
+	t_sphere s4;
+	sphere(&s4, vec3(400, 90, 190), 90, rgb(166, 13, 13));
+	s4.print((void*)&s4);
+
+	// add a quad just left of the s4 sphere
+	t_quad s5;
+	quad_rgb(&s5, point3(300, 90, 100), vec3(50,0,100), vec3(0,100,50), rgb(166, 13, 13));
+	s5.print((void*)&s5);
+
+	// add a plane just below the s4 sphere
+	t_plane s7;
+	plane_mat(&s7, point3(400, 0, 190), vec3(0,1,0), (t_material*)&lambertian_material);
+	s7.print((void*)&s7);
+
+	t_disk s8;
+	disk(&s8, point3(500, 90, 190), vec3(0,0,1), 100, rgb(166, 53, 13));
+	s8.print((void*)&s8);
+
+// try with cube t_box box(t_point3 a, t_point3 b, t_material *mat)
+	t_box s9;
+	box(&s9, point3(600, 90, 190), point3(700, 190, 290), (t_material*)&metal);
+	s9.print((void*)&s9);
+
+	t_triangle s10;
+	triangle(&s10, point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
+	s10.print((void*)&s10);
+	
+	t_sphere s11;
+	sphere_mat(&s11, point3(650, 300, 200), 100, (t_material*)&lambertian_material);
+	s11.print((void*)&s11);
+
+	t_plane pl12;
+	plane_mat(&pl12, point3(0, 0, -400), vec3(0,0,1), (t_material*)&lambertian_material);
+	pl12.print((void*)&pl12);
+
+	t_plane pl13;
+	plane_mat(&pl13, point3(-600, 0, 0), vec3(1,0,0), (t_material*)&lambertian_material);
+	pl12.print((void*)&pl12);
+
+	/***********************************/
+	/* 			earth       		   */
+	/***********************************/
+	t_sphere s12;
+	t_lambertian earth_surface;
+	img_texture_init(&s12.img_texture,"rtw_image/earthmap.jpg");
+	lambertian_init_tex(&earth_surface, (t_texture*)&s12.img_texture);
+	sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
+	s12.print((void*)&s12);
+	
+	t_cylinder_capped s13;
+	cylinder_capped(&s13, point3(350, 100, -300), vec3(0,1,0), 200, 50, rgb(166, 103, 13));
+	s13.print((void*)&s13);
+
+	list[0] = (t_hittable*)(&s1);
+	list[1] = (t_hittable*)(&s6);
+	list[2] = (t_hittable*)(&s2);
+	list[3] = (t_hittable*)(&s4);
+	list[4] = (t_hittable*)(&s5);	
+	list[5] = (t_hittable*)(&s7);
+	list[6] = (t_hittable*)(&s8);
+	list[7] = (t_hittable*)(&s9);
+	list[8] = (t_hittable*)(&s10);
+	list[9] = (t_hittable*)(&s11);
+	list[10] = (t_hittable*)(&s12);
+	list[11] = (t_hittable*)(&s13);
+	list[12] = (t_hittable*)(&pl12);
+	list[13] = (t_hittable*)(&pl13);
+
+	const t_hittablelist world = hittablelist(list, 14);
+
+	t_hittable *list_lights[2];
+
+	t_empty_material empty_material;
+	t_material *no_material = (t_material*)&empty_material;
+	t_quad l6;
+	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
+	l6.print((void*)&l6);
+
+	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	t_sphere l2;
+	sphere_mat(&l2, point3( 0,250,-50 ), 120, (t_material*)&no_material);
+	l2.print((void*)&l2);
+
+	list_lights[0] = (t_hittable*)(&l6);
+	list_lights[1] = (t_hittable*)(&l2);
+	const t_hittablelist lights = hittablelist(list_lights, 2);
+
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+
+	mlx_set_window_title(data.mlx, "New Title");
+	data.world = world;
+	data.lights = lights;
+
+	render(&data, &world, &lights);
+	
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
+}
+
+
+int main_earth(int argc, char **argv)
+{
+    t_mrt data;
+    (void)argv;
+	(void)argc;
+
+	if (!init_data(&data))
+        return (1);
+	
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	t_point3 center = point3(-422.000000,307.999863, -71.947640);
+	t_vec3 direction = vec3(0,-2,-2);
+	init_cam(&data.cam, center, direction, 50);
+	data.cam.print((void*)(&(data.cam)));
+
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	ambient(&data.cam.ambient, 1, rgb(110,100,110));
+	data.cam.ambient.print((void*)&data.cam.ambient);
+
+	// world
+	t_hittable *list[7];
+
+	// red sphere
+	// t_sphere s1;
+	// sphere(&s1, vec3(0, 0, -2.0), 1, rgb(128,0,0));
+	// s1.print((void*)&s1);
+
+	// // checker texture sphere
+	// t_sphere s2;
+	// t_rgb even1 = color_to_rgb(color(0.2, 0.3, 0.1));
+	// t_rgb odd1 = color_to_rgb(color(0.9, 0.9, 0.9));
+	// checker_texture_init(&s2.checker, 0.31, even1, odd1);
+	// lambertian_init_tex(&s2.lambertian_mat, (t_texture*)&(s2.checker));
+	// sphere_mat(&s2, point3(0, -500.5, -1), 1000, (t_material*)&s2.lambertian_mat);
+	
+	// // yellow sphere
+	// t_sphere s3;
+	// sphere(&s3, vec3(-1, 0.0, -2.0), 1, rgb(255,219,0));
+	// s3.print((void*)&s3);
+
+	// // white
+	// t_sphere s4;
+	// sphere(&s4, vec3(1, 0.0, -2.0), 1, rgb(255,255,254));
+	// s4.print((void*)&s4);
+
+	/***********************************/
+	/* 			earth       		   */
+	/***********************************/
+	t_sphere s5;
+	t_lambertian earth_surface;
+	img_texture_init(&s5.img_texture,"rtw_image/earthmap.jpg");
+	lambertian_init_tex(&earth_surface, (t_texture*)&s5.img_texture);
+	sphere_mat(&s5, point3(250, 100, -200), 200.0, (t_material*)&earth_surface);
+	s5.print((void*)&s5);
+
+
+	// /***********************************/
+	// /* 			mars        		   */
+	// /***********************************/
+
+	// t_lambertian mars_surface;
+	// t_rtw_image img2;
+	// init_rtw_image(&img2,"rtw_image/jupiter.jpg");
+	// t_img_texture img_texture2;
+	// img_texture_init(&img_texture2, &img2);
+	// lambertian_init_tex(&mars_surface, (t_texture*)&img_texture2);
+	// t_sphere s6 = sphere_mat(point3(-1, 0, 0), 2.0, rgb(0,0,0) ,(t_material*)&mars_surface);
+
+	/***********************************/
+	/* 			checker        		   */
+	/***********************************/
+	// t_lambertian lambertian_material;
+	// t_checker_texture checker_texture1;
+	// t_solid_color even1;
+	// t_solid_color odd1;
+	// solid_color_init(&even1, color(0.2, 0.3, 0.1));
+	// solid_color_init(&odd1, color(0.9, 0.9, 0.9));
+	// checker_texture_init(&checker_texture1, 0.31, &even1, &odd1);
+	// lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
+	// t_sphere s6 = sphere_mat(point3(-1, 0, 0), 2.0, rgb(0,0,0), (t_material*)&lambertian_material);
+
+	/***********************************/
+	/* 			light        		   */
+	/***********************************/
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(20, 20, 20));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+	// t_sphere s6 = sphere_mat(point3(5, 0, 0), 5.0, rgb(255,223 ,34 ), (t_material*)&difflight);
+	t_quad s6;
+	quad_mat(&s6, point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
+	
+	// list[0] = (t_hittable*)(&s1);
+	// list[1] = (t_hittable*)(&s2);
+	// list[2] = (t_hittable*)(&s3);
+	// list[3] = (t_hittable*)(&s4);
+	// list[4] = (t_hittable*)(&s5);
+	// list[5] = (t_hittable*)(&s6);
+	list[0] = (t_hittable*)(&s5);
+	// list[1] = (t_hittable*)(&s6);
+
+	const t_hittablelist world = hittablelist(list, 1);
+
+
+	t_hittable *list_lights[1];
+
+	t_empty_material empty_material;
+	t_material *no_material = (t_material*)&empty_material;
+	t_quad l6;
+	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
+	l6.print((void*)&l6);
+
+	list_lights[0] = (t_hittable*)(&l6);
+	const t_hittablelist lights = hittablelist(list_lights, 1);
+
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+
+	data.world = world;
+	data.lights = lights;
+	render(&data, &world, &lights);
+	
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
     mlx_loop(data.mlx);
     ft_printf("\nbyebye!\n");
     mlx_terminate(data.mlx);
