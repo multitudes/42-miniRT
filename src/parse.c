@@ -205,7 +205,7 @@ static void	quad_light(t_objects *obj)
 
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds_array size", "light", obj);
-	if (count_tokens(obj->_tokens) != 6)
+	if (count_tokens(obj->_tokens) != 7)
 		call_error("invalid token amount", "q_light", obj);
 	rgbcolor = set_rgb(obj, 5, "q_light");
 	color = vec3multscalar(rgb_to_color(rgbcolor), 100*ft_atod(obj->_tokens[6]));
@@ -326,7 +326,7 @@ static void	get_plane(t_objects *obj)
 	plane(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
 		set_vec3(obj, 2, "plane", 1), set_rgb(obj, 3, "plane"));
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->planes[set_index];
-	obj->hit_idx++
+	obj->hit_idx++;
 	set_index++;
 }
 
