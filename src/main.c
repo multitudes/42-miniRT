@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 16:32:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 16:47:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{	
-		int scene = 4;
+		int scene = 7;
 
 		switch (scene)	
 		{
@@ -100,7 +100,7 @@ int	main_camera_center()
 	/***************************** */
 	/* 			camera 			   */	
 	/***************************** */
-	t_point3 center = point3(0, 0, 0);
+	t_point3 center = point3(210, 330, -130);
 	t_vec3 direction = vec3(0,0,1);
 	init_cam(&data.cam, center, direction, 120);
 	data.cam.print((void*)(&(data.cam)));
@@ -496,8 +496,8 @@ int main_lights_three_lambertian()
 	/***************************** */
 	/* 			camera 			   */	
 	/***************************** */
-	t_point3 center = point3( -500.000000,47.000000, 0.000000);
-	t_vec3 direction = vec3(0,0,1);
+	t_point3 center = point3( -800.000000, -234, -250.000000);
+	t_vec3 direction = vec3(1,1,1);
 	init_cam(&data.cam, center, direction, 90);
 	data.cam.print((void*)(&(data.cam)));
 
@@ -611,7 +611,7 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	/***************************** */
 	/* 			camera 			   */	
 	/***************************** */
-	t_point3 center = point3(-170, -30, 0);
+	t_point3 center = point3(-5, 80, 291);
 	t_vec3 direction = vec3(0,0,-400);
  	init_cam(&data.cam, center, direction, 60);
 	data.cam.print((void*)(&(data.cam)));
@@ -645,6 +645,7 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	t_cylinder c0;
 	cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
 	// cylinder_mat_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, (t_material*)&metal);
+	c0.print((void*)&c0);
 
 	list[0] = (t_hittable*)(&d0);
 	list[1] = (t_hittable*)(&c0);
