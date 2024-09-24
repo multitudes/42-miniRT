@@ -1,9 +1,0 @@
-C	278,279,-800    0,0,1		60.0	# this is a commnent
-A	1   111,111,111
-
-# the first when uncommented gives
-# Error q_light: color not in rgb range
-# the second when uncommented gives no error... why? maybe something with the spaces?
-
-# l qd 343,554,332	-130,0,0    0,0,-105	30,69,94  	0.6
-l 	qd 100,100,100	100,75,0 75,0,100	255,255,255 	1

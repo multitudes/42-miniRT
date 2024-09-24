@@ -307,7 +307,6 @@ static void	get_sphere(t_objects *obj)
 	char		**tokens;
 	int			diam;
 
-
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "sphere", obj);
@@ -318,7 +317,9 @@ static void	get_sphere(t_objects *obj)
 		call_error("diameter cannot be negative...", "sphere", obj);
 	if (count_tokens(tokens) == 5 && is_float(tokens[4]))
 	{
-		printf("is metalic\n");
+		metal_init(&obj->spheres[set_index].metal, set_rgb(obj, 3, "sphere"), ft_atod(tokens[4]));
+		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
+			(t_material *) &obj->spheres[set_index].metal);
 	}
 	else if (count_tokens(tokens) == 5)
 	{
@@ -553,7 +554,7 @@ void	parse_input(char *filename, t_mrt *data)
 	char    *line;
 
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
-		call_error("invalid file extension\n", NULL, NULL);
+		call_error("invalid file extension", NULL, NULL);
     data->objects._file_fd = open(filename, O_RDONLY);
     if (data->objects._file_fd == -1)
     	perror(filename), exit(1);

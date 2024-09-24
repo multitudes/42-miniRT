@@ -20,13 +20,13 @@
 #include <pthread.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 200
+#define IMAGE_WIDTH 500
 #define CORES 16
 #define BONUS 1
 
 typedef struct s_mrt t_mrt;
 
-typedef struct	s_thread_data 
+typedef struct	s_thread_data
 {
 	t_mrt *data;
 	int thread_id;

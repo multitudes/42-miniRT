@@ -56,7 +56,7 @@ typedef struct 		s_texture t_texture;
  * to reside somewhere therefore I need to keep them in the
  * struct to be able to reference them.
  */
-typedef struct 		s_scatter_record 
+typedef struct 		s_scatter_record
 {
     t_color 		attenuation;
     t_pdf 			*pdf_ptr;
@@ -109,7 +109,7 @@ void	diffuse_light_init(t_diffuse_light *diffuse_light, t_texture *tex);
 void 	init_scatter_record(t_scatter_record *srec);
 bool	lambertian_scatter(void *self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec);
 double	lambertian_scattering_pdf(void	*self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
-void	metal_init(t_metal *metal, t_color albedo, double fuzz);
+void	metal_init(t_metal *metal, t_rgb albedo, double fuzz);
 bool	metal_scatter(void *self, t_ray *r_in, t_hit_record *rec, t_scatter_record *srec);
 t_color	emitlight(void *self, t_hit_record rec, double u, double v, t_point3 p);
 
