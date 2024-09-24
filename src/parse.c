@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "libft.h"  	// get_next_line should be here
+#include <complex.h>
 #include <fcntl.h>  	/* open() */
+#include <stdbool.h>
 #include <stdio.h>  	/* perror() */
 #include "minirt.h"
 
@@ -154,6 +156,7 @@ static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalize
 }
 
 /* Inits the ambient struct inside of t_mrt->t_camera.
+ * usage:
  * "A" [intesity([0.0;1.0])] [rgb color]
 */
 static void	get_ambient(t_mrt *data)
@@ -267,17 +270,42 @@ static void	get_light(t_objects *obj)
 }
 
 /*
+ * Checks if a string represents a float number.
+ * (the string can have just a single dot and digits)
+*/
+bool	is_float(char *str)
+{
+	int		i;
+	bool	has_dot;
+
+
+	has_dot = false;
+	i = -1;
+	while (str[++i])
+	{
+		if (ft_isdigit(str[i]) == false)
+		{
+			if (str[i] == '.' && has_dot == false)
+				has_dot = true;
+			else
+				return (false);
+		}
+	}
+	return (true);
+}
+
+/*
  * usage:
  * default sphere - "sp" [origin] [diameter] [rgb color]
  * checker texture - "sp" [origin] [diameter] [rgb color1] [rgb color2]
  * image (earthmap) - "sp" [origin] [diameter] "img:"[path to .jpg]
+ * metal sphere - "sp" [origin] [diameter] [rgb color] [fuzz value(double)]
 */
 static void	get_sphere(t_objects *obj)
 {
 	static int	set_index;
 	char		**tokens;
 	int			diam;
-
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
@@ -287,7 +315,13 @@ static void	get_sphere(t_objects *obj)
 	diam = ft_atod(tokens[2]);
 	if (diam < 0)
 		call_error("diameter cannot be negative...", "sphere", obj);
-	if (count_tokens(tokens) == 5)
+	if (count_tokens(tokens) == 5 && is_float(tokens[4]))
+	{
+		metal_init(&obj->spheres[set_index].metal, set_rgb(obj, 3, "sphere"), ft_atod(tokens[4]));
+		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
+			(t_material *) &obj->spheres[set_index].metal);
+	}
+	else if (count_tokens(tokens) == 5)
 	{
 		checker_texture_init(&obj->spheres[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].checker);
@@ -456,11 +490,8 @@ static void	get_box(t_objects *obj)
 		call_error("exceeds array size", "box", obj);
 	if (count_tokens(tokens) != 4)
 		call_error("invalid token amount", "box", obj);
-
 	box_rgb(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), \
 		set_vec3(obj, 2, "box", 0), set_rgb(obj, 3, "box"));
-
-
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->boxes[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -468,10 +499,10 @@ static void	get_box(t_objects *obj)
 
 static void	update_struct(t_mrt *data)
 {
-	if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
-		get_ambient(data);
-	else if (ft_strncmp("C", data->objects._tokens[0], 2) == 0)
+	if (ft_strncmp("C", data->objects._tokens[0], 2) == 0)
 		get_camera(data);
+	else if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
+		get_ambient(data);
 	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0)
 		get_light(&data->objects);
 	else if (ft_strncmp("sp", data->objects._tokens[0], 3) == 0)
@@ -523,7 +554,7 @@ void	parse_input(char *filename, t_mrt *data)
 	char    *line;
 
     if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
-		call_error("invalid file extension\n", NULL, NULL);
+		call_error("invalid file extension", NULL, NULL);
     data->objects._file_fd = open(filename, O_RDONLY);
     if (data->objects._file_fd == -1)
     	perror(filename), exit(1);
@@ -545,6 +576,9 @@ void	parse_input(char *filename, t_mrt *data)
 		update_struct(data);
 		free_split(data->objects._tokens);
     }
+   	data->objects._tokens = NULL;
+    if (data->cam.aspect_ratio == 0)
+	   	call_error("There has to be a camera object!!!", "parse_input", &data->objects);
     data->world = hittablelist(data->objects.hit_list, data->objects.hit_idx);
     data->lights = hittablelist(data->objects.light_hit, data->objects.light_hit_idx);
     if (close(data->objects._file_fd) == -1)
