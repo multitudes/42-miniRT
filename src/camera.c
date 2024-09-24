@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 12:01:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 16:11:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,10 @@ void update_cam_resize(t_camera *cam, int new_width, int new_height)
 // TODO: what happens in direction vector is 0,0,0 at the start?
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
+  cam->direction = unit_vector(direction);
 	if (cam->direction.x == 0 && cam->direction.z == 0)
 		cam->direction.z -= 0.1;
-	cam->original_dir = direction;
+	cam->original_dir = cam->direction;
 	cam->original_pos = center;
 	cam->samples_per_pixel = 100;
 	cam->max_depth = 200;
@@ -114,7 +115,6 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 	if (cam->image_height < 1)
 		cam->image_height = 1;
 	cam->center = center;
-	cam->direction = unit_vector(cam->direction );
 	t_point3 lookat = vec3add(cam->center, cam->direction);
 	cam->hfov = clamp(interval(1, 170), hfov);
 	ambient(&cam->ambient, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
