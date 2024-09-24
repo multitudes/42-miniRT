@@ -62,38 +62,38 @@ int main(int argc, char **argv)
 	{
 		render_from_file(argv[1]);
 	}
-	else
-	{
-		int scene = 7;
+	// else
+	// {
+	// 	int scene = 7;
 
-		switch (scene)
-		{
-		case 1:
-			main_redlight(argc, argv);
-			break;
-		case 2:
-			main_earth(argc, argv);
-			break;
-		case 3:
-			main_blue_red();
-			break;
-		case 4:
-			main_checkerfloors();
-			break;
-		case 5:
-			main_redlight(argc, argv);
-			break;
-		case 6:
-			main_cyl(argc, argv);
-			break;
-		case 7:
-			main_camera_center();
-			break;
-		default:
-			break;
-		}
-		return (EXIT_SUCCESS);
-	}
+	// 	switch (scene)
+	// 	{
+	// 	case 1:
+	// 		main_redlight(argc, argv);
+	// 		break;
+	// 	case 2:
+	// 		main_earth(argc, argv);
+	// 		break;
+	// 	case 3:
+	// 		main_blue_red();
+	// 		break;
+	// 	case 4:
+	// 		main_checkerfloors();
+	// 		break;
+	// 	case 5:
+	// 		main_redlight(argc, argv);
+	// 		break;
+	// 	case 6:
+	// 		main_cyl(argc, argv);
+	// 		break;
+	// 	case 7:
+	// 		main_camera_center();
+	// 		break;
+	// 	default:
+	// 		break;
+	// 	}
+	// 	return (EXIT_SUCCESS);
+	// }
 }
 
 
@@ -632,7 +632,7 @@ int render_from_file(char *filename)
 	ft_memset(&data, 0, sizeof(t_mrt));
 	parse_input(filename, &data);
 
-
+	return (0);
     debug("Start of minirt %s", "helllo !! ");
 
 	if (!init_window(&data))

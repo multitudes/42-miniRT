@@ -11,7 +11,9 @@
 /* ************************************************************************** */
 
 #include "libft.h"  	// get_next_line should be here
+#include <complex.h>
 #include <fcntl.h>  	/* open() */
+#include <stdbool.h>
 #include <stdio.h>  	/* perror() */
 #include "minirt.h"
 
@@ -268,10 +270,36 @@ static void	get_light(t_objects *obj)
 }
 
 /*
+ * Checks if a string represents a float number.
+ * (the string can have just a single dot and digits)
+*/
+bool	is_float(char *str)
+{
+	int		i;
+	bool	has_dot;
+
+
+	has_dot = false;
+	i = -1;
+	while (str[++i])
+	{
+		if (ft_isdigit(str[i]) == false)
+		{
+			if (str[i] == '.' && has_dot == false)
+				has_dot = true;
+			else
+				return (false);
+		}
+	}
+	return (true);
+}
+
+/*
  * usage:
  * default sphere - "sp" [origin] [diameter] [rgb color]
  * checker texture - "sp" [origin] [diameter] [rgb color1] [rgb color2]
  * image (earthmap) - "sp" [origin] [diameter] "img:"[path to .jpg]
+ * metal sphere - "sp" [origin] [diameter] [rgb color] [fuzz value(double)]
 */
 static void	get_sphere(t_objects *obj)
 {
@@ -288,7 +316,11 @@ static void	get_sphere(t_objects *obj)
 	diam = ft_atod(tokens[2]);
 	if (diam < 0)
 		call_error("diameter cannot be negative...", "sphere", obj);
-	if (count_tokens(tokens) == 5)
+	if (count_tokens(tokens) == 5 && is_float(tokens[4]))
+	{
+		printf("is metalic\n");
+	}
+	else if (count_tokens(tokens) == 5)
 	{
 		checker_texture_init(&obj->spheres[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].checker);

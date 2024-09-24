@@ -1,5 +1,5 @@
 C       278,278,-800            0,0,1         60
-A       1               255,255,255
+#A       1               255,255,255
 # R   400     400 # resolution widht and height
 # S   100      50 # samples per pixel and number of bounces
 sp      90,190,90               180             0,0,0   #metallic red
