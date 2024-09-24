@@ -54,7 +54,7 @@ void	hook(void *param);
 
 int main(int argc, char **argv)
 {
-   
+
     (void)argv;
 	(void)argc;
 
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 	{
 		render_from_file(argv[1]);
 	}
-	else 
+	else
 	{
 		int scene = 7;
 
@@ -200,7 +200,7 @@ void key_callback(mlx_key_data_t keydata, void* param)
 		data->needs_render = true;
 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
 	}
-    
+
     if (data->needs_render)
     {
         data->needs_render = false;
@@ -214,7 +214,7 @@ int	main_camera_center()
 	init_data(&data);
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(0, 0, 0);
 	t_vec3 direction = vec3(0,0,1);
@@ -222,7 +222,7 @@ int	main_camera_center()
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 0.3, rgb(110,100,100));
 	data.cam.ambient.print((void*)&data.cam.ambient);
@@ -238,7 +238,7 @@ int	main_camera_center()
 	// world ================================================== world ==================================================
 	t_hittable *list[10];
 
-	// red sphere 
+	// red sphere
 	t_sphere s1;
 	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	s1.print((void*)&s1);
@@ -376,7 +376,7 @@ void rotate_camera_roll(t_camera *cam, double angle) {
 //         double deltax = xpos - data->mouse_state.last_x;
 //         double deltay = ypos - data->mouse_state.last_y;
 
-//         // Update the camera direction 
+//         // Update the camera direction
 //         debug("Mouse moved: deltax = %f, deltay = %f\n", deltax, deltay);
 // 		rotate_camera_yaw(&(data->cam), deltax);
 // 		update_cam_orientation(&(data->cam));
@@ -416,7 +416,7 @@ void translate_camera(t_camera *cam, t_vec3 translation) {
     update_cam_resize(cam, cam->image_width, cam->image_height);
 }
 
-void move_camera_forward(t_camera *cam, double distance) 
+void move_camera_forward(t_camera *cam, double distance)
 {
     t_vec3 translation = vec3multscalar(cam->w, distance);
     translate_camera(cam, translation);
@@ -450,102 +450,102 @@ void	hook(void *param)
 	data = (t_mrt *)param;
 	mlx = data->mlx;
 
-	// if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-	// 	exit_gracefully(mlx);
-	// if (mlx_is_key_down(mlx, MLX_KEY_LEFT_CONTROL) || mlx_is_key_down(mlx, MLX_KEY_RIGHT_CONTROL))
-    // {
-    //     if (mlx_is_key_down(mlx, MLX_KEY_UP))
-    //     {
-    //         debug("Ctrl + Arrow Up pressed\n");
-	// 		debug("camera center point before = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * ROTATION_DEG) );
-	// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-    //     {
-    //         debug("Ctrl + Arrow down pressed\n");
-	// 					debug("camera center point before = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-    //         rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
-	// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-	// 	{
-	// 		debug("Ctrl + Arrow left pressed\n");
-	// 		rotate_camera_yaw(&(data->cam),  degrees_to_radians(data->cam.hfov * ROTATION_DEG));
-	// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
-	// 	{
-	// 		debug("Ctrl + Arrow right pressed\n");
-	// 		rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
-	// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_F1))
-	// 	{
-	// 		// reset camera to original position
-	// 		debug("F1 pressed\n");
-	// 		data->cam.center = data->cam.original_pos;
-	// 		data->cam.direction = data->cam.original_dir;
-	// 		update_cam_orientation(&data->cam);
-	// 		data->needs_render = true;
-	// 	}
-	// 	if (mlx_is_key_down(mlx, MLX_KEY_F))
-	// 	{
-	// 		data->cam.hfov += 1;
-	// 		update_cam_orientation(&data->cam);
-	// 		data->needs_render = true;
-	// 		debug("F key pressed %f\n", data->cam.hfov);
-	// 	}
-    // }
-	// if (mlx_is_key_down(mlx, MLX_KEY_F))
-	// {
-	// 	data->cam.hfov -= 1;
-	// 	update_cam_orientation(&data->cam);
-	// 	data->needs_render = true;
-	// 	debug("F key pressed %f\n", data->cam.hfov);
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_UP))
-	// {
-	// 	move_camera_up(&(data->cam), data->cam.image_height / 20);
-	// 	debug("UP key pressed");
-	// 	debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
-	// {
-	// 	move_camera_up(&(data->cam), -data->cam.image_height / 20 );
-	// 	debug("DOWN key pressed");
-	// 	debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
-	// {
-	// 	move_camera_right(&(data->cam), -data->cam.image_width / 20);
-	// 	debug("LEFT key pressed");
-	// 	debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
-	// 	move_camera_right(&(data->cam), data->cam.image_width / 20);
-	// 	debug("RIGHT key pressed");
-	// 	debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_SPACE)){
-	// 	move_camera_forward(&(data->cam), -data->cam.image_width / 20);
-	// 	debug("S key pressed");
-	// 	data->needs_render = true;
-	// }
-	// if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
-	// {
-	// 	move_camera_forward(&(data->cam), data->cam.image_width / 10);
-	// 	debug("W key pressed");
-	// 	data->needs_render = true;
-	// }
+	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
+		exit_gracefully(mlx);
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_CONTROL) || mlx_is_key_down(mlx, MLX_KEY_RIGHT_CONTROL))
+    {
+        if (mlx_is_key_down(mlx, MLX_KEY_UP))
+        {
+            debug("Ctrl + Arrow Up pressed\n");
+			debug("camera center point before = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * ROTATION_DEG) );
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+        {
+            debug("Ctrl + Arrow down pressed\n");
+						debug("camera center point before = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+            rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+		{
+			debug("Ctrl + Arrow left pressed\n");
+			rotate_camera_yaw(&(data->cam),  degrees_to_radians(data->cam.hfov * ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
+		{
+			debug("Ctrl + Arrow right pressed\n");
+			rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
+			debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_F1))
+		{
+			// reset camera to original position
+			debug("F1 pressed\n");
+			data->cam.center = data->cam.original_pos;
+			data->cam.direction = data->cam.original_dir;
+			update_cam_orientation(&data->cam);
+			data->needs_render = true;
+		}
+		if (mlx_is_key_down(mlx, MLX_KEY_F))
+		{
+			data->cam.hfov += 1;
+			update_cam_orientation(&data->cam);
+			data->needs_render = true;
+			debug("F key pressed %f\n", data->cam.hfov);
+		}
+    }
+	if (mlx_is_key_down(mlx, MLX_KEY_F))
+	{
+		data->cam.hfov -= 1;
+		update_cam_orientation(&data->cam);
+		data->needs_render = true;
+		debug("F key pressed %f\n", data->cam.hfov);
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_UP))
+	{
+		move_camera_up(&(data->cam), data->cam.image_height / 20);
+		debug("UP key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
+	{
+		move_camera_up(&(data->cam), -data->cam.image_height / 20 );
+		debug("DOWN key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
+	{
+		move_camera_right(&(data->cam), -data->cam.image_width / 20);
+		debug("LEFT key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT)){
+		move_camera_right(&(data->cam), data->cam.image_width / 20);
+		debug("RIGHT key pressed");
+		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_SPACE)){
+		move_camera_forward(&(data->cam), -data->cam.image_width / 20);
+		debug("S key pressed");
+		data->needs_render = true;
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
+	{
+		move_camera_forward(&(data->cam), data->cam.image_width / 10);
+		debug("W key pressed");
+		data->needs_render = true;
+	}
 	if (data->needs_render)
 	{
 		data->needs_render = false;
@@ -585,7 +585,7 @@ int init_window(t_mrt *data)
 bool init_data(t_mrt *data)
 {
 	/***************************** */
-	/* 			MLX42 			   */	
+	/* 			MLX42 			   */
 	/***************************** */
     data->mlx = NULL;
     data->win_ptr = NULL;
@@ -602,15 +602,15 @@ bool init_data(t_mrt *data)
 }
 
 /*
-This is the callback of 
+This is the callback of
 mlx_resize_hook(params.mlx, &_resize_hook, (void*)&params);
-The prototype of the function is given already. 
-I receive the new height and width from the system. 
-This works when resizing the window with the handles and also when going in 
-fullscreen mode for some reason, even if the full screen mode 
-is controlled differently in the background by the system.  
+The prototype of the function is given already.
+I receive the new height and width from the system.
+This works when resizing the window with the handles and also when going in
+fullscreen mode for some reason, even if the full screen mode
+is controlled differently in the background by the system.
 */
-void	_resize_hook(int new_width, int new_height, void *params) 
+void	_resize_hook(int new_width, int new_height, void *params)
 {
 	t_mrt *data = ((t_mrt *)params);
 	data->cam.image_width = new_width;
@@ -660,7 +660,7 @@ int render_from_file(char *filename)
 // 	(void)argc;
 
 // 	/***************************** */
-// 	/* 			camera 			   */	
+// 	/* 			camera 			   */
 // 	/***************************** */
 // 	t_point3 center = point3(378, 378, -1800);
 // 	t_vec3 direction = vec3(0,0,800);
@@ -668,7 +668,7 @@ int render_from_file(char *filename)
 // 	data.cam.print((void*)(&(data.cam)));
 
 // 	/***************************** */
-// 	/* 		ambient light		   */	
+// 	/* 		ambient light		   */
 // 	/***************************** */
 // 	t_ambient ambient_light = ambient(0.0, rgb(255,255,255));
 // 	data.ambient_light = ambient_light;
@@ -714,7 +714,7 @@ int render_from_file(char *filename)
 // 	t_sphere s2;
 // 	sphere(&s2, vec3(0, -100.5, -1), 200, rgb(0,128,0));
 // 	s2.print((void*)&s2);
-// 	t_sphere s3; 
+// 	t_sphere s3;
 // 	sphere(&s3, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
 // 	s3.print((void*)&s3);
 // 	t_sphere s4;
@@ -731,10 +731,10 @@ int render_from_file(char *filename)
 //     debug("Start of minirt %s", "helllo !! ");
 // 	if (!init_window(&data))
 // 		return (EXIT_FAILURE);
-	
+
 
 // 	render(&data, &world, NULL);
-	
+
 
 //     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
@@ -769,7 +769,7 @@ int main_blue_red()
 
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(278, 278, -800);
 	t_vec3 direction = vec3(0,0,1);
@@ -777,7 +777,7 @@ int main_blue_red()
 	data.cam.print((void*)(&(data.cam)));
 
 		/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient,0.2, rgb(110,110,110));
 	data.cam.ambient.print((void*)&	data.cam.ambient);
@@ -802,13 +802,13 @@ int main_blue_red()
 	// sphere(&s1, vec3(190, 90, 190), 180, rgb(200, 0, 0));
 	t_metal metal;
 	metal_init(&metal, color(0.8, 0, 0), 0.3);
-	
+
 	// red metallic sphere
 	t_sphere s1;
 	sphere_mat(&s1, vec3(190, 90, 190), 180, (t_material*)&metal);
 	s1.print((void*)&s1);
 
-// as light also 
+// as light also
 	// t_sphere s2;
 	// sphere_mat(&s2, point3( 343,554,332 ), 100, (t_material*)&difflight);
 	// blue
@@ -818,7 +818,7 @@ int main_blue_red()
 	quad_mat(&s3, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&blue);
 	// t_disk s3;
 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&difflight);
-	
+
 	// t_disk s3;
 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&blue);
 	// s3.print((void*)&s3);
@@ -884,7 +884,7 @@ int main_redlight(int argc, char **argv)
 	(void)argc;
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(378, 378, -1800);
 	t_vec3 direction = vec3(0,0,800);
@@ -892,7 +892,7 @@ int main_redlight(int argc, char **argv)
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 0.3, rgb(110,100,100));
 	data.cam.ambient.print((void*)&data.cam.ambient);
@@ -913,7 +913,7 @@ int main_redlight(int argc, char **argv)
 	// world ================================================== world ==================================================
 	t_hittable *list[10];
 
-	// red sphere 
+	// red sphere
 	t_sphere s1;
 	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	s1.print((void*)&s1);
@@ -1004,7 +1004,7 @@ int main_cyl(int argc, char **argv)
 	(void)argc;
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(0, 100, 400);
 	t_vec3 direction = vec3(0,0,-400);
@@ -1012,7 +1012,7 @@ int main_cyl(int argc, char **argv)
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 1, rgb(255,255,255));
 
@@ -1035,7 +1035,7 @@ int main_cyl(int argc, char **argv)
 	// t_disk d1;
 	// disk_mat(&d1, point3(0, 0, 0), vec3(0,1,0), 50, (t_material*)&metal);
 	// d1.print((void*)&d1);
-	
+
 	// t_cylinder_capped c0;
 	t_cylinder c0;
 	cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
@@ -1069,7 +1069,7 @@ int main_cyl(int argc, char **argv)
 	data.lights = lights;
 
 	render(&data, &world, &lights);
-	
+
 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);

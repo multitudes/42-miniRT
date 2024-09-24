@@ -99,7 +99,7 @@ void update_cam_resize(t_camera *cam, int new_width, int new_height)
 	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
 
-void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov) 
+void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
 	if (cam->direction.x == 0 && cam->direction.z == 0)
 		cam->direction.x += 0.1;
@@ -108,7 +108,7 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 	cam->samples_per_pixel = 100;
 	cam->max_depth = 200;
 	cam->aspect_ratio = ASPECT_RATIO;
-	cam->image_width = IMAGE_WIDTH; 
+	cam->image_width = IMAGE_WIDTH;
 	cam->image_height = (int)(IMAGE_WIDTH / cam->aspect_ratio);
 	if (cam->image_height < 1)
 		cam->image_height = 1;
@@ -128,14 +128,14 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 /**
  * @brief one of the most important functions in the raytracer
  * this function will return the color of the pixel for a given camera position
- * sending rays into the scene. 
+ * sending rays into the scene.
  * @param cam the camera object
  * @param r the ray object
  * @param depth the maximum number of bounces
  * @param world the list of objects in the scene
  * @param lights the list of light sources in the scene
  * @return t_color the color of the pixel
- * 
+ *
  * If there are no hits the functions returns a space grey color.
  * Then first I check if the material is a light source and return the color of the light source
  * or what the emit function fort the material returns. Materials like diffuse lambertians and
@@ -146,14 +146,14 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
  * if the material is metal the scatter function will return the scattered ray and the attenuation
  * and the function will call itself recursively with the scattered ray and return the color of the object
  * At this stage i mix the ambient light with the color returned by the recursive call otherwise the metal
- * object will be black with only specular reflections.  
+ * object will be black with only specular reflections.
  * If it is not a metal object the function will continue and do a pdf calculation for the light sources.
  * In the hittable_pdf struct I have a pointer to the light source list and the point of intersection.
  * I will do a mix of the pdf values of the light sources and the material and then I will randomly choose
  * a light source or the material to scatter the ray. I will calculate the pdf value for the chosen light source
  * and the material and then I will calculate the scattering pdf for the material. I will call the function
  * recursively with the scattered ray and return the color of the object.
- * 
+ *
  */
 t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights)
 {
@@ -211,12 +211,12 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 unsigned int    color_gamma_corrected(t_color color)
 {
 	t_interval intensity;
-	
+
 	intensity = interval(0.0,0.999);
 	t_rgb a;
 	a = color_to_rgb((t_color){
-		.r = clamp(intensity, linear_to_gamma(color.r)), 
-		.g = clamp(intensity, linear_to_gamma(color.g)), 
+		.r = clamp(intensity, linear_to_gamma(color.r)),
+		.g = clamp(intensity, linear_to_gamma(color.g)),
 		.b = clamp(intensity, linear_to_gamma(color.b))});
     return (rgb_to_uint(a));
 }
@@ -266,7 +266,7 @@ void render_thread(void *args)
 	int i = 0;
     start_time = clock();
     while (y < thread_data->endy)
-    {	
+    {
 		x = 0;
         while (x < thread_data->data->cam.image_width)
         {
@@ -277,7 +277,7 @@ void render_thread(void *args)
 				t_ray r = get_ray(thread_data->data->cam, x, y);
 
 				pixel_color = vec3add(pixel_color, ray_color(&(thread_data->data->cam), &r, thread_data->data->cam.max_depth ,thread_data->world, thread_data->lights));
-				
+
 				i++;
 			}
 
@@ -286,18 +286,19 @@ void render_thread(void *args)
         }
 		y++;
     }
-	
+
 	end_time = clock();
 
     // Calculate time taken and FPS
     time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
     fps = 1.0 / time_taken;
+    (void)fps;
 	// debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
 	// fflush(stderr);
 	// char fps_str[100];
 	// snprintf(fps_str, sizeof(fps_str), "Frame rendered in %.2f seconds (FPS: %.2f)", time_taken, fps);
 	// mlx_string_put(thread_data->data->mlx, thread_data->data->win_ptr, 10, 10, 0xFFFFFF, fps_str);
-	
+
 }
 
 
@@ -312,7 +313,7 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
     int sliceheight = data->cam.image_height / CORES;
 	int thread_idx = 0;
 	while (thread_idx < CORES)
-	{	
+	{
 		thread_data[thread_idx].data = data;
 		thread_data[thread_idx].thread_id = thread_idx;
 		thread_data[thread_idx].world = world;
@@ -407,7 +408,7 @@ unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
 
 /**
  * not working right now but interesting test... just playing around
- * 
+ *
  */
 void gaussian_blur(t_mrt *data) {
     debug("Applying Gaussian blur to the image...\n");
