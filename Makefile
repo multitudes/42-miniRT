@@ -10,12 +10,16 @@
 NAME 			= 	miniRT
 CC 				= 	cc
 
-CFLAGS 			= 	-Wextra -Wall -Werror
-CFLAGS 			+= 	-Iinclude -Isrc -Ilib/external
-CFLAGS			+=  -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
-CFLAGS 			+=  -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+CFLAGS 			:= -Wall -Wextra -Werror
+CFLAGS 			+= -Iinclude 
+CFLAGS			+= -Isrc -Ilib/external
+CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
+CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math 
+CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
+CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
+CFLAGS 			+=  -g
 # CFLAGS 			+=  -DNDEBUG
-# CFLAGS 			+=  -g
 
 
 # directories
@@ -36,12 +40,13 @@ INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
 											vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
 											texture.c material.c onb.c pdf.c quad.c hittable_list.c \
-											disk.c box.c triangle.c parse.c cone.c)
+											disk.c box.c triangle.c rotated.c translated.c mersenne_twister.c)
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 									hittable.h hittable_list.h minirt.h color.h \
 									utils.h ambient.h plane.h cylinder.h texture.h \
-									material.h onb.h pdf.h quad.h disk.h box.h triangle.h)
+									rtw_stb_image.h material.h onb.h pdf.h quad.h disk.h \
+									box.h triangle.h rotated.h translated.h mersenne_twister.h)
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
@@ -54,6 +59,10 @@ ifeq ($(UNAME), Linux)
 else ifeq ($(UNAME), Darwin)
 	LIBS 		+=  -L/opt/homebrew/lib
 endif
+
+# to look up later - should detect the changes in libft and recompile
+# MAKEFILES := lib/libft/Makefile
+# include $(MAKEFILES)
 
 all: libmlx $(LIBFT) $(NAME)
 

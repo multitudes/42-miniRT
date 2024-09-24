@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:53:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 17:15:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:34:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,5 @@ void	print_plane(const void *self);
 bool	hit_plane(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
 double	plane_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir);
 t_vec3	plane_random(const void *self, const t_point3 *orig);
-
 
 #endif

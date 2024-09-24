@@ -206,3 +206,23 @@ where
 
 ## trivia  
 Phong and Crow (1975) first introduced the idea of interpolating per-vertex shading normals to give the appearance of smooth surfaces from polygonal meshes.   
+
+## courses  
+http://graphics.cs.cmu.edu/courses/15-463/  
+The following textbooks can also be useful references in general. All of them are available online from the CMU library:
+
+    Computer Vision: Algorithms and Applications, by Richard Szeliski.
+    Computational Imaging Book, by Ayush Bansai, Achuta Kadambi, and Ramesh Raskar.
+    Multiple View Geometry in Computer Vision, by Richard Hartley and Andrew Zisserman.
+    Computer Vision: A Modern Approach, by David Forsyth and Jean Ponce.
+    Foundations of 3D Computer Graphics, by Steven Gortler.
+    Digital Image Processing, by Rafael Gonzalez and Richard Woods.
+    Photography, by Barbara London and John Upton.
+
+https://www.realtimerendering.com/raytracinggems/  
+https://github.com/Apress/ray-tracing-gems  
+
+https://github.com/Apress/Ray-Tracing-Gems-II  
+https://link.springer.com/book/10.1007/978-1-4842-7185-8  
+https://youtu.be/gBPNO6ruevk?si=Qtmk42NVdP9aJgRN  
+

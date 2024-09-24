@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:49:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/07 15:02:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/22 14:01:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_color color(double r, double g, double b)
  * @brief Create a rgb struct to use in the initializer
  * for the sphere and other objects
  */
-t_rgb rgb(int r, int g, int b)
+t_rgb rgb(uint32_t r, uint32_t g, uint32_t b)
 {
 	t_rgb rgbcolor;
 
@@ -50,6 +50,24 @@ t_color rgb_to_color(t_rgb rgbcolor)
 	color.g = (double)rgbcolor.g / 255;
 	color.b = (double)rgbcolor.b / 255;
 	return color;
+}
+
+t_rgb color_to_rgb(t_color color)
+{
+	t_rgb rgb;
+
+	rgb.r = (uint8_t)(255.999 * color.x);
+	rgb.g = (uint8_t)(255.999 * color.y);
+	rgb.b = (uint8_t)(255.999 * color.z);
+	return rgb;
+}
+
+unsigned int rgb_to_uint(t_rgb rgbcolor)
+{
+	unsigned int result;
+
+	result = ((rgbcolor.r << 24) | (rgbcolor.g << 16) | (rgbcolor.b << 8) | 0xFF);
+	return (result);
 }
 
 /**

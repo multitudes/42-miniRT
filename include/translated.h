@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ambient.h                                          :+:      :+:    :+:   */
+/*   translated.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/06 11:52:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:31:31 by lbrusa           ###   ########.fr       */
+/*   Created: 2024/07/25 11:46:22 by lbrusa            #+#    #+#             */
+/*   Updated: 2024/09/22 13:20:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef AMBIENT_H
-# define AMBIENT_H
+#ifndef TRANSLATED_H
+# define TRANSLATED_H
 
-#include "color.h"
+#include "hittable.h"
 
-typedef struct 	s_ambient
+typedef struct 	s_translated
 {
-	double		ratio;
-	t_rgb		rgbcolor;
-	t_color		color;
-	void		(*print)(const void* self);
-}				t_ambient;
+	t_hittable  base;
+	t_hittable 	*obj;
+	t_vec3 		offset;
+} 				t_translated;
 
-void	ambient(t_ambient *result, double ratio, t_rgb rgb);
-void	print_ambient(const void *self);
+t_translated	translated(t_hittable *obj, t_vec3 offset);
+bool			hit_translated(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec);
 
 #endif

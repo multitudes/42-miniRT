@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/21 15:43:56 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:48:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,29 @@
 #include <pthread.h>
 #include <stdint.h>
 
-void gaussian_blur(t_mrt *data);
+/**
+ * @brief update a camera object when the orientation changes
+ */
+void update_cam_orientation(t_camera *cam)
+{
+	cam->direction = vec3negate(cam->w);
+    t_point3 lookat = vec3add(cam->center, cam->direction);
+    double focal_length = length(vec3substr(cam->center, lookat));
+    double theta = degrees_to_radians(cam->hfov);
+    double h = tan(theta / 2);
+    double viewport_width = 2 * h * focal_length;
+    double viewport_height = viewport_width * ((double)cam->image_height / cam->image_width);
+
+    t_vec3 viewport_u = vec3multscalar(cam->u, viewport_width);
+    t_vec3 viewport_v = vec3multscalar(vec3negate(cam->v), viewport_height);
+    cam->pixel_delta_u = vec3divscalar(viewport_u, cam->image_width);
+    cam->pixel_delta_v = vec3divscalar(viewport_v, cam->image_height);
+
+    t_point3 part1 = vec3substr(cam->center, vec3multscalar(cam->w, focal_length));
+    t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
+    t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
+    cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
+}
 
 void update_cam_orientation(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
@@ -53,7 +75,7 @@ void update_cam_orientation(t_camera *cam, t_point3 center, t_vec3 direction, do
 	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
 
-void update_cam(t_camera *cam, int new_width, int new_height)
+void update_cam_resize(t_camera *cam, int new_width, int new_height)
 {
 	cam->image_width = new_width;
 	cam->image_height = new_height;
@@ -79,18 +101,28 @@ void update_cam(t_camera *cam, int new_width, int new_height)
 
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov) 
 {
+	if (cam->direction.x == 0 && cam->direction.z == 0)
+		cam->direction.x += 0.1;
+	cam->original_dir = direction;
+	cam->original_pos = center;
 	cam->samples_per_pixel = 100;
-	cam->max_depth = 100;
+	cam->max_depth = 200;
 	cam->aspect_ratio = ASPECT_RATIO;
 	cam->image_width = IMAGE_WIDTH; 
-	cam->image_height = IMAGE_WIDTH / cam->aspect_ratio;
-	cam->image_height = (cam->image_height < 1) ? 1 : cam->image_height;
+	cam->image_height = (int)(IMAGE_WIDTH / cam->aspect_ratio);
+	if (cam->image_height < 1)
+		cam->image_height = 1;
 	cam->center = center;
-	cam->direction = direction;
+	cam->direction = unit_vector(cam->direction );
+	t_point3 lookat = vec3add(cam->center, cam->direction);
 	cam->hfov = clamp(interval(1, 170), hfov);
+	ambient(&cam->ambient_light, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
+    cam->w = unit_vector(vec3substr(cam->center, lookat));
+    cam->u = unit_vector(cross(cam->vup, cam->w));
+    cam->v = cross(cam->w, cam->u);
 	cam->vup = vec3(0,1,0);
 	cam->print = print_camera;
-	update_cam(cam, cam->image_width, cam->image_height);
+	update_cam_resize(cam, cam->image_width, cam->image_height);
 }
 
 /**
@@ -133,23 +165,32 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	// base case - stops recursion
 	if (depth <= 0)
         return color(0,0,0);
-	if (!world->hit_objects(world, r, interval(0.001, 10000), &rec))
-		return color(0.0005,0.0005,0.0005);
+	if (!world->hit_objects(world, r, interval(0.001, 100000), &rec))
+		return color(0.01,0.01,0.01);
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 	init_scatter_record(&srec);
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 		return color_from_emission;
 	t_ray scattered = srec.skip_pdf_ray;
-	if (srec.skip_pdf)
-	{
-		if (srec.skip_pdf) {
-			t_color ambient_light = cam->ambient.color;
-			t_metal *metal = (t_metal *)rec.mat;
-			t_color ambient_material = vec3mult(metal->albedo, ambient_light);
-       		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-        	return vec3add(ambient_material, reflected_color);
-    	}
+	// if (srec.skip_pdf)
+	// {
+	// 	if (srec.skip_pdf) {
+	// 		t_color ambient_light = cam->ambient_light.color;
+	// 		t_metal *metal = (t_metal *)rec.mat;
+	// 		t_color ambient_material = vec3mult(metal->albedo, ambient_light);
+    //    		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+    //     	return vec3add(ambient_material, reflected_color);
+    // 	}
+	// }
+	if (srec.skip_pdf) {
+		t_color ambient_light = cam->ambient.color;
+		t_metal *metal = (t_metal *)rec.mat;
+		t_color ambient_material = vec3mult(metal->albedo, ambient_light);
+		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+		return vec3add(ambient_material, reflected_color);
+        // return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 	}
+
 	recorded_pdf = srec.pdf_ptr;
 	hittable_pdf_init(&light_pdf, lights, &rec.p);
 	t_mixture_pdf mix_pdf;
@@ -169,11 +210,15 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 /* gamma corrects the colorvector. - squareroots the color values. */
 unsigned int    color_gamma_corrected(t_color color)
 {
-	t_interval intensity = interval(0.0,0.999);
-	int r = clamp(intensity, linear_to_gamma(color.r)) * 255;
-	int g = clamp(intensity, linear_to_gamma(color.g)) * 255;
-	int b = clamp(intensity, linear_to_gamma(color.b)) * 255;
-    return ((r << 24) | (g << 16) | (b << 8) | 0xFF);
+	t_interval intensity;
+	
+	intensity = interval(0.0,0.999);
+	t_rgb a;
+	a = color_to_rgb((t_color){
+		.r = clamp(intensity, linear_to_gamma(color.r)), 
+		.g = clamp(intensity, linear_to_gamma(color.g)), 
+		.b = clamp(intensity, linear_to_gamma(color.b))});
+    return (rgb_to_uint(a));
 }
 
 /*
@@ -182,7 +227,7 @@ and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib!
 */
 void write_color(t_mrt *data, int x, int y, t_color colorvector)
 {
-    int color = color_gamma_corrected(colorvector);
+    unsigned int color = color_gamma_corrected(colorvector);
     int offset;
     mlx_image_t *image;
     uint8_t *pixel;
@@ -205,7 +250,6 @@ t_ray get_ray(t_camera cam, int i, int j)
 	t_vec3 ju = vec3multscalar(cam.pixel_delta_v, j + offset.y);
 	t_vec3 partial = vec3add(iu, ju);
 	t_point3 pixel_sample = vec3add(cam.pixel00_loc, partial);
-
 	t_point3 ray_origin = cam.center;
 	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin);
 	return ray(ray_origin, ray_direction);
@@ -248,8 +292,8 @@ void render_thread(void *args)
     // Calculate time taken and FPS
     time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
     fps = 1.0 / time_taken;
-	debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
-	fflush(stderr);
+	// debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
+	// fflush(stderr);
 	// char fps_str[100];
 	// snprintf(fps_str, sizeof(fps_str), "Frame rendered in %.2f seconds (FPS: %.2f)", time_taken, fps);
 	// mlx_string_put(thread_data->data->mlx, thread_data->data->win_ptr, 10, 10, 0xFFFFFF, fps_str);
@@ -287,9 +331,8 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 		pthread_join(threads[thread_idx], NULL);
 		thread_idx++;
 	}
-	debug("All threads have finished rendering the frame!\n");
-	// gaussian_blur(data);
-	data->needs_render = false;
+	if (data->needs_render)
+		data->needs_render = false;
 }
 
 /**

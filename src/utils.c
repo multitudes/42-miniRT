@@ -6,27 +6,44 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/21 11:09:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:55:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "camera.h"
-
 #include "utils.h"
-
-
+#include "mersenne_twister.h"
+#include <time.h>
+#define CORES 16
+#define RANDOM_SYSTEM 0
 
 /**
  *  @brief Our random int generator.
  *
  * @return unsigned int
  */
-unsigned int rand_rt()
+#if RANDOM_SYSTEM == 0
+unsigned int rand_rt() 
 {
 	static __thread unsigned int seed = 1;
     seed = (A * seed + C) % M;
-    return seed;
+    return (seed);
 }
+#elif RANDOM_SYSTEM == 1
+unsigned int rand_rt() 
+{
+    static __thread int initialized = 0;
+    if (!initialized) {
+        srand(time(NULL) ^ (uintptr_t)&initialized); // Seed the random number generator with a unique seed per thread
+        initialized = 1;
+    }
+    return rand();
+}
+#elif RANDOM_SYSTEM == 2
+unsigned int rand_rt()
+{
+    return mt_genrand_int32();
+}
+#endif
 
 /*
  * Comverts degrees to radians.
@@ -37,7 +54,8 @@ double degrees_to_radians(double degrees)
 }
 
 /*
- * Returns a random int in [min,max).
+ * @brief Returns a random int in [min,max).
+ * 
  * max is excluded.
  */
 int random_int(int min, int max)
@@ -54,8 +72,9 @@ int random_int(int min, int max)
     }
     return min + rand_rt() % diff;
 }
+
 /*
- * Returns a random real in [0,1], 1 excluded.
+ * @brief Returns a random real in [0,1), 1 excluded.
  */
 double random_d()
 {
@@ -63,7 +82,7 @@ double random_d()
 }
 
 /*
- * Returns a random real in [min,max) with min included
+ * @brief Returns a random real in [min,max) 
  * and max excluded.
  */
 double random_double(double min, double max)

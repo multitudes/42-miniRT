@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/20 13:30:38 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:32:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void 	lambertian_init(t_lambertian *lambertian_material, t_color albedo);
 void	lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex);
 void	diffuse_light_init(t_diffuse_light *diffuse_light, t_texture *tex);
 void 	init_scatter_record(t_scatter_record *srec);
-bool	lambertian_scatter(void *self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec); ;
+bool	lambertian_scatter(void *self,  t_ray *r_in,  t_hit_record *rec, t_scatter_record *srec);
 double	lambertian_scattering_pdf(void	*self, const t_ray *r_in, const t_hit_record *rec, const t_ray *scattered);
 void	metal_init(t_metal *metal, t_color albedo, double fuzz);
 bool	metal_scatter(void *self, t_ray *r_in, t_hit_record *rec, t_scatter_record *srec);

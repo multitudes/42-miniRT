@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 17:20:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:43:53 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,11 +241,4 @@ t_vec3 random_to_sphere(double radius, double distance_squared)
     return unit_vector(vec3(x, y, z));
 }
 
-t_rgb color_to_rgb(t_color color)
-{
-	t_rgb rgb;
-	rgb.r = (uint8_t)(255.999 * color.x);
-	rgb.g = (uint8_t)(255.999 * color.y);
-	rgb.b = (uint8_t)(255.999 * color.z);
-	return rgb;
-}
+

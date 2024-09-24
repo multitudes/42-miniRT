@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/21 11:08:58 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:39:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@
 #define EPSILON 1e-6
 
 // Define constants for the LCG
-#define A 1664525
+// #define A 1664525
+// #define C 1013904223
+// #define M 4294967296 // 2^32
+
+#define A 1103515245
 #define C 1013904223
 #define M 4294967296 // 2^32
 
