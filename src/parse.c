@@ -345,7 +345,8 @@ static void	get_sphere(t_objects *obj)
 
 /*
  * usage:
- * "pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
+ * regular plane - "pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
+ * checker plane - "pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color1] [rgb color2]
 */
 static void	get_plane(t_objects *obj)
 {
@@ -355,10 +356,20 @@ static void	get_plane(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "plane", obj);
-	if (count_tokens(tokens) != 4)
+	if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
 		call_error("invalid token amount", "plane", obj);
-	plane(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
-		set_vec3(obj, 2, "plane", 1), set_rgb(obj, 3, "plane"));
+	if (count_tokens(tokens) == 5)
+	{
+		checker_texture_init(&obj->planes[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
+		lambertian_init_tex(&obj->planes[set_index].lambertian_mat, (t_texture *)&obj->planes[set_index].checker);
+		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
+			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].lambertian_mat);
+	}
+	else if (count_tokens(tokens) == 4)
+	{
+		plane(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
+			set_vec3(obj, 2, "plane", 1), set_rgb(obj, 3, "plane"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->planes[set_index];
 	obj->hit_idx++;
 	set_index++;

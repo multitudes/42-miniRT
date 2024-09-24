@@ -29,7 +29,7 @@
  ∗ 3d normalized normal vector. In range [-1,1] for each x,y,z axis: 0.0,1.0,0.0
  ∗ R,G,B colors in range [0-255]: 0,0,225
  */
-typedef struct 		s_plane 
+typedef struct 		s_plane
 {
 	t_hittable  	base;
 	t_point3		q;
@@ -40,7 +40,11 @@ typedef struct 		s_plane
 	t_rgb			rgb;
 	t_color			color;
 	t_lambertian 	lambertian_mat;
-	t_solid_color 	texture;
+	union
+	{
+		t_solid_color 		solid;
+		t_checker_texture	checker;
+	};
 	t_material		*mat;
 	void			(*print)(const void* self);
 }					t_plane;
@@ -48,8 +52,8 @@ typedef struct 		s_plane
 /*
  * a sort of initializer for a plane
  */
-void 	plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol); 
-void	plane_mat(t_plane *pl, t_point3 point, t_vec3 normal, t_material *mat); 
+void 	plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol);
+void	plane_mat(t_plane *pl, t_point3 point, t_vec3 normal, t_material *mat);
 void	print_plane(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool	hit_plane(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);

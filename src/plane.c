@@ -28,8 +28,8 @@ void plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol)
     pl->color = rgb_to_color(rgbcol);
 
     // Initialize texture and material as I did for the quad
-    solid_color_init(&(pl->texture), pl->color);
-    lambertian_init_tex(&(pl->lambertian_mat), (t_texture*)&(pl->texture));
+    solid_color_init(&(pl->solid), pl->color);
+    lambertian_init_tex(&(pl->lambertian_mat), (t_texture*)&(pl->solid));
     pl->mat = (t_material*)&(pl->lambertian_mat);
 	// print plane for the rt file
 	pl->print = print_plane;

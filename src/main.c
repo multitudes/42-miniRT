@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 18:10:14 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 18:19:17 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ bool init_data(t_mrt *data);
 
 int main(int argc, char **argv)
 {
-   
+
     (void)argv;
 	(void)argc;
 
@@ -98,7 +98,7 @@ int	main_camera_center()
 	init_data(&data);
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(210, 330, -130);
 	t_vec3 direction = vec3(0,0,1);
@@ -106,7 +106,7 @@ int	main_camera_center()
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 0.3, rgb(110,100,100));
 	data.cam.ambient.print((void*)&data.cam.ambient);
@@ -122,7 +122,7 @@ int	main_camera_center()
 	// world ================================================== world ==================================================
 	t_hittable *list[10];
 
-	// red sphere 
+	// red sphere
 	t_sphere s1;
 	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	s1.print((void*)&s1);
@@ -192,7 +192,7 @@ int init_window(t_mrt *data)
 bool init_data(t_mrt *data)
 {
 	/***************************** */
-	/* 			MLX42 			   */	
+	/* 			MLX42 			   */
 	/***************************** */
     data->mlx = NULL;
     data->win_ptr = NULL;
@@ -209,15 +209,15 @@ bool init_data(t_mrt *data)
 }
 
 /*
-This is the callback of 
+This is the callback of
 mlx_resize_hook(params.mlx, &_resize_hook, (void*)&params);
-The prototype of the function is given already. 
-I receive the new height and width from the system. 
-This works when resizing the window with the handles and also when going in 
-fullscreen mode for some reason, even if the full screen mode 
-is controlled differently in the background by the system.  
+The prototype of the function is given already.
+I receive the new height and width from the system.
+This works when resizing the window with the handles and also when going in
+fullscreen mode for some reason, even if the full screen mode
+is controlled differently in the background by the system.
 */
-void	_resize_hook(int new_width, int new_height, void *params) 
+void	_resize_hook(int new_width, int new_height, void *params)
 {
 	t_mrt *data = ((t_mrt *)params);
 	data->cam.image_width = new_width;
@@ -267,7 +267,7 @@ int render_from_file(char *filename)
 // 	(void)argc;
 
 // 	/***************************** */
-// 	/* 			camera 			   */	
+// 	/* 			camera 			   */
 // 	/***************************** */
 // 	t_point3 center = point3(378, 378, -1800);
 // 	t_vec3 direction = vec3(0,0,800);
@@ -275,7 +275,7 @@ int render_from_file(char *filename)
 // 	data.cam.print((void*)(&(data.cam)));
 
 // 	/***************************** */
-// 	/* 		ambient light		   */	
+// 	/* 		ambient light		   */
 // 	/***************************** */
 // 	t_ambient ambient_light = ambient(0.0, rgb(255,255,255));
 // 	data.ambient_light = ambient_light;
@@ -321,7 +321,7 @@ int render_from_file(char *filename)
 // 	t_sphere s2;
 // 	sphere(&s2, vec3(0, -100.5, -1), 200, rgb(0,128,0));
 // 	s2.print((void*)&s2);
-// 	t_sphere s3; 
+// 	t_sphere s3;
 // 	sphere(&s3, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
 // 	s3.print((void*)&s3);
 // 	t_sphere s4;
@@ -338,10 +338,10 @@ int render_from_file(char *filename)
 //     debug("Start of minirt %s", "helllo !! ");
 // 	if (!init_window(&data))
 // 		return (EXIT_FAILURE);
-	
+
 
 // 	render(&data, &world, NULL);
-	
+
 
 //     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 
@@ -376,7 +376,7 @@ int main_blue_red()
 
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(214, 265, -289);
 	t_vec3 direction = vec3(0,0,1);
@@ -415,7 +415,7 @@ int main_blue_red()
 	sphere_mat(&s1, vec3(190, 90, 190), 180, (t_material*)&metal);
 	s1.print((void*)&s1);
 
-// as light also 
+// as light also
 	// t_sphere s2;
 	// sphere_mat(&s2, point3( 343,554,332 ), 100, (t_material*)&difflight);
 	// blue
@@ -426,7 +426,7 @@ int main_blue_red()
 	s3.print((void*)&s3);
 	// t_disk s3;
 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&difflight);
-	
+
 	// t_disk s3;
 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&blue);
 	// s3.print((void*)&s3);
@@ -494,7 +494,7 @@ int main_lights_three_lambertian()
 
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3( -800.000000, -234, -250.000000);
 	t_vec3 direction = vec3(1,1,1);
@@ -502,7 +502,7 @@ int main_lights_three_lambertian()
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 1, rgb(110,100,100));
 	data.cam.ambient.print((void*)&data.cam.ambient);
@@ -518,7 +518,7 @@ int main_lights_three_lambertian()
 	// world ================================================== world ==================================================
 	t_hittable *list[10];
 
-	// red sphere 
+	// red sphere
 	t_sphere s1;
 	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
 	s1.print((void*)&s1);
@@ -609,7 +609,7 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	(void)argc;
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(-5, 80, 291);
 	t_vec3 direction = vec3(0,0,-400);
@@ -617,7 +617,7 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 1, rgb(255,255,255));
 
@@ -640,7 +640,7 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	// t_disk d1;
 	// disk_mat(&d1, point3(0, 0, 0), vec3(0,1,0), 50, (t_material*)&metal);
 	// d1.print((void*)&d1);
-	
+
 	// t_cylinder_capped c0;
 	t_cylinder c0;
 	cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
@@ -675,7 +675,7 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	data.lights = lights;
 
 	render(&data, &world, &lights);
-	
+
 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
