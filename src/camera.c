@@ -99,10 +99,11 @@ void update_cam_resize(t_camera *cam, int new_width, int new_height)
 	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
 
+// TODO: what happens in direction vector is 0,0,0 at the start?
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
 	if (cam->direction.x == 0 && cam->direction.z == 0)
-		cam->direction.x += 0.1;
+		cam->direction.z -= 0.1;
 	cam->original_dir = direction;
 	cam->original_pos = center;
 	cam->samples_per_pixel = 100;
@@ -334,6 +335,7 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 	}
 	if (data->needs_render)
 		data->needs_render = false;
+	debug("DONE\n");
 }
 
 /**
