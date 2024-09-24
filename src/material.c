@@ -23,15 +23,15 @@
 
 /**
  * @brief Initialize a lambertian material with albedo
- * 
+ *
  * @param lambertian_material
  * @param tex
- * lambertian has two initializer functions, one takes the albedo as 
- * initializer, the other takes a texture. 
+ * lambertian has two initializer functions, one takes the albedo as
+ * initializer, the other takes a texture.
  * In the albedo initializer, the albedo is used to set the texture
- * which is used by the scatter function to get the color 
+ * which is used by the scatter function to get the color
  */
-void lambertian_init(t_lambertian *lambertian_material, t_color albedo) 
+void lambertian_init(t_lambertian *lambertian_material, t_color albedo)
 {
     lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
 	lambertian_material->base.emit = emitzero;
@@ -41,16 +41,16 @@ void lambertian_init(t_lambertian *lambertian_material, t_color albedo)
 
 /**
  * @brief Initialize a lambertian material with a texture
- * 
+ *
  * @param lambertian_material
  * @param tex
- * lambertian has two initializer functions, one takes the albedo as 
- * initializer, the other takes a texture. In the texture 
- * initializer, the albedo is set to the value of the texture 
- * but it will not be used directly since the scatter function 
- * will call the value function of the texture to get the color 
+ * lambertian has two initializer functions, one takes the albedo as
+ * initializer, the other takes a texture. In the texture
+ * initializer, the albedo is set to the value of the texture
+ * but it will not be used directly since the scatter function
+ * will call the value function of the texture to get the color
  */
-void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex) 
+void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex)
 {
     lambertian_material->base.scatter = lambertian_scatter;
 	lambertian_material->base.emit = emitzero;
@@ -59,12 +59,12 @@ void lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex)
     lambertian_material->albedo = tex->value(tex, 0, 0, &(t_point3){.x = 0, .y = 0, .z = 0});
 }
 
-void metal_init(t_metal *metal, t_color albedo, double fuzz)
+void metal_init(t_metal *metal, t_rgb albedo, double fuzz)
 {
 	metal->base.scatter = metal_scatter;
 	metal->base.emit = emitzero;
 	metal->base.scattering_pdf = scattering_pdf_zero;
-	metal->albedo = albedo;
+	metal->albedo = rgb_to_color(albedo);
 	metal->fuzz = clamp(interval(0, 1), fuzz);
 }
 
@@ -153,7 +153,7 @@ bool lambertian_scatter(void* self, t_ray *r_in, t_hit_record *rec, t_scatter_re
 	cosine_pdf_init(&srec->cosine_pdf, &rec->normal);
 	srec->pdf_ptr = (t_pdf *)&(srec->cosine_pdf);
 	srec->skip_pdf = false;
-    return (true); 
+    return (true);
 }
 
 /*
@@ -164,7 +164,7 @@ double lambertian_scattering_pdf(void* self, const t_ray *r_in, const t_hit_reco
 	(void)r_in;
 	(void)self;
 	double cos_theta;
-	
+
 	cos_theta = dot(rec->normal, unit_vector(scattered->dir));
 	if (cos_theta < 0)
 		return (0);
@@ -192,7 +192,7 @@ bool metal_scatter(void *self,  t_ray* r_in,  t_hit_record *rec, t_scatter_recor
 t_color		emitlight(void *self,  t_hit_record rec, double u, double v, t_point3 p)
 {
 	t_diffuse_light *light;
-	
+
 	light = (t_diffuse_light *)self;
 	if (!rec.front_face)
 		return color(0, 0, 0);

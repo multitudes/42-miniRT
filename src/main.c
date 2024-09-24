@@ -57,14 +57,14 @@ int main(int argc, char **argv)
 	{
 		render_from_file(argv[1]);
 	}
-	else 
-	{	
-		int scene = 7;
+	else
+	{
+		int scene = 6;
 
-		switch (scene)	
+		switch (scene)
 		{
 		case 1:
-			main_lights_three_lambertian(argc, argv);
+			main_lights_three_lambertian();
 			break;
 		case 2:
 			main_earth_nolight(argc, argv);
@@ -76,12 +76,9 @@ int main(int argc, char **argv)
 			main_checkerfloors();
 			break;
 		case 5:
-			main_lights_three_lambertian(argc, argv);
-			break;
-		case 6:
 			main_cyl_uncapped_disk(argc, argv);
 			break;
-		case 7:
+		case 6:
 			main_camera_center();
 			break;
 		default:
@@ -90,6 +87,7 @@ int main(int argc, char **argv)
 		return (EXIT_SUCCESS);
 	}
 }
+
 
 int	main_camera_center()
 {
@@ -158,7 +156,6 @@ int	main_camera_center()
     mlx_terminate(data.mlx);
     return (EXIT_SUCCESS);
 }
-
 
 
 int init_window(t_mrt *data)
@@ -238,6 +235,7 @@ int render_from_file(char *filename)
 	// }
 	ft_memset(&data, 0, sizeof(t_mrt));
 	parse_input(filename, &data);
+
 
     debug("Start of minirt %s", "helllo !! ");
 
@@ -368,16 +366,14 @@ l	   343,354,332              0.9          0,0,255    200
 
 
 */
-// int main_blue_red()
-// {
+int main_blue_red()
+{
 
-// 	t_mrt data;
-
-
+	t_mrt data;
 
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(214, 265, -289);
 	t_vec3 direction = vec3(0,0,1);
@@ -385,17 +381,15 @@ l	   343,354,332              0.9          0,0,255    200
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient,0.0, rgb(110,110,110));
 	data.cam.ambient.print((void*)&	data.cam.ambient);
 
-
-// 	t_diffuse_light difflight;
-// 	t_solid_color difflight_color;
-// 	solid_color_init(&difflight_color, color(255, 255, 255));
-// 	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
-
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(255, 255, 255));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
 
 	// blue light
 	t_diffuse_light blue;
@@ -411,14 +405,14 @@ l	   343,354,332              0.9          0,0,255    200
 	// t_sphere s1;
 	// sphere(&s1, vec3(190, 90, 190), 180, rgb(200, 0, 0));
 	t_metal metal;
-	metal_init(&metal, color(0.8, 0, 0), 0.3);
-	
+	metal_init(&metal, rgb(200, 0, 0), 0.3);
+
 	// red metallic sphere
 	t_sphere s1;
 	sphere_mat(&s1, vec3(190, 90, 190), 180, (t_material*)&metal);
 	s1.print((void*)&s1);
 
-// as light also 
+// as light also
 	// t_sphere s2;
 	// sphere_mat(&s2, point3( 343,554,332 ), 100, (t_material*)&difflight);
 	// blue
@@ -429,7 +423,7 @@ l	   343,354,332              0.9          0,0,255    200
 	s3.print((void*)&s3);
 	// t_disk s3;
 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&difflight);
-	
+
 	// t_disk s3;
 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&blue);
 	// s3.print((void*)&s3);
@@ -441,13 +435,7 @@ l	   343,354,332              0.9          0,0,255    200
 	// list[1] = (t_hittable*)(&s2);
 	list[1] = (t_hittable*)(&s3);
 
-
-// 	// "red" sphere
-// 	// t_sphere s1;
-// 	// sphere(&s1, vec3(190, 90, 190), 180, rgb(200, 0, 0));
-// 	t_metal metal;
-// 	metal_init(&metal, color(0.8, 0, 0), 0.3);
-
+	const t_hittablelist world = hittablelist(list, 2);
 
 	t_hittable *list_lights[1];
 
@@ -469,59 +457,31 @@ l	   343,354,332              0.9          0,0,255    200
 	list_lights[0] = (t_hittable*)(&l2);
 	// list_lights[1] = (t_hittable*)(&l2);
 
-
-// // as light also
-// 	// t_sphere s2;
-// 	// sphere_mat(&s2, point3( 343,554,332 ), 100, (t_material*)&difflight);
-// 	// blue
-// 	// t_sphere s3;
-// 	// sphere_mat(&s3, point3( 343,354,332 ), 200, (t_material*)&difflight);
-// 	t_quad s3;
-// 	quad_mat(&s3, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&blue);
-// 	// t_disk s3;
-// 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&difflight);
-
-// 	// t_disk s3;
-// 	// disk_mat(&s3, point3(343,554,332), vec3(0,-1,0), 200, (t_material*)&blue);
-// 	// s3.print((void*)&s3);
-
-// 	// t_disk s3;
-// 	// disk(&s3, point3(343,554,332), vec3(0,1,0), 200, rgb(255, 255, 255));
-
-// 	list[0] = (t_hittable*)(&s1);
-// 	// list[1] = (t_hittable*)(&s2);
-// 	list[1] = (t_hittable*)(&s3);
-
-// 	const t_hittablelist world = hittablelist(list, 2);
-
-// 	t_hittable *list_lights[1];
-// 	t_empty_material empty_material;
-// 	t_material *no_material = (t_material*)&empty_material;
-
-// 	// t_sphere l1;
-// 	// sphere_mat(&l1, point3( 343,554,332 ), 100, (t_material*)&no_material);
-// 	// t_sphere l2;
-// 	// sphere_mat(&l2, point3( 343,354,132 ), 200, (t_material*)&no_material);
-// 	// t_quad l2;
-// 	// quad_mat(&l2, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
-// 	// t_disk l2;
-// 	// disk_mat(&l2, point3(343,554,332), vec3(0,0,1), 10, (t_material*)&no_material);
-// 	t_quad l2;
-// 	quad_mat(&l2, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
-
-// 	list_lights[0] = (t_hittable*)(&l2);
-// 	// list_lights[1] = (t_hittable*)(&l2);
-
-// 	const t_hittablelist lights = hittablelist(list_lights, 1);
+	const t_hittablelist lights = hittablelist(list_lights, 1);
 
 
-//     debug("Start of minirt %s", "helllo !! ");
-// 	if (!init_window(&data))
-// 		return (EXIT_FAILURE);
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
 
-// 	data.world = world;
-// 	data.lights = lights;
-// 	render(&data, &world, &lights);
+	data.world = world;
+	data.lights = lights;
+	render(&data, &world, &lights);
+
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
+
+
+}
+
+
 
 int main_lights_three_lambertian()
 {
@@ -531,7 +491,7 @@ int main_lights_three_lambertian()
 
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3( -800.000000, -234, -250.000000);
 	t_vec3 direction = vec3(1,1,1);
@@ -539,21 +499,31 @@ int main_lights_three_lambertian()
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 1, rgb(110,100,100));
 	data.cam.ambient.print((void*)&data.cam.ambient);
 
-
-//     return (EXIT_SUCCESS);
-
+	/***********************************/
+	/* 			light        		   */
+	/***********************************/
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(100, 100, 100));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
 
 	// world ================================================== world ==================================================
 	t_hittable *list[10];
 
+	// red sphere
+	t_sphere s1;
+	sphere(&s1, vec3(190, 90, 190), 180, rgb(166, 13, 13));
+	s1.print((void*)&s1);
 
-
-
+// light top
+	t_quad s6;
+	quad_mat(&s6, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&difflight);
+	s6.print((void*)&s6);
 
 	// // t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
 	// t_sphere s2;
@@ -567,11 +537,11 @@ int main_lights_three_lambertian()
 	t_sphere s5;
 	sphere(&s5, vec3(100, 0, -101.2), 350, rgb(128,0,0));
 	s5.print((void*)&s5);
-	
+
 	t_sphere s8;
 	sphere(&s8, vec3(0, -100.5, -1), 200, rgb(0,128,0));
 	s8.print((void*)&s8);
-	
+
 	t_sphere s7;
 	sphere(&s7, vec3(-1, 0.0, -1.0), 150, rgb(128,128,0));
 	s7.print((void*)&s7);
@@ -583,16 +553,11 @@ int main_lights_three_lambertian()
 	list[4] = (t_hittable*)(&s7);
 	list[5] = (t_hittable*)(&s8);
 
-
-// 	t_diffuse_light blue;
-// 	t_solid_color difflight_color2;
-// 	solid_color_init(&difflight_color2, color(0, 0, 80));
-// 	diffuse_light_init(&blue, (t_texture*)&difflight_color2);
-
+	const t_hittablelist world = hittablelist(list, 6);
 
 	t_empty_material empty_material;
 	empty_material_init(&empty_material);
-	
+
 	t_sphere l2;
 	sphere_mat(&l2, point3( 343,554,332 ), 10, (t_material*)&empty_material);
 
@@ -601,79 +566,37 @@ int main_lights_three_lambertian()
 	t_quad l6;
 	quad_mat(&l6, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&empty_material);
 
+	t_hittable *list_lights[2];
+	list_lights[0] = (t_hittable*)(&l6);
+	list_lights[1] = (t_hittable*)(&l2);
+	const t_hittablelist lights = hittablelist(list_lights, 1);
 
-// // light top
-// 	t_quad s6;
-// 	quad_mat(&s6, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&difflight);
-// 	s6.print((void*)&s6);
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
 
-// 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-// 	t_sphere s2;
-// 	sphere_mat(&s2, point3( 90,190,90 ), 60, (t_material*)&blue);
-// 	// t_sphere s6 = sphere_mat(point3( 343,554,332), 90, (t_material*)&difflight);
-
-// 	t_sphere s4;
-// 	sphere(&s4, vec3(350, 350, 250), 160, rgb(10,0,0));
-
-// 	t_sphere s5;
-// 	sphere(&s5, vec3(0, 0, -1.2), 1, rgb(128,0,0));
-// 	s5.print((void*)&s5);
-// 	t_sphere s8;
-// 	sphere(&s8, vec3(0, -100.5, -1), 200, rgb(0,128,0));
-// 	s8.print((void*)&s8);
-// 	t_sphere s7;
-// 	sphere(&s7, vec3(-1, 0.0, -1.0), 1, rgb(128,128,0));
-// 	s7.print((void*)&s7);
-
-// 	list[0] = (t_hittable*)(&s1); // red sphere
-// 	list[1] = (t_hittable*)(&s6);  // light quad
-// 	// list[1] = (t_hittable*)(&s2);
-// 	list[2] = (t_hittable*)(&s4);
-// 	list[3] = (t_hittable*)(&s5);
-// 	list[4] = (t_hittable*)(&s7);
-// 	list[5] = (t_hittable*)(&s8);
-
-// 	const t_hittablelist world = hittablelist(list, 6);
-
-// 	t_empty_material empty_material;
-// 	t_material *no_material = (t_material*)&empty_material;
-// 	t_sphere l2;
-// 	sphere_mat(&l2, point3( 343,554,332 ), 10, (t_material*)&no_material);
-
-// 	// t_quad s6;
-// 	// quad_mat(&s6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&difflight);
-// 	t_quad l6;
-// 	quad_mat(&l6, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&no_material);
-
-// 	t_hittable *list_lights[2];
-// 	list_lights[0] = (t_hittable*)(&l6);
-// 	list_lights[1] = (t_hittable*)(&l2);
-// 	const t_hittablelist lights = hittablelist(list_lights, 1);
+	data.world= world;
+	data.lights = lights;
 
 	render(&data, &world, &lights);
 
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
 
-// 	render(&data, &world, &lights);
-//  	// mlx_mouse_hook(data.mlx, mouse_button_callback, (void *)&data);
-//     // mlx_cursor_hook(data.mlx, mouse_move_callback, (void *)&data);
+    return (EXIT_SUCCESS);
+}
 
+// plane test
+int main_()
+{
 
-// 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
-//     mlx_loop_hook(data.mlx, &hook, (void *)&data);
-//     mlx_loop(data.mlx);
-//     ft_printf("\nbyebye!\n");
-//     mlx_terminate(data.mlx);
+	return (0);
 
-//     return (EXIT_SUCCESS);
-// }
+}
 
-// // plane test
-// int main_()
-// {
-
-// 	return (0);
-
-// }
 
 
 int main_cyl_uncapped_disk(int argc, char **argv)
@@ -683,7 +606,7 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	(void)argc;
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(-5, 80, 291);
 	t_vec3 direction = vec3(0,0,-400);
@@ -691,7 +614,7 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 1, rgb(255,255,255));
 
@@ -707,14 +630,14 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	disk(&d0, point3(0, 0, 0), vec3(0,1,0), 100, rgb(166, 13, 103));
 	d0.print((void*)&d0);
 
-	t_color albedo = color(0.1, 0.8, 0.1);
+	t_rgb albedo = rgb(40, 230, 40);
 	double fuzz = 0.0;
 	t_metal metal;
 	metal_init(&metal, albedo, fuzz);
 	// t_disk d1;
 	// disk_mat(&d1, point3(0, 0, 0), vec3(0,1,0), 50, (t_material*)&metal);
 	// d1.print((void*)&d1);
-	
+
 	// t_cylinder_capped c0;
 	t_cylinder c0;
 	cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
@@ -724,87 +647,54 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	list[0] = (t_hittable*)(&d0);
 	list[1] = (t_hittable*)(&c0);
 
+	const t_hittablelist world = hittablelist(list, 2);
 
-// 	/***************************** */
-// 	/* 			camera 			   */
-// 	/***************************** */
-// 	t_point3 center = point3(0, 100, 400);
-// 	t_vec3 direction = vec3(0,0,-400);
-//  	init_cam(&data.cam, center, direction, 60);
-// 	data.cam.print((void*)(&(data.cam)));
+	t_hittable *list_lights[2];
+	t_empty_material empty_material;
+	t_material *no_material = (t_material*)&empty_material;
+	t_quad l6;
+	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 
-// 	/***************************** */
-// 	/* 		ambient light		   */
-// 	/***************************** */
-// 	ambient(&data.cam.ambient, 1, rgb(255,255,255));
+	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
+	t_sphere l2;
+	sphere_mat(&l2, point3( 0,250,-50 ), 120, (t_material*)&no_material);
 
+//0,250,-50 ), 120
+	list_lights[0] = (t_hittable*)(&l6);
+	list_lights[1] = (t_hittable*)(&l2);
+	const t_hittablelist lights = hittablelist(list_lights, 2);
 
-// 	// world
-// 	// ================================================== world ==================================================
-// 	t_hittable *list[2];
-// 	// =============================================
-// 	// t_cylinder_capped c0;
-// 	// cylinder_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, rgb(166, 103, 13));
-// 	// c0.print((void*)&c0);
-// 	t_disk d0;
-// 	disk(&d0, point3(0, 0, 0), vec3(0,1,0), 100, rgb(166, 13, 103));
-// 	d0.print((void*)&d0);
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
 
-// 	t_color albedo = color(0.1, 0.8, 0.1);
-// 	double fuzz = 0.0;
-// 	t_metal metal;
-// 	metal_init(&metal, albedo, fuzz);
-// 	// t_disk d1;
-// 	// disk_mat(&d1, point3(0, 0, 0), vec3(0,1,0), 50, (t_material*)&metal);
-// 	// d1.print((void*)&d1);
+	data.world = world;
+	data.lights = lights;
 
-// 	// t_cylinder_capped c0;
-// 	t_cylinder c0;
-// 	cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
-// 	// cylinder_mat_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, (t_material*)&metal);
+	render(&data, &world, &lights);
 
-// 	list[0] = (t_hittable*)(&d0);
-// 	list[1] = (t_hittable*)(&c0);
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
 
-// 	const t_hittablelist world = hittablelist(list, 2);
-
-// 	t_hittable *list_lights[2];
-// 	t_empty_material empty_material;
-// 	t_material *no_material = (t_material*)&empty_material;
-// 	t_quad l6;
-// 	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
-
-// 	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-// 	t_sphere l2;
-// 	sphere_mat(&l2, point3( 0,250,-50 ), 120, (t_material*)&no_material);
-
-// //0,250,-50 ), 120
-// 	list_lights[0] = (t_hittable*)(&l6);
-// 	list_lights[1] = (t_hittable*)(&l2);
-// 	const t_hittablelist lights = hittablelist(list_lights, 2);
-
-//     debug("Start of minirt %s", "helllo !! ");
-// 	if (!init_window(&data))
-// 		return (EXIT_FAILURE);
-
-// 	data.world = world;
-// 	data.lights = lights;
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
 
     return (EXIT_SUCCESS);
 }
 
 
-	
-int main_checkerfloors() 
+
+int main_checkerfloors()
 {
 	t_mrt data;
 	if (!init_data(&data))
 		return (1);
-	
-	
+
+
 
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	//-422.000000 307.999863 -71.947640
 	t_point3 center = point3(74, 212, -390);
@@ -813,7 +703,7 @@ int main_checkerfloors()
 	data.cam.print((void*)(&(data.cam)));
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 0.5, rgb(110,110,110));
 	data.cam.ambient.print((void*)&data.cam.ambient);
@@ -823,10 +713,10 @@ int main_checkerfloors()
 	// ================================================== world ==================================================
 	t_hittable *list[15];
 	// ================================================== world ==================================================
-	
+
 	// red sphere
 	// t_sphere s1 = sphere(vec3(190, 90, 190), 180, rgb(166, 13, 13));
-	
+
 
 	// checker texture sphere
 	t_lambertian lambertian_material;
@@ -836,12 +726,12 @@ int main_checkerfloors()
 	checker_texture_init(&checker_texture1, 40.0, even1, odd1);
 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
 
-	//red metallic 
-	t_color albedo = color(0.8, 0.1, 0.1);
+	//red metallic
+	t_rgb albedo = rgb(230, 25, 25);
 	double fuzz = 0.0;
 	t_metal metal;
 	metal_init(&metal, albedo, fuzz);
-	
+
 	// red metallic sphere
 	t_sphere s1;
 	sphere_mat(&s1, point3( 90,190,90 ), 180, (t_material*)&metal);
@@ -852,9 +742,9 @@ int main_checkerfloors()
 	/***********************************/
 
 	// L -40.0,50.0,0.0           (0.6) strength from 0 to 1 -  rgb (10,0,255)
-	// strength - 0.5 
-	// max 100 
-	// rgb (10,0,255) - color (0.5, 0, 1)  * max 200  * strength 
+	// strength - 0.5
+	// max 100
+	// rgb (10,0,255) - color (0.5, 0, 1)  * max 200  * strength
 	// color (100,100,100)
 
 	t_diffuse_light difflight;
@@ -908,7 +798,7 @@ int main_checkerfloors()
 	t_triangle s10;
 	triangle(&s10, point3(300, 101, 100), point3(200, 101, 290), point3(50, 101, 190), rgb(166, 103, 13));
 	s10.print((void*)&s10);
-	
+
 	t_sphere s11;
 	sphere_mat(&s11, point3(650, 300, 200), 100, (t_material*)&lambertian_material);
 	s11.print((void*)&s11);
@@ -930,7 +820,7 @@ int main_checkerfloors()
 	lambertian_init_tex(&earth_surface, (t_texture*)&s12.img_texture);
 	sphere_mat(&s12, point3(250, 100, -200), 100.0, (t_material*)&earth_surface);
 	s12.print((void*)&s12);
-	
+
 	t_cylinder_capped s13;
 	cylinder_capped(&s13, point3(350, 100, -300), vec3(0,1,0), 200, 50, rgb(166, 103, 13));
 	s13.print((void*)&s13);
@@ -939,7 +829,7 @@ int main_checkerfloors()
 	list[1] = (t_hittable*)(&s6);
 	list[2] = (t_hittable*)(&s2);
 	list[3] = (t_hittable*)(&s4);
-	list[4] = (t_hittable*)(&s5);	
+	list[4] = (t_hittable*)(&s5);
 	list[5] = (t_hittable*)(&s7);
 	list[6] = (t_hittable*)(&s8);
 	list[7] = (t_hittable*)(&s9);
@@ -978,7 +868,7 @@ int main_checkerfloors()
 	data.lights = lights;
 
 	render(&data, &world, &lights);
-	
+
 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
@@ -998,9 +888,9 @@ int main_earth_nolight(int argc, char **argv)
 
 	if (!init_data(&data))
         return (1);
-	
+
 	/***************************** */
-	/* 			camera 			   */	
+	/* 			camera 			   */
 	/***************************** */
 	t_point3 center = point3(0, 0, -200);
 	t_vec3 direction = vec3(0,100,200);
@@ -1009,7 +899,7 @@ int main_earth_nolight(int argc, char **argv)
 
 
 	/***************************** */
-	/* 		ambient light		   */	
+	/* 		ambient light		   */
 	/***************************** */
 	ambient(&data.cam.ambient, 1, rgb(220,100,110));
 	data.cam.ambient.print((void*)&data.cam.ambient);
@@ -1029,7 +919,7 @@ int main_earth_nolight(int argc, char **argv)
 	// checker_texture_init(&s2.checker, 0.31, even1, odd1);
 	// lambertian_init_tex(&s2.lambertian_mat, (t_texture*)&(s2.checker));
 	// sphere_mat(&s2, point3(0, -500.5, -1), 1000, (t_material*)&s2.lambertian_mat);
-	
+
 	// // yellow sphere
 	// t_sphere s3;
 	// sphere(&s3, vec3(-1, 0.0, -2.0), 1, rgb(255,219,0));
@@ -1086,7 +976,7 @@ int main_earth_nolight(int argc, char **argv)
 	// t_sphere s6 = sphere_mat(point3(5, 0, 0), 5.0, rgb(255,223 ,34 ), (t_material*)&difflight);
 	t_quad s6;
 	quad_mat(&s6, point3(50, 20, 20), vec3(-30,0,0), vec3(0,0,-30), (t_material*)&difflight);
-	
+
 	// list[0] = (t_hittable*)(&s1);
 	// list[1] = (t_hittable*)(&s2);
 	// list[2] = (t_hittable*)(&s3);
@@ -1117,7 +1007,7 @@ int main_earth_nolight(int argc, char **argv)
 	data.world = world;
 	data.lights = lights;
 	render(&data, &world, &lights);
-	
+
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
     mlx_loop(data.mlx);
@@ -1126,4 +1016,3 @@ int main_earth_nolight(int argc, char **argv)
 
     return (EXIT_SUCCESS);
 }
-
