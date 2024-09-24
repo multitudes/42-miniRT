@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:54:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 12:03:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ t_color checker_texture_value(const void *self, double u, double v, const t_poin
  * @param img_texture The image texture object
  * @param img The image to use as texture from the t_rtw_image struct
  */
-void	img_texture_init(t_img_texture *img_texture, t_rtw_image *img)
+void	img_texture_init(t_img_texture *img_texture, char *filename)
 {
 	img_texture->base.value = img_texture_value;
 	img_texture->bytes_per_pixel = 3;

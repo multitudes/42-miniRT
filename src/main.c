@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:42:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 12:01:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int main_blue_red();
 int main_redlight(int argc, char **argv);
 int main_cyl(int argc, char **argv);
 int main_camera_center();
-void render_from_file(char *filename);
+int render_from_file(char *filename);
 int init_window(t_mrt *data);
 bool init_data(t_mrt *data);
 void exit_gracefully(mlx_t *mlx);
@@ -224,8 +224,8 @@ int	main_camera_center()
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	ambient(&data.cam.ambient_light, 0.3, rgb(110,100,100));
-	data.cam.ambient_light.print((void*)&data.cam.ambient_light);
+	ambient(&data.cam.ambient, 0.3, rgb(110,100,100));
+	data.cam.ambient.print((void*)&data.cam.ambient);
 
 	/***********************************/
 	/* 			light        		   */
@@ -409,13 +409,15 @@ t_point3 rotate_camera(t_point3 camera, double angle_degrees) {
 
     // Return the new camera position
     return point3(new_x, new_y, new_z);
+}
 
 void translate_camera(t_camera *cam, t_vec3 translation) {
     cam->center = vec3add(cam->center, translation);
     update_cam_resize(cam, cam->image_width, cam->image_height);
 }
 
-void move_camera_forward(t_camera *cam, double distance) {
+void move_camera_forward(t_camera *cam, double distance) 
+{
     t_vec3 translation = vec3multscalar(cam->w, distance);
     translate_camera(cam, translation);
 }
@@ -427,6 +429,8 @@ t_point3 calculate_direction(t_point3 camera_pos) {
 
     // Normalize the direction vector
     return unit_vector(direction);
+}
+
 void move_camera_right(t_camera *cam, double distance) {
     t_vec3 translation = vec3multscalar(cam->u, distance);
     translate_camera(cam, translation);
@@ -588,9 +592,9 @@ bool init_data(t_mrt *data)
     data->image = NULL;
 	data->renderscene = render;
 	data->needs_render = true;
-	data->mouse_state.mouse_pressed = 0;
-	data->mouse_state.last_x = 0;
-	data->mouse_state.last_y = 0;
+	// data->mouse_state.mouse_pressed = 0;
+	// data->mouse_state.last_x = 0;
+	// data->mouse_state.last_y = 0;
 
 	if (BONUS)
 		mt_init_genrand(time(NULL));
@@ -616,7 +620,7 @@ void	_resize_hook(int new_width, int new_height, void *params)
 	data->needs_render = true;
 }
 
-void render_from_file(char *filename)
+int render_from_file(char *filename)
 {
     t_mrt data;
 
@@ -775,8 +779,8 @@ int main_blue_red()
 		/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	ambient(&data.cam.ambient_light,0.2, rgb(110,110,110));
-	data.cam.ambient_light.print((void*)&	data.cam.ambient_light);
+	ambient(&data.cam.ambient,0.2, rgb(110,110,110));
+	data.cam.ambient.print((void*)&	data.cam.ambient);
 
 	t_diffuse_light difflight;
 	t_solid_color difflight_color;
@@ -890,8 +894,8 @@ int main_redlight(int argc, char **argv)
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	ambient(&data.cam.ambient_light, 0.3, rgb(110,100,100));
-	data.cam.ambient_light.print((void*)&data.cam.ambient_light);
+	ambient(&data.cam.ambient, 0.3, rgb(110,100,100));
+	data.cam.ambient.print((void*)&data.cam.ambient);
 
 	/***********************************/
 	/* 			light        		   */
@@ -1010,7 +1014,7 @@ int main_cyl(int argc, char **argv)
 	/***************************** */
 	/* 		ambient light		   */	
 	/***************************** */
-	ambient(&data.cam.ambient_light, 1, rgb(255,255,255));
+	ambient(&data.cam.ambient, 1, rgb(255,255,255));
 
 
 	// world

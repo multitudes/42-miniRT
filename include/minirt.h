@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:45:52 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/24 11:56:34 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ typedef struct 	s_mrt
 	// render function
 	void (*renderscene)(struct s_mrt *, const t_hittablelist *, const t_hittablelist *);
 
-	t_mouse_state mouse_state;
+	// t_mouse_state mouse_state;
 	// t_viewport	viewport;
 	// t_pixel		pixel;
 }				t_mrt;
