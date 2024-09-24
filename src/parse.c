@@ -153,7 +153,9 @@ static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalize
 	return(vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
 
-/* Inits the ambient struct inside of t_mrt->t_camera */
+/* Inits the ambient struct inside of t_mrt->t_camera.
+ * "A" [intesity([0.0;1.0])] [rgb color]
+*/
 static void	get_ambient(t_mrt *data)
 {
 	static int	already_set;
@@ -168,7 +170,10 @@ static void	get_ambient(t_mrt *data)
 	already_set = 1;
 }
 
-/* Inits the camera struct inside of t_mrt */
+/* Inits the camera struct inside of t_mrt.
+ * usage:
+ * "C" [origin] [orientation(view) vector (normalized values)] [horiz. fow (double)]
+*/
 static void	get_camera(t_mrt *data)
 {
 	static int	already_set;
@@ -188,20 +193,22 @@ static void	get_camera(t_mrt *data)
 	already_set = 1;
 }
 
+/*
+ * usage:
+ * "l" "qd" [origin] [side_vector1] [side_vector2] [rgb color] [intensity ([0.0;1.0])]
+*/
 static void	quad_light(t_objects *obj)
 {
 	static int	set_index;
 	t_color		color;
 	t_rgb		rgbcolor;
-	char		**tokens;
 
-	tokens = &obj->_tokens[1];
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds_array size", "light", obj);
-	if (count_tokens(tokens) != 6)
+	if (count_tokens(obj->_tokens) != 7)
 		call_error("invalid token amount", "q_light", obj);
-	rgbcolor = set_rgb(obj, 4, "q_light");
-	color = vec3multscalar(rgb_to_color(rgbcolor), 100*ft_atod(tokens[5]));
+	rgbcolor = set_rgb(obj, 5, "q_light");
+	color = vec3multscalar(rgb_to_color(rgbcolor), 100*ft_atod(obj->_tokens[6]));
 	solid_color_init(&obj->lights[set_index].color, color);
 	diffuse_light_init(&obj->lights[set_index].difflight, (t_texture *)&obj->lights[set_index].color);
 	quad_mat(&obj->lights[set_index].q_body, set_vec3(obj, 2, "q_light", 0), \
@@ -218,6 +225,10 @@ static void	quad_light(t_objects *obj)
 /* Makes a light object, which is a sphere or a quad with a light texture.
  * Adds the sphere from the light struct to the regular hittable list.
  * as well as the light one.
+*/
+/*
+ * usage (for default sphere light):
+ * "l" [origin] [intensity([0.0;1,0])] [rgb color] [optional : diameter(default value=100)]
 */
 static void	get_light(t_objects *obj)
 {
@@ -255,6 +266,12 @@ static void	get_light(t_objects *obj)
 	}
 }
 
+/*
+ * usage:
+ * default sphere - "sp" [origin] [diameter] [rgb color]
+ * checker texture - "sp" [origin] [diameter] [rgb color1] [rgb color2]
+ * image (earthmap) - "sp" [origin] [diameter] "img:"[path to .jpg]
+*/
 static void	get_sphere(t_objects *obj)
 {
 	static int	set_index;
@@ -292,6 +309,10 @@ static void	get_sphere(t_objects *obj)
 	set_index++;
 }
 
+/*
+ * usage:
+ * "pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
+*/
 static void	get_plane(t_objects *obj)
 {
 	static int	set_index;
@@ -309,6 +330,10 @@ static void	get_plane(t_objects *obj)
 	set_index++;
 }
 
+/*
+ * usage:
+ * default, capped cylinder - "cy" [origin] [axis normal] [diameter] [height] [rgb color]
+*/
 static void	get_cylinder(t_objects *obj)
 {
 	static int	set_index;
@@ -327,6 +352,11 @@ static void	get_cylinder(t_objects *obj)
 	set_index++;
 }
 
+/*
+ * usage:
+ * "qd" [origin] [side_vector1] [side_vector2] [color]
+ * (for quad light check quad_light())
+*/
 static void	get_quad(t_objects *obj)
 {
 	static int	set_index;
@@ -344,6 +374,10 @@ static void	get_quad(t_objects *obj)
 	set_index++;
 }
 
+/*
+ * usage:
+ * "dsk" [origin] [surface normal] [diameter] [rgb color]
+*/
 static void	get_disk(t_objects *obj)
 {
 	static int	set_index;
@@ -363,6 +397,10 @@ static void	get_disk(t_objects *obj)
 	set_index++;
 }
 
+/*
+ * usage:
+ * "tr" [vertice1] [vertice2] [vertice3] [rbg color] (vertices are points in 3d space)
+*/
 static void	get_triangle(t_objects *obj)
 {
 	static int	set_index;
@@ -404,7 +442,10 @@ static void	get_triangle(t_objects *obj)
 // 	set_index++;
 // }
 
-/* cretes a box with the default box_rgb() */
+/*
+ * usage:
+ * "box" [origin] [diognal point] [color]
+*/
 static void	get_box(t_objects *obj)
 {
 	static int	set_index;
