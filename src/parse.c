@@ -326,7 +326,7 @@ static void	get_plane(t_objects *obj)
 	plane(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
 		set_vec3(obj, 2, "plane", 1), set_rgb(obj, 3, "plane"));
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->planes[set_index];
-	obj->hit_idx++;
+	obj->hit_idx++
 	set_index++;
 }
 

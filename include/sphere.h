@@ -29,7 +29,11 @@ typedef struct		s_sphere
 	t_color			color;
 	t_rgb			rgb;
 	t_material		*mat;
-	t_lambertian 	lambertian_mat;
+	union
+	{
+		t_lambertian 	lambertian_mat;
+		t_metal				metal;
+	};
 	union
 	{
 		t_checker_texture	checker;
