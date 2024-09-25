@@ -565,7 +565,8 @@ static void	update_struct(t_mrt *data)
 		get_camera(data);
 	else if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
 		get_ambient(data);
-	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0)
+	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0 || \
+				ft_strncmp("L", data->objects._tokens[0], 2) == 0)
 		get_light(&data->objects);
 	else if (ft_strncmp("sp", data->objects._tokens[0], 3) == 0)
 		get_sphere(&data->objects);
