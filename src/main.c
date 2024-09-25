@@ -59,7 +59,8 @@ int main(int argc, char **argv)
 	}
 	else
 	{
-		int scene = 4;
+
+		int scene = 2;
 
 		switch (scene)
 		{
@@ -1000,7 +1001,7 @@ int main_earth_nolight_pinkambient()
 	l6.print((void*)&l6);
 
 	list_lights[0] = (t_hittable*)(&l6);
-	const t_hittablelist lights = hittablelist(list_lights, 1);
+	const t_hittablelist lights = hittablelist(NULL, 0);
 
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))
