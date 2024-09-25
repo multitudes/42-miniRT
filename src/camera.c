@@ -102,9 +102,9 @@ void update_cam_resize(t_camera *cam, int new_width, int new_height)
 // TODO: what happens in direction vector is 0,0,0 at the start?
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
-  cam->direction = unit_vector(direction);
-	if (cam->direction.x == 0 && cam->direction.z == 0)
-		cam->direction.z -= 0.1;
+	if (direction.x == 0 && direction.z == 0)
+		direction.z -= 0.1;
+	cam->direction = unit_vector(direction);
 	cam->original_dir = cam->direction;
 	cam->original_pos = center;
 	cam->samples_per_pixel = 100;
