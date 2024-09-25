@@ -443,7 +443,8 @@ static void	get_quad(t_objects *obj)
 
 /*
  * usage:
- * "dsk" [origin] [surface normal] [diameter] [rgb color]
+ * default -	"dsk" [origin] [surface normal] [diameter] [rgb color]
+ * metalic -	"dsk" [origin] [surface normal] [diameter] [rgb color] [fuzz(double)]
 */
 static void	get_disk(t_objects *obj)
 {
@@ -453,12 +454,19 @@ static void	get_disk(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "disk", obj);
-	if (count_tokens(tokens) != 5)
+	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "disk", obj);
-
-	disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 1), \
-		ft_atod(tokens[3]), set_rgb(obj, 4, "disk"));
-
+	if (count_tokens(tokens) == 6)
+	{
+		metal_init(&obj->disks[set_index].metal, set_rgb(obj, 4, "disk"), ft_atod(tokens[4]));
+		disk_mat(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 0), \
+			ft_atod(tokens[3]), (t_material*)&obj->disks[set_index].metal);
+	}
+	else
+	{
+		disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 1), \
+			ft_atod(tokens[3]), set_rgb(obj, 4, "disk"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->disks[set_index];
 	obj->hit_idx++;
 	set_index++;
