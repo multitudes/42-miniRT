@@ -28,7 +28,11 @@ typedef struct
 	double			height;
 	t_rgb			rgbcolor;
 	t_material		*mat;
-	t_lambertian	lambertian_mat;
+	union
+	{
+		t_metal			metal;
+		t_lambertian	lambertian_mat;
+	};
 }					t_cone;
 
 /* init function */
