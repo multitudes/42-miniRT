@@ -289,10 +289,10 @@ bool	is_float(char *str)
 
 /*
  * usage:
- * default sphere - "sp" [origin] [diameter] [rgb color]
- * checker texture - "sp" [origin] [diameter] [rgb color1] [rgb color2]
- * image (earthmap) - "sp" [origin] [diameter] "img:"[path to .jpg]
- * metal sphere - "sp" [origin] [diameter] [rgb color] [fuzz value(double)]
+ * default sphere -		"sp" [origin] [diameter] [rgb color]
+ * checker texture -	"sp" [origin] [diameter] [rgb color1] [rgb color2]
+ * image (earthmap) -	"sp" [origin] [diameter] "img:"[path to .jpg]
+ * metal sphere -		"sp" [origin] [diameter] [rgb color] [fuzz value(double)]
 */
 static void	get_sphere(t_objects *obj)
 {
@@ -338,8 +338,9 @@ static void	get_sphere(t_objects *obj)
 
 /*
  * usage:
- * regular plane - "pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
- * checker plane - "pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color1] [rgb color2]
+ * regular plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
+ * metal plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color] [fuzz(double)]
+ * checker plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color1] [rgb color2]
 */
 static void	get_plane(t_objects *obj)
 {
@@ -351,7 +352,13 @@ static void	get_plane(t_objects *obj)
 		call_error("exceeds array size", "plane", obj);
 	if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
 		call_error("invalid token amount", "plane", obj);
-	if (count_tokens(tokens) == 5)
+	if (count_tokens(tokens) == 5 && is_float(tokens[4]))
+	{
+		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "sphere"), ft_atod(tokens[4]));
+		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
+			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].metal);
+	}
+	else if (count_tokens(tokens) == 5)
 	{
 		checker_texture_init(&obj->planes[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
 		lambertian_init_tex(&obj->planes[set_index].lambertian_mat, (t_texture *)&obj->planes[set_index].checker);
