@@ -491,7 +491,7 @@ static void	get_triangle(t_objects *obj)
 		call_error("invalid token amount", "triangle", obj);
 	if (count_tokens(tokens) == 6)
 	{
-		metal_init(&obj->triangles[set_index].metal, set_rgb(obj, 4, "triangle"), ft_atod(tokens[4]));
+		metal_init(&obj->triangles[set_index].metal, set_rgb(obj, 4, "triangle"), ft_atod(tokens[5]));
 		triangle_mat(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0), \
 			set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0), \
 			(t_material*)&obj->triangles[set_index].metal);
