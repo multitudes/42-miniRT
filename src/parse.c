@@ -206,7 +206,7 @@ static void	quad_light(t_objects *obj, int set_index)
 	t_rgb		rgbcolor;
 
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds_array size", "light", obj);
+		call_error("exceeds_array size", "q_light", obj);
 	if (count_tokens(obj->_tokens) != 7)
 		call_error("invalid token amount", "q_light", obj);
 	rgbcolor = set_rgb(obj, 5, "q_light");
@@ -354,13 +354,13 @@ static void	get_plane(t_objects *obj)
 		call_error("invalid token amount", "plane", obj);
 	if (count_tokens(tokens) == 5 && is_float(tokens[4]))
 	{
-		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "sphere"), ft_atod(tokens[4]));
+		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "plane"), ft_atod(tokens[4]));
 		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
 			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].metal);
 	}
 	else if (count_tokens(tokens) == 5)
 	{
-		checker_texture_init(&obj->planes[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
+		checker_texture_init(&obj->planes[set_index].checker, 20, set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
 		lambertian_init_tex(&obj->planes[set_index].lambertian_mat, (t_texture *)&obj->planes[set_index].checker);
 		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
 			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].lambertian_mat);
@@ -377,7 +377,8 @@ static void	get_plane(t_objects *obj)
 
 /*
  * usage:
- * default, capped cylinder - "cy" [origin] [axis normal] [diameter] [height] [rgb color]
+ * default, capped cylinder -	"cy" [origin] [axis normal] [diameter] [height] [rgb color]
+ * metalic, capped cylinder -	"cy" [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
 */
 static void	get_cylinder(t_objects *obj)
 {
@@ -387,11 +388,21 @@ static void	get_cylinder(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "cylinder", obj);
-	if (count_tokens(tokens) != 6)
+	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
 		call_error("invalid token amount", "cylinder", obj);
-	cylinder_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
-		set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
-		set_rgb(obj, 5, "cylinder"));
+	if (count_tokens(tokens) == 7)
+	{
+		metal_init(&obj->cylinders[set_index].cylinder_uncapped.metal, set_rgb(obj, 3, "sphere"), ft_atod(tokens[4]));
+		cylinder_mat_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
+			set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
+			(t_material *)&obj->cylinders[set_index].cylinder_uncapped.metal);
+	}
+	else
+	{
+		cylinder_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
+			set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
+			set_rgb(obj, 5, "cylinder"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];
 	obj->hit_idx++;
 	set_index++;
