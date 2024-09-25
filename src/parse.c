@@ -392,7 +392,7 @@ static void	get_cylinder(t_objects *obj)
 		call_error("invalid token amount", "cylinder", obj);
 	if (count_tokens(tokens) == 7)
 	{
-		metal_init(&obj->cylinders[set_index].cylinder_uncapped.metal, set_rgb(obj, 3, "sphere"), ft_atod(tokens[4]));
+		metal_init(&obj->cylinders[set_index].cylinder_uncapped.metal, set_rgb(obj, 3, "cylinder"), ft_atod(tokens[4]));
 		cylinder_mat_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
 			set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
 			(t_material *)&obj->cylinders[set_index].cylinder_uncapped.metal);
@@ -410,9 +410,11 @@ static void	get_cylinder(t_objects *obj)
 
 /*
  * usage:
- * "qd" [origin] [side_vector1] [side_vector2] [color]
+ * default quad -	"qd" [origin] [side_vector1] [side_vector2] [color]
+ * metalic quad -	"qd" [origin] [side_vector1] [side_vector2] [color] [fuzz(double)]
  * (for quad light check quad_light())
 */
+/* TODO: cant get quad to render, might just be the coords */
 static void	get_quad(t_objects *obj)
 {
 	static int	set_index;
@@ -421,10 +423,19 @@ static void	get_quad(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "quad", obj);
-	if (count_tokens(tokens) != 5)
+	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "quad", obj);
-	quad_rgb(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
-		set_vec3(obj, 3, "quad", 0), set_rgb(obj, 4, "quad"));
+	if (count_tokens(tokens) == 6)
+	{
+		metal_init(&obj->quads[set_index].metal, set_rgb(obj, 4, "quad"), ft_atod(tokens[4]));
+		quad_mat(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
+			set_vec3(obj, 3, "quad", 0), (t_material*)&obj->quads[set_index].metal);
+	}
+	else
+	{
+		quad_rgb(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
+			set_vec3(obj, 3, "quad", 0), set_rgb(obj, 4, "quad"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->quads[set_index];
 	obj->hit_idx++;
 	set_index++;
