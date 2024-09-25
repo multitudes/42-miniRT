@@ -39,7 +39,7 @@ bool hit_objects(const void *self, const t_ray* r, t_interval ray_t, t_hit_recor
 	if (!objects)
 			return (false);
 	while (i < objects->size)
-	{	
+	{
 		t_interval closest = interval(ray_t.min, closest_so_far);
 		if (objects->list[i]->hit(objects->list[i], r, closest, &temp_rec))
 		{
@@ -67,7 +67,7 @@ t_hittablelist hittablelist(t_hittable **list, int size)
 
 double obj_pdf_value(const void *self, const t_point3 *o, const t_vec3 *v)
 {
-	int i; 
+	int i;
 	double sum;
 	t_hittablelist *objects;
 
@@ -86,8 +86,10 @@ t_vec3 obj_random(const void *self, const t_vec3 *o)
 {
 	int random_i;
 	t_hittablelist *objects;
-	
+
 	objects = (t_hittablelist *)self;
+	if (objects == NULL || objects->list[0] == NULL)
+		return (vec3(0, 0, 0));
 	random_i = random_int(0, objects->size);
 	return (objects->list[random_i]->random(objects->list[random_i], o));
 }
