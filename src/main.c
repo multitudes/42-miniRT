@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 18:24:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 12:24:36 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{	
-		int scene = 1;
+		int scene = 3;
 
 		switch (scene)	
 		{
@@ -371,9 +371,7 @@ l	   343,354,332              0.9          0,0,255    200
 */
 int main_blue_red()
 {
-
 	t_mrt data;
-
 
 	/***************************** */
 	/* 			camera 			   */
@@ -397,7 +395,7 @@ int main_blue_red()
 	// blue light
 	t_diffuse_light blue;
 	t_solid_color diff_lightblue;
-	solid_color_init(&diff_lightblue, color(0, 0, 2222));
+	solid_color_init(&diff_lightblue, color(1, 1, 2222));
 	diffuse_light_init(&blue, (t_texture*)&diff_lightblue);
 
 		// world
@@ -414,6 +412,11 @@ int main_blue_red()
 	t_sphere s1;
 	sphere_mat(&s1, vec3(190, 90, 190), 180, (t_material*)&metal);
 	s1.print((void*)&s1);
+
+	// red non metallic sphere
+	t_sphere s2;
+	sphere(&s2, vec3(90, 190, 90), 60, rgb(200, 0, 0));
+	s2.print((void*)&s2);
 
 // as light also
 	// t_sphere s2;
@@ -435,10 +438,10 @@ int main_blue_red()
 	// disk(&s3, point3(343,554,332), vec3(0,1,0), 200, rgb(255, 255, 255));
 
 	list[0] = (t_hittable*)(&s1);
-	// list[1] = (t_hittable*)(&s2);
-	list[1] = (t_hittable*)(&s3);
+	list[1] = (t_hittable*)(&s2);
+	list[2] = (t_hittable*)(&s3);
 
-	const t_hittablelist world = hittablelist(list, 2);
+	const t_hittablelist world = hittablelist(list, 3);
 
 	t_hittable *list_lights[1];
 
