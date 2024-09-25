@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/25 12:24:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 13:07:05 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{	
-		int scene = 3;
+		int scene = 2;
 
 		switch (scene)	
 		{
@@ -395,10 +395,10 @@ int main_blue_red()
 	// blue light
 	t_diffuse_light blue;
 	t_solid_color diff_lightblue;
-	solid_color_init(&diff_lightblue, color(1, 1, 2222));
+	solid_color_init(&diff_lightblue, color(1, 1, 255));
 	diffuse_light_init(&blue, (t_texture*)&diff_lightblue);
 
-		// world
+	// world
 	// ================================================== world ==================================================
 	t_hittable *list[3];
 
@@ -415,7 +415,7 @@ int main_blue_red()
 
 	// red non metallic sphere
 	t_sphere s2;
-	sphere(&s2, vec3(90, 190, 90), 60, rgb(200, 0, 0));
+	sphere(&s2, vec3(90, 190, 90), 60, rgb(200, 200, 200));
 	s2.print((void*)&s2);
 
 // as light also
@@ -460,7 +460,7 @@ int main_blue_red()
 	t_quad l2;
 	quad_mat(&l2, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 
-	list_lights[0] = (t_hittable*)(&l2);
+	list_lights[0] = (t_hittable*)(&s3);
 	// list_lights[1] = (t_hittable*)(&l2);
 
 	const t_hittablelist lights = hittablelist(list_lights, 1);
@@ -994,7 +994,7 @@ int main_earth_nolight_pinkambient()
 	const t_hittablelist world = hittablelist(list, 1);
 
 
-	t_hittable *list_lights[1];
+	t_hittable *list_lights[0];
 
 	t_empty_material empty_material;
 	t_material *no_material = (t_material*)&empty_material;
@@ -1002,8 +1002,9 @@ int main_earth_nolight_pinkambient()
 	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
 	l6.print((void*)&l6);
 
-	list_lights[0] = (t_hittable*)(&l6);
-	const t_hittablelist lights = hittablelist(list_lights, 1);
+	list_lights[0] = NULL;
+	// list_lights[0] = (t_hittable*)(&l6);
+	const t_hittablelist lights = hittablelist(list_lights, 0);
 
     debug("Start of minirt %s", "helllo !! ");
 	if (!init_window(&data))

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:49:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 14:01:41 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 12:54:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,16 @@ t_color rgb_to_color(t_rgb rgbcolor)
 	return color;
 }
 
+/**
+ * @brief Convert a color to a rgb struct
+ */
 t_rgb color_to_rgb(t_color color)
 {
 	t_rgb rgb;
 
-	rgb.r = (uint8_t)(255.999 * color.x);
-	rgb.g = (uint8_t)(255.999 * color.y);
-	rgb.b = (uint8_t)(255.999 * color.z);
+	rgb.r = (uint32_t)(255.999 * color.x);
+	rgb.g = (uint32_t)(255.999 * color.y);
+	rgb.b = (uint32_t)(255.999 * color.z);
 	return rgb;
 }
 

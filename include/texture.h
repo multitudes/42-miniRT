@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:02:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/25 12:34:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 12:34:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "vec3.h"
 # include "color.h"
-
 
 /**
  * @brief Texture structure
@@ -72,7 +71,7 @@ typedef struct 		s_checker_texture
  * @param image_height: the loaded image height
  * @param bytes_per_scanline: the number of bytes per scanline
  * 
- */
+*/
 typedef struct		s_img_texture
 {
 	t_texture		base;

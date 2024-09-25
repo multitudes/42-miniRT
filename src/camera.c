@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 18:24:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 13:25:23 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,9 @@ void update_cam_resize(t_camera *cam, int new_width, int new_height)
 // TODO: what happens in direction vector is 0,0,0 at the start?
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
-  cam->direction = unit_vector(direction);
-	if (cam->direction.x == 0 && cam->direction.z == 0)
-		cam->direction.z -= 0.1;
+	if (direction.x == 0 && direction.z == 0)
+		direction.z -= 0.1;
+  	cam->direction = unit_vector(direction);
 	cam->original_dir = cam->direction;
 	cam->original_pos = center;
 	cam->samples_per_pixel = 100;
@@ -173,23 +173,14 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 		return color_from_emission;
 	t_ray scattered = srec.skip_pdf_ray;
-	// if (srec.skip_pdf)
-	// {
-	// 	if (srec.skip_pdf) {
-	// 		t_color ambient_light = cam->ambient_light.color;
-	// 		t_metal *metal = (t_metal *)rec.mat;
-	// 		t_color ambient_material = vec3mult(metal->albedo, ambient_light);
-    //    		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-    //     	return vec3add(ambient_material, reflected_color);
-    // 	}
-	// }
+
 	if (srec.skip_pdf) {
-		t_color ambient_light = cam->ambient.color;
-		t_metal *metal = (t_metal *)rec.mat;
-		t_color ambient_material = vec3mult(metal->albedo, ambient_light);
-		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-		return vec3add(ambient_material, reflected_color);
-        // return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+		// t_color ambient_light = cam->ambient.color;
+		// t_metal *metal = (t_metal *)rec.mat;
+		// t_color ambient_material = vec3mult(metal->albedo, ambient_light);
+		// t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+		// return vec3add(ambient_material, reflected_color);
+        return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 	}
 
 	recorded_pdf = srec.pdf_ptr;
