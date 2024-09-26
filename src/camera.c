@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 18:28:42 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 19:13:39 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 #include <time.h>
 #include <pthread.h>
 #include <stdint.h>
-#include <OpenImageDenoise/oidn.h>
+
+void apply_bilateral_filter_to_image(t_mrt *data);
 
 /**
  * @brief update a camera object when the orientation changes
@@ -343,6 +344,7 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 		data->needs_render = false;
 
 	debug("DONE\n");
+	apply_bilateral_filter_to_image(data);
 }
 
 /**
@@ -413,6 +415,95 @@ unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
 
 	dst = data->pixels + (y * data->width + x * (sizeof(int32_t) / 8));
 	return (*(unsigned int *)dst);
+}
+
+
+
+
+double gaussian(double x, double sigma) {
+    return exp(-(x * x) / (2 * sigma * sigma)) / (2 * PI * sigma * sigma);
+}
+
+t_rgb bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, double sigma_r) {
+    double rs = 0, gs = 0, bs = 0;
+    double w_sum = 0;
+
+    int radius = (int)(2 * sigma_s);
+    for (int i = -radius; i <= radius; ++i) {
+        for (int j = -radius; j <= radius; ++j) {
+            int nx = x + i;
+            int ny = y + j;
+
+            if (nx >= 0 && nx < image->width && ny >= 0 && ny < image->height) {
+                uint8_t *neighbor_pixel = &image->pixels[(ny * image->width + nx) * 4];
+                uint8_t *center_pixel = &image->pixels[(y * image->width + x) * 4];
+
+                t_rgb neighbor = {neighbor_pixel[0], neighbor_pixel[1], neighbor_pixel[2]};
+                t_rgb center = {center_pixel[0], center_pixel[1], center_pixel[2]};
+
+                double spatial_weight = gaussian(sqrt(i * i + j * j), sigma_s);
+                double range_weight = gaussian(sqrt(
+                    (neighbor.r - center.r) * (neighbor.r - center.r) +
+                    (neighbor.g - center.g) * (neighbor.g - center.g) +
+                    (neighbor.b - center.b) * (neighbor.b - center.b)
+                ), sigma_r);
+
+                double weight = spatial_weight * range_weight;
+
+                rs += neighbor.r * weight;
+                gs += neighbor.g * weight;
+                bs += neighbor.b * weight;
+                w_sum += weight;
+            }
+        }
+    }
+
+    t_rgb result;
+    result.r = (uint8_t)(rs / w_sum);
+    result.g = (uint8_t)(gs / w_sum);
+    result.b = (uint8_t)(bs / w_sum);
+    return result;
+}
+
+void apply_bilateral_filter(mlx_image_t *image, double sigma_s, double sigma_r) {
+    t_rgb *filtered_pixels = (t_rgb *)malloc(image->width * image->height * sizeof(t_rgb));
+
+    for (int y = 0; y < image->height; ++y) {
+        for (int x = 0; x < image->width; ++x) {
+            filtered_pixels[y * image->width + x] = bilateral_filter_pixel(image, x, y, sigma_s, sigma_r);
+        }
+    }
+
+    for (int y = 0; y < image->height; ++y) {
+        for (int x = 0; x < image->width; ++x) {
+            int offset = y * image->width + x;
+            uint8_t *pixel = &image->pixels[offset * 4];
+            pixel[0] = filtered_pixels[offset].r;
+            pixel[1] = filtered_pixels[offset].g;
+            pixel[2] = filtered_pixels[offset].b;
+        }
+    }
+
+    free(filtered_pixels);
+}
+
+
+/**
+ * @brief apply the bilateral filter to the image
+ * 
+ * sigma_s (Spatial Sigma): Controls the spatial extent of the filter. 
+ * Increasing sigma_s will make the filter consider a larger neighborhood, 
+ * resulting in stronger smoothing.
+ * sigma_r (Range Sigma): Controls the intensity difference that the filter considers. 
+ * Increasing sigma_r will make the filter less sensitive to intensity differences, 
+ * resulting in stronger smoothing.
+ */
+void apply_bilateral_filter_to_image(t_mrt *data) {
+    // Apply the bilateral filter
+	// debug("apply_bilateral_filter_to_image\n");
+    double sigma_s = 2.0; // Spatial sigma
+    double sigma_r = 25.0; // Range sigma
+    apply_bilateral_filter(data->image, sigma_s, sigma_r);
 }
 
 /**
@@ -494,6 +585,24 @@ double kernel[3][3] = {
     mlx_image_to_window(data->mlx, blurred_image, 0, 0);
     debug("Gaussian blur applied to the image!\n");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
