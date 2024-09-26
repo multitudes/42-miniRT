@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 16:44:22 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 17:00:58 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{	
-		int scene = 8;
+		int scene = 4;
 
 		switch (scene)
 		{

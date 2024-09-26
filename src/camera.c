@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 16:43:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 17:02:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,13 +176,13 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	init_scatter_record(&srec);
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
 	{
-		debug("light source\n");
+		// debug("light source\n");
 		return color_from_emission;
 	}
 	t_ray scattered = srec.skip_pdf_ray;
 
 	if (srec.skip_pdf) {
-		// debug("metal\n"); // really adding ambient light here it doesnt do anything
+		// debug("metal\n"); 
 		t_color ambient_light = cam->ambient.color;
 		t_metal *metal = (t_metal *)rec.mat;
 		t_color ambient_material = vec3multscalar(vec3add(metal->albedo, vec3multscalar(ambient_light, 0.1)), 0.01);
