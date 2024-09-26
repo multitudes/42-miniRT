@@ -50,6 +50,9 @@
 		"typeinfo": "c",
 		"vector": "c",
 		"compare": "c",
-		"pthread.h": "c"
+		"pthread.h": "c",
+		"complex": "c",
+		"istream": "c",
+		"sstream": "c"
 	}
 }

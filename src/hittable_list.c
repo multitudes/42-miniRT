@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:23:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/25 13:23:14 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 13:59:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool hit_objects(const void *self, const t_ray* r, t_interval ray_t, t_hit_recor
 	hit_anything = false;
 	objects = (t_hittablelist *)self;
 	closest_so_far = ray_t.max;
-	if (!objects || !objects->list)
+	if (!objects || !objects->list[0])
 			return (false);
 	while (i < objects->size)
 	{	

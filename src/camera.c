@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/25 13:25:23 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 14:45:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,8 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	t_scatter_record srec;
 	t_hittable_pdf light_pdf;
 	t_pdf *recorded_pdf;
-
-	// base case - stops recursion
+	// debug("ambient light = %f, %f, %f\n", cam->ambient.color.r, cam->ambient.color.g, cam->ambient.color.b);
+	
 	if (depth <= 0)
         return color(0,0,0);
 	if (!world->hit_objects(world, r, interval(0.001, 100000), &rec))
@@ -171,27 +171,37 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 	init_scatter_record(&srec);
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
+	{
+		debug("light source\n");
 		return color_from_emission;
+	}
 	t_ray scattered = srec.skip_pdf_ray;
 
 	if (srec.skip_pdf) {
-		// t_color ambient_light = cam->ambient.color;
-		// t_metal *metal = (t_metal *)rec.mat;
-		// t_color ambient_material = vec3mult(metal->albedo, ambient_light);
-		// t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
-		// return vec3add(ambient_material, reflected_color);
-        return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+		debug("metal\n");
+		t_color ambient_light = cam->ambient.color;
+		t_metal *metal = (t_metal *)rec.mat;
+		t_color ambient_material = vec3add(metal->albedo, ambient_light);
+		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+		return vec3add(ambient_material, reflected_color);
+        // return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 	}
 
+	// debug("not light source or metal\n");
 	recorded_pdf = srec.pdf_ptr;
+	// i sample the light sources in the hittable pdf init function
 	hittable_pdf_init(&light_pdf, lights, &rec.p);
 	t_mixture_pdf mix_pdf;
 	mixture_pdf_init(&mix_pdf, recorded_pdf, (t_pdf *)&light_pdf);
 	scattered = ray(rec.p, mixture_pdf_generate(&mix_pdf));
 	double pdf_value = mixture_pdf_value(&mix_pdf, &scattered.dir);
+	// scattered = ray(rec.p, recorded_pdf->generate(recorded_pdf));
+	// double pdf_value = recorded_pdf->value(recorded_pdf, &scattered.dir);
 	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
 	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
-	t_color ambient = vec3divscalar(cam->ambient.color,1);
+	// debug("pdf_value = %f, scattering_pdf = %f\n", pdf_value, scattering_pdf);
+	// t_color ambient = vec3divscalar(cam->ambient.color,1);
+	t_color ambient = cam->ambient.color;
 	t_color ambient_samplecolor = vec3add(ambient, sample_color);
 	t_color attenuationxscattering_pdf = vec3multscalar(srec.attenuation, scattering_pdf);
 	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, ambient_samplecolor);
