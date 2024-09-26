@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 18:24:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 09:09:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -905,6 +905,10 @@ int main_earth_nolight_pinkambient()
 	/***************************** */
 	ambient(&data.cam.ambient, 1, rgb(220,100,110));
 	data.cam.ambient.print((void*)&data.cam.ambient);
+
+
+
+
 
 	// world
 	t_hittable *list[7];
