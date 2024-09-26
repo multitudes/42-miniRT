@@ -226,3 +226,4 @@ https://github.com/Apress/Ray-Tracing-Gems-II
 https://link.springer.com/book/10.1007/978-1-4842-7185-8  
 https://youtu.be/gBPNO6ruevk?si=Qtmk42NVdP9aJgRN  
 
+https://alain.xyz/blog/ray-tracing-denoising  

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 17:02:37 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 18:28:42 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <time.h>
 #include <pthread.h>
 #include <stdint.h>
+#include <OpenImageDenoise/oidn.h>
 
 /**
  * @brief update a camera object when the orientation changes
@@ -261,6 +262,8 @@ t_ray get_ray(t_camera cam, int i, int j)
 	return ray(ray_origin, ray_direction);
 }
 
+
+
 void render_thread(void *args)
 {
 	clock_t start_time, end_time; // to remove eventually later
@@ -338,6 +341,7 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 	}
 	if (data->needs_render)
 		data->needs_render = false;
+
 	debug("DONE\n");
 }
 
@@ -490,3 +494,83 @@ double kernel[3][3] = {
     mlx_image_to_window(data->mlx, blurred_image, 0, 0);
     debug("Gaussian blur applied to the image!\n");
 }
+
+
+
+// this is something to try if we have time
+// https://github.com/RenderKit/oidn
+/*
+
+void fill_oidn_buffers(t_mrt *data, float *colorPtr)
+{
+    int width = data->cam.image_width;
+    int height = data->cam.image_height;
+
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            int offset = y * width + x;
+            uint8_t *pixel = &data->image->pixels[offset * 4];
+            colorPtr[offset * 3 + 0] = pixel[0] / 255.0f;
+            colorPtr[offset * 3 + 1] = pixel[1] / 255.0f;
+            colorPtr[offset * 3 + 2] = pixel[2] / 255.0f;
+        }
+    }
+}
+
+void apply_oidn_denoising(t_mrt *data)
+{
+    int width = data->cam.image_width;
+    int height = data->cam.image_height;
+
+    // Create an OIDN device
+    OIDNDevice device = oidnNewDevice(OIDN_DEVICE_TYPE_DEFAULT);
+    oidnCommitDevice(device);
+
+    // Create buffers for input/output images
+    OIDNBuffer colorBuf = oidnNewBuffer(device, width * height * 3 * sizeof(float));
+    float *colorPtr = (float *)oidnGetBufferData(colorBuf);
+
+    // Fill the input buffers with your rendered image data
+    fill_oidn_buffers(data, colorPtr);
+
+    // Create and configure the filter
+    OIDNFilter filter = oidnNewFilter(device, "RT");
+    oidnSetFilterImage(filter, "color", colorBuf, OIDN_FORMAT_FLOAT3, width, height, 0, 0, 0);
+    oidnSetFilterImage(filter, "output", colorBuf, OIDN_FORMAT_FLOAT3, width, height, 0, 0, 0);
+    oidnSetFilterBool(filter, "hdr", true);
+    oidnCommitFilter(filter);
+
+    // Execute the filter
+    oidnExecuteFilter(filter);
+
+    // Check for errors
+    const char *errorMessage;
+    if (oidnGetDeviceError(device, &errorMessage) != OIDN_ERROR_NONE)
+    {
+        printf("Error: %s\n", errorMessage);
+    }
+
+    // Write the denoised image back to the image buffer
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            int offset = y * width + x;
+            uint8_t *pixel = &data->image->pixels[offset * 4];
+            pixel[0] = (uint8_t)(colorPtr[offset * 3 + 0] * 255.0f);
+            pixel[1] = (uint8_t)(colorPtr[offset * 3 + 1] * 255.0f);
+            pixel[2] = (uint8_t)(colorPtr[offset * 3 + 2] * 255.0f);
+        }
+    }
+
+    // Cleanup
+    oidnReleaseBuffer(colorBuf);
+    oidnReleaseFilter(filter);
+    oidnReleaseDevice(device);
+}
+
+then 
+	apply_oidn_denoising(&data);
+*/

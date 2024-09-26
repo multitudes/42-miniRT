@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 17:00:58 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 17:37:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -774,14 +774,12 @@ int main_checkerfloors()
 	if (!init_data(&data))
 		return (1);
 
-
-
 	/***************************** */
 	/* 			camera 			   */
 	/***************************** */
 	//-422.000000 307.999863 -71.947640
-	t_point3 center = point3(74, 212, -390);
-	t_vec3 direction = vec3(0,0,1);
+	t_point3 center = point3(-422, 307, -71);
+	t_vec3 direction = vec3(-1,0,0);
  	init_cam(&data.cam, center, direction, 60);
 	data.cam.print((void*)(&(data.cam)));
 
@@ -790,7 +788,6 @@ int main_checkerfloors()
 	/***************************** */
 	ambient(&data.cam.ambient, 0.5, rgb(110,110,110));
 	data.cam.ambient.print((void*)&data.cam.ambient);
-
 
 	// world
 	// ================================================== world ==================================================
@@ -887,11 +884,11 @@ int main_checkerfloors()
 	s11.print((void*)&s11);
 
 	t_plane pl12;
-	plane_mat(&pl12, point3(0, 0, -400), vec3(0,0,1), (t_material*)&lambertian_material);
+	plane_mat(&pl12, point3(0, 0, -300), vec3(0,0,1), (t_material*)&lambertian_material);
 	pl12.print((void*)&pl12);
 
 	t_plane pl13;
-	plane_mat(&pl13, point3(-600, 0, 0), vec3(1,0,0), (t_material*)&lambertian_material);
+	plane_mat(&pl13, point3(-300, 0, 0), vec3(1,0,0), (t_material*)&lambertian_material);
 	pl12.print((void*)&pl12);
 
 	/***********************************/
