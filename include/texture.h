@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:02:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:35:32 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 12:34:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,40 @@
 # include "vec3.h"
 # include "color.h"
 
-/*	This will be overlayed (cast) on each instance of the bottom 3 structs.
-	The cast will cause only the first (t_texture) member to be taken from the
-	old struct. */
+/**
+ * @brief Texture structure
+ * @param value: function pointer to get the color of the texture at
+ * a specific point. for example a solid color texture will return
+ * the same color for every point, a checker texture will return
+ * different colors for different points. An image texture will
+ * return the color of the pixel at those coordinates
+ */
 typedef struct s_texture
 {
 	t_color (*value)(const void *self, double u, double v, const t_point3 *p);
 }			t_texture;
 
+/**
+ * @brief Solid color texture
+ * @param base: the base texture which is a pointer to the texture struct
+ * containing the value function pointer
+ * @param color_albedo: the color of the texture
+ */
 typedef struct s_solid_color
 {
 	t_texture	base;
 	t_color 	color_albedo;
 }               t_solid_color;
 
-/* has a color for an even and for an odd coordinate */
+/**
+ * @brief Checker texture
+ * @param base: the base texture which is a pointer to the texture struct
+ * containing the value function pointer
+ * @param inv_scale: the inverse scale of the checker texture, the higher
+ * the scale the smaller the squares
+ * @param even: the even color of the checker texture
+ * @param odd: the odd color of the checker texture
+ */
 typedef struct 		s_checker_texture
 {
 	t_texture 		base;
@@ -39,6 +58,20 @@ typedef struct 		s_checker_texture
 	t_solid_color	odd;
 }               	t_checker_texture;
 
+/**
+ * @brief Image texture
+ * @param base: the base texture which is a pointer to the texture struct
+ * containing the value function pointer
+ * @param filename: the filename of the image
+ * The following fields are used to store the image data:
+ * @param bytes_per_pixel: the number of bytes per pixel
+ * @param fdata: the linear floating point pixel data
+ * @param bdata: the linear 8-bit pixel data
+ * @param image_width: the loaded image width
+ * @param image_height: the loaded image height
+ * @param bytes_per_scanline: the number of bytes per scanline
+ * 
+*/
 typedef struct		s_img_texture
 {
 	t_texture		base;

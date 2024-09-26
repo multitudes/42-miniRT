@@ -6,15 +6,14 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 12:07:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 10:34:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 #include "mersenne_twister.h"
 #include <time.h>
-#define CORES 16
-#define RANDOM_SYSTEM 0
+
 
 /**
  *  @brief Our random int generator.
