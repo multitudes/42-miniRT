@@ -21,7 +21,7 @@
 
 /**
  * @brief: initializer for a cylinder uncapped standard material
- * 
+ *
  * the rt file will have the following format:
  * cy 	50.0,0.0,20.6     0.0,0.0,1.0    14.2 21.42 	10,0,255
  * x,y,z coordinates of the center of the cylinder
@@ -50,15 +50,15 @@ void		cylinder_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diam
 	// i assign the material to the sphere as a pointer
 	// the pointer will contain the scatter function for the material
 	// which will be passed to the t_record struct when hit
- 	c->mat = (t_material*)&(c->lambertian_mat); 
+ 	c->mat = (t_material*)&(c->lambertian_mat);
 	c->print = &print_cylinder;
 }
 
 /**
  * @brief: initializer for a cylinder uncapped with a material
- * 
+ *
  * the rt file will have the following format:
- * 	
+ *
  */
 void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
 {
@@ -79,9 +79,9 @@ void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double 
 
 /**
  * @brief: initializer for a cylinder capped with a standard material
- * 
+ *
  * the rt file will have the following format:
- * 	
+ *
  */
 void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
 {
@@ -97,12 +97,12 @@ void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double 
 	if (fabs(axis.x) > fabs(axis.y)) {
         u = vec3(0, 1, 0);
     }
- 	v = unit_vector(cross(axis, u)); 
-    u = unit_vector(cross(v, axis)); 
+ 	v = unit_vector(cross(axis, u));
+    u = unit_vector(cross(v, axis));
 
     u = vec3multscalar(u, diameter);
     v = vec3multscalar(v, diameter);
-  	
+
 	// Calculate the positions of the top and bottom caps
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
     t_point3 bottom_center = vec3substr(center, vec3multscalar(axis, height / 2));
@@ -125,8 +125,8 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, dou
 	if (fabs(axis.x) > fabs(axis.y)) {
         u = vec3(0, 1, 0);
     }
- 	v = unit_vector(cross(axis, u)); 
-    u = unit_vector(cross(v, axis)); 
+ 	v = unit_vector(cross(axis, u));
+    u = unit_vector(cross(v, axis));
 
     u = vec3multscalar(u, diameter / 2);
     v = vec3multscalar(v, diameter / 2);
@@ -140,7 +140,7 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, dou
 
 /**
  * @brief print the cylinder capped object
- * 
+ *
  * The print will just print the cylinder which is a part of the capped cylinder
  */
 void print_cylinder_capped(const void *self)
@@ -163,8 +163,8 @@ void		print_cylinder(const void *self)
 
 /**
  * @brief: check if the ray hits the uncapped cylinder
- * 
- * The cylinder is an infinite object so we need to check if the intersection 
+ *
+ * The cylinder is an infinite object so we need to check if the intersection
  * is within the height of the cylinder
  */
 bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec) {
@@ -177,6 +177,13 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
     double b = 2 * (r->dir.x * (r->orig.x - cyl->center.x) + r->dir.z * (r->orig.z - cyl->center.z));
     double c = (r->orig.x - cyl->center.x) * (r->orig.x - cyl->center.x) + (r->orig.z - cyl->center.z) * (r->orig.z - cyl->center.z) - cyl->radius * cyl->radius;
 
+    // double a = dot(r->dir, cyl->axis) * dot(r->dir, cyl->axis);
+    // if (fabs(a) <= EPSILON)
+    //      return false;
+    // double b = 2 * (dot(r->dir, cyl->axis) * dot(r->orig - cyl->center, cyl->axis));
+    //  double c = dot(r->orig - cyl->center, r->orig - cyl->center) - dot(r->orig - cyl->center, cyl->axis) * dot(r->orig - cyl->center, cyl->axis) - cyl->radius * cyl->radius;
+
+
     // Solve the quadratic equation
     double discriminant = b * b - 4 * a * c;
     if (discriminant < 0)
@@ -188,7 +195,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
     double t1 = (-b + sqrt(discriminant)) / (2 * a);
 
     // return false;
-	  // Initialize variables to track the closest intersection point
+	// Initialize variables to track the closest intersection point
     double closest_t = -1;
     t_vec3 closest_point;
     t_vec3 normal;
@@ -237,7 +244,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 
 /**
  * @brief: check if the ray hits the cylinder capped object
- * 
+ *
  * This is essentially creating a hittable list with the cylinder and the two disks
  * and using the hit function for the hittable list on them
  */
@@ -309,7 +316,7 @@ t_vec3 obj_cylinder_random(const void *self, const t_point3 *orig) {
     return unit_vector(direction);
 }
 
-void get_cylinder_uncappedv(t_vec3 normal, double* u, double* v) 
+void get_cylinder_uncappedv(t_vec3 normal, double* u, double* v)
 {
     double theta;
     double phi;
