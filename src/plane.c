@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/16 17:20:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 16:09:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void    plane_mat(t_plane *pl, t_point3 point, t_vec3 normal, t_material *mat)
 	//->colors are depnding of the type of mat which i dont know yet
     pl->rgb = rgb(0, 0, 0);
 	pl->color = color(0, 0, 0);
-	//->print plane for the rt file
 	pl->print = print_plane;
 }
 
@@ -80,7 +79,7 @@ bool hit_plane(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record
 		return false;
 
 	// Return false if the hit point parameter t is outside the ray interval.
-	double t = (pl->d - dot(pl->normal, r->orig)) / denom;
+	double t = (-pl->d - dot(pl->normal, r->orig)) / denom;
 	if (!contains(&ray_t, t))
 		return false;
 

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/25 14:45:25 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 16:26:40 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
  */
 void update_cam_orientation(t_camera *cam)
 {
+	if (cam->direction.x == 0 && cam->direction.z == 0)
+		cam->direction.x -= 0.1;
 	cam->direction = vec3negate(cam->w);
     t_point3 lookat = vec3add(cam->center, cam->direction);
     double focal_length = length(vec3substr(cam->center, lookat));
@@ -77,6 +79,8 @@ void update_cam_orientation(t_camera *cam)
 
 void update_cam_resize(t_camera *cam, int new_width, int new_height)
 {
+	if (cam->direction.x == 0 && cam->direction.z == 0)
+		cam->direction.x -= 0.1;
 	cam->image_width = new_width;
 	cam->image_height = new_height;
 	cam->aspect_ratio = (double)new_width / new_height;
@@ -103,7 +107,7 @@ void update_cam_resize(t_camera *cam, int new_width, int new_height)
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
 	if (direction.x == 0 && direction.z == 0)
-		direction.z -= 0.1;
+		direction.x -= 0.1;
   	cam->direction = unit_vector(direction);
 	cam->original_dir = cam->direction;
 	cam->original_pos = center;
@@ -167,7 +171,7 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	if (depth <= 0)
         return color(0,0,0);
 	if (!world->hit_objects(world, r, interval(0.001, 100000), &rec))
-		return color(0.01,0.01,0.01);
+		return color(0.0,0.0,0.0);
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.u, rec.v, rec.p);
 	init_scatter_record(&srec);
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
@@ -178,10 +182,10 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	t_ray scattered = srec.skip_pdf_ray;
 
 	if (srec.skip_pdf) {
-		debug("metal\n");
+		// debug("metal\n"); // really adding ambient light here it doesnt do anything
 		t_color ambient_light = cam->ambient.color;
 		t_metal *metal = (t_metal *)rec.mat;
-		t_color ambient_material = vec3add(metal->albedo, ambient_light);
+		t_color ambient_material = vec3multscalar(vec3add(metal->albedo, vec3multscalar(ambient_light, 0.1)), 0.01);
 		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
 		return vec3add(ambient_material, reflected_color);
         // return vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
@@ -279,7 +283,6 @@ void render_thread(void *args)
 				t_ray r = get_ray(thread_data->data->cam, x, y);
 
 				pixel_color = vec3add(pixel_color, ray_color(&(thread_data->data->cam), &r, thread_data->data->cam.max_depth ,thread_data->world, thread_data->lights));
-
 				i++;
 			}
 
@@ -302,7 +305,6 @@ void render_thread(void *args)
 	// mlx_string_put(thread_data->data->mlx, thread_data->data->win_ptr, 10, 10, 0xFFFFFF, fps_str);
 
 }
-
 
 /**
  * @brief render the scene

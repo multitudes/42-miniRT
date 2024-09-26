@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 15:08:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/25 14:53:21 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 11:57:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,11 @@ t_vec3 cosine_pdf_generate(void *self)
 	return onb_transform(&cos_pdf->uvw, random_cosine_direction());
 }
 
-
 void hittable_pdf_init(t_hittable_pdf *hittable_pdf, const t_hittablelist *objects, const t_vec3 *origin)
 {
 	hittable_pdf->base.value = hittable_pdf_value;
 	hittable_pdf->base.generate = hittable_pdf_generate;
+	// debug("hittable_pdf_init %f", hittable_pdf->base.value);
 	hittable_pdf->objects = objects;
 	hittable_pdf->origin = *origin;
 }
@@ -98,6 +98,7 @@ void hittable_pdf_init(t_hittable_pdf *hittable_pdf, const t_hittablelist *objec
  */
 double hittable_pdf_value(const void *self, const t_vec3 *direction)
 {
+	// debug("hittable_pdf_value");
 	t_hittable_pdf *hittable_pdf = (t_hittable_pdf *)self;
 	return hittable_pdf->objects->obj_pdf_value(hittable_pdf->objects, &hittable_pdf->origin, direction);
 }
