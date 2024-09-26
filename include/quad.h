@@ -21,13 +21,13 @@
 
 /*
  * A quad is a 4-pointed polygon in 3D space
- * 
+ *
  * q: the center of the quad
  * u: the first vector of the quad
  * v: the second vector of the quad
  * mat: the material of the quad
- * 
- * The miniRT quad is defined by the center point q 
+ *
+ * The miniRT quad is defined by the center point q
  * and a normalized vector and a color. This below is from the book
  * but can be adapted to the miniRT quad.
  */
@@ -39,7 +39,11 @@ typedef struct s_quad
 	t_vec3		v;
 	t_rgb			rgb;
 	t_color			color;
-	t_lambertian 	lambertian_mat;
+	union
+	{
+		t_metal			metal;
+		t_lambertian 	lambertian_mat;
+	};
 	t_solid_color 	texture;
 	t_material	*mat;
 	double		d;

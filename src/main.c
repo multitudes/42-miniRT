@@ -59,6 +59,7 @@ int main(int argc, char **argv)
 	}
 	else
 	{
+
 		int scene = 2;
 
 		switch (scene)

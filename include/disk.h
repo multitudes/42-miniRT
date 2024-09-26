@@ -33,7 +33,11 @@ typedef struct s_disk
 	t_rgb			rgb;
 	t_color			color;
 	t_rgb			rgbcolor;
-	t_lambertian 	lambertian_mat;
+	union
+	{
+		t_metal			metal;
+		t_lambertian 	lambertian_mat;
+	};
 	t_solid_color 	texture;
 	t_material		*mat;
 	void			(*print)(const void* self);
