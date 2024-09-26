@@ -118,18 +118,25 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, dou
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	cylinder_mat_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, mat);
-	// just need to create two vector parallel to the axis
-	t_vec3 u, v;
-	// make sure not parallel to the y axis
-    u = vec3(1, 0, 0);
-	if (fabs(axis.x) > fabs(axis.y)) {
-        u = vec3(0, 1, 0);
-    }
- 	v = unit_vector(cross(axis, u));
-    u = unit_vector(cross(v, axis));
 
-    u = vec3multscalar(u, diameter / 2);
-    v = vec3multscalar(v, diameter / 2);
+
+	/* TODO: i think i dont need theese vectors */
+
+	// just need to create two vector parallel to the axis
+	// t_vec3 u, v;
+	// // make sure not parallel to the y axis
+ //    u = vec3(1, 0, 0);
+	// if (fabs(axis.x) > fabs(axis.y)) {
+ //        u = vec3(0, 1, 0);
+ //    }
+ // 	v = unit_vector(cross(axis, u));
+ //    u = unit_vector(cross(v, axis));
+
+ //    u = vec3multscalar(u, diameter / 2);
+ //    v = vec3multscalar(v, diameter / 2);
+
+
+
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
     t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -height / 2));
 
@@ -167,21 +174,25 @@ void		print_cylinder(const void *self)
  * The cylinder is an infinite object so we need to check if the intersection
  * is within the height of the cylinder
  */
-bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec) {
-    const t_cylinder *cyl = (t_cylinder*)self;
+bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec)
+{
+	const t_cylinder *cyl = (t_cylinder*)self;
+	t_vec3	delta_p, cross_rd_cd, cross_dp_cd;
 
-    // Calculate coefficients for the quadratic equation
-    double a = r->dir.x * r->dir.x + r->dir.z * r->dir.z;
-	if (fabs(a) <= EPSILON)
-		return false;
-    double b = 2 * (r->dir.x * (r->orig.x - cyl->center.x) + r->dir.z * (r->orig.z - cyl->center.z));
-    double c = (r->orig.x - cyl->center.x) * (r->orig.x - cyl->center.x) + (r->orig.z - cyl->center.z) * (r->orig.z - cyl->center.z) - cyl->radius * cyl->radius;
+	delta_p = vec3substr(r->orig, cyl->center);
+	cross_rd_cd = cross(r->dir, cyl->axis);
+	cross_dp_cd = cross(delta_p, cyl->axis);
 
-    // double a = dot(r->dir, cyl->axis) * dot(r->dir, cyl->axis);
-    // if (fabs(a) <= EPSILON)
-    //      return false;
-    // double b = 2 * (dot(r->dir, cyl->axis) * dot(r->orig - cyl->center, cyl->axis));
-    //  double c = dot(r->orig - cyl->center, r->orig - cyl->center) - dot(r->orig - cyl->center, cyl->axis) * dot(r->orig - cyl->center, cyl->axis) - cyl->radius * cyl->radius;
+	double a = dot(cross_rd_cd, cross_rd_cd);
+	double b = 2 * dot(cross_rd_cd, cross_dp_cd);
+	double c = dot(cross_dp_cd, cross_dp_cd) - pow(cyl->radius, 2);
+
+
+ //    double a = r->dir.x * r->dir.x + r->dir.z * r->dir.z;
+	// if (fabs(a) <= EPSILON)
+	// 	return false;
+ //    double b = 2 * (r->dir.x * (r->orig.x - cyl->center.x) + r->dir.z * (r->orig.z - cyl->center.z));
+ //    double c = (r->orig.x - cyl->center.x) * (r->orig.x - cyl->center.x) + (r->orig.z - cyl->center.z) * (r->orig.z - cyl->center.z) - cyl->radius * cyl->radius;
 
 
     // Solve the quadratic equation
@@ -189,8 +200,6 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
     if (discriminant < 0)
     	return false;
 
-    rec->v = 0;
-	rec->u = 0;
     double t0 = (-b - sqrt(discriminant)) / (2 * a);
     double t1 = (-b + sqrt(discriminant)) / (2 * a);
 
@@ -205,7 +214,10 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
     // Check both intersections
 	if (surrounds(&ray_t, t0)) {
 		t_vec3 point = point_at(r, t0);
-		if (cyl->min < point.y && point.y < cyl->max) {
+		t_vec3 delta_point = vec3substr(point, cyl->center);
+		double height = dot(delta_point, cyl->axis);
+		if (cyl->min < height && height < cyl->max)
+		{
 			// Check if this intersection point is closer to the origin
 			if (closest_t < 0 || t0 < closest_t) {
 				closest_t = t0;
@@ -215,9 +227,12 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 			}
 		}
 	}
-	if (surrounds(&ray_t, t1)) {
+	if (surrounds(&ray_t, t1))
+	{
 		t_vec3 point = point_at(r, t1);
-		if (cyl->min < point.y && point.y < cyl->max) {
+		t_vec3 delta_point = vec3substr(point, cyl->center);
+		double height = dot(delta_point, cyl->axis);
+		if (cyl->min < height && height < cyl->max) {		// this is the cutoff
 			// Check if this intersection point is closer to the origin
 			if (closest_t < 0 || t1 < closest_t) {
 				closest_t = t1;
