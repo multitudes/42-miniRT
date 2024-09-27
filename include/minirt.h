@@ -66,7 +66,7 @@ typedef struct
 	int 		hit_idx;
 
 	/* contains just lights */
-	t_hittable *light_hit[OBJECT_COUNT];
+	t_hittable *light_hit[OBJECT_COUNT + 1];
 	int			light_hit_idx;
 
 	// data for the parser
