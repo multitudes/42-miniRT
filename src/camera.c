@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 19:13:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 11:24:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,14 +267,11 @@ t_ray get_ray(t_camera cam, int i, int j)
 
 void render_thread(void *args)
 {
-	clock_t start_time, end_time; // to remove eventually later
-    double time_taken, fps; 	// remove later
 	t_thread_data *thread_data;
 	thread_data = (t_thread_data *)args;
 	int y = thread_data->starty;
 	int x = 0;
 	int i = 0;
-    start_time = clock();
     while (y < thread_data->endy)
     {
 		x = 0;
@@ -295,19 +292,6 @@ void render_thread(void *args)
         }
 		y++;
     }
-
-	end_time = clock();
-
-    // Calculate time taken and FPS
-    time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-    fps = 1.0 / time_taken;
-    (void) fps;
-	// debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
-	// fflush(stderr);
-	// char fps_str[100];
-	// snprintf(fps_str, sizeof(fps_str), "Frame rendered in %.2f seconds (FPS: %.2f)", time_taken, fps);
-	// mlx_string_put(thread_data->data->mlx, thread_data->data->win_ptr, 10, 10, 0xFFFFFF, fps_str);
-
 }
 
 /**
@@ -315,6 +299,8 @@ void render_thread(void *args)
  */
 void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
 {
+    double fps; 	// remove later
+    double start_time = mlx_get_time();
 	pthread_t threads[CORES];
 	t_thread_data thread_data[CORES];
 
@@ -344,7 +330,13 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 		data->needs_render = false;
 
 	debug("DONE\n");
-	apply_bilateral_filter_to_image(data);
+    
+    // Calculate time taken and FPS
+    double time_taken = ((double)(mlx_get_time() - start_time));
+    fps = 1.0 / time_taken;
+    // char *fps_str = {"Hello"};
+    apply_bilateral_filter_to_image(data);
+	// mlx_put_string(data->mlx, fps_str, 10, 10);
 }
 
 /**
