@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 13:09:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 14:11:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ int main(int argc, char **argv)
 		case 9:
 			main_quad();
 			break;
-		case 10;
-			main_showcase_all()
+		case 10:
+			main_showcase_all();
 			break;
 		default:
 			break;
@@ -106,6 +106,7 @@ int main(int argc, char **argv)
 int main_showcase_all()
 {
 	
+	return 0;
 }
 
 //debug 
@@ -805,10 +806,17 @@ int main_cyl_uncapped_disk(int argc, char **argv)
 	// t_cylinder_capped c0;
 	// cylinder_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, rgb(166, 103, 13));
 	// c0.print((void*)&c0);
-	t_disk d0;
-	disk(&d0, point3(0, 0, 0), vec3(0,1,0), 100, rgb(166, 13, 103));
-	d0.print((void*)&d0);
+	// t_disk d0;
+	// disk(&d0, point3(0, 0, 0), vec3(0,1,0), 100, rgb(166, 13, 103));
+	// d0.print((void*)&d0);
 
+	// replace disk with triangle
+	// # default -	"tr" [vertice1] [vertice2] [vertice3] [rbg color]
+// tr     300,101,100     200,101,290     50,101,190      166,103,13
+	t_triangle d0;
+	triangle(&d0, point3(300,10,100), point3(200,10,290), point3(50,10,190), rgb(166, 103, 13));
+	d0.print((void*)&d0);
+	
 	t_rgb albedo = color_to_rgb(color(0.1, 0.8, 0.1));
 	double fuzz = 0.0;
 	t_metal metal;
