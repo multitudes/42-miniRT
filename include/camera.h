@@ -21,7 +21,7 @@
 #include <pthread.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 400
+#define IMAGE_WIDTH 800
 
 #define BONUS 1
 

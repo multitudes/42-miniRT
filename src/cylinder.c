@@ -85,8 +85,9 @@ void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double 
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	cylinder_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, rgbcolor);
-    t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
-    t_point3 bottom_center = vec3substr(center, vec3multscalar(axis, -(height / 2)));
+	
+	t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
+    t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -height / 2));
 	disk_mat(&c->top, top_center, axis, diameter, c->cylinder_uncapped.mat);
 	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), diameter, c->cylinder_uncapped.mat);
 	c->print = &print_cylinder_capped;
@@ -100,7 +101,7 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, dou
 	c->base.random = obj_random;
 	cylinder_mat_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, mat);
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
-    t_point3 bottom_center = vec3substr(center, vec3multscalar(axis, -(height / 2)));
+    t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -(height / 2)));
 	disk_mat(&c->top, top_center, axis, diameter, c->cylinder_uncapped.mat);
 	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), diameter, c->cylinder_uncapped.mat);
 	c->print = &print_cylinder_capped;
@@ -199,7 +200,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 			if (closest_t < 0 || t1 < closest_t) {
 				closest_t = t1;
 				closest_point = point;
-				normal = unit_vector(vec3(point.x - cyl->center.x, 0.0, point.z - cyl->center.z));
+				normal = unit_vector(cross(cyl->axis, delta_point));
 				hit = true;
 			}
 		}
