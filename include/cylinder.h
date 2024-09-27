@@ -42,7 +42,11 @@ typedef struct	s_cylinder
 	t_color			color;
 	t_rgb			rgb;
 	t_material		*mat;
-	t_lambertian 	lambertian_mat;
+	union
+	{
+		t_metal			metal;
+		t_lambertian 	lambertian_mat;
+	};
 	t_solid_color 	texture;
 	void			(*print)(const void* self);
 }				t_cylinder;
@@ -67,6 +71,6 @@ void		print_cylinder_capped(const void *self);
 bool		hit_cylinder(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
 double 		obj_cylinder_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir);
 t_vec3 		obj_cylinder_random(const void *self, const t_point3 *orig);
-void		get_cylinder_uncappedv(t_vec3 normal, double* u, double* v); 
+void		get_cylinder_uncappedv(t_vec3 normal, double* u, double* v);
 
 #endif

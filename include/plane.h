@@ -39,7 +39,11 @@ typedef struct 		s_plane
 	t_vec3			normal;
 	t_rgb			rgb;
 	t_color			color;
-	t_lambertian 	lambertian_mat;
+	union
+	{
+		t_metal			metal;
+		t_lambertian 	lambertian_mat;
+	};
 	union
 	{
 		t_solid_color 		solid;

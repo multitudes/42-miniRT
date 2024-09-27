@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:43:53 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 14:03:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,6 @@ void		print_sphere(const void *self)
  * @param: ray_t: the interval of the ray
  * @param: rec: the hit record
  * @return: true if the ray hits the sphere
- *
- *
  *
 */
 bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record* rec)

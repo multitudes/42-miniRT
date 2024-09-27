@@ -206,7 +206,7 @@ static void	quad_light(t_objects *obj, int set_index)
 	t_rgb		rgbcolor;
 
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds_array size", "light", obj);
+		call_error("exceeds_array size", "q_light", obj);
 	if (count_tokens(obj->_tokens) != 7)
 		call_error("invalid token amount", "q_light", obj);
 	rgbcolor = set_rgb(obj, 5, "q_light");
@@ -289,10 +289,10 @@ bool	is_float(char *str)
 
 /*
  * usage:
- * default sphere - "sp" [origin] [diameter] [rgb color]
- * checker texture - "sp" [origin] [diameter] [rgb color1] [rgb color2]
- * image (earthmap) - "sp" [origin] [diameter] "img:"[path to .jpg]
- * metal sphere - "sp" [origin] [diameter] [rgb color] [fuzz value(double)]
+ * default sphere -		"sp" [origin] [diameter] [rgb color]
+ * checker texture -	"sp" [origin] [diameter] [rgb color1] [rgb color2]
+ * image (earthmap) -	"sp" [origin] [diameter] "img:"[path to .jpg]
+ * metal sphere -		"sp" [origin] [diameter] [rgb color] [fuzz value(double)]
 */
 static void	get_sphere(t_objects *obj)
 {
@@ -338,8 +338,9 @@ static void	get_sphere(t_objects *obj)
 
 /*
  * usage:
- * regular plane - "pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
- * checker plane - "pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color1] [rgb color2]
+ * regular plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
+ * metal plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color] [fuzz(double)]
+ * checker plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color1] [rgb color2]
 */
 static void	get_plane(t_objects *obj)
 {
@@ -351,9 +352,15 @@ static void	get_plane(t_objects *obj)
 		call_error("exceeds array size", "plane", obj);
 	if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
 		call_error("invalid token amount", "plane", obj);
-	if (count_tokens(tokens) == 5)
+	if (count_tokens(tokens) == 5 && is_float(tokens[4]))
 	{
-		checker_texture_init(&obj->planes[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
+		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "plane"), ft_atod(tokens[4]));
+		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
+			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].metal);
+	}
+	else if (count_tokens(tokens) == 5)
+	{
+		checker_texture_init(&obj->planes[set_index].checker, 20, set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
 		lambertian_init_tex(&obj->planes[set_index].lambertian_mat, (t_texture *)&obj->planes[set_index].checker);
 		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
 			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].lambertian_mat);
@@ -370,7 +377,8 @@ static void	get_plane(t_objects *obj)
 
 /*
  * usage:
- * default, capped cylinder - "cy" [origin] [axis normal] [diameter] [height] [rgb color]
+ * default, capped cylinder -	"cy" [origin] [axis normal] [diameter] [height] [rgb color]
+ * metalic, capped cylinder -	"cy" [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
 */
 static void	get_cylinder(t_objects *obj)
 {
@@ -380,11 +388,21 @@ static void	get_cylinder(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "cylinder", obj);
-	if (count_tokens(tokens) != 6)
+	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
 		call_error("invalid token amount", "cylinder", obj);
-	cylinder_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
-		set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
-		set_rgb(obj, 5, "cylinder"));
+	if (count_tokens(tokens) == 7)
+	{
+		metal_init(&obj->cylinders[set_index].cylinder_uncapped.metal, set_rgb(obj, 3, "cylinder"), ft_atod(tokens[4]));
+		cylinder_mat_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
+			set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
+			(t_material *)&obj->cylinders[set_index].cylinder_uncapped.metal);
+	}
+	else
+	{
+		cylinder_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
+			set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
+			set_rgb(obj, 5, "cylinder"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -392,9 +410,11 @@ static void	get_cylinder(t_objects *obj)
 
 /*
  * usage:
- * "qd" [origin] [side_vector1] [side_vector2] [color]
+ * default quad -	"qd" [origin] [side_vector1] [side_vector2] [color]
+ * metalic quad -	"qd" [origin] [side_vector1] [side_vector2] [color] [fuzz(double)]
  * (for quad light check quad_light())
 */
+/* TODO: cant get quad to render, might just be the coords */
 static void	get_quad(t_objects *obj)
 {
 	static int	set_index;
@@ -403,10 +423,19 @@ static void	get_quad(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "quad", obj);
-	if (count_tokens(tokens) != 5)
+	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "quad", obj);
-	quad_rgb(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
-		set_vec3(obj, 3, "quad", 0), set_rgb(obj, 4, "quad"));
+	if (count_tokens(tokens) == 6)
+	{
+		metal_init(&obj->quads[set_index].metal, set_rgb(obj, 4, "quad"), ft_atod(tokens[4]));
+		quad_mat(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
+			set_vec3(obj, 3, "quad", 0), (t_material*)&obj->quads[set_index].metal);
+	}
+	else
+	{
+		quad_rgb(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
+			set_vec3(obj, 3, "quad", 0), set_rgb(obj, 4, "quad"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->quads[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -414,7 +443,8 @@ static void	get_quad(t_objects *obj)
 
 /*
  * usage:
- * "dsk" [origin] [surface normal] [diameter] [rgb color]
+ * default -	"dsk" [origin] [surface normal] [diameter] [rgb color]
+ * metalic -	"dsk" [origin] [surface normal] [diameter] [rgb color] [fuzz(double)]
 */
 static void	get_disk(t_objects *obj)
 {
@@ -424,12 +454,19 @@ static void	get_disk(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "disk", obj);
-	if (count_tokens(tokens) != 5)
+	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "disk", obj);
-
-	disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 1), \
-		ft_atod(tokens[3]), set_rgb(obj, 4, "disk"));
-
+	if (count_tokens(tokens) == 6)
+	{
+		metal_init(&obj->disks[set_index].metal, set_rgb(obj, 4, "disk"), ft_atod(tokens[4]));
+		disk_mat(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 0), \
+			ft_atod(tokens[3]), (t_material*)&obj->disks[set_index].metal);
+	}
+	else
+	{
+		disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 1), \
+			ft_atod(tokens[3]), set_rgb(obj, 4, "disk"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->disks[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -437,8 +474,11 @@ static void	get_disk(t_objects *obj)
 
 /*
  * usage:
- * "tr" [vertice1] [vertice2] [vertice3] [rbg color] (vertices are points in 3d space)
+ * default -	"tr" [vertice1] [vertice2] [vertice3] [rbg color]
+ * metalic -	"tr" [vertice1] [vertice2] [vertice3] [rbg color] [fuzz(double)]
+ * (vertices are points in 3d space)
 */
+/* TODO: might not be rendering - the same as quad*/
 static void	get_triangle(t_objects *obj)
 {
 	static int	set_index;
@@ -447,13 +487,21 @@ static void	get_triangle(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "triangle", obj);
-	if (count_tokens(tokens) != 5)
+	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "triangle", obj);
-
-	triangle(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0), \
-		set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0), \
-		set_rgb(obj, 4, "triangle"));
-
+	if (count_tokens(tokens) == 6)
+	{
+		metal_init(&obj->triangles[set_index].metal, set_rgb(obj, 4, "triangle"), ft_atod(tokens[5]));
+		triangle_mat(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0), \
+			set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0), \
+			(t_material*)&obj->triangles[set_index].metal);
+	}
+	else
+	{
+		triangle(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0), \
+			set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0), \
+			set_rgb(obj, 4, "triangle"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->triangles[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -482,7 +530,8 @@ static void	get_triangle(t_objects *obj)
 
 /*
  * usage:
- * "box" [origin] [diognal point] [color]
+ * default - "box" [origin] [diagonal point] [color]
+ * metalic - "box" [origin] [diagonal point] [color] [fuzz(double)]
 */
 static void	get_box(t_objects *obj)
 {
@@ -492,10 +541,19 @@ static void	get_box(t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "box", obj);
-	if (count_tokens(tokens) != 4)
+	if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
 		call_error("invalid token amount", "box", obj);
-	box_rgb(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), \
-		set_vec3(obj, 2, "box", 0), set_rgb(obj, 3, "box"));
+	if (count_tokens(tokens) == 5)
+	{
+		metal_init(&obj->boxes[set_index].metal, set_rgb(obj, 3, "box"), ft_atod(tokens[4]));
+		box(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), \
+			set_vec3(obj, 2, "box", 0), (t_material*)&obj->boxes[set_index].metal);
+	}
+	else
+	{
+		box_rgb(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), \
+			set_vec3(obj, 2, "box", 0), set_rgb(obj, 3, "box"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->boxes[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -507,7 +565,8 @@ static void	update_struct(t_mrt *data)
 		get_camera(data);
 	else if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
 		get_ambient(data);
-	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0)
+	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0 || \
+				ft_strncmp("L", data->objects._tokens[0], 2) == 0)
 		get_light(&data->objects);
 	else if (ft_strncmp("sp", data->objects._tokens[0], 3) == 0)
 		get_sphere(&data->objects);

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:23:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/20 13:40:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 16:43:20 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "ray.h"
 #include <stdbool.h>
 #include "utils.h"
+#include "debug.h"
 
 /*
  * This function is just for a single ray.
@@ -36,10 +37,10 @@ bool hit_objects(const void *self, const t_ray* r, t_interval ray_t, t_hit_recor
 	hit_anything = false;
 	objects = (t_hittablelist *)self;
 	closest_so_far = ray_t.max;
-	if (!objects)
+	if (!objects || !objects->size || !objects->list || !objects->list[0])
 			return (false);
 	while (i < objects->size)
-	{	
+	{
 		t_interval closest = interval(ray_t.min, closest_so_far);
 		if (objects->list[i]->hit(objects->list[i], r, closest, &temp_rec))
 		{
@@ -67,11 +68,16 @@ t_hittablelist hittablelist(t_hittable **list, int size)
 
 double obj_pdf_value(const void *self, const t_point3 *o, const t_vec3 *v)
 {
-	int i; 
+	int i;
 	double sum;
 	t_hittablelist *objects;
 
 	objects = (t_hittablelist *)self;
+	if (!objects || !objects->size || !objects->list || !objects->list[0])
+	{
+		// debug("no objects in the list\n");
+		return (0.0);
+	}
 	sum = 0.0;
 	i = 0;
 	while (i < objects->size)
@@ -86,8 +92,13 @@ t_vec3 obj_random(const void *self, const t_vec3 *o)
 {
 	int random_i;
 	t_hittablelist *objects;
-	
+
 	objects = (t_hittablelist *)self;
+	if (!objects || !objects->size || !objects->list || !objects->list[0])
+	{
+		// debug("no objects in the list\n");
+		return (vec3(0,0,0));
+	}
 	random_i = random_int(0, objects->size);
 	return (objects->list[random_i]->random(objects->list[random_i], o));
 }

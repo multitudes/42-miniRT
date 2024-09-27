@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:39:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/26 10:36:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "camera.h"
+
 
 #ifndef PI
 # define PI 3.1415926535897932385
@@ -24,7 +24,8 @@
 
 // Epsilon value for floating-point comparison
 #define EPSILON 1e-6
-
+#define CORES 16
+#define RANDOM_SYSTEM 0
 // Define constants for the LCG
 // #define A 1664525
 // #define C 1013904223

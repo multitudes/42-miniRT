@@ -6,10 +6,13 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 21:43:38 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 21:43:46 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/25 12:38:04 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// this code was used as a test to otate the camera...
+// not in use right now but it's a good example of how to use quaternions
+// and how to rotate a vector using them
 
 typedef struct s_quat
 {

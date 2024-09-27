@@ -1,0 +1,5 @@
+C	278,279,-800    0,0,1		90.0	# this is a commnent
+A	1   111,111,111
+
+# so i guess the color is off because i get green instead of white?
+l 	qd 343,554,332	-130,1,0 1,130,0 250,30,30 	1

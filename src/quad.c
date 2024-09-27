@@ -20,7 +20,7 @@
 /**
  * @brief Initialize a quad object with a given position q, and two vectors u and v.
  */
-void	quad_rgb(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor) 
+void	quad_rgb(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
 {
 	qd->base.hit = hit_quad;
 	qd->base.pdf_value = quad_pdf_value;
@@ -56,13 +56,12 @@ void quad_mat(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
 	qd->q = q;
 	qd->u = u;
 	qd->v = v;
-	qd->mat = mat;
 	t_vec3 n = cross(u, v);
-    qd->normal = unit_vector(n);
-    qd->d = dot(qd->normal, q);
+	qd->normal = unit_vector(n);
+	qd->d = dot(qd->normal, q);
 	qd->w = vec3divscalar(n, dot(n, n));
 	qd->area = length(n);
-	qd->rgb = rgb(0, 0, 0);
+ 	qd->mat = mat;
 	qd->print = print_quad;
 }
 
@@ -72,7 +71,6 @@ void quad_mat(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
  * @param: self: the quad object
  * the format will be
  * "quad %f,%f,%f    %f,%f,%f     %f,%f,%f      %d,%d,%d"
-
 */
 void	print_quad(const void *self)
 {

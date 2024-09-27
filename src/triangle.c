@@ -51,12 +51,12 @@ void triangle_mat(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c, t_materia
     tri->a = a;
     tri->b = b;
     tri->c = c;
-    tri->mat = mat;
-    tri->normal = unit_vector(cross(vec3substr(b, a), vec3substr(c, a)));
+    tri->edge1 = vec3substr(b, a);
+    tri->edge2 = vec3substr(c, a);
+    tri->normal = unit_vector(cross(tri->edge2, tri->edge1));
     tri->d = dot(tri->normal, a);
     tri->area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
-    tri->rgb = rgb(0, 0, 0);
-    tri->color = color(0, 0, 0);
+    tri->mat = mat;
     tri->print = print_triangle;
 }
 
@@ -71,32 +71,32 @@ void print_triangle(const void *self) {
 
 /**
  * @brief Check if a ray intersects a triangle.
- * 
+ *
  * @param self Pointer to the triangle object.
  * @param r Pointer to the ray object.
  * @param ray_t Interval of valid t values for the ray.
  * @param rec Pointer to the hit record to update.
  * @return true if the ray intersects the triangle, false otherwise.
- * 
+ *
  * We use the Möller–Trumbore intersection algorithm to check if
- * the ray intersects the triangle. The algorithm starts by 
+ * the ray intersects the triangle. The algorithm starts by
  * extracting the edges of the triangle and calculating the
- * determinant which is the dot product of the first edge  
- * with the cross product of the second edge and the ray direction vector. 
- * If the determinant is close to zero, the ray is parallel to the triangle 
- * and we return false. 
- * We then take the inverse of the determinant and calculate 
- * the Vector from Vertex A to the ray origin using this to 
- * calculate the barycerntric u parameter. 
- * If u is outside the range [0, 1], the intersection point is outside 
+ * determinant which is the dot product of the first edge
+ * with the cross product of the second edge and the ray direction vector.
+ * If the determinant is close to zero, the ray is parallel to the triangle
+ * and we return false.
+ * We then take the inverse of the determinant and calculate
+ * the Vector from Vertex A to the ray origin using this to
+ * calculate the barycerntric u parameter.
+ * If u is outside the range [0, 1], the intersection point is outside
  * the triangle.
  * Calculate the Cross Product of p1_to_origin and e1 and use it for
  * the Barycentric Coordinate v. If v is outside the range [0, 1] or
  * u + v > 1, the intersection point is outside the triangle.
  * Calculate the t value for the intersection point and check if it is
  * within the valid interval. Then we store the hit record and return true.
-*/ 
-bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec) 
+*/
+bool hit_triangle(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec)
 {
     const t_triangle *tri = (t_triangle *)self;
     t_vec3 e1 = tri->edge1;
