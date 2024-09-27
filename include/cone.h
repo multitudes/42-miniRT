@@ -14,8 +14,10 @@
 # define CONE_H
 
 #include "color.h"
+#include "disk.h"
 # include "hittable.h"
 #include "material.h"
+#include "texture.h"
 # include "vec3.h"
 #include <stdbool.h>
 
@@ -26,13 +28,16 @@ typedef struct
 	t_vec3			axis;
 	double			angle;
 	double			height;
-	t_rgb			rgbcolor;
+	double			min;
+	t_color			color;
 	t_material		*mat;
+	t_disk			bottom;
 	union
 	{
 		t_metal			metal;
 		t_lambertian	lambertian_mat;
 	};
+	t_solid_color	texture;
 }					t_cone;
 
 /* init function */

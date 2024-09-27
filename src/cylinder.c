@@ -67,8 +67,6 @@ void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double 
 	c->min = -height / 2;
 	c->max = height / 2;
 	c->mat = mat;
-	c->rgb = rgb(0, 0, 0);
-	c->color = color(0, 0, 0);
 	c->print = &print_cylinder;
 }
 
@@ -185,7 +183,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 			if (closest_t < 0 || t0 < closest_t) {
 				closest_t = t0;
 				closest_point = point;
-				normal = unit_vector(vec3(point.x - cyl->center.x, 0.0, point.z - cyl->center.z));
+				normal = unit_vector(cross(cyl->axis, delta_point));
 				hit = true;
 			}
 		}
