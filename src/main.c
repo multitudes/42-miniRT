@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 12:24:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 13:09:15 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int init_window(t_mrt *data);
 bool init_data(t_mrt *data);
 int main_plane_orientation();
 int main_quad();
+int main_showcase_all();
 
 
 int main(int argc, char **argv)
@@ -61,7 +62,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{	
-		int scene = 4;
+		int scene = 6;
 
 		switch (scene)
 		{
@@ -92,11 +93,19 @@ int main(int argc, char **argv)
 		case 9:
 			main_quad();
 			break;
+		case 10;
+			main_showcase_all()
+			break;
 		default:
 			break;
 		}
 		return (EXIT_SUCCESS);
 	}
+}
+
+int main_showcase_all()
+{
+	
 }
 
 //debug 
