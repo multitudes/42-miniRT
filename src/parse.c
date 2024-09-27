@@ -609,6 +609,7 @@ static void	sanitize_line(char *line)
 	}
 }
 
+
 /*
  * The light struct will always have something in it.
  * If there are no lights in the input, then this "nothing light"
@@ -627,6 +628,19 @@ static void	init_light_struct(t_mrt *data)
 	data->objects.light_hit_idx++;
 }
 
+static bool	ft_isspace(char *str)
+{
+	int i;
+	
+	i = -1;
+	while(str[++i])
+		if (str[i] != ' ')
+			return false;
+	return true;
+}
+
+
+
 /* TODO: error - when camera inits with 0,1,1 - segfault  ??? */
 
 /* in case or error, the parser calls exit() */
@@ -643,7 +657,7 @@ void	parse_input(char *filename, t_mrt *data)
     while ((line = get_next_line(data->objects._file_fd)) != NULL)
     {
     	sanitize_line(line);
-		if (ft_strlen(line) == 1)
+		if (ft_strlen(line) == 1 || ft_isspace(line) == true)
 		{
 			free(line);
 			continue ;
