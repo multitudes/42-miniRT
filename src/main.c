@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 11:08:37 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 12:24:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{	
-		int scene = 9;
+		int scene = 4;
 
 		switch (scene)
 		{
@@ -890,7 +890,7 @@ int main_checkerfloors()
 	t_checker_texture checker_texture1;
 	t_rgb even1 = color_to_rgb(color(0.2, 0.3, 0.1));
 	t_rgb odd1 = color_to_rgb(color(0.9, 0.9, 0.9));
-	checker_texture_init(&checker_texture1, 40.0, even1, odd1);
+	checker_texture_init(&checker_texture1, 100.0, even1, odd1);
 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
 
 	//red metallic

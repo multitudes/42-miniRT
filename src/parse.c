@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/20 13:55:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 12:27:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -360,7 +360,7 @@ static void	get_plane(t_objects *obj)
 	}
 	else if (count_tokens(tokens) == 5)
 	{
-		checker_texture_init(&obj->planes[set_index].checker, 20, set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
+		checker_texture_init(&obj->planes[set_index].checker, CHECKER_SIZE, set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
 		lambertian_init_tex(&obj->planes[set_index].lambertian_mat, (t_texture *)&obj->planes[set_index].checker);
 		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
 			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].lambertian_mat);
