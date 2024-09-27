@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:56:34 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 12:26:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define TRUE 1
 # define FALSE 0
 # define OBJECT_COUNT 20
+# define CHECKER_SIZE 50
 
 /* struct that we didnt already have - used in the parser */
 typedef struct
@@ -65,7 +66,7 @@ typedef struct
 	int 		hit_idx;
 
 	/* contains just lights */
-	t_hittable *light_hit[OBJECT_COUNT];
+	t_hittable *light_hit[OBJECT_COUNT + 1];
 	int			light_hit_idx;
 
 	// data for the parser

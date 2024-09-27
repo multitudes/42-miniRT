@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 17:02:37 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 11:24:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 #include <time.h>
 #include <pthread.h>
 #include <stdint.h>
+
+void apply_bilateral_filter_to_image(t_mrt *data);
 
 /**
  * @brief update a camera object when the orientation changes
@@ -261,16 +263,15 @@ t_ray get_ray(t_camera cam, int i, int j)
 	return ray(ray_origin, ray_direction);
 }
 
+
+
 void render_thread(void *args)
 {
-	clock_t start_time, end_time; // to remove eventually later
-    double time_taken, fps; 	// remove later
 	t_thread_data *thread_data;
 	thread_data = (t_thread_data *)args;
 	int y = thread_data->starty;
 	int x = 0;
 	int i = 0;
-    start_time = clock();
     while (y < thread_data->endy)
     {
 		x = 0;
@@ -291,19 +292,6 @@ void render_thread(void *args)
         }
 		y++;
     }
-
-	end_time = clock();
-
-    // Calculate time taken and FPS
-    time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
-    fps = 1.0 / time_taken;
-    (void) fps;
-	// debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
-	// fflush(stderr);
-	// char fps_str[100];
-	// snprintf(fps_str, sizeof(fps_str), "Frame rendered in %.2f seconds (FPS: %.2f)", time_taken, fps);
-	// mlx_string_put(thread_data->data->mlx, thread_data->data->win_ptr, 10, 10, 0xFFFFFF, fps_str);
-
 }
 
 /**
@@ -311,6 +299,8 @@ void render_thread(void *args)
  */
 void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
 {
+    double fps; 	// remove later
+    double start_time = mlx_get_time();
 	pthread_t threads[CORES];
 	t_thread_data thread_data[CORES];
 
@@ -338,7 +328,15 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 	}
 	if (data->needs_render)
 		data->needs_render = false;
+
 	debug("DONE\n");
+    
+    // Calculate time taken and FPS
+    double time_taken = ((double)(mlx_get_time() - start_time));
+    fps = 1.0 / time_taken;
+    // char *fps_str = {"Hello"};
+    apply_bilateral_filter_to_image(data);
+	// mlx_put_string(data->mlx, fps_str, 10, 10);
 }
 
 /**
@@ -409,6 +407,95 @@ unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
 
 	dst = data->pixels + (y * data->width + x * (sizeof(int32_t) / 8));
 	return (*(unsigned int *)dst);
+}
+
+
+
+
+double gaussian(double x, double sigma) {
+    return exp(-(x * x) / (2 * sigma * sigma)) / (2 * PI * sigma * sigma);
+}
+
+t_rgb bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, double sigma_r) {
+    double rs = 0, gs = 0, bs = 0;
+    double w_sum = 0;
+
+    int radius = (int)(2 * sigma_s);
+    for (int i = -radius; i <= radius; ++i) {
+        for (int j = -radius; j <= radius; ++j) {
+            int nx = x + i;
+            int ny = y + j;
+
+            if (nx >= 0 && nx < image->width && ny >= 0 && ny < image->height) {
+                uint8_t *neighbor_pixel = &image->pixels[(ny * image->width + nx) * 4];
+                uint8_t *center_pixel = &image->pixels[(y * image->width + x) * 4];
+
+                t_rgb neighbor = {neighbor_pixel[0], neighbor_pixel[1], neighbor_pixel[2]};
+                t_rgb center = {center_pixel[0], center_pixel[1], center_pixel[2]};
+
+                double spatial_weight = gaussian(sqrt(i * i + j * j), sigma_s);
+                double range_weight = gaussian(sqrt(
+                    (neighbor.r - center.r) * (neighbor.r - center.r) +
+                    (neighbor.g - center.g) * (neighbor.g - center.g) +
+                    (neighbor.b - center.b) * (neighbor.b - center.b)
+                ), sigma_r);
+
+                double weight = spatial_weight * range_weight;
+
+                rs += neighbor.r * weight;
+                gs += neighbor.g * weight;
+                bs += neighbor.b * weight;
+                w_sum += weight;
+            }
+        }
+    }
+
+    t_rgb result;
+    result.r = (uint8_t)(rs / w_sum);
+    result.g = (uint8_t)(gs / w_sum);
+    result.b = (uint8_t)(bs / w_sum);
+    return result;
+}
+
+void apply_bilateral_filter(mlx_image_t *image, double sigma_s, double sigma_r) {
+    t_rgb *filtered_pixels = (t_rgb *)malloc(image->width * image->height * sizeof(t_rgb));
+
+    for (int y = 0; y < image->height; ++y) {
+        for (int x = 0; x < image->width; ++x) {
+            filtered_pixels[y * image->width + x] = bilateral_filter_pixel(image, x, y, sigma_s, sigma_r);
+        }
+    }
+
+    for (int y = 0; y < image->height; ++y) {
+        for (int x = 0; x < image->width; ++x) {
+            int offset = y * image->width + x;
+            uint8_t *pixel = &image->pixels[offset * 4];
+            pixel[0] = filtered_pixels[offset].r;
+            pixel[1] = filtered_pixels[offset].g;
+            pixel[2] = filtered_pixels[offset].b;
+        }
+    }
+
+    free(filtered_pixels);
+}
+
+
+/**
+ * @brief apply the bilateral filter to the image
+ * 
+ * sigma_s (Spatial Sigma): Controls the spatial extent of the filter. 
+ * Increasing sigma_s will make the filter consider a larger neighborhood, 
+ * resulting in stronger smoothing.
+ * sigma_r (Range Sigma): Controls the intensity difference that the filter considers. 
+ * Increasing sigma_r will make the filter less sensitive to intensity differences, 
+ * resulting in stronger smoothing.
+ */
+void apply_bilateral_filter_to_image(t_mrt *data) {
+    // Apply the bilateral filter
+	// debug("apply_bilateral_filter_to_image\n");
+    double sigma_s = 2.0; // Spatial sigma
+    double sigma_r = 25.0; // Range sigma
+    apply_bilateral_filter(data->image, sigma_s, sigma_r);
 }
 
 /**
@@ -490,3 +577,101 @@ double kernel[3][3] = {
     mlx_image_to_window(data->mlx, blurred_image, 0, 0);
     debug("Gaussian blur applied to the image!\n");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// this is something to try if we have time
+// https://github.com/RenderKit/oidn
+/*
+
+void fill_oidn_buffers(t_mrt *data, float *colorPtr)
+{
+    int width = data->cam.image_width;
+    int height = data->cam.image_height;
+
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            int offset = y * width + x;
+            uint8_t *pixel = &data->image->pixels[offset * 4];
+            colorPtr[offset * 3 + 0] = pixel[0] / 255.0f;
+            colorPtr[offset * 3 + 1] = pixel[1] / 255.0f;
+            colorPtr[offset * 3 + 2] = pixel[2] / 255.0f;
+        }
+    }
+}
+
+void apply_oidn_denoising(t_mrt *data)
+{
+    int width = data->cam.image_width;
+    int height = data->cam.image_height;
+
+    // Create an OIDN device
+    OIDNDevice device = oidnNewDevice(OIDN_DEVICE_TYPE_DEFAULT);
+    oidnCommitDevice(device);
+
+    // Create buffers for input/output images
+    OIDNBuffer colorBuf = oidnNewBuffer(device, width * height * 3 * sizeof(float));
+    float *colorPtr = (float *)oidnGetBufferData(colorBuf);
+
+    // Fill the input buffers with your rendered image data
+    fill_oidn_buffers(data, colorPtr);
+
+    // Create and configure the filter
+    OIDNFilter filter = oidnNewFilter(device, "RT");
+    oidnSetFilterImage(filter, "color", colorBuf, OIDN_FORMAT_FLOAT3, width, height, 0, 0, 0);
+    oidnSetFilterImage(filter, "output", colorBuf, OIDN_FORMAT_FLOAT3, width, height, 0, 0, 0);
+    oidnSetFilterBool(filter, "hdr", true);
+    oidnCommitFilter(filter);
+
+    // Execute the filter
+    oidnExecuteFilter(filter);
+
+    // Check for errors
+    const char *errorMessage;
+    if (oidnGetDeviceError(device, &errorMessage) != OIDN_ERROR_NONE)
+    {
+        printf("Error: %s\n", errorMessage);
+    }
+
+    // Write the denoised image back to the image buffer
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            int offset = y * width + x;
+            uint8_t *pixel = &data->image->pixels[offset * 4];
+            pixel[0] = (uint8_t)(colorPtr[offset * 3 + 0] * 255.0f);
+            pixel[1] = (uint8_t)(colorPtr[offset * 3 + 1] * 255.0f);
+            pixel[2] = (uint8_t)(colorPtr[offset * 3 + 2] * 255.0f);
+        }
+    }
+
+    // Cleanup
+    oidnReleaseBuffer(colorBuf);
+    oidnReleaseFilter(filter);
+    oidnReleaseDevice(device);
+}
+
+then 
+	apply_oidn_denoising(&data);
+*/

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/25 13:34:42 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 12:23:04 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,11 +157,5 @@ t_color img_texture_value(const void *self, double u, double v, const t_point3 *
 	double r = *pixel * color_scale;
 	double g = *(++pixel) * color_scale;
 	double b = *(++pixel) * color_scale;
-	// printf("r = %f, g = %f, b = %f\n", r, g, b);
 	return color(r, g, b);
 }
-// 	int i = (int)(clamp(interval(0, 1), u) * width(image->img));
-// 	int j = (int)((1.0 - clamp(interval(0, 1), v)) * height(image->img));
-// 	uint8_t *pixel = pixel_data(image->img, i, j);
-// 	return rgb_to_color(rgb(*pixel, *(pixel + 1), *(pixel + 2)));
-// }

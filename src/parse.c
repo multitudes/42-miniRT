@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/20 13:55:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 12:57:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,7 +316,7 @@ static void	get_sphere(t_objects *obj)
 	}
 	else if (count_tokens(tokens) == 5)
 	{
-		checker_texture_init(&obj->spheres[set_index].checker, 20, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
+		checker_texture_init(&obj->spheres[set_index].checker, CHECKER_SIZE, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].checker);
 		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
 			(t_material *) &obj->spheres[set_index].lambertian_mat);
@@ -360,7 +360,7 @@ static void	get_plane(t_objects *obj)
 	}
 	else if (count_tokens(tokens) == 5)
 	{
-		checker_texture_init(&obj->planes[set_index].checker, 20, set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
+		checker_texture_init(&obj->planes[set_index].checker, CHECKER_SIZE, set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
 		lambertian_init_tex(&obj->planes[set_index].lambertian_mat, (t_texture *)&obj->planes[set_index].checker);
 		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
 			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].lambertian_mat);
@@ -609,6 +609,38 @@ static void	sanitize_line(char *line)
 	}
 }
 
+
+/*
+ * The light struct will always have something in it.
+ * If there are no lights in the input, then this "nothing light"
+ * will be the only thing passed to the light hittable list.
+ * It will not do anything, but without it ambient light doesnt seem to work.
+ *
+ * If there are light int the input, then the "nothing light" will be
+ * written over and nonexistant.
+*/
+static void	init_light_struct(t_mrt *data)
+{
+	t_empty_material empty_material;
+	quad_mat(&data->objects.lights[0].q_body, point3(0.1,0.1,0.1), vec3(0.1,1,0.1), \
+		vec3(1,0.1,0.1), (t_material*)&empty_material);
+	data->objects.light_hit[0] = (t_hittable *)&data->objects.lights[0].q_body;
+	data->objects.light_hit_idx++;
+}
+
+static bool	ft_isspace(char *str)
+{
+	int i;
+	
+	i = -1;
+	while(str[++i])
+		if (str[i] != ' ')
+			return false;
+	return true;
+}
+
+
+
 /* TODO: error - when camera inits with 0,1,1 - segfault  ??? */
 
 /* in case or error, the parser calls exit() */
@@ -621,10 +653,11 @@ void	parse_input(char *filename, t_mrt *data)
     data->objects._file_fd = open(filename, O_RDONLY);
     if (data->objects._file_fd == -1)
     	perror(filename), exit(1);
+    init_light_struct(data);
     while ((line = get_next_line(data->objects._file_fd)) != NULL)
     {
     	sanitize_line(line);
-		if (ft_strlen(line) == 1)
+		if (ft_strlen(line) == 1 || ft_isspace(line) == true)
 		{
 			free(line);
 			continue ;
