@@ -85,11 +85,8 @@ void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double 
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	cylinder_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, rgbcolor);
-
-	// Calculate the positions of the top and bottom caps
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
     t_point3 bottom_center = vec3substr(center, vec3multscalar(axis, -(height / 2)));
-
 	disk_mat(&c->top, top_center, axis, diameter, c->cylinder_uncapped.mat);
 	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), diameter, c->cylinder_uncapped.mat);
 	c->print = &print_cylinder_capped;
@@ -97,16 +94,16 @@ void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double 
 
 void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
 {
+	axis = unit_vector(axis);
 	c->base.hit = hit_cylinder_capped;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	cylinder_mat_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, mat);
-
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
-    t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -height / 2));
-
-	disk_mat(&c->top, top_center, axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
+    t_point3 bottom_center = vec3substr(center, vec3multscalar(axis, -(height / 2)));
+	disk_mat(&c->top, top_center, axis, diameter, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), diameter, c->cylinder_uncapped.mat);
+	c->print = &print_cylinder_capped;
 }
 
 
