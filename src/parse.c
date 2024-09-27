@@ -609,6 +609,24 @@ static void	sanitize_line(char *line)
 	}
 }
 
+/*
+ * The light struct will always have something in it.
+ * If there are no lights in the input, then this "nothing light"
+ * will be the only thing passed to the light hittable list.
+ * It will not do anything, but without it ambient light doesnt seem to work.
+ *
+ * If there are light int the input, then the "nothing light" will be
+ * written over and nonexistant.
+*/
+static void	init_light_struct(t_mrt *data)
+{
+	t_empty_material empty_material;
+	quad_mat(&data->objects.lights[0].q_body, point3(0.1,0.1,0.1), vec3(0.1,1,0.1), \
+		vec3(1,0.1,0.1), (t_material*)&empty_material);
+	data->objects.light_hit[0] = (t_hittable *)&data->objects.lights[0].q_body;
+	data->objects.light_hit_idx++;
+}
+
 /* TODO: error - when camera inits with 0,1,1 - segfault  ??? */
 
 /* in case or error, the parser calls exit() */
@@ -621,6 +639,7 @@ void	parse_input(char *filename, t_mrt *data)
     data->objects._file_fd = open(filename, O_RDONLY);
     if (data->objects._file_fd == -1)
     	perror(filename), exit(1);
+    init_light_struct(data);
     while ((line = get_next_line(data->objects._file_fd)) != NULL)
     {
     	sanitize_line(line);
