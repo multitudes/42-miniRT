@@ -43,13 +43,8 @@ void		cylinder_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diam
 	c->max = height / 2;
 	c->rgb = rgbcolor;
 	c->color = rgb_to_color(rgbcolor);
-	// i use the color to create a texture
 	solid_color_init(&(c->texture), c->color);
-	// i init the lambertian material with the texture
 	lambertian_init_tex(&(c->lambertian_mat), (t_texture*)&(c->texture));
-	// i assign the material to the sphere as a pointer
-	// the pointer will contain the scatter function for the material
-	// which will be passed to the t_record struct when hit
  	c->mat = (t_material*)&(c->lambertian_mat);
 	c->print = &print_cylinder;
 }
@@ -85,30 +80,18 @@ void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double 
  */
 void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
 {
-	t_vec3 u, v;
-
+	axis = unit_vector(axis);
 	c->base.hit = hit_cylinder_capped;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	cylinder_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, rgbcolor);
-	// just need to create two vector parallel to the axis
-	// make sure not parallel to the y axis
-    u = vec3(1, 0, 0);
-	if (fabs(axis.x) > fabs(axis.y)) {
-        u = vec3(0, 1, 0);
-    }
- 	v = unit_vector(cross(axis, u));
-    u = unit_vector(cross(v, axis));
-
-    u = vec3multscalar(u, diameter);
-    v = vec3multscalar(v, diameter);
 
 	// Calculate the positions of the top and bottom caps
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
-    t_point3 bottom_center = vec3substr(center, vec3multscalar(axis, height / 2));
+    t_point3 bottom_center = vec3substr(center, vec3multscalar(axis, -(height / 2)));
 
-	disk_mat(&c->top, top_center, axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center,axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
+	disk_mat(&c->top, top_center, axis, diameter, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), diameter, c->cylinder_uncapped.mat);
 	c->print = &print_cylinder_capped;
 }
 
@@ -119,29 +102,11 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, dou
 	c->base.random = obj_random;
 	cylinder_mat_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, mat);
 
-
-	/* TODO: i think i dont need theese vectors */
-
-	// just need to create two vector parallel to the axis
-	// t_vec3 u, v;
-	// // make sure not parallel to the y axis
- //    u = vec3(1, 0, 0);
-	// if (fabs(axis.x) > fabs(axis.y)) {
- //        u = vec3(0, 1, 0);
- //    }
- // 	v = unit_vector(cross(axis, u));
- //    u = unit_vector(cross(v, axis));
-
- //    u = vec3multscalar(u, diameter / 2);
- //    v = vec3multscalar(v, diameter / 2);
-
-
-
     t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
     t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -height / 2));
 
 	disk_mat(&c->top, top_center, axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center, axis, c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), c->cylinder_uncapped.radius, c->cylinder_uncapped.mat);
 }
 
 
