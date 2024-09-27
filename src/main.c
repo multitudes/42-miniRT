@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 17:00:58 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 12:24:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int render_from_file(char *filename);
 int init_window(t_mrt *data);
 bool init_data(t_mrt *data);
 int main_plane_orientation();
+int main_quad();
 
 
 int main(int argc, char **argv)
@@ -88,11 +89,97 @@ int main(int argc, char **argv)
 		case 8:
 			main_plane_orientation();
 			break;
+		case 9:
+			main_quad();
+			break;
 		default:
 			break;
 		}
 		return (EXIT_SUCCESS);
 	}
+}
+
+//debug 
+// qd    300,10,200     100,10,100 200,10,200         166,53,13  
+int main_quad()
+{
+
+t_mrt data;
+	// world
+	t_hittable *list[7];
+
+	if (!init_data(&data))
+        return (1);
+	
+	/***************************** */
+	/* 			camera 			   */	
+	/***************************** */
+	// t_point3 center = point3(0, 0, 0);
+	//343,212,-490    
+	t_point3 center = point3(-100, 212, -490);
+	t_vec3 direction = vec3(0, 0, 1);
+	init_cam(&data.cam, center, direction, 60);
+	data.cam.print((void*)(&(data.cam)));
+
+	/***************************** */
+	/* 		ambient light		   */	
+	/***************************** */
+	ambient(&data.cam.ambient, 1, rgb(110,110,110));
+	data.cam.ambient.print((void*)&data.cam.ambient);
+
+	// red plane
+	// t_lambertian lambertian_material;
+	// lambertian_init(&lambertian_material, color(200, 0, 0));
+	// pl	0,100,0		0,1,0 	111,111,111
+	t_plane s0;
+	// t_metal metal_material;
+	// metal_init(&metal_material, color_to_rgb(color(0.5, 0, 0)), 0.3);
+	// plane_mat(&s0, point3(0, 100, 0), vec3(0,1,0), (t_material*)&metal_material);
+	plane(&s0, point3(0, -100, 0), vec3(0,-1,0), rgb(200,0,0));
+	s0.print((void*)&s0); 
+	
+	// qd    300,10,200     100,10,100 200,10,200         166,53,13  
+	// -130,0,0    0,0,-105 
+	t_quad s1;
+	quad_rgb(&s1, point3(0,100,0), vec3(-130,0,0), vec3(0,0,-105), rgb(0,255,13));
+	s1.print((void*)&s1);
+
+	list[0] = (t_hittable*)(&s0);
+	list[1] = (t_hittable*)(&s1);
+
+	const t_hittablelist world = hittablelist(list, 2);
+
+	t_hittable *list_lights[1];
+
+	t_empty_material empty_material;
+	t_material *no_material = (t_material*)&empty_material;
+	t_quad l6;
+	quad_mat(&l6, point3(0.1,0.1,0.1), vec3(0.1,1,0.1), vec3(1,0.1,0.1), (t_material*)&no_material);
+
+	// t_sphere l6;
+	// sphere_mat(&l6, point3(250, 100, -200), 200.0, (t_material*)&no_material);
+
+	// l6.print((void*)&l6);
+
+	list_lights[0] = (t_hittable *) &l6;
+	// list_lights[0] = (t_hittable*)(&l6);
+	const t_hittablelist lights = hittablelist(list_lights, 1);
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+
+	data.world = world;
+	data.lights = lights;
+	render(&data, &world, &lights);
+	
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
+
 }
 
 int main_plane_orientation()
@@ -774,14 +861,12 @@ int main_checkerfloors()
 	if (!init_data(&data))
 		return (1);
 
-
-
 	/***************************** */
 	/* 			camera 			   */
 	/***************************** */
 	//-422.000000 307.999863 -71.947640
-	t_point3 center = point3(74, 212, -390);
-	t_vec3 direction = vec3(0,0,1);
+	t_point3 center = point3(-422, 307, -71);
+	t_vec3 direction = vec3(-1,0,0);
  	init_cam(&data.cam, center, direction, 60);
 	data.cam.print((void*)(&(data.cam)));
 
@@ -790,7 +875,6 @@ int main_checkerfloors()
 	/***************************** */
 	ambient(&data.cam.ambient, 0.5, rgb(110,110,110));
 	data.cam.ambient.print((void*)&data.cam.ambient);
-
 
 	// world
 	// ================================================== world ==================================================
@@ -806,7 +890,7 @@ int main_checkerfloors()
 	t_checker_texture checker_texture1;
 	t_rgb even1 = color_to_rgb(color(0.2, 0.3, 0.1));
 	t_rgb odd1 = color_to_rgb(color(0.9, 0.9, 0.9));
-	checker_texture_init(&checker_texture1, 40.0, even1, odd1);
+	checker_texture_init(&checker_texture1, 100.0, even1, odd1);
 	lambertian_init_tex(&lambertian_material, (t_texture*)&(checker_texture1));
 
 	//red metallic
@@ -887,11 +971,11 @@ int main_checkerfloors()
 	s11.print((void*)&s11);
 
 	t_plane pl12;
-	plane_mat(&pl12, point3(0, 0, -400), vec3(0,0,1), (t_material*)&lambertian_material);
+	plane_mat(&pl12, point3(0, 0, -300), vec3(0,0,1), (t_material*)&lambertian_material);
 	pl12.print((void*)&pl12);
 
 	t_plane pl13;
-	plane_mat(&pl13, point3(-600, 0, 0), vec3(1,0,0), (t_material*)&lambertian_material);
+	plane_mat(&pl13, point3(-300, 0, 0), vec3(1,0,0), (t_material*)&lambertian_material);
 	pl12.print((void*)&pl12);
 
 	/***********************************/

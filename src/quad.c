@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/20 13:40:13 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/27 11:09:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ void	print_quad(const void *self)
 	printf("quad   %.f,%.f,%.f    %.f,%.f,%.f    %.f,%.f,%.f  %d,%d,%d\n",
 	qd->q.x, qd->q.y, qd->q.z,
 	qd->u.x, qd->u.y, qd->u.z,
-	qd->v.x, qd->v.y, qd->v.z, qd->rgb.r, qd->rgb.g, qd->rgb.b);
+	qd->v.x, qd->v.y, qd->v.z, 
+	qd->rgb.r, qd->rgb.g, qd->rgb.b);
 }
 
 bool hit_quad(const void* self, const t_ray *r, t_interval ray_t,  t_hit_record *rec)
