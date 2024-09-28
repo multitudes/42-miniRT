@@ -507,26 +507,29 @@ static void	get_triangle(t_objects *obj)
 	set_index++;
 }
 
-// static void	get_cone (t_objects *obj)
-// {
-// 	static int	set_index;
-// 	char		**tokens;
-// 	double		angle;
+/*
+ * usage:
+ * default - "co" [origin] [axis] [diameter] [height] [color]
+ *  
+ *  
+ * origin - the center of the base; diameter - the diameter of the base
+*/
+static void	get_cone (t_objects *obj)
+{
+	static int	set_index;
+	char		**tokens;
 
-// 	tokens = obj->_tokens;
-// 	if (set_index >= OBJECT_COUNT)
-// 		call_error("exceeds array size", "cone", obj);
-// 	if (count_tokens(tokens) != 6)
-// 		call_error("invalid token amount", "cone", obj);
-// 	angle = ft_atod(tokens[3]);
-// 	if (angle <= 0 || angle >= 180)
-// 		call_error("angle must be in range (0.0, 180.0)", "cone", obj);
-// 	cone(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
-// 		angle, ft_atod(tokens[4]), set_rgb(obj, 5, "cone"));
-// 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cones[set_index];
-// 	obj->hit_idx++;
-// 	set_index++;
-// }
+	tokens = obj->_tokens;
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "cone", obj);
+	if (count_tokens(tokens) != 6)
+		call_error("invalid token amount", "cone", obj);
+	cone_rgb(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
+		angle, ft_atod(tokens[4]), set_rgb(obj, 5, "cone"));
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cones[set_index];
+	obj->hit_idx++;
+	set_index++;
+}
 
 /*
  * usage:

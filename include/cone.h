@@ -24,9 +24,9 @@
 typedef struct
 {
 	t_hittable		base;
-	t_point3		apex;
+	t_point3		center;
 	t_vec3			axis;
-	double			angle;
+	double			radius;
 	double			height;
 	double			min;
 	t_color			color;
@@ -41,7 +41,7 @@ typedef struct
 }					t_cone;
 
 /* init function */
-void	cone(t_cone *c, t_point3 apex, t_vec3 axis, double angle, double height, \
+void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double angle, double height, \
 	t_rgb rgbcolor);
 
 /* hit function */
