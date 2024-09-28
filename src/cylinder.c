@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 18:53:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 17:01:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
             if (closest_t < 0 || t0 < closest_t) {
                 closest_t = t0;
                 closest_point = point;
+                // changed this for correct shadows
+                // normal = unit_vector(cross(cyl->axis, delta_point));
                 normal = unit_vector(vec3substr(point, vec3add(cyl->center, vec3multscalar(cyl->axis, height))));
                 hit = true;
             }
@@ -190,7 +192,8 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
             if (closest_t < 0 || t1 < closest_t) {
                 closest_t = t1;
                 closest_point = point;
-				// changed this for better shadows
+				// changed this for correct shadows
+                // normal = unit_vector(cross(cyl->axis, delta_point));
                 normal = unit_vector(vec3substr(point, vec3add(cyl->center, vec3multscalar(cyl->axis, height))));
                 hit = true;
             }
