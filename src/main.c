@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/28 12:42:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 14:37:30 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,7 +326,7 @@ int	main_camera_center()
 	data.lights = lights;
 	render(&data, &world, &lights);
 	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
-	mlx_key_hook(data.mlx, key_callback, &data);
+	// mlx_key_hook(data.mlx, key_callback, &data);
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
     mlx_loop(data.mlx);
     ft_printf("\nbyebye!\n");
