@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 12:26:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 16:57:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define TRUE 1
 # define FALSE 0
 # define OBJECT_COUNT 20
+# define SPHERES_COUNT 1000
 # define CHECKER_SIZE 50
 
 /* struct that we didnt already have - used in the parser */
@@ -52,7 +53,7 @@ typedef struct
 typedef struct
 {
 	t_light		lights[OBJECT_COUNT];
-	t_sphere	spheres[OBJECT_COUNT];
+	t_sphere	spheres[SPHERES_COUNT];
 	t_plane		planes[OBJECT_COUNT];
 	t_cylinder_capped	cylinders[OBJECT_COUNT];
 	t_quad		quads[OBJECT_COUNT];
@@ -62,7 +63,7 @@ typedef struct
 	t_box		boxes[OBJECT_COUNT];
 
 	/* contains all shapes. lights as well */
-	t_hittable *hit_list[OBJECT_COUNT * 9];
+	t_hittable *hit_list[OBJECT_COUNT * 8 + SPHERES_COUNT];
 	int 		hit_idx;
 
 	/* contains just lights */
@@ -79,6 +80,11 @@ typedef struct 	s_mrt
 	void		*mlx;
 	void		*win_ptr;
 	mlx_image_t	*image;
+	
+	mlx_image_t *seconds_str;
+    mlx_image_t *cores_str;
+
+	double		mlx_time;
 	bool needs_render;
 
 	t_camera	cam;

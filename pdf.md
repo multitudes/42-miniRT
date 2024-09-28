@@ -420,3 +420,49 @@ double triangle_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *
 ```
 
 This function calculates the PDF for a ray hitting a specific point on the triangle's surface. It takes into account the distance from the origin, the angle between the ray and the triangle's normal, and the area of the triangle.
+
+
+## Gaussian pdf
+
+```
+
+double gaussian(double x, double sigma)
+{
+    return (1 / (sigma * sqrt(2 * PI))) * exp(-(x * x) / (2 * sigma * sigma));
+}
+```
+
+The `gaussian` function you provided implements the **Gaussian probability density function (PDF)**, often referred to as the **normal distribution** or **bell curve**. It's a widely used statistical distribution in various fields, including signal processing, image processing, and machine learning.
+
+**Purpose:**
+
+The Gaussian PDF describes a continuous probability distribution that is symmetric around its mean (which is usually 0 in this context) and has a characteristic bell shape. It's frequently used to model random variables that are likely to be clustered around a central value with decreasing probability as you move further away from the mean.
+
+**Parameters:**
+
+- `x`: The value for which you want to calculate the probability density.
+- `sigma`: The standard deviation of the distribution, which controls the spread or width of the bell curve. A larger sigma results in a wider curve, while a smaller sigma results in a narrower curve.
+
+**Formula:**
+
+The formula for the Gaussian PDF is:
+
+$$
+f(x) = (1 / (sigma * sqrt(2 * pi))) * exp(-(x - mu)^2 / (2 * sigma^2))
+$$
+    
+where:
+- `mu` is the mean of the distribution (often 0).
+- `sigma` is the standard deviation.
+- `pi` is the mathematical constant pi.
+- `exp` is the exponential function.
+
+
+**Usage:**
+
+The `gaussian` function can be used in various ways, including:
+
+- **Filtering:** In image processing, Gaussian functions are used as filters to smooth images and reduce noise.
+- **Probability calculations:** The Gaussian PDF can be used to calculate the probability of a random variable falling within a certain range.
+- **Machine learning:** Gaussian distributions are used in many machine learning algorithms, such as Gaussian mixture models and Bayesian networks.
+

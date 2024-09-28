@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/27 12:57:52 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 13:36:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,11 +145,11 @@ static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalize
 	while (++i < 3)
 	{
 		coord_val[i] = ft_atod(coord_tok[i]);
-		if (normalized && (coord_val[i] < -1.0 || coord_val[i] > 1.0))
-		{
-			free_split(coord_tok);
-			call_error("vector not normalized", func_name, obj);
-		}
+		// if (normalized && (coord_val[i] < -1.0 || coord_val[i] > 1.0))
+		// {
+		// 	free_split(coord_tok);
+		// 	call_error("vector not normalized", func_name, obj);
+		// }
 	}
 	free_split(coord_tok);
 	return(vec3(coord_val[0], coord_val[1], coord_val[2]));
@@ -157,7 +157,7 @@ static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalize
 
 /* Inits the ambient struct inside of t_mrt->t_camera.
  * usage:
- * "A" [intesity([0.0;1.0])] [rgb color]
+ * "A" [intensity([0.0;1.0])] [rgb color]
 */
 static void	get_ambient(t_mrt *data)
 {
@@ -196,7 +196,7 @@ static void	get_camera(t_mrt *data)
 	already_set = 1;
 }
 
-/*
+/* Quad light.
  * usage:
  * "l" "qd" [origin] [side_vector1] [side_vector2] [rgb color] [intensity ([0.0;1.0])]
 */
@@ -245,7 +245,7 @@ static void	get_light(t_objects *obj)
 		if (count_tokens(tokens)!= 4 && count_tokens(tokens) != 5)
 			call_error("invalid token amount", "light", obj);
 		rgbcolor = set_rgb(obj, 3, "light");
-		color = vec3multscalar(rgb_to_color(rgbcolor), 100 * ft_atod(tokens[2]));
+		color = vec3multscalar(rgb_to_color(rgbcolor), 1000 * ft_atod(tokens[2]));
 		solid_color_init(&obj->lights[set_index].color, color);
 		diffuse_light_init(&obj->lights[set_index].difflight, (t_texture*)&obj->lights[set_index].color);
 		if (count_tokens(tokens) == 5)
@@ -301,7 +301,7 @@ static void	get_sphere(t_objects *obj)
 	int			diam;
 
 	tokens = obj->_tokens;
-	if (set_index >= OBJECT_COUNT)
+	if (set_index >= SPHERES_COUNT)
 		call_error("exceeds array size", "sphere", obj);
 	if (count_tokens(tokens) < 4)
 		call_error("needs at least 4 tokens", "sphere", obj);
@@ -610,6 +610,7 @@ static void	sanitize_line(char *line)
 }
 
 
+
 /*
  * The light struct will always have something in it.
  * If there are no lights in the input, then this "nothing light"
@@ -638,10 +639,6 @@ static bool	ft_isspace(char *str)
 			return false;
 	return true;
 }
-
-
-
-/* TODO: error - when camera inits with 0,1,1 - segfault  ??? */
 
 /* in case or error, the parser calls exit() */
 void	parse_input(char *filename, t_mrt *data)

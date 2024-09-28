@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 12:32:18 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 15:30:18 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,9 @@ typedef struct	s_camera
 	t_point3	original_pos;
 	t_vec3		original_dir;
 	t_ambient 	ambient;
-	pthread_t	threads[CORES];
-	t_thread_data thread_data[CORES];
+	uint8_t		cores;
+	pthread_t	threads[16];
+	t_thread_data thread_data[16];
 	void		(*print)(const void* self);
 } 				t_camera;
 

@@ -54,6 +54,7 @@
 		"complex": "c",
 		"istream": "c",
 		"sstream": "c",
-		"debug.h": "c"
+		"debug.h": "c",
+		"libft.h": "c"
 	}
 }
