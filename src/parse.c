@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/28 13:36:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 18:41:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,7 +298,7 @@ static void	get_sphere(t_objects *obj)
 {
 	static int	set_index;
 	char		**tokens;
-	int			diam;
+	double			diam; // fixed this - spheres less than 1 would be ignored otherwise
 
 	tokens = obj->_tokens;
 	if (set_index >= SPHERES_COUNT)
