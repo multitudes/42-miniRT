@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/28 14:39:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 16:55:51 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	hook(void *param)
 	mlx_t		*mlx;
 	t_mrt		*data;
 	// mlx start time
-	double mlx_time;
 
 	data = (t_mrt *)param;
 	mlx = data->mlx;
@@ -39,7 +38,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
 	{
@@ -49,7 +48,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT))
 	{
@@ -59,7 +58,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
 	{
@@ -69,7 +68,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_F1))
 	{
@@ -79,7 +78,7 @@ void	hook(void *param)
 		data->cam.direction = data->cam.original_dir;
 		update_cam_orientation(&data->cam);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_F))
 	{
@@ -87,7 +86,7 @@ void	hook(void *param)
 		update_cam_orientation(&data->cam);
 		data->needs_render = true;
 		debug("F hfov+ key pressed %f\n", data->cam.hfov);
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
     
 	if (mlx_is_key_down(mlx, MLX_KEY_G))
@@ -96,7 +95,7 @@ void	hook(void *param)
 		update_cam_orientation(&data->cam);
 		data->needs_render = true;
 		debug("G hfov- key pressed %f\n", data->cam.hfov);
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_W))
 	{
@@ -106,7 +105,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_S))
 	{
@@ -116,7 +115,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_A))
 	{
@@ -126,7 +125,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_D)){
 		move_camera_right(&(data->cam), data->cam.image_width / 20);
@@ -135,7 +134,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE)){
 		move_camera_forward(&(data->cam), -data->cam.image_width / 20);
@@ -144,7 +143,7 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
@@ -154,126 +153,30 @@ void	hook(void *param)
 		data->cam.center.x, data->cam.center.y, data->cam.center.z, \
 		data->cam.direction.x, data->cam.direction.y, data->cam.direction.z);
 		data->needs_render = true;
-		mlx_time = mlx_get_time();
+		data->mlx_time = mlx_get_time();
+	}
+	if (mlx_is_key_down(mlx, MLX_KEY_F2))
+	{
+		if (mlx_get_time() - data->mlx_time > 0.1) {
+			debug("mlx_get_time() - data->mlx_time %f\n", mlx_get_time() - data->mlx_time);
+			debug("F2 cores toggle pressed\n");
+			data->cam.cores = data->cam.cores == 1 ? 16 : 1;
+			debug("cores: %d\n", data->cam.cores);
+			data->needs_render = true;
+			mlx_delete_image(data->mlx, data->cores_str);
+			mlx_delete_image(data->mlx, data->seconds_str);
+			data->mlx_time = mlx_get_time();
+		}
 	}
 	if (data->needs_render)
 	{
-		if (mlx_get_time() - mlx_time > 0.0005)
+		if (mlx_get_time() - data->mlx_time > 0.0005)
 		{
 			data->needs_render = false;
 			render(data, &(data->world), &(data->lights));
 		}
 	}
 }
-
-
-
-
-
-// void key_callback(mlx_key_data_t keydata, void* param)
-// {
-//     t_mrt *data = (t_mrt *)param;
-
-// 	debug("keydata key action modifier %d %d %d\n", keydata.key, keydata.action, keydata.modifier);
-
-// 	if (keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS && keydata.modifier == MLX_CONTROL)
-// 	{
-// 		debug("Ctrl + Arrow Up pressed\n");
-// 		rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * ROTATION_DEG));
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 		data->needs_render = true;
-// 	}
-// 	if (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS && keydata.modifier == MLX_CONTROL)
-// 	{
-// 		debug("Ctrl + Arrow Down pressed\n");
-// 		rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 		data->needs_render = true;
-// 	}
-// 	if (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS && keydata.modifier == MLX_CONTROL)
-// 	{
-// 		debug("Ctrl + Arrow Left pressed\n");
-// 		rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov * ROTATION_DEG));
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS && keydata.modifier == MLX_CONTROL)
-// 	{
-// 		debug("Ctrl + Arrow Right pressed\n");
-// 		rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_F1 && keydata.action == MLX_PRESS && keydata.modifier == MLX_CONTROL)
-// 	{
-// 		debug("F1 pressed\n");
-// 		data->cam.center = data->cam.original_pos;
-// 		data->cam.direction = data->cam.original_dir;
-// 		update_cam_resize(&data->cam, data->cam.image_width, data->cam.image_height);
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS && keydata.modifier == MLX_CONTROL)
-// 	{
-// 		data->cam.hfov += 1;
-// 		update_cam_orientation(&data->cam);
-// 		data->needs_render = true;
-// 		debug("F key pressed %f\n", data->cam.hfov);
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_F && keydata.action == MLX_PRESS && keydata.modifier == 0)
-// 	{
-// 		data->cam.hfov -= 1;
-// 		update_cam_orientation(&data->cam);
-// 		data->needs_render = true;
-// 		debug("F key pressed %f\n", data->cam.hfov);
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_UP && keydata.action == MLX_PRESS && keydata.modifier == 0)
-// 	{
-// 		move_camera_up(&(data->cam), data->cam.image_height / 20);
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_DOWN && keydata.action == MLX_PRESS && keydata.modifier == 0)
-// 	{
-// 		move_camera_up(&(data->cam), -data->cam.image_height / 20);
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_LEFT && keydata.action == MLX_PRESS && keydata.modifier == 0)
-// 	{
-// 		move_camera_right(&(data->cam), -data->cam.image_width / 20);
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_RIGHT && keydata.action == MLX_PRESS && keydata.modifier == 0)
-// 	{
-// 		move_camera_right(&(data->cam), data->cam.image_width / 20);
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-// 	if (keydata.key == MLX_KEY_SPACE && keydata.action == MLX_PRESS && keydata.modifier == 0)
-// 	{
-// 		move_camera_forward(&(data->cam), -data->cam.image_width / 20);
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-
-// 	}
-// 	if (keydata.key == MLX_KEY_LEFT_SHIFT && keydata.action == MLX_PRESS && keydata.modifier == 0)
-// 	{
-// 		move_camera_forward(&(data->cam), data->cam.image_width / 10);
-// 		data->needs_render = true;
-// 		debug("camera center point = %f %f %f\n", data->cam.center.x, data->cam.center.y, data->cam.center.z);
-// 	}
-    
-//     if (data->needs_render)
-//     {
-//         data->needs_render = false;
-//         render(data, &(data->world), &(data->lights));
-//     }
-// }
-
 
 // Function to rotate a vector using a 3x3 rotation matrix
 t_vec3 rotate_vector(t_vec3 v, double matrix[3][3]) {

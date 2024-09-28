@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/28 14:37:30 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 16:57:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,13 +370,15 @@ bool init_data(t_mrt *data)
 	/***************************** */
     data->mlx = NULL;
     data->win_ptr = NULL;
+	data->cores_str = NULL;
+	data->seconds_str = NULL;
+
+	data->mlx_time = 0;
     data->image = NULL;
 	data->renderscene = render;
 	data->needs_render = true;
-	// data->mouse_state.mouse_pressed = 0;
-	// data->mouse_state.last_x = 0;
-	// data->mouse_state.last_y = 0;
-
+	// this is for the alternative random algorithm
+	// but unsure if it makes sense to use it
 	if (BONUS)
 		mt_init_genrand(time(NULL));
     return (true);

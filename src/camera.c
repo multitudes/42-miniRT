@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/28 15:15:18 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 16:57:30 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void update_cam_resize(t_camera *cam, int new_width, int new_height)
 // TODO: what happens in direction vector is 0,0,0 at the start?
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
+    cam->cores = 16;
 	if (direction.x == 0 && direction.z == 0)
 		direction.z -= 0.1;
 	cam->direction = unit_vector(direction);
@@ -299,31 +300,32 @@ void render_thread(void *args)
  */
 void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
 {
-    double fps; 	// remove later
     double start_time = mlx_get_time();
-	pthread_t threads[CORES];
-	t_thread_data thread_data[CORES];
+    mlx_delete_image(data->mlx, data->seconds_str);
+    mlx_delete_image(data->mlx, data->cores_str);
+	
 
-    int sliceheight = data->cam.image_height / CORES;
+
+    int sliceheight = data->cam.image_height / data->cam.cores;
 	int thread_idx = 0;
-	while (thread_idx < CORES)
+	while (thread_idx < data->cam.cores)
 	{
-		thread_data[thread_idx].data = data;
-		thread_data[thread_idx].thread_id = thread_idx;
-		thread_data[thread_idx].world = world;
-		thread_data[thread_idx].lights = lights;
-		thread_data[thread_idx].starty = thread_idx * sliceheight;
-		if (thread_idx == CORES - 1)
-			thread_data[thread_idx].endy = data->cam.image_height;
+		data->cam.thread_data[thread_idx].data = data;
+		data->cam.thread_data[thread_idx].thread_id = thread_idx;
+		data->cam.thread_data[thread_idx].world = world;
+		data->cam.thread_data[thread_idx].lights = lights;
+		data->cam.thread_data[thread_idx].starty = thread_idx * sliceheight;
+		if (thread_idx == data->cam.cores - 1)
+			data->cam.thread_data[thread_idx].endy = data->cam.image_height;
 		else
-			thread_data[thread_idx].endy = (thread_idx + 1) * sliceheight;
-		pthread_create(&threads[thread_idx], NULL, (void *)render_thread, &thread_data[thread_idx]);
+			data->cam.thread_data[thread_idx].endy = (thread_idx + 1) * sliceheight;
+		pthread_create(&data->cam.threads[thread_idx], NULL, (void *)render_thread, &data->cam.thread_data[thread_idx]);
 		thread_idx++;
 	}
 	thread_idx = 0;
-	while (thread_idx < CORES)
+	while (thread_idx < data->cam.cores)
 	{
-		pthread_join(threads[thread_idx], NULL);
+		pthread_join(data->cam.threads[thread_idx], NULL);
 		thread_idx++;
 	}
 	if (data->needs_render)
@@ -333,10 +335,14 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
     
     // Calculate time taken and FPS
     double time_taken = ((double)(mlx_get_time() - start_time));
-    fps = 1.0 / time_taken;
-    // char *fps_str = {"Hello"};
+    char time_str[25];
+    char cores_str[25]; 
+    sprintf(cores_str, "cores: %d", data->cam.cores);
+    sprintf(time_str, "time: %.1f sec", time_taken);
+
     apply_bilateral_filter_to_image(data);
-	// mlx_put_string(data->mlx, fps_str, 10, 10);
+	data->seconds_str =  mlx_put_string(data->mlx, time_str, 10, 10);
+    data->cores_str = mlx_put_string(data->mlx, cores_str, 10, 30);
 }
 
 /**

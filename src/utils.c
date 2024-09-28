@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/26 10:34:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 15:48:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ int random_int(int min, int max)
 	diff = max - min;
 	if (diff <= 0)
 		diff = 1;
-    if (CORES > 1)
-    {
-        unsigned int seed  = rand();
-        return min + rand_r(&seed) % diff; // maybe remove and use our random func
-    }
+    // if (CORES > 1)
+    // {
+    //     unsigned int seed  = rand();
+    //     return min + rand_r(&seed) % diff; // maybe remove and use our random func
+    // }
     return min + rand_rt() % diff;
 }
 

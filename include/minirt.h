@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/28 12:53:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 16:57:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,11 @@ typedef struct 	s_mrt
 	void		*mlx;
 	void		*win_ptr;
 	mlx_image_t	*image;
+	
+	mlx_image_t *seconds_str;
+    mlx_image_t *cores_str;
+
+	double		mlx_time;
 	bool needs_render;
 
 	t_camera	cam;
