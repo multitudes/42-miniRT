@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 11:24:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 15:15:18 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,47 +358,6 @@ bool is_near_zero(double value) {
     return fabs(value) < EPSILON;
 }
 
-// probably i will not need this.. i just wanted to visualize the axes...
-bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
-    // Check for intersection with x-axis (line along the x-axis)
-    if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
-        // The ray intersects the x-axis when y = 0 and z = 0
-        if (!is_near_zero(r->orig.y) || !is_near_zero(r->orig.z)) {
-            // Ray origin is not on the yz-plane, so calculate the intersection point
-            double t = -r->orig.y / r->dir.y; // Find where y = 0
-            double z_at_t = r->orig.z + t * r->dir.z;
-            return is_near_zero(z_at_t); // Check if z also equals 0
-        }
-        return true; // If the ray origin is on the yz-plane
-    }
-
-    // Check for intersection with y-axis (line along the y-axis)
-    if (axis->x == 0 && axis->y != 0 && axis->z == 0) {
-        // The ray intersects the y-axis when x = 0 and z = 0
-        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.z)) {
-            // Ray origin is not on the xz-plane, so calculate the intersection point
-            double t = -r->orig.x / r->dir.x; // Find where x = 0
-            double z_at_t = r->orig.z + t * r->dir.z;
-            return is_near_zero(z_at_t); // Check if z also equals 0
-        }
-        return true; // If the ray origin is on the xz-plane
-    }
-
-    // Check for intersection with z-axis (line along the z-axis)
-    if (axis->x == 0 && axis->y == 0 && axis->z != 0) {
-        // The ray intersects the z-axis when x = 0 and y = 0
-        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.y)) {
-            // Ray origin is not on the xy-plane, so calculate the intersection point
-            double t = -r->orig.x / r->dir.x; // Find where x = 0
-            double y_at_t = r->orig.y + t * r->dir.y;
-            return is_near_zero(y_at_t); // Check if y also equals 0
-        }
-        return true; // If the ray origin is on the xy-plane
-    }
-
-    // If none of the conditions match, the ray does not intersect the line
-    return false;
-}
 
 
 unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
@@ -409,14 +368,45 @@ unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
 	return (*(unsigned int *)dst);
 }
 
+typedef struct {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+} t_rgb8;
 
 
-
-double gaussian(double x, double sigma) {
-    return exp(-(x * x) / (2 * sigma * sigma)) / (2 * PI * sigma * sigma);
+/**
+ * @brief gaussian function
+ * 
+ * @param x
+ * @param sigma
+ * 
+ * @return double
+ * 
+ * implements the Gaussian probability density function (PDF), 
+ * often referred to as the normal distribution or bell curve.  
+ * It's a widely used statistical distribution in various fields, 
+ * including signal processing, image processing, and machine learning.
+ * The Gaussian PDF describes a continuous probability distribution 
+ * that is symmetric around its mean (which is usually 0 in this context) 
+ * and has a characteristic bell shape.
+ * 
+ */
+double gaussian(double x, double sigma)
+{
+    return (1 / (sigma * sqrt(2 * PI))) * exp(-(x * x) / (2 * sigma * sigma));
 }
-
-t_rgb bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, double sigma_r) {
+/**
+ * @brief apply the bilateral filter to a single pixel
+ * 
+ * @param image the image to apply the filter to
+ * @param x the x coordinate of the pixel
+ * @param y the y coordinate of the pixel
+ * @param sigma_s the spatial sigma
+ * @param sigma_r the range sigma
+ * 
+ */
+t_rgb8 bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, double sigma_r) {
     double rs = 0, gs = 0, bs = 0;
     double w_sum = 0;
 
@@ -430,8 +420,8 @@ t_rgb bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, d
                 uint8_t *neighbor_pixel = &image->pixels[(ny * image->width + nx) * 4];
                 uint8_t *center_pixel = &image->pixels[(y * image->width + x) * 4];
 
-                t_rgb neighbor = {neighbor_pixel[0], neighbor_pixel[1], neighbor_pixel[2]};
-                t_rgb center = {center_pixel[0], center_pixel[1], center_pixel[2]};
+                t_rgb8 neighbor = {neighbor_pixel[0], neighbor_pixel[1], neighbor_pixel[2]};
+                t_rgb8 center = {center_pixel[0], center_pixel[1], center_pixel[2]};
 
                 double spatial_weight = gaussian(sqrt(i * i + j * j), sigma_s);
                 double range_weight = gaussian(sqrt(
@@ -450,15 +440,15 @@ t_rgb bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, d
         }
     }
 
-    t_rgb result;
-    result.r = (uint8_t)(rs / w_sum);
-    result.g = (uint8_t)(gs / w_sum);
-    result.b = (uint8_t)(bs / w_sum);
+    t_rgb8 result;
+    result.r = (uint8_t)fmax(0, fmin(rs / w_sum, 255));
+    result.g = (uint8_t)fmax(0, fmin(gs / w_sum, 255));
+    result.b = (uint8_t)fmax(0, fmin(bs / w_sum, 255));
     return result;
 }
 
 void apply_bilateral_filter(mlx_image_t *image, double sigma_s, double sigma_r) {
-    t_rgb *filtered_pixels = (t_rgb *)malloc(image->width * image->height * sizeof(t_rgb));
+    t_rgb8 *filtered_pixels = (t_rgb8 *)malloc(image->width * image->height * sizeof(t_rgb8));
 
     for (int y = 0; y < image->height; ++y) {
         for (int x = 0; x < image->width; ++x) {
