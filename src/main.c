@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 14:11:56 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 12:42:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -777,90 +777,71 @@ int main_()
 
 }
 
-
-
 int main_cyl_uncapped_disk(int argc, char **argv)
 {
     t_mrt data;
     (void)argv;
-	(void)argc;
+    (void)argc;
 
-	/***************************** */
-	/* 			camera 			   */
-	/***************************** */
-	t_point3 center = point3(-5, 80, 291);
-	t_vec3 direction = vec3(0,0,-400);
- 	init_cam(&data.cam, center, direction, 60);
-	data.cam.print((void*)(&(data.cam)));
+    /***************************** */
+    /*          camera            */
+    /***************************** */
+    t_point3 center = point3(-5, 80, 291);
+    t_vec3 direction = vec3(0, 0, -400);
+    init_cam(&data.cam, center, direction, 60);
+    data.cam.print((void*)(&(data.cam)));
 
-	/***************************** */
-	/* 		ambient light		   */
-	/***************************** */
-	ambient(&data.cam.ambient, 1, rgb(255,255,255));
+    /***************************** */
+    /*       ambient light        */
+    /***************************** */
+    ambient(&data.cam.ambient, 1, rgb(255, 255, 255));
 
+    // world
+    // ================================================== world ==================================================
+    t_hittable *list[2];
 
-	// world
-	// ================================================== world ==================================================
-	t_hittable *list[2];
-	// =============================================
-	// t_cylinder_capped c0;
-	// cylinder_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, rgb(166, 103, 13));
-	// c0.print((void*)&c0);
-	// t_disk d0;
-	// disk(&d0, point3(0, 0, 0), vec3(0,1,0), 100, rgb(166, 13, 103));
-	// d0.print((void*)&d0);
+    // Adjusted triangle coordinates
+    t_triangle d0;
+    triangle(&d0, point3(0, 0, 100), point3(-50, 0, 0), point3(50, 0, 150), rgb(166, 103, 13));
+    d0.print((void*)&d0);
 
-	// replace disk with triangle
-	// # default -	"tr" [vertice1] [vertice2] [vertice3] [rbg color]
-// tr     300,101,100     200,101,290     50,101,190      166,103,13
-	t_triangle d0;
-	triangle(&d0, point3(300,10,100), point3(200,10,290), point3(50,10,190), rgb(166, 103, 13));
-	d0.print((void*)&d0);
-	
-	t_rgb albedo = color_to_rgb(color(0.1, 0.8, 0.1));
-	double fuzz = 0.0;
-	t_metal metal;
-	metal_init(&metal, albedo, fuzz);
-	// t_disk d1;
-	// disk_mat(&d1, point3(0, 0, 0), vec3(0,1,0), 50, (t_material*)&metal);
-	// d1.print((void*)&d1);
+    t_rgb albedo = color_to_rgb(color(0.1, 0.8, 0.1));
+    double fuzz = 0.0;
+    t_metal metal;
+    metal_init(&metal, albedo, fuzz);
 
-	// t_cylinder_capped c0;
-	t_cylinder c0;
-	cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 10, (t_material*)&metal);
-	// cylinder_mat_capped(&c0, point3(0, 0, 0), vec3(0,1,0), 200, 50, (t_material*)&metal);
-	c0.print((void*)&c0);
+    t_cylinder c0;
+    cylinder_mat_uncapped(&c0, point3(0, 0, 0), vec3(0, 1, 0), 200, 10, (t_material*)&metal);
+    c0.print((void*)&c0);
 
-	list[0] = (t_hittable*)(&d0);
-	list[1] = (t_hittable*)(&c0);
+    list[0] = (t_hittable*)(&d0);
+    list[1] = (t_hittable*)(&c0);
 
-	const t_hittablelist world = hittablelist(list, 2);
+    const t_hittablelist world = hittablelist(list, 2);
 
-	t_hittable *list_lights[2];
-	t_empty_material empty_material;
-	t_material *no_material = (t_material*)&empty_material;
-	t_quad l6;
-	quad_mat(&l6, point3(343,554,332), vec3(-130,0,0), vec3(0,0,-105), (t_material*)&no_material);
+    t_hittable *list_lights[2];
+    t_empty_material empty_material;
+    t_material *no_material = (t_material*)&empty_material;
+    t_quad l6;
+    quad_mat(&l6, point3(343, 554, 332), vec3(-130, 0, 0), vec3(0, 0, -105), (t_material*)&no_material);
 
-	// t_sphere s6 = sphere_mat(point3( 343,554,332 ), 90, rgb(255,223 ,34 ), (t_material*)&difflight);
-	t_sphere l2;
-	sphere_mat(&l2, point3( 0,250,-50 ), 120, (t_material*)&no_material);
+    t_sphere l2;
+    sphere_mat(&l2, point3(0, 250, -50), 120, (t_material*)&no_material);
 
-//0,250,-50 ), 120
-	list_lights[0] = (t_hittable*)(&l6);
-	list_lights[1] = (t_hittable*)(&l2);
-	const t_hittablelist lights = hittablelist(list_lights, 2);
+    list_lights[0] = (t_hittable*)(&l6);
+    list_lights[1] = (t_hittable*)(&l2);
+    const t_hittablelist lights = hittablelist(list_lights, 2);
 
     debug("Start of minirt %s", "helllo !! ");
-	if (!init_window(&data))
-		return (EXIT_FAILURE);
+    if (!init_window(&data))
+        return (EXIT_FAILURE);
 
-	data.world = world;
-	data.lights = lights;
+    data.world = world;
+    data.lights = lights;
 
-	render(&data, &world, &lights);
+    render(&data, &world, &lights);
 
-	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+    mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
 
     mlx_loop_hook(data.mlx, &hook, (void *)&data);
     mlx_loop(data.mlx);
