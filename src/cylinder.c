@@ -137,14 +137,9 @@ void		print_cylinder(const void *self)
  * The cylinder is an infinite object so we need to check if the intersection
  * is within the height of the cylinder
  */
-/**
- * @brief: check if the ray hits the uncapped cylinder
- * 
- * The cylinder is an infinite object so we need to check if the intersection 
- * is within the height of the cylinder
- */
 bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec)
 {
+
     const t_cylinder *cyl = (t_cylinder*)self;
     t_vec3 delta_p, cross_rd_cd, cross_dp_cd;
 
@@ -156,6 +151,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
     double b = 2 * dot(cross_rd_cd, cross_dp_cd);
     double c = dot(cross_dp_cd, cross_dp_cd) - pow(cyl->radius, 2);
 
+
     double discriminant = b * b - 4 * a * c;
     if (discriminant < 0)
         return false;
@@ -166,6 +162,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
     double closest_t = -1;
     t_vec3 closest_point;
     t_vec3 normal;
+
 
     bool hit = false;
 
@@ -199,6 +196,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
             }
         }
     }
+
 
     if (closest_t >= 0 && hit) {
         rec->t = closest_t;
