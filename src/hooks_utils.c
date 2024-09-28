@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/28 16:55:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 18:12:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void	hook(void *param)
 	}
 	if (data->needs_render)
 	{
-		if (mlx_get_time() - data->mlx_time > 0.0005)
+		if (mlx_get_time() - data->mlx_time > 0.05)
 		{
 			data->needs_render = false;
 			render(data, &(data->world), &(data->lights));
