@@ -227,3 +227,6 @@ https://link.springer.com/book/10.1007/978-1-4842-7185-8
 https://youtu.be/gBPNO6ruevk?si=Qtmk42NVdP9aJgRN  
 
 https://alain.xyz/blog/ray-tracing-denoising  
+
+https://planetpixelemporium.com/earth8081.html  
+https://www.solarsystemscope.com/textures/

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:53:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/24 11:34:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/29 12:56:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include "material.h"
 # include "texture.h"
 
-#define PLANE_MAX 10000
-#define PLANE_MIN 0.00000
+#define PLANE_MAX 1000
+#define PLANE_MIN 0.00001
 
 /**
  * @brief a plane object

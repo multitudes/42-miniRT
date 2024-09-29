@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/28 19:11:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/29 11:10:34 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -386,7 +386,7 @@ static void	get_cylinder(t_objects *obj)
 	char		**tokens;
 
 	tokens = obj->_tokens;
-	if (set_index >= OBJECT_COUNT)
+	if (set_index >= CYLINDER_COUNT)
 		call_error("exceeds array size", "cylinder", obj);
 	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
 		call_error("invalid token amount", "cylinder", obj);
