@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/28 18:41:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/28 19:11:51 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,7 +245,7 @@ static void	get_light(t_objects *obj)
 		if (count_tokens(tokens)!= 4 && count_tokens(tokens) != 5)
 			call_error("invalid token amount", "light", obj);
 		rgbcolor = set_rgb(obj, 3, "light");
-		color = vec3multscalar(rgb_to_color(rgbcolor), 1000 * ft_atod(tokens[2]));
+		color = vec3multscalar(rgb_to_color(rgbcolor), 100 * ft_atod(tokens[2]));
 		solid_color_init(&obj->lights[set_index].color, color);
 		diffuse_light_init(&obj->lights[set_index].difflight, (t_texture*)&obj->lights[set_index].color);
 		if (count_tokens(tokens) == 5)
