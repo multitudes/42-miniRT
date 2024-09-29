@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/28 16:57:41 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/29 08:19:04 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int main_checkerfloors();
 int main_earth_nolight_pinkambient();
 int main_blue_red();
 int main_lights_three_lambertian();
-int main_cyl_uncapped_disk(int argc, char **argv);
+int main_cyl_uncapped_disk();
 int main_camera_center();
 int render_from_file(char *filename);
 int init_window(t_mrt *data);
@@ -67,10 +67,10 @@ int main(int argc, char **argv)
 		switch (scene)
 		{
 		case 1:
-			main_lights_three_lambertian(argc, argv);
+			main_lights_three_lambertian();
 			break;
 		case 2:
-			main_earth_nolight_pinkambient(argc, argv);
+			main_earth_nolight_pinkambient();
 			break;
 		case 3:
 			main_blue_red();
@@ -79,10 +79,10 @@ int main(int argc, char **argv)
 			main_checkerfloors();
 			break;
 		case 5:
-			main_lights_three_lambertian(argc, argv);
+			main_lights_three_lambertian();
 			break;
 		case 6:
-			main_cyl_uncapped_disk(argc, argv);
+			main_cyl_uncapped_disk();
 			break;
 		case 7:
 			main_camera_center();
@@ -779,11 +779,10 @@ int main_()
 
 }
 
-int main_cyl_uncapped_disk(int argc, char **argv)
+int main_cyl_uncapped_disk()
 {
     t_mrt data;
-    (void)argv;
-    (void)argc;
+
 
     /***************************** */
     /*          camera            */
