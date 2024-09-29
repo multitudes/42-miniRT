@@ -56,5 +56,6 @@
 		"sstream": "c",
 		"debug.h": "c",
 		"libft.h": "c"
-	}
+	},
+	"cmake.sourceDirectory": "/home/lbrusa/DEV/42-miniRT/lib/MLX42"
 }
