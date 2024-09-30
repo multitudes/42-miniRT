@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ambient.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:53:45 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/25 14:40:22 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/30 09:58:39 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "ambient.h"
 #include "color.h"
 #include "debug.h"
+#include <stdio.h>
 
 void	ambient(t_ambient *result, double ratio, t_rgb rgb)
 {
@@ -23,9 +23,10 @@ void	ambient(t_ambient *result, double ratio, t_rgb rgb)
 	result->print = &print_ambient;
 }
 
-void		print_ambient(const void *self)
+void	print_ambient(const void *self)
 {
-	const t_ambient *ambient = self;
-	printf("A\t%f\t\t%d,%d,%d\n",ambient->ratio,
-	ambient->rgbcolor.r, ambient->rgbcolor.g, ambient->rgbcolor.b);
+	const t_ambient	*ambient = self;
+
+	printf("A\t%f\t\t%d,%d,%d\n", ambient->ratio, ambient->rgbcolor.r,
+		ambient->rgbcolor.g, ambient->rgbcolor.b);
 }

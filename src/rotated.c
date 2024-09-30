@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   rotated.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 12:13:20 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 11:53:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:01:03 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rotated.h"
 #include "utils.h"
 
-// this is as per book translated from c++ but 
+// this is as per book translated from c++ but
 // i am looking for a better way to implement this
 t_rotated_y	rotated_y(t_hittable *obj, double angle)
 {
-	double radians; 
-	t_rotated_y rotated;
-	
+	double		radians;
+	t_rotated_y	rotated;
+
 	radians = degrees_to_radians(angle);
 	rotated.base.hit = hit_rotated;
 	rotated.obj = obj;
@@ -28,7 +28,8 @@ t_rotated_y	rotated_y(t_hittable *obj, double angle)
 	return (rotated);
 }
 
-bool	hit_rotated(const void *self, const t_ray *r, t_interval ray_t, t_hit_record *rec)
+bool	hit_rotated(const void *self, const t_ray *r, t_interval ray_t,
+		t_hit_record *rec)
 {
 	t_rotated_y *rot_y;
 	t_point3 origin;
@@ -39,7 +40,7 @@ bool	hit_rotated(const void *self, const t_ray *r, t_interval ray_t, t_hit_recor
 	direction = r->dir;
 
 	// Rotate the ray's origin and direction. this will be similar for the other rotations
-	// on the other axes	
+	// on the other axes
 	origin.x = rot_y->cos_theta * r->orig.x - rot_y->sin_theta * r->orig.z;
 	origin.z = rot_y->sin_theta * r->orig.x + rot_y->cos_theta * r->orig.z;
 
@@ -48,7 +49,8 @@ bool	hit_rotated(const void *self, const t_ray *r, t_interval ray_t, t_hit_recor
 
 	t_ray rotated_r = ray(origin, direction);
 
-	// Determine whether an intersection exists in object space (and if so, where)
+	// Determine whether an intersection exists in object space (and if so,
+		//where)
 	if (!rot_y->obj->hit(rot_y->obj, &rotated_r, ray_t, rec))
 		return (false);
 
@@ -61,9 +63,11 @@ bool	hit_rotated(const void *self, const t_ray *r, t_interval ray_t, t_hit_recor
 	t_vec3 normal = rec->normal;
 
 	// Change the normal from object space to world space
-	normal.x = rot_y->cos_theta * rec->normal.x + rot_y->sin_theta * rec->normal.z;
-	normal.z = -rot_y->sin_theta * rec->normal.x + rot_y->cos_theta * rec->normal.z;
-	
+	normal.x = rot_y->cos_theta * rec->normal.x + rot_y->sin_theta
+		* rec->normal.z;
+	normal.z = -rot_y->sin_theta * rec->normal.x + rot_y->cos_theta
+		* rec->normal.z;
+
 	rec->p = p;
 	rec->normal = normal;
 

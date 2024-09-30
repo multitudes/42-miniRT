@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/29 11:10:34 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:00:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"  	// get_next_line should be here
-#include <complex.h>
-#include <fcntl.h>  	/* open() */
-#include <stdbool.h>
-#include <stdio.h>  	/* perror() */
+#include "libft.h" // get_next_line should be here
 #include "minirt.h"
+#include <complex.h>
+#include <fcntl.h> /* open() */
+#include <stdbool.h>
+#include <stdio.h> /* perror() */
 
 static void	free_split(char **split)
 {
@@ -28,7 +28,7 @@ static void	free_split(char **split)
 }
 
 /* program will exit if there is an error */
-static int call_error(char *msg, char *prefix, t_objects *obj)
+static int	call_error(char *msg, char *prefix, t_objects *obj)
 {
 	write(2, "Error\n", 6);
 	if (prefix)
@@ -90,7 +90,7 @@ double	ft_atod(char *str)
 			break ;
 		num = (num * 10) + (int)(str[i] - '0');
 	}
-	result = (double) num;
+	result = (double)num;
 	if (exponent != -1 && num != 0)
 	{
 		exponent = i - exponent;
@@ -123,7 +123,7 @@ static t_rgb	set_rgb(t_objects *obj, int index, char *func_name)
 		}
 	}
 	free_split(rgb_tok);
-	return(rgb(rgb_val[0], rgb_val[1], rgb_val[2]));
+	return (rgb(rgb_val[0], rgb_val[1], rgb_val[2]));
 }
 
 /*
@@ -131,8 +131,9 @@ static t_rgb	set_rgb(t_objects *obj, int index, char *func_name)
  *
  * Function is very similar to set_rgb, but sets doubles, checks
  * if values from token are normalized, calls vec3().
-*/
-static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
+ */
+static t_vec3	set_vec3(t_objects *obj, int index, char *func_name,
+		int normalized)
 {
 	char	**coord_tok;
 	double	coord_val[3];
@@ -152,13 +153,13 @@ static t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalize
 		// }
 	}
 	free_split(coord_tok);
-	return(vec3(coord_val[0], coord_val[1], coord_val[2]));
+	return (vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
 
 /* Inits the ambient struct inside of t_mrt->t_camera.
  * usage:
  * "A" [intensity([0.0;1.0])] [rgb color]
-*/
+ */
 static void	get_ambient(t_mrt *data)
 {
 	static int	already_set;
@@ -166,17 +167,20 @@ static void	get_ambient(t_mrt *data)
 
 	tokens = data->objects._tokens;
 	if (already_set)
-		call_error("this element can only be set once", "ambient", &data->objects);
+		call_error("this element can only be set once", "ambient",
+			&data->objects);
 	if (count_tokens(tokens) != 3)
 		call_error("invalid token amount", "ambient", &data->objects);
-	ambient(&data->cam.ambient, ft_atod(tokens[1]), set_rgb(&data->objects, 2, "ambient"));
+	ambient(&data->cam.ambient, ft_atod(tokens[1]), set_rgb(&data->objects, 2,
+			"ambient"));
 	already_set = 1;
 }
 
 /* Inits the camera struct inside of t_mrt.
  * usage:
- * "C" [origin] [orientation(view) vector (normalized values)] [horiz. fow (double)]
-*/
+
+	* "C" [origin] [orientation(view) vector (normalized values)] [horiz. fow (double)]
+ */
 static void	get_camera(t_mrt *data)
 {
 	static int	already_set;
@@ -185,47 +189,52 @@ static void	get_camera(t_mrt *data)
 
 	tokens = data->objects._tokens;
 	if (already_set)
-		call_error("this element can only be set once", "camera", &data->objects);
+		call_error("this element can only be set once", "camera",
+			&data->objects);
 	if (count_tokens(tokens) != 4)
 		call_error("invalid token amount", "camera", &data->objects);
 	hfov = ft_atod(tokens[3]);
 	if (hfov < 0. || hfov > 180.)
 		call_error("fov must be in range [0;180]", "camera", &data->objects);
-	init_cam(&data->cam, set_vec3(&data->objects, 1, "camera", 0), \
+	init_cam(&data->cam, set_vec3(&data->objects, 1, "camera", 0),
 		set_vec3(&data->objects, 2, "camera", 1), hfov);
 	already_set = 1;
 }
 
 /* Quad light.
  * usage:
- * "l" "qd" [origin] [side_vector1] [side_vector2] [rgb color] [intensity ([0.0;1.0])]
-*/
+
+	* "l" "qd" [origin] [side_vector1] [side_vector2] [rgb color] [intensity ([0.0;1.0])]
+ */
 static void	quad_light(t_objects *obj, int set_index)
 {
-	t_color		color;
-	t_rgb		rgbcolor;
+	t_color	color;
+	t_rgb	rgbcolor;
 
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds_array size", "q_light", obj);
 	if (count_tokens(obj->_tokens) != 7)
 		call_error("invalid token amount", "q_light", obj);
 	rgbcolor = set_rgb(obj, 5, "q_light");
-	color = vec3multscalar(rgb_to_color(rgbcolor), 100*ft_atod(obj->_tokens[6]));
+	color = vec3multscalar(rgb_to_color(rgbcolor), 100
+			* ft_atod(obj->_tokens[6]));
 	solid_color_init(&obj->lights[set_index].color, color);
-	diffuse_light_init(&obj->lights[set_index].difflight, (t_texture *)&obj->lights[set_index].color);
-	quad_mat(&obj->lights[set_index].q_body, set_vec3(obj, 2, "q_light", 0), \
-			set_vec3(obj, 3, "q_light", 0), set_vec3(obj, 4, "q_light", 0), \
-			(t_material *)&obj->lights[set_index].difflight);
+	diffuse_light_init(&obj->lights[set_index].difflight,
+		(t_texture *)&obj->lights[set_index].color);
+	quad_mat(&obj->lights[set_index].q_body, set_vec3(obj, 2, "q_light", 0),
+		set_vec3(obj, 3, "q_light", 0), set_vec3(obj, 4, "q_light", 0),
+		(t_material *)&obj->lights[set_index].difflight);
 }
 
 /* Makes a light object, which is a sphere or a quad with a light texture.
  * Adds the sphere from the light struct to the regular hittable list.
  * as well as the light one.
-*/
+ */
 /*
  * usage (for default sphere light):
- * "l" [origin] [intensity([0.0;1,0])] [rgb color] [optional : diameter(default value=100)]
-*/
+
+	* "l" [origin] [intensity([0.0;1,0])] [rgb color] [optional : diameter(default value=100)]
+ */
 static void	get_light(t_objects *obj)
 {
 	static int	set_index;
@@ -242,17 +251,19 @@ static void	get_light(t_objects *obj)
 		tokens = obj->_tokens;
 		if (set_index >= OBJECT_COUNT)
 			call_error("exceeds array size", "light", obj);
-		if (count_tokens(tokens)!= 4 && count_tokens(tokens) != 5)
+		if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
 			call_error("invalid token amount", "light", obj);
 		rgbcolor = set_rgb(obj, 3, "light");
-		color = vec3multscalar(rgb_to_color(rgbcolor), 100 * ft_atod(tokens[2]));
+		color = vec3multscalar(rgb_to_color(rgbcolor), 100
+				* ft_atod(tokens[2]));
 		solid_color_init(&obj->lights[set_index].color, color);
-		diffuse_light_init(&obj->lights[set_index].difflight, (t_texture*)&obj->lights[set_index].color);
+		diffuse_light_init(&obj->lights[set_index].difflight,
+			(t_texture *)&obj->lights[set_index].color);
 		if (count_tokens(tokens) == 5)
 			diam = ft_atod(tokens[4]);
 		if (diam < 0)
 			call_error("diameter cannot be negative...", "light", obj);
-		sphere_mat(&obj->lights[set_index].s_body, set_vec3(obj, 1, "light", 0), \
+		sphere_mat(&obj->lights[set_index].s_body, set_vec3(obj, 1, "light", 0),
 			diam, (t_material *)&obj->lights[set_index].difflight);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].s_body;
@@ -265,12 +276,11 @@ static void	get_light(t_objects *obj)
 /*
  * Checks if a string represents a float number.
  * (the string can have just a single dot and digits)
-*/
+ */
 bool	is_float(char *str)
 {
 	int		i;
 	bool	has_dot;
-
 
 	has_dot = false;
 	i = -1;
@@ -292,14 +302,15 @@ bool	is_float(char *str)
  * default sphere -		"sp" [origin] [diameter] [rgb color]
  * checker texture -	"sp" [origin] [diameter] [rgb color1] [rgb color2]
  * image (earthmap) -	"sp" [origin] [diameter] "img:"[path to .jpg]
- * metal sphere -		"sp" [origin] [diameter] [rgb color] [fuzz value(double)]
-*/
+ * metal sphere
+			-		"sp" [origin] [diameter] [rgb color] [fuzz value(double)]
+ */
 static void	get_sphere(t_objects *obj)
 {
 	static int	set_index;
 	char		**tokens;
-	double			diam; // fixed this - spheres less than 1 would be ignored otherwise
 
+	double diam; // fixed this - spheres less than 1 would be ignored otherwise
 	tokens = obj->_tokens;
 	if (set_index >= SPHERES_COUNT)
 		call_error("exceeds array size", "sphere", obj);
@@ -310,38 +321,45 @@ static void	get_sphere(t_objects *obj)
 		call_error("diameter cannot be negative...", "sphere", obj);
 	if (count_tokens(tokens) == 5 && is_float(tokens[4]))
 	{
-		metal_init(&obj->spheres[set_index].metal, set_rgb(obj, 3, "sphere"), ft_atod(tokens[4]));
-		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
-			(t_material *) &obj->spheres[set_index].metal);
+		metal_init(&obj->spheres[set_index].metal, set_rgb(obj, 3, "sphere"),
+			ft_atod(tokens[4]));
+		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0),
+			diam, (t_material *)&obj->spheres[set_index].metal);
 	}
 	else if (count_tokens(tokens) == 5)
 	{
-		checker_texture_init(&obj->spheres[set_index].checker, CHECKER_SIZE, set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
-		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].checker);
-		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
-			(t_material *) &obj->spheres[set_index].lambertian_mat);
+		checker_texture_init(&obj->spheres[set_index].checker, CHECKER_SIZE,
+			set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
+		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat,
+			(t_texture *)&obj->spheres[set_index].checker);
+		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0),
+			diam, (t_material *)&obj->spheres[set_index].lambertian_mat);
 	}
 	else if (count_tokens(tokens) == 4 && ft_strncmp(tokens[3], "img:", 4) == 0)
 	{
 		img_texture_init(&obj->spheres[set_index].img_texture, &tokens[3][4]);
-		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat, (t_texture *)&obj->spheres[set_index].img_texture);
-		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam, \
-			(t_material *) &obj->spheres[set_index].lambertian_mat);
+		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat,
+			(t_texture *)&obj->spheres[set_index].img_texture);
+		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0),
+			diam, (t_material *)&obj->spheres[set_index].lambertian_mat);
 	}
 	else
-		sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), \
-			diam, set_rgb(obj, 3, "sphere"));
-	obj->hit_list[obj->hit_idx] = (t_hittable*)&obj->spheres[set_index];
+		sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam,
+			set_rgb(obj, 3, "sphere"));
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->spheres[set_index];
 	obj->hit_idx++;
 	set_index++;
 }
 
 /*
  * usage:
- * regular plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
- * metal plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color] [fuzz(double)]
- * checker plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color1] [rgb color2]
-*/
+ * regular plane
+		-	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
+ * metal plane
+		-	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color] [fuzz(double)]
+ * checker plane
+		-	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color1] [rgb color2]
+ */
 static void	get_plane(t_objects *obj)
 {
 	static int	set_index;
@@ -354,20 +372,25 @@ static void	get_plane(t_objects *obj)
 		call_error("invalid token amount", "plane", obj);
 	if (count_tokens(tokens) == 5 && is_float(tokens[4]))
 	{
-		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "plane"), ft_atod(tokens[4]));
-		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
-			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].metal);
+		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "plane"),
+			ft_atod(tokens[4]));
+		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0),
+			set_vec3(obj, 2, "plane", 1),
+			(t_material *)&obj->planes[set_index].metal);
 	}
 	else if (count_tokens(tokens) == 5)
 	{
-		checker_texture_init(&obj->planes[set_index].checker, CHECKER_SIZE, set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
-		lambertian_init_tex(&obj->planes[set_index].lambertian_mat, (t_texture *)&obj->planes[set_index].checker);
-		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
-			set_vec3(obj, 2, "plane", 1), (t_material *)&obj->planes[set_index].lambertian_mat);
+		checker_texture_init(&obj->planes[set_index].checker, CHECKER_SIZE,
+			set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
+		lambertian_init_tex(&obj->planes[set_index].lambertian_mat,
+			(t_texture *)&obj->planes[set_index].checker);
+		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0),
+			set_vec3(obj, 2, "plane", 1),
+			(t_material *)&obj->planes[set_index].lambertian_mat);
 	}
 	else if (count_tokens(tokens) == 4)
 	{
-		plane(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0), \
+		plane(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0),
 			set_vec3(obj, 2, "plane", 1), set_rgb(obj, 3, "plane"));
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->planes[set_index];
@@ -377,9 +400,11 @@ static void	get_plane(t_objects *obj)
 
 /*
  * usage:
- * default, capped cylinder -	"cy" [origin] [axis normal] [diameter] [height] [rgb color]
- * metalic, capped cylinder -	"cy" [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
-*/
+ * default, capped cylinder
+		-	"cy" [origin] [axis normal] [diameter] [height] [rgb color]
+ * metalic, capped cylinder
+		-	"cy" [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
+ */
 static void	get_cylinder(t_objects *obj)
 {
 	static int	set_index;
@@ -392,16 +417,18 @@ static void	get_cylinder(t_objects *obj)
 		call_error("invalid token amount", "cylinder", obj);
 	if (count_tokens(tokens) == 7)
 	{
-		metal_init(&obj->cylinders[set_index].cylinder_uncapped.metal, set_rgb(obj, 3, "cylinder"), ft_atod(tokens[4]));
-		cylinder_mat_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
-			set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
+		metal_init(&obj->cylinders[set_index].cylinder_uncapped.metal,
+			set_rgb(obj, 3, "cylinder"), ft_atod(tokens[4]));
+		cylinder_mat_capped(&obj->cylinders[set_index], set_vec3(obj, 1,
+				"cylinder", 0), set_vec3(obj, 2, "cylinder", 1),
+			ft_atod(tokens[3]), ft_atod(tokens[4]),
 			(t_material *)&obj->cylinders[set_index].cylinder_uncapped.metal);
 	}
 	else
 	{
-		cylinder_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder", 0), \
-			set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]), ft_atod(tokens[4]), \
-			set_rgb(obj, 5, "cylinder"));
+		cylinder_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder",
+				0), set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]),
+			ft_atod(tokens[4]), set_rgb(obj, 5, "cylinder"));
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];
 	obj->hit_idx++;
@@ -411,9 +438,10 @@ static void	get_cylinder(t_objects *obj)
 /*
  * usage:
  * default quad -	"qd" [origin] [side_vector1] [side_vector2] [color]
- * metalic quad -	"qd" [origin] [side_vector1] [side_vector2] [color] [fuzz(double)]
+ * metalic quad
+		-	"qd" [origin] [side_vector1] [side_vector2] [color] [fuzz(double)]
  * (for quad light check quad_light())
-*/
+ */
 /* TODO: cant get quad to render, might just be the coords */
 static void	get_quad(t_objects *obj)
 {
@@ -427,14 +455,17 @@ static void	get_quad(t_objects *obj)
 		call_error("invalid token amount", "quad", obj);
 	if (count_tokens(tokens) == 6)
 	{
-		metal_init(&obj->quads[set_index].metal, set_rgb(obj, 4, "quad"), ft_atod(tokens[4]));
-		quad_mat(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
-			set_vec3(obj, 3, "quad", 0), (t_material*)&obj->quads[set_index].metal);
+		metal_init(&obj->quads[set_index].metal, set_rgb(obj, 4, "quad"),
+			ft_atod(tokens[4]));
+		quad_mat(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0),
+			set_vec3(obj, 2, "quad", 0), set_vec3(obj, 3, "quad", 0),
+			(t_material *)&obj->quads[set_index].metal);
 	}
 	else
 	{
-		quad_rgb(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0), set_vec3(obj, 2, "quad", 0), \
-			set_vec3(obj, 3, "quad", 0), set_rgb(obj, 4, "quad"));
+		quad_rgb(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0),
+			set_vec3(obj, 2, "quad", 0), set_vec3(obj, 3, "quad", 0),
+			set_rgb(obj, 4, "quad"));
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->quads[set_index];
 	obj->hit_idx++;
@@ -444,8 +475,9 @@ static void	get_quad(t_objects *obj)
 /*
  * usage:
  * default -	"dsk" [origin] [surface normal] [diameter] [rgb color]
- * metalic -	"dsk" [origin] [surface normal] [diameter] [rgb color] [fuzz(double)]
-*/
+ * metalic
+		-	"dsk" [origin] [surface normal] [diameter] [rgb color] [fuzz(double)]
+ */
 static void	get_disk(t_objects *obj)
 {
 	static int	set_index;
@@ -458,14 +490,16 @@ static void	get_disk(t_objects *obj)
 		call_error("invalid token amount", "disk", obj);
 	if (count_tokens(tokens) == 6)
 	{
-		metal_init(&obj->disks[set_index].metal, set_rgb(obj, 4, "disk"), ft_atod(tokens[4]));
-		disk_mat(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 0), \
-			ft_atod(tokens[3]), (t_material*)&obj->disks[set_index].metal);
+		metal_init(&obj->disks[set_index].metal, set_rgb(obj, 4, "disk"),
+			ft_atod(tokens[4]));
+		disk_mat(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0),
+			set_vec3(obj, 2, "disk", 0), ft_atod(tokens[3]),
+			(t_material *)&obj->disks[set_index].metal);
 	}
 	else
 	{
-		disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj, 2, "disk", 1), \
-			ft_atod(tokens[3]), set_rgb(obj, 4, "disk"));
+		disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj,
+				2, "disk", 1), ft_atod(tokens[3]), set_rgb(obj, 4, "disk"));
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->disks[set_index];
 	obj->hit_idx++;
@@ -477,7 +511,7 @@ static void	get_disk(t_objects *obj)
  * default -	"tr" [vertice1] [vertice2] [vertice3] [rbg color]
  * metalic -	"tr" [vertice1] [vertice2] [vertice3] [rbg color] [fuzz(double)]
  * (vertices are points in 3d space)
-*/
+ */
 /* TODO: might not be rendering - the same as quad*/
 static void	get_triangle(t_objects *obj)
 {
@@ -491,15 +525,16 @@ static void	get_triangle(t_objects *obj)
 		call_error("invalid token amount", "triangle", obj);
 	if (count_tokens(tokens) == 6)
 	{
-		metal_init(&obj->triangles[set_index].metal, set_rgb(obj, 4, "triangle"), ft_atod(tokens[5]));
-		triangle_mat(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0), \
-			set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0), \
-			(t_material*)&obj->triangles[set_index].metal);
+		metal_init(&obj->triangles[set_index].metal, set_rgb(obj, 4,
+				"triangle"), ft_atod(tokens[5]));
+		triangle_mat(&obj->triangles[set_index], set_vec3(obj, 1, "triangle",
+				0), set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3,
+				"triangle", 0), (t_material *)&obj->triangles[set_index].metal);
 	}
 	else
 	{
-		triangle(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0), \
-			set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0), \
+		triangle(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0),
+			set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0),
 			set_rgb(obj, 4, "triangle"));
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->triangles[set_index];
@@ -521,7 +556,8 @@ static void	get_triangle(t_objects *obj)
 // 	angle = ft_atod(tokens[3]);
 // 	if (angle <= 0 || angle >= 180)
 // 		call_error("angle must be in range (0.0, 180.0)", "cone", obj);
-// 	cone(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
+// 	cone(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2,
+			// "cone", 1), \
 // 		angle, ft_atod(tokens[4]), set_rgb(obj, 5, "cone"));
 // 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cones[set_index];
 // 	obj->hit_idx++;
@@ -532,7 +568,7 @@ static void	get_triangle(t_objects *obj)
  * usage:
  * default - "box" [origin] [diagonal point] [color]
  * metalic - "box" [origin] [diagonal point] [color] [fuzz(double)]
-*/
+ */
 static void	get_box(t_objects *obj)
 {
 	static int	set_index;
@@ -545,13 +581,14 @@ static void	get_box(t_objects *obj)
 		call_error("invalid token amount", "box", obj);
 	if (count_tokens(tokens) == 5)
 	{
-		metal_init(&obj->boxes[set_index].metal, set_rgb(obj, 3, "box"), ft_atod(tokens[4]));
-		box(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), \
-			set_vec3(obj, 2, "box", 0), (t_material*)&obj->boxes[set_index].metal);
+		metal_init(&obj->boxes[set_index].metal, set_rgb(obj, 3, "box"),
+			ft_atod(tokens[4]));
+		box(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), set_vec3(obj, 2,
+				"box", 0), (t_material *)&obj->boxes[set_index].metal);
 	}
 	else
 	{
-		box_rgb(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), \
+		box_rgb(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0),
 			set_vec3(obj, 2, "box", 0), set_rgb(obj, 3, "box"));
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->boxes[set_index];
@@ -565,8 +602,8 @@ static void	update_struct(t_mrt *data)
 		get_camera(data);
 	else if (ft_strncmp("A", data->objects._tokens[0], 2) == 0)
 		get_ambient(data);
-	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0 || \
-				ft_strncmp("L", data->objects._tokens[0], 2) == 0)
+	else if (ft_strncmp("l", data->objects._tokens[0], 2) == 0
+		|| ft_strncmp("L", data->objects._tokens[0], 2) == 0)
 		get_light(&data->objects);
 	else if (ft_strncmp("sp", data->objects._tokens[0], 3) == 0)
 		get_sphere(&data->objects);
@@ -585,7 +622,7 @@ static void	update_struct(t_mrt *data)
 	// else if (ft_strncmp("co", data->objects._tokens[0], 3) == 0)
 	// 	get_cone(&data->objects);
 	else
-		call_error("invalid object identifier", data->objects._tokens[0], \
+		call_error("invalid object identifier", data->objects._tokens[0],
 			&data->objects);
 }
 
@@ -609,8 +646,6 @@ static void	sanitize_line(char *line)
 	}
 }
 
-
-
 /*
  * The light struct will always have something in it.
  * If there are no lights in the input, then this "nothing light"
@@ -619,41 +654,42 @@ static void	sanitize_line(char *line)
  *
  * If there are light int the input, then the "nothing light" will be
  * written over and nonexistant.
-*/
+ */
 static void	init_light_struct(t_mrt *data)
 {
-	t_empty_material empty_material;
-	quad_mat(&data->objects.lights[0].q_body, point3(0.1,0.1,0.1), vec3(0.1,1,0.1), \
-		vec3(1,0.1,0.1), (t_material*)&empty_material);
+	t_empty_material	empty_material;
+
+	quad_mat(&data->objects.lights[0].q_body, point3(0.1, 0.1, 0.1), vec3(0.1,
+			1, 0.1), vec3(1, 0.1, 0.1), (t_material *)&empty_material);
 	data->objects.light_hit[0] = (t_hittable *)&data->objects.lights[0].q_body;
 	data->objects.light_hit_idx++;
 }
 
 static bool	ft_isspace(char *str)
 {
-	int i;
-	
+	int	i;
+
 	i = -1;
-	while(str[++i])
+	while (str[++i])
 		if (str[i] != ' ')
-			return false;
-	return true;
+			return (false);
+	return (true);
 }
 
 /* in case or error, the parser calls exit() */
 void	parse_input(char *filename, t_mrt *data)
 {
-	char    *line;
+	char	*line;
 
-    if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
+	if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
 		call_error("invalid file extension", NULL, NULL);
-    data->objects._file_fd = open(filename, O_RDONLY);
-    if (data->objects._file_fd == -1)
-    	perror(filename), exit(1);
-    init_light_struct(data);
-    while ((line = get_next_line(data->objects._file_fd)) != NULL)
-    {
-    	sanitize_line(line);
+	data->objects._file_fd = open(filename, O_RDONLY);
+	if (data->objects._file_fd == -1)
+		perror(filename), exit(1);
+	init_light_struct(data);
+	while ((line = get_next_line(data->objects._file_fd)) != NULL)
+	{
+		sanitize_line(line);
 		if (ft_strlen(line) == 1 || ft_isspace(line) == true)
 		{
 			free(line);
@@ -668,12 +704,14 @@ void	parse_input(char *filename, t_mrt *data)
 		free(line);
 		update_struct(data);
 		free_split(data->objects._tokens);
-    }
-   	data->objects._tokens = NULL;
-    if (data->cam.aspect_ratio == 0)
-	   	call_error("There has to be a camera object!!!", "parse_input", &data->objects);
-    data->world = hittablelist(data->objects.hit_list, data->objects.hit_idx);
-    data->lights = hittablelist(data->objects.light_hit, data->objects.light_hit_idx);
-    if (close(data->objects._file_fd) == -1)
-    	perror("MiniRT: close()");
+	}
+	data->objects._tokens = NULL;
+	if (data->cam.aspect_ratio == 0)
+		call_error("There has to be a camera object!!!", "parse_input",
+			&data->objects);
+	data->world = hittablelist(data->objects.hit_list, data->objects.hit_idx);
+	data->lights = hittablelist(data->objects.light_hit,
+			data->objects.light_hit_idx);
+	if (close(data->objects._file_fd) == -1)
+		perror("MiniRT: close()");
 }
