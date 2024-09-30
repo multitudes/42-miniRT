@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ray.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:44:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/22 13:17:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/30 09:50:18 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RAY_H
 # define RAY_H
 
-#include "vec3.h"
+# include "vec3.h"
 
 typedef struct s_ray
 {

@@ -25,20 +25,19 @@ usage (for default sphere light):
 l [origin] [intensity([0.0;1,0])] [rgb color] [optional : diameter(default value=100)]
 ```
 
-
-Quad light source.  
+### Quad light source.  
 usage:
 ``` 
-"l" "qd" [origin] [side_vector1] [side_vector2] [rgb color] [intensity ([0.0;1.0])]
+l qd [origin] [side_vector1] [side_vector2] [rgb color] [intensity ([0.0;1.0])]
 ```
 
 ## Sphere
 Creates a sphere object.
 usage:  
-default sphere -		`"sp" [origin] [diameter] [rgb color]`
-checker texture -	`"sp" [origin] [diameter] [rgb color1] [rgb color2]`
-image (earthmap) -	`"sp" [origin] [diameter] "img:"[path to .jpg]`
-metal sphere -		`"sp" [origin] [diameter] [rgb color] [fuzz value double)]`
+default sphere -		`sp [origin] [diameter] [rgb color]`
+checker texture -	`sp [origin] [diameter] [rgb color1] [rgb color2]`
+image (earthmap) -	`sp [origin] [diameter] "img:"[path to .jpg]`
+metal sphere -		`sp [origin] [diameter] [rgb color] [fuzz value double)]`
 
 ```
 sp [origin] [diameter] [rgb color]
@@ -68,8 +67,8 @@ cy [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
 Creates a quad object.
 usage:
 ```
-q [origin] [side_vector1] [side_vector2] [rgb color]
-q [origin] [side_vector1] [side_vector2] [rgb color] [fuzz(double)]
+qd [origin] [side_vector1] [side_vector2] [rgb color]
+qd [origin] [side_vector1] [side_vector2] [rgb color] [fuzz(double)]
 ```
 
 ## Disk
@@ -91,8 +90,8 @@ tr [vertice1] [vertice2] [vertice3] [rbg color] [fuzz(double)]
 ## Box
 /*
  * usage:
- * default - "box" [origin] [diagonal point] [color]
- * metalic - "box" [origin] [diagonal point] [color] [fuzz(double)]
+ * default - box [origin] [diagonal point] [color]
+ * metalic - box [origin] [diagonal point] [color] [fuzz(double)]
 */
 Creates a box object.
 usage:
