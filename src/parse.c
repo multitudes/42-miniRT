@@ -510,7 +510,7 @@ static void	get_triangle(t_objects *obj)
 /*
  * usage:
  * default - "co" [origin] [axis] [diameter] [height] [color]
- *  
+ * metalic - "co" [origin] [axis] [diameter] [height] [color] [fuzz]
  *  
  * origin - the center of the base; diameter - the diameter of the base
 */
@@ -522,10 +522,19 @@ static void	get_cone (t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "cone", obj);
-	if (count_tokens(tokens) != 6)
+	if (count_tokens(tokens) != 6 || count_tokens(tokens) != 7)
 		call_error("invalid token amount", "cone", obj);
-	cone_rgb(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
-		angle, ft_atod(tokens[4]), set_rgb(obj, 5, "cone"));
+	if (count_tokens(tokens) == 7)
+	{
+		metal_init(&obj->cones[set_index].metal, set_rgb(obj, 5, "cone"), ft_atod(tokens[6]));
+		cone_mat(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
+			ft_atod(tokens[3]), ft_atod(tokens[4]), (t_material*)&obj->cones[set_index].metal);
+	}
+	else
+	{
+		cone_rgb(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
+			ft_atod(tokens[3]), ft_atod(tokens[4]), set_rgb(obj, 5, "cone"));
+	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cones[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -585,8 +594,8 @@ static void	update_struct(t_mrt *data)
 		get_triangle(&data->objects);
 	else if (ft_strncmp("box", data->objects._tokens[0], 4) == 0)
 		get_box(&data->objects);
-	// else if (ft_strncmp("co", data->objects._tokens[0], 3) == 0)
-	// 	get_cone(&data->objects);
+	else if (ft_strncmp("co", data->objects._tokens[0], 3) == 0)
+		get_cone(&data->objects);
 	else
 		call_error("invalid object identifier", data->objects._tokens[0], \
 			&data->objects);

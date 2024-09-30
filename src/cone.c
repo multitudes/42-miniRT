@@ -16,9 +16,12 @@ void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double heigh
 	t_rgb rgbcolor)
 {
 	c->base.hit = hit_cone;
-	c->center = center;
+	// TODO:
+	// c->base.random = ...
+	// c->base.pdf_value = ...
+	c->center = center;				// center of the base
 	c->axis = axis;
-	c->radius = diam / 2;			// in degrees (half angle - max 89 deg)
+	c->radius = diam / 2;			// radius of the base
 	c->height = height;
 	c->color = rgb_to_color(rgbcolor);
 	solid_color_init(&(c->texture), c->color);
@@ -31,14 +34,18 @@ void	cone_mat(t_cone *c, t_point3 center, t_vec3 axis, double diam, double heigh
 	t_material *mat)
 {
 	c->base.hit = hit_cone;
-	c->center = center;
+	// TODO:
+	// c->base.random = ...
+	// c->base.pdf_value = ...
+	c->center = center;				// center of the base
 	c->axis = axis;
-	c->radius = diam / 2;			// in degrees (half angle - max 89 deg)
+	c->radius = diam / 2;			// radius of the base
 	c->height = height;
 	c->mat = mat;
 	disk_mat(&c->bottom, center, axis, diam, mat);
 }
 
+// TODO: call the base hit function here as well
 bool	hit_cone(const void *self, const t_ray *r, t_interval ray_t, t_hit_record *rec)
 {
 	const t_cone	*co = (t_cone*)self;

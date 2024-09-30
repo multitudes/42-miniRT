@@ -43,6 +43,8 @@ typedef struct
 /* init function */
 void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double angle, double height, \
 	t_rgb rgbcolor);
+void	cone_mat(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
+	t_material *mat);
 
 /* hit function */
 bool	hit_cone(const void *self, const t_ray *ray, t_interval closest, t_hit_record *rec);
