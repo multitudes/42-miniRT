@@ -26,18 +26,24 @@ typedef struct
 	t_hittable		base;
 	t_point3		center;
 	t_vec3			axis;
-	double			radius;
+	double			angle;		// half angle
 	double			height;
 	double			min;
 	t_color			color;
 	t_material		*mat;
-	t_disk			bottom;
 	union
 	{
 		t_metal			metal;
 		t_lambertian	lambertian_mat;
 	};
 	t_solid_color	texture;
+}		t_cone_uncap;
+
+typedef struct
+{
+	t_hittable		base;
+	t_cone_uncap	body;
+	t_disk			bottom;
 }					t_cone;
 
 /* init function */

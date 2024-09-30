@@ -522,13 +522,13 @@ static void	get_cone (t_objects *obj)
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "cone", obj);
-	if (count_tokens(tokens) != 6 || count_tokens(tokens) != 7)
+	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
 		call_error("invalid token amount", "cone", obj);
 	if (count_tokens(tokens) == 7)
 	{
-		metal_init(&obj->cones[set_index].metal, set_rgb(obj, 5, "cone"), ft_atod(tokens[6]));
+		metal_init(&obj->cones[set_index].body.metal, set_rgb(obj, 5, "cone"), ft_atod(tokens[6]));
 		cone_mat(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
-			ft_atod(tokens[3]), ft_atod(tokens[4]), (t_material*)&obj->cones[set_index].metal);
+			ft_atod(tokens[3]), ft_atod(tokens[4]), (t_material*)&obj->cones[set_index].body.metal);
 	}
 	else
 	{

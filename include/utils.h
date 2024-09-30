@@ -24,7 +24,7 @@
 
 // Epsilon value for floating-point comparison
 #define EPSILON 1e-6
-#define CORES 16
+#define CORES 1
 #define RANDOM_SYSTEM 0
 
 // Define constants for the LCG
