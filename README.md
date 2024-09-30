@@ -5,7 +5,13 @@
 
 This project is an introduction to the beautiful world of Raytracing.  
 The goal is to create a simple raytracer that can render basic objects like spheres, planes, and cylinders.  
-It is not mean to be a full-featured raytracer, but a simple one that can render a scene from a file.
+*This 42 project is written in C and in accordance to the 42 school norm.*
+- All variables have to be declared and defined in separate lines
+- Variable declaration has to be on the top and no more than 5
+- function parameter cannot be more than 4
+- Each function can not have more then 25 lines
+- Projects should be created with allowed std functions otherwise it is cheating
+- etc [link](https://github.com/42School/norminette/blob/master/pdf/en.norm.pdf).  
 
 Bonuses are encouraged but keeping in mind that to implement a more complex features, it is better to create a more complex project.  
 Therefore bonuses can be :
@@ -56,10 +62,11 @@ File Structure: Accepts scene description files in a specific format, handling e
 It is a group project. The team is composed of two students.
 
 ## Problems encountered
-This project for 42 is a first introduction to raytracing. We are not meant to use libraries like OpenGL or Vulkan, but to create our own raytracer. So also we will not implement GPU optimisations. Our raytracer will be slow which will be a challenge for itself.
+This project for 42 is a first introduction to raytracing.  
+We are not meant to use libraries like OpenGL or Vulkan, but to create our own implementation in C. 
 
 ### optimisations
-
+Multithreading is allowed when doing the bonus part. 
 
 ## A ray 
 A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same.  
@@ -74,11 +81,22 @@ $$
 (x,y,z)=(x0,y0,z0)+t(a,b,c)  
 $$  
 
-## The Viewport
+### The Viewport
 The viewport is a virtual rectangle in the 3D world that contains the grid of image pixel locations. If pixels are spaced the same distance horizontally as they are vertically, the viewport that bounds them will have the same aspect ratio as the rendered image. The distance between two adjacent pixels is called the pixel spacing, and square pixels is the standard. 
 We'll initially set the distance between the viewport and the camera center point to be one unit. This distance is often referred to as the focal length.  
 While our 3D space has the conventions above, this conflicts with our image coordinates, where we want to have the zeroth pixel in the top-left and work our way down to the last pixel at the bottom right. This means that our image coordinate Y-axis is inverted: Y increases going down the image. 
  We'll also have the y-axis go up, the x-axis to the right, and the negative z-axis pointing in the viewing direction. (This is commonly referred to as right-handed coordinates.)
+
+
+### viewports are virtual
+Really the size of the viewport is arbitrary. It will have the same aspect ratio of the image we want to render.  
+the idea is that we know the amount of pixel to render which is in the image width and height. Taking a camera "eye" at a certain point and looking at a certain direction, we can imagine the viewport as a window in front of the camera. The center of the viewport is a point and viewport is orthogonal to the ray from the camera center to the middle of the viewport. 
+There are two ways to create the viewport:
+- With the field of view, the angle from the cam to the viewport width (horizontal fov) or height (vertical fov). having one of this angles and the aspect ratio we can calculate the other. 
+- With the width and height of the viewport if we are given a depth of view, the distance beteween the camera eye and the viewport. 
+
+The viewport size doesnt matter unless you want to use the focal length to calculate the depth of field and what will be in focus.  The viewport can be very close to the eyw and so very small, still we will send a ray per pixel out and going through the viewport. 
+
 
 ## right hand vs left hand coordinate system
 In a right-handed coordinate system, the x-axis points to the right, the y-axis points up, and the z-axis points out of the screen towards the viewer. The book and tutorials raytracing in one weekend and the next week use a right-handed coordinate system while the raytracer challenge uses a left-handed coordinate system. As does pixar for instance. There is no right or wrong. it is just a convention. We will use the right-handed coordinate system in this project. 
@@ -96,15 +114,6 @@ $$
 degrees(radians) = radians * 180 / \pi
 $$
 
-## viewports are virtual
-Really the size of the viewport is arbitrary. It will have the same aspect ratio of the image we want to render.  
-the idea is that we know the amount of pixel to render which is in the image width and height. Taking a camera "eye" at a certain point and looking at a certain direction, we can imagine the viewport as a window in front of the camera. The center of the viewport is a point and viewport is orthogonal to the ray from the camera center to the middle of the viewport. 
-There are two ways to create the viewport:
-- With the field of view, the angle from the cam to the viewport width (horizontal fov) or height (vertical fov). having one of this angles and the aspect ratio we can calculate the other. 
-- With the width and height of the viewport if we are given a depth of view, the distance beteween the camera eye and the viewport. 
-
-The viewport size doesnt matter unless you want to use the focal length to calculate the depth of field and what will be in focus.  The viewport can be very close to the eyw and so very small, still we will send a ray per pixel out and going through the viewport. 
-
 
 ## Which side of the plane is the normal
 In the literature there are two versions. When we calculate the normal for a sphere (and each geometrical obj will have its own formula for the normal...) we have two possible interpretations.  
@@ -113,25 +122,31 @@ If my ray is in opposite direction of the normal, then I am outside the sphere. 
 The boolean to know if I am inside or outside the sphere is the dot product of the ray and the normal. If the dot product is positive, then I am outside the sphere.  
 I will use this information to calculate the color of the pixel and reflections. 
 
-## Lambertian Reflection Model
-
-- Diffuse reflection: Light is scattered uniformly in all directions.
-- No specular component: There's no shiny or mirror-like reflection.
-- Idealized surface: Assumes a perfectly rough surface that scatters light equally in all directions.
-- Mathematical representation: The reflected light intensity is proportional to the cosine of the angle between the incoming light direction and the surface normal.
-
-# Phong
-## Phong Reflection Model
+# Phong Reflection Model
 Bui Tuong Phong was a Vietnamese-born computer graphics researcher. He developed the Phong reflection model while working on his Ph.D. at the University of Utah.  
-Phong specular reflection is a component of the Phong reflection model, which is used in computer graphics to simulate the way light interacts with surfaces. The model was introduced by Bui Tuong Phong in his 1975 paper "Illumination for Computer Generated Pictures."  
-
-It accounts for both diffuse and specular components simulating a shiny or mirror-like reflection, where light is reflected in a specific direction. It has a roughness parameter to control the degree of roughness of the surface. A smaller roughness value results in a shinier surface. The reflected light intensity is a combination of a diffuse component (similar to Lambertian) and a specular component based on the angle between the reflected light direction and the viewer's direction.  
 
 So the components are:  
 - Ambient Reflection: Simulates the constant light that is present in the environment.  
 - Diffuse Reflection: Simulates the light scattered in many directions from a rough surface.  
 - Specular Reflection: Simulates the light that reflects in a specific direction from a shiny surface, creating highlights. It depends on the viewer's position, the light source position, and the surface normal. The intensity of the specular reflection is calculated using the angle between the viewer direction and the reflection direction of the light.  
 
+## Ambient Reflection
+It is a constant light that is present in the environment. It is the minimum amount of light that a surface receives. It is the same regardless of the surface's orientation. It has no origin. In the project we can set the ambient light in the scene file. If it is not specified it is set to a small default value.
+
+## Lambertian Reflection Model
+- Diffuse reflection: Light is scattered uniformly in all directions.
+- No specular component: There's no shiny or mirror-like reflection.
+- Idealized surface: Assumes a perfectly rough surface that scatters light equally in all directions.
+- Mathematical representation: The reflected light intensity is proportional to the cosine of the angle between the incoming light direction and the surface normal.
+
+It is the default material in our scene file. 
+
+## Specular Reflection
+
+It accounts for specular components simulating a shiny or mirror-like reflection, where light is reflected in a specific direction. It has a roughness parameter to control the degree of roughness of the surface. A smaller roughness value results in a shinier surface. 
+It actually doesnt have a diffuse component if we follow the ray tracing in a weekend tutorials. 
+We decide to still add some diffuse scattering to the metal material for edge cases. But this is open to discussion. Ex, a metallic ball in space would reflect the light, but would mirror the blackness, so would i be able to see its intrinsic color?  
+A shiny metallic surface will have a high specular component and a very low diffuse component. 
 
 
 ## Links
