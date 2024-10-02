@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:02:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:33:47 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 17:11:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ typedef struct s_img_texture
 	char			*filename;
 	int				bytes_per_pixel;
 	float			*fdata;
-	unsigned char	*bdata;
+	uint8_t			*bdata;
 	int				image_width;
 	int				image_height;
 	int				bytes_per_scanline;
@@ -100,12 +100,12 @@ t_color				img_texture_value(const void *self, double uv[2],
 						const t_point3 *p);
 
 /* for image handling */
-unsigned char		float_to_byte(float value);
+uint8_t				float_to_byte(float value);
 void				convert_to_bytes(t_img_texture *img);
 unsigned char		*pixel_data(const t_img_texture *img, int x, int y);
 int					width(const t_img_texture *img);
 int					height(const t_img_texture *img);
-int					load(t_img_texture *img, const char *filename);
+bool				load(t_img_texture *img, const char *filename);
 int					clamp_rtw(int x, int low, int high);
 void				free_rtw_image(t_img_texture *img);
 
