@@ -47,7 +47,8 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 	cam->center = center;
 	t_point3 lookat = vec3add(cam->center, cam->direction);
 	cam->hfov = clamp(interval(1, 170), hfov);
-	ambient(&cam->ambient, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
+	if (cam->ambient.ratio == 0)
+		ambient(&cam->ambient, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
     cam->w = unit_vector(vec3substr(cam->center, lookat));
     cam->u = unit_vector(cross(cam->vup, cam->w));
     cam->v = cross(cam->w, cam->u);
