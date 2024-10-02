@@ -13,25 +13,24 @@
 #ifndef CONE_H
 # define CONE_H
 
-#include "color.h"
-#include "disk.h"
+# include "color.h"
+# include "disk.h"
 # include "hittable.h"
-#include "material.h"
-#include "texture.h"
+# include "material.h"
+# include "texture.h"
 # include "vec3.h"
-#include <stdbool.h>
+# include <stdbool.h>
 
 typedef struct
 {
 	/* like cylinder: */
 	t_hittable		base;
-	t_vec3			center;		// the center of the cones axis (like the cylinder)
+	t_point3		apex;		// the top of the cone
 	t_vec3			axis;		// the axis
 	double			radius;		// radius of the base
 	double			height;		// height of the whole cone axis
 	
 	/* maybe dont need theese */
-	t_point3		apex;		// the top of the cone
 	double			angle;		// half angle
 	double			cosa;		// 
 	

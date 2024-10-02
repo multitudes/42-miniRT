@@ -13,7 +13,6 @@
 #include "cone.h"
 #include "utils.h"
 #include <math.h>
-#include <stdio.h>
 
 /* forward declaration */
 bool	hit_cone_cap(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
@@ -23,7 +22,7 @@ t_vec3	obj_cone_random(const void *self, const t_point3 *orig);
 /*
  * Inits a capped cone with an rgb color.
 */
-void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
+void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height, \
 	t_rgb rgbcolor)
 {
 	// this for the whole cylinder
@@ -37,7 +36,7 @@ void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double heigh
 	c->body.base.pdf_value = obj_cone_pdf_value;
 
 	/* same as the cylinder */
-	c->body.center = center;
+	c->body.apex = apex;
 	c->body.axis = unit_vector(vec3multscalar(axis, -1));
 	c->body.radius = diam / 2;
 	c->body.height = height;
@@ -47,7 +46,7 @@ void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double heigh
 	lambertian_init_tex(&(c->body.lambertian_mat), (t_texture*)&(c->body.texture));
 	c->body.mat = (t_material*)&(c->body.lambertian_mat);
 	
-	t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -height / 2));
+	t_point3 bottom_center = vec3add(apex, vec3multscalar(axis, -height));
 	disk(&c->bottom, bottom_center, axis, diam, rgbcolor);
 }
 
@@ -80,10 +79,7 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
     t_cone_uncap *cone = (t_cone_uncap*)self;
     t_vec3 delta_p, cross_rd_ca, cross_dp_ca;
 
-    // cone->axis = vec3multscalar(cone->axis, -1);
-    t_vec3 apex = vec3add(cone->center, vec3multscalar(cone->axis, -cone->height / 2));
-    
-    delta_p = vec3substr(r->orig, apex);
+    delta_p = vec3substr(r->orig, cone->apex);
     cross_rd_ca = cross(r->dir, cone->axis);
     cross_dp_ca = cross(delta_p, cone->axis);
 
@@ -110,8 +106,8 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
     if (surrounds(&ray_t, t0))
     {
         t_vec3 point = point_at(r, t0);
-        t_vec3 delta_point = vec3substr(point, cone->center);
-        double height = dot(delta_point, cone->axis) + (cone->height / 2);
+        t_vec3 delta_point = vec3substr(point, cone->apex);
+        double height = dot(delta_point, cone->axis);
         if (0 <= height && height <= cone->height)
         {
             // Check if this intersection point is closer to the origin
@@ -127,8 +123,8 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
     if (surrounds(&ray_t, t1))
     {
         t_vec3 point = point_at(r, t1);
-        t_vec3 delta_point = vec3substr(point, cone->center);
-        double height = dot(delta_point, cone->axis) + (cone->height / 2);
+        t_vec3 delta_point = vec3substr(point, cone->apex);
+        double height = dot(delta_point, cone->axis);
         if (0 <= height && height <= cone->height)
         {
             // Check if this intersection point is closer to the origin

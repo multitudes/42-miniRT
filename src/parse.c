@@ -507,11 +507,11 @@ static void	get_triangle(t_objects *obj)
 
 /*
  * usage:
- * default - "co" [center] [axis] [diam] [height] [color]
- * metalic - "co" [center] [axis] [diam] [height] [color] [fuzz]
+ * default - "co" [apex] [axis] [diam] [height] [color]
+ * metalic - "co" [apex] [axis] [diam] [height] [color] [fuzz]
  *  
- * center - a point in the center of the cone axis
- * axis - axis of cone
+ * apex - the pointy end of the cone
+ * axis - axis of cone (goes up from the apex)
  * diam - the diameter of the base of the cone
 */
 static void	get_cone (t_objects *obj)
