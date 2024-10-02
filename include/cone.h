@@ -29,8 +29,6 @@ typedef struct
 	t_vec3			axis;		// the axis
 	double			radius;		// radius of the base
 	double			height;		// height of the whole cone axis
-	double			min;
-	double			max;
 	
 	/* maybe dont need theese */
 	t_point3		apex;		// the top of the cone

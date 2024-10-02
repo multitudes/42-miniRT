@@ -38,11 +38,9 @@ void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double heigh
 
 	/* same as the cylinder */
 	c->body.center = center;
-	c->body.axis = unit_vector(axis);
+	c->body.axis = unit_vector(vec3multscalar(axis, -1));
 	c->body.radius = diam / 2;
 	c->body.height = height;
-	c->body.min = -height / 2;
-	c->body.max = height / 2;
 	
 	c->body.color = rgb_to_color(rgbcolor);
 	solid_color_init(&(c->body.texture), c->body.color);
@@ -68,9 +66,7 @@ void	cone_mat(t_cone *c, t_point3 apex, t_vec3 axis, double angle, double height
 	c->body.base.random = obj_cone_random;
 	c->body.base.pdf_value = obj_cone_pdf_value;
 	
-	c->body.apex = apex;
 	c->body.axis = axis;
-	c->body.angle = angle;
 	c->body.height = height;
 	c->body.mat = mat;
 	
@@ -85,8 +81,9 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
     t_vec3 delta_p, cross_rd_ca, cross_dp_ca;
 
     // cone->axis = vec3multscalar(cone->axis, -1);
+    t_vec3 apex = vec3add(cone->center, vec3multscalar(cone->axis, -cone->height / 2));
     
-    delta_p = vec3substr(r->orig, cone->center);
+    delta_p = vec3substr(r->orig, apex);
     cross_rd_ca = cross(r->dir, cone->axis);
     cross_dp_ca = cross(delta_p, cone->axis);
 
@@ -114,7 +111,7 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
     {
         t_vec3 point = point_at(r, t0);
         t_vec3 delta_point = vec3substr(point, cone->center);
-        double height = dot(delta_point, cone->axis);
+        double height = dot(delta_point, cone->axis) + (cone->height / 2);
         if (0 <= height && height <= cone->height)
         {
             // Check if this intersection point is closer to the origin
@@ -131,7 +128,7 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
     {
         t_vec3 point = point_at(r, t1);
         t_vec3 delta_point = vec3substr(point, cone->center);
-        double height = dot(delta_point, cone->axis);
+        double height = dot(delta_point, cone->axis) + (cone->height / 2);
         if (0 <= height && height <= cone->height)
         {
             // Check if this intersection point is closer to the origin
