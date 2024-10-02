@@ -83,9 +83,9 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
     cross_rd_ca = cross(r->dir, cone->axis);
     cross_dp_ca = cross(delta_p, cone->axis);
 
-    double a = dot(cross_rd_ca, cross_rd_ca) - pow(r->dir.y, 2) * pow(cone->radius / cone->height, 2);
-    double b = 2 * (dot(cross_rd_ca, cross_dp_ca) - r->dir.y * delta_p.y * pow(cone->radius / cone->height, 2));
-    double c = dot(cross_dp_ca, cross_dp_ca) - pow(delta_p.y, 2) * pow(cone->radius / cone->height, 2);
+    double a = dot(cross_rd_ca, cross_rd_ca) - dot(r->dir, r->dir) * pow(cone->radius / cone->height, 2);
+    double b = 2 * (dot(cross_rd_ca, cross_dp_ca) - dot(r->dir, delta_p) * pow(cone->radius / cone->height, 2));
+    double c = dot(cross_dp_ca, cross_dp_ca) - dot(delta_p, delta_p) * pow(cone->radius / cone->height, 2);
     
     // Solve the quadratic equation
     double discriminant = b * b - 4 * a * c;
