@@ -40,12 +40,14 @@ INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
 						vec3.c hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
 						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c hooks_utils.c \
-						disk.c box.c triangle.c rotated.c translated.c mersenne_twister.c)
+						disk.c box.c triangle.c rotated.c translated.c mersenne_twister.c \
+						 bilateral_filter.c bilateral_filter2.c)
+#  sphere_utils.c
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 						hittable.h hittable_list.h minirt.h color.h hooks_utils.h \
 						utils.h ambient.h plane.h cylinder.h texture.h \
-						rtw_stb_image.h material.h onb.h pdf.h quad.h disk.h \
+						material.h onb.h pdf.h quad.h disk.h bilateral_filter.h\
 						box.h triangle.h rotated.h translated.h mersenne_twister.h)
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
@@ -104,15 +106,22 @@ clean:
 fclean: clean
 	rm -rf $(NAME)
 #$(MAKE) -C $(LIBFTDIR) fclean
-#@rm -rf $(LIBMLX)/build
+	# @rm -rf $(LIBMLX)/build
 
 re: fclean all
 
 # The idea is for this project to use run for production with extra flags to speed it up
 # and optimize the binary size
+ARGS = z_scenes/billard.rt
+
 run:
 	@echo
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) $(LDFLAGS) -o $(NAME)
 	@PATH=".$${PATH:+:$${PATH}}" && $(NAME) $(ARGS)
+
+valrun:
+	@echo
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) $(LDFLAGS) -o $(NAME)
+	@PATH=".$${PATH:+:$${PATH}}" && valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt ./$(NAME) $(ARGS)
 
 .PHONY: all clean fclean re libmlx $(LIBFT)
