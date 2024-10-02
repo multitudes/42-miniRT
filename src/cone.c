@@ -35,7 +35,6 @@ void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height,
 	c->body.base.random = obj_cone_random;
 	c->body.base.pdf_value = obj_cone_pdf_value;
 
-	/* same as the cylinder */
 	c->body.apex = apex;
 	c->body.axis = unit_vector(vec3multscalar(axis, -1));
 	c->body.radius = diam / 2;
@@ -53,25 +52,28 @@ void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height,
 /*
  * Inits a capped cone with a material (metal).
 */
-void	cone_mat(t_cone *c, t_point3 apex, t_vec3 axis, double angle, double height, \
+void	cone_mat(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height, \
 	t_material *mat)
 {
+	// this for the whole cylinder
 	c->base.hit = hit_cone_cap;
-	c->base.random = obj_cone_random;
-	c->base.pdf_value = obj_cone_pdf_value;
+	c->base.pdf_value = obj_pdf_value;
+	c->base.random = obj_random;
 	
 	// this for the body only (uncapped)
 	c->body.base.hit = hit_cone;
 	c->body.base.random = obj_cone_random;
 	c->body.base.pdf_value = obj_cone_pdf_value;
-	
-	c->body.axis = axis;
+
+	c->body.apex = apex;
+	c->body.axis = unit_vector(vec3multscalar(axis, -1));
+	c->body.radius = diam / 2;
 	c->body.height = height;
+	
 	c->body.mat = mat;
 	
-	double diam = 2 * tan(degrees_to_radians(angle)) * height;
-	t_vec3 center = vec3add(apex, vec3multscalar(axis, height));
-	disk_mat(&c->bottom, center, axis, diam, mat);
+	t_point3 bottom_center = vec3add(apex, vec3multscalar(c->body.axis, height));
+	disk_mat(&c->bottom, bottom_center, axis, diam, mat);
 }
 
 bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec)
@@ -399,23 +401,27 @@ bool	hit_cone_cap(const void* self, const t_ray *r, t_interval closest, t_hit_re
 */
 double obj_cone_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
-    const t_cone_uncap *cone = (t_cone_uncap*)self;
-    double		base_radius = tan(cone->angle) * cone->height;
-  
+	const t_cone *cone = (t_cone *)self;
+	
     // Calculate distance squared from origin to cylinder axis
-    t_vec3 axis_vector =  vec3substr(cone->apex, *orig);
-    double axis_distance_squared = length_squared(axis_vector);
+    t_vec3 apex_to_orig =  vec3substr(*orig, cone->body.apex);
+    // double apex_to_orig_len = length_squared(apex_to_orig);
 
+    t_vec3 apex_to_orig_norm = unit_vector(apex_to_orig);
+    
     // Project the ray direction onto the cylinder axis
-    double cos_theta = dot(axis_vector, *dir) / sqrt(axis_distance_squared);
-   
-    double cone_radius = base_radius * (1 - cone->height * cos_theta / sqrt(axis_distance_squared));
+    double cos_theta = dot(cone->body.axis, apex_to_orig_norm);
+
+    double half_angle_cos = cone->body.height / sqrt(pow(cone->body.height, 2) + pow(cone->body.radius, 2));
+  
+    if (cos_theta < half_angle_cos)
+    	return (0);		// outside the cone
     
     // Calculate the solid angle of the cylinder's surface visible from the origin
-    double solid_angle = 2 * PI * cone_radius * (1.0 - sqrt(1.0 - cos_theta * cos_theta));
-  
+    double solid_angle = 2 * PI * (1 - half_angle_cos);
+
     // Return the PDF (inverse of the solid angle)
-    return 1.0 / solid_angle; 
+    return 1.0 / solid_angle;
 }
 
 /*
