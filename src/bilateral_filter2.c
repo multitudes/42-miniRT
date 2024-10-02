@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:29:16 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/01 17:47:56 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:43:59 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void	write_filtered_px(t_mrt *data, int xy[2], t_sigmas sigmas)
  * sigma_s (Spatial Sigma): Controls the spatial extent of the filter.
  * Increasing sigma_s will make the filter consider a larger neighborhood,
  * resulting in stronger smoothing.
- * sigma_r (Range Sigma): Controls the intensity difference that the 
+ * sigma_r (Range Sigma): Controls the intensity difference that the
  * filter considers.
- * Increasing sigma_r will make the filter less sensitive to intensity 
+ * Increasing sigma_r will make the filter less sensitive to intensity
  * differences, resulting in stronger smoothing.
  */
 void	apply_bilateral_filter(t_mrt *data)
