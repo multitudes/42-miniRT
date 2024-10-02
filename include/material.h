@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:32:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:20:04 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:12:30 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef struct s_material
 {
 	bool			(*scatter)(void *self, t_ray *r_in, t_hit_record *rec,
 					t_scatter_record *srec);
-	t_color			(*emit)(void *self, t_hit_record rec, double u, double v,
+	t_color			(*emit)(void *self, t_hit_record rec, double uv[2],
 					t_point3);
 	double			(*scattering_pdf)(void *self, const t_ray *r_in,
 					const t_hit_record *rec, const t_ray *scattered);
@@ -98,7 +98,7 @@ void				set_face_normal(t_hit_record *rec, const t_ray *r,
 						const t_vec3 outward_normal);
 bool				noscatter(void *self, t_ray *r_in, t_hit_record *rec,
 						t_scatter_record *srec);
-t_color				emitzero(void *self, t_hit_record rec, double u, double v,
+t_color				emitzero(void *self, t_hit_record rec, double uv[2],
 						t_point3 p);
 double				scattering_pdf_zero(void *self, const t_ray *r_in,
 						const t_hit_record *rec, const t_ray *scattered);
@@ -117,7 +117,7 @@ double				lambertian_scattering_pdf(void *self, const t_ray *r_in,
 void				metal_init(t_metal *metal, t_rgb albedo, double fuzz);
 bool				metal_scatter(void *self, t_ray *r_in, t_hit_record *rec,
 						t_scatter_record *srec);
-t_color				emitlight(void *self, t_hit_record rec, double u, double v,
+t_color				emitlight(void *self, t_hit_record rec, double uv[2],
 						t_point3 p);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:02:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:16:18 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:18:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@
  */
 typedef struct s_texture
 {
-	t_color			(*value)(const void *self, double u, double v, \
-						const t_point3 *p);
+	t_color			(*value)(const void *self, double uv[2], const t_point3 *p);
 }					t_texture;
 
 /**

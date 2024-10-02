@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:05:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:14:05 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ bool hit_sphere(const void* self, const t_ray* r, t_interval ray_t, t_hit_record
 	rec->p = point_at(r, root);
 	t_vec3 outward_normal = vec3divscalar(vec3substr(rec->p, s->center), s->radius);
 	set_face_normal(rec, r, outward_normal);
-	get_sphere_uv(rec->normal, &rec->u, &rec->v);
+	get_sphere_uv(rec->normal, rec->uv);
 
 	rec->mat = s->mat;
 	return true;
@@ -154,15 +154,15 @@ void set_face_normal(t_hit_record *rec, const t_ray *r, const t_vec3 outward_nor
  *
  * returns: the uv coordinates of a sphere
  */
-void	get_sphere_uv(t_vec3 normal, double* u, double* v)
+void	get_sphere_uv(t_vec3 normal, double uv[2])
 {
     double theta;
     double phi;
 
 	theta = acos(-normal.y);
 	phi = atan2(-normal.z, normal.x) + PI;
-    *u = phi / (2 * PI);
-    *v = theta / PI;
+    uv[0] = phi / (2 * PI);
+    uv[1] = theta / PI;
 }
 
 /**

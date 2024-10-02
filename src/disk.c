@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:59:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:20:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,8 +166,8 @@ bool	is_interior_disk(double a, double b, t_hit_record *rec, t_vec3 u,
 	distance_squared = u_squared + v_squared - 2 * uv * cos_theta;
 	if (distance_squared > radius_squared)
 		return (false);
-	rec->u = a;
-	rec->v = b;
+	rec->uv[0] = a;
+	rec->uv[1] = b;
 	return (true);
 }
 

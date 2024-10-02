@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:06:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:19:59 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ bool is_interior(double a, double b, t_hit_record *rec)
 	t_interval unit_interval = interval(0, 1);
 	if (!contains(&unit_interval, a) || !contains(&unit_interval, b) )
 		return false;
-	rec->u = a;
-	rec->v = b;
+	rec->uv[0] = a;
+	rec->uv[1] = b;
 	return true;
 }
 

@@ -1535,5 +1535,43 @@
    "obj/mersenne_twister.o"
   ],
   "file": "src/mersenne_twister.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/bilateral_filter.c",
+   "-o",
+   "obj/bilateral_filter.o"
+  ],
+  "file": "src/bilateral_filter.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/bilateral_filter2.c",
+   "-o",
+   "obj/bilateral_filter2.o"
+  ],
+  "file": "src/bilateral_filter2.c"
  }
 ]

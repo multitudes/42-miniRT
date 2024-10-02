@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:05:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:15:38 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
         rec->normal = normal;
         set_face_normal(rec, r, rec->normal);
         rec->mat = cyl->mat;
-        get_cylinder_uncappedv(rec->normal, &rec->u, &rec->v);
+        get_cylinder_uncappedv(rec->normal, rec->uv);
         return true;
     }
 
@@ -290,7 +290,7 @@ t_vec3 obj_cylinder_random(const void *self, const t_point3 *orig) {
     return unit_vector(direction);
 }
 
-void get_cylinder_uncappedv(t_vec3 normal, double* u, double* v)
+void get_cylinder_uncappedv(t_vec3 normal, double uv[2])
 {
     double theta;
     double phi;
@@ -302,6 +302,6 @@ void get_cylinder_uncappedv(t_vec3 normal, double* u, double* v)
     phi = acos(normal.y);
 
     // Map theta and phi to UV coordinates
-    *u = theta / (2 * PI);
-    *v = phi / PI;
+    uv[0] = theta / (2 * PI);
+    uv[1] = phi / PI;
 }
