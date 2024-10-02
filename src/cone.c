@@ -46,7 +46,7 @@ void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height,
 	lambertian_init_tex(&(c->body.lambertian_mat), (t_texture*)&(c->body.texture));
 	c->body.mat = (t_material*)&(c->body.lambertian_mat);
 	
-	t_point3 bottom_center = vec3add(apex, vec3multscalar(axis, -height));
+	t_point3 bottom_center = vec3add(apex, vec3multscalar(c->body.axis, height));
 	disk(&c->bottom, bottom_center, axis, diam, rgbcolor);
 }
 
