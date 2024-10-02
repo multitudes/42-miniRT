@@ -36,6 +36,7 @@ void		cylinder_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diam
 	c->base.pdf_value = obj_cylinder_pdf_value;
 	c->base.random = obj_cylinder_random;
 	c->center = center;
+	// TODO: normalize axis??
 	c->axis = axis;
 	c->radius = diameter / 2;
 	c->height = height;
@@ -147,14 +148,6 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
 	double a = dot(cross_rd_cd, cross_rd_cd);
 	double b = 2 * dot(cross_rd_cd, cross_dp_cd);
 	double c = dot(cross_dp_cd, cross_dp_cd) - pow(cyl->radius, 2);
-
-
- //    double a = r->dir.x * r->dir.x + r->dir.z * r->dir.z;
-	// if (fabs(a) <= EPSILON)
-	// 	return false;
- //    double b = 2 * (r->dir.x * (r->orig.x - cyl->center.x) + r->dir.z * (r->orig.z - cyl->center.z));
- //    double c = (r->orig.x - cyl->center.x) * (r->orig.x - cyl->center.x) + (r->orig.z - cyl->center.z) * (r->orig.z - cyl->center.z) - cyl->radius * cyl->radius;
-
 
     // Solve the quadratic equation
     double discriminant = b * b - 4 * a * c;

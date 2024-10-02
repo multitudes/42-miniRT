@@ -11,9 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"  	// get_next_line should be here
-#include <complex.h>
 #include <fcntl.h>  	/* open() */
-#include <stdbool.h>
 #include <stdio.h>  	/* perror() */
 #include "minirt.h"
 
@@ -509,10 +507,12 @@ static void	get_triangle(t_objects *obj)
 
 /*
  * usage:
- * default - "co" [origin] [axis] [diameter] [height] [color]
- * metalic - "co" [origin] [axis] [diameter] [height] [color] [fuzz]
+ * default - "co" [center] [axis] [diam] [height] [color]
+ * metalic - "co" [center] [axis] [diam] [height] [color] [fuzz]
  *  
- * origin - the center of the base; diameter - the diameter of the base
+ * center - a point in the center of the cone axis
+ * axis - axis of cone
+ * diam - the diameter of the base of the cone
 */
 static void	get_cone (t_objects *obj)
 {

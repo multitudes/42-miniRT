@@ -23,12 +23,22 @@
 
 typedef struct
 {
+	/* like cylinder: */
 	t_hittable		base;
-	t_point3		center;
-	t_vec3			axis;
-	double			angle;		// half angle
-	double			height;
+	t_vec3			center;		// the center of the cones axis (like the cylinder)
+	t_vec3			axis;		// the axis
+	double			radius;		// radius of the base
+	double			height;		// height of the whole cone axis
 	double			min;
+	double			max;
+	
+	/* maybe dont need theese */
+	t_point3		apex;		// the top of the cone
+	double			angle;		// half angle
+	double			cosa;		// 
+	
+	
+	
 	t_color			color;
 	t_material		*mat;
 	union
@@ -47,7 +57,7 @@ typedef struct
 }					t_cone;
 
 /* init function */
-void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double angle, double height, \
+void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
 	t_rgb rgbcolor);
 void	cone_mat(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
 	t_material *mat);
