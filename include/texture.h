@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:02:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:18:13 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:33:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,17 +86,17 @@ typedef struct s_img_texture
 
 void				solid_color_init(t_solid_color *solid_color_texture,
 						t_color albedo);
-t_color				solid_color_value(const void *self, double u, double v,
+t_color				solid_color_value(const void *self, double uv[2],
 						const t_point3 *p);
 
 void				checker_texture_init(t_checker_texture *checker_texture,
 						double scale, t_rgb even_rgb, t_rgb odd_rgb);
-t_color				checker_texture_value(const void *self, double u, double v,
+t_color				checker_texture_value(const void *self, double uv[2],
 						const t_point3 *p);
 
 void				img_texture_init(t_img_texture *img_texture,
 						char *filename);
-t_color				img_texture_value(const void *self, double u, double v,
+t_color				img_texture_value(const void *self, double uv[2],
 						const t_point3 *p);
 
 /* for image handling */

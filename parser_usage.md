@@ -2,6 +2,13 @@
 
 The `.rt` files follow our conventions. The following is a list of the syntax used in the `.rt` files.
 
+## Camera
+Inits the camera struct inside of t_mrt.
+usage:
+```
+"C" [origin] [orientation(view) vector (normalized values)] [horiz. fow (double)]
+```
+
 ## Ambient light
 Inits the ambient struct inside of t_mrt->t_camera.  
 usage:
@@ -9,13 +16,6 @@ usage:
 "A" [intensity([0.0;1.0])] [rgb color]
 ```
 
-
-## Camera
-Inits the camera struct inside of t_mrt.
-usage:
-```
-"C" [origin] [orientation(view) vector (normalized values)] [horiz. fow (double)]
-```
 
 ## Light
 

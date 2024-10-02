@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:11:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:58:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,8 +277,6 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
     mlx_delete_image(data->mlx, data->seconds_str);
     mlx_delete_image(data->mlx, data->cores_str);
 	
-
-
     int sliceheight = data->cam.image_height / data->cam.cores;
 	int thread_idx = 0;
 	while (thread_idx < data->cam.cores)
