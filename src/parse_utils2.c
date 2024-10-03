@@ -42,8 +42,7 @@ t_rgb	set_rgb(t_objects *obj, int index, char *func_name)
  * Function is very similar to set_rgb, but sets doubles, checks
  * if values from token are normalized, calls vec3().
  */
- t_vec3	set_vec3(t_objects *obj, int index, char *func_name,
-		int normalized)
+t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
 {
 	char	**coord_tok;
 	double	coord_val[3];
