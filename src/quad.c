@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
 #include "quad.h"
 #include "hittable.h"
 #include "utils.h"
