@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:00:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:36:08 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@ void	solid_color_init(t_solid_color *solid_color_texture, t_color albedo)
 	solid_color_texture->color_albedo = albedo;
 }
 
-t_color	solid_color_value(const void *self, double u, double v,
+t_color	solid_color_value(const void *self, double uv[2],
 		const t_point3 *p)
 {
 	t_solid_color	*solid_color;
 
-	(void)u;
-	(void)v;
+	(void)uv;
 	(void)p;
 	solid_color = (t_solid_color *)self;
 	return (solid_color->color_albedo);
@@ -67,12 +66,12 @@ void	checker_texture_init(t_checker_texture *checker_texture, double scale,
  * of the point which will be used to get the color of the texture
  * in the accompanying image texture.
  */
-void	get_spherical_uv(const t_point3 *p, double *u, double *v)
+void	get_spherical_uv(const t_point3 *p, double uv[2])
 {
 	double phi = atan2(p->z, p->x); // Azimuthal angle
 	double theta = acos(p->y);      // Polar angle
-	*u = (phi + PI) / (2 * PI); // u is in the range [0, 1]
-	*v = theta / PI;            // v is in the range [0, 1]
+	uv[0] = (phi + PI) / (2 * PI); // u is in the range [0, 1]
+	uv[1] = theta / PI;            // v is in the range [0, 1]
 }
 
 /**
@@ -86,7 +85,7 @@ void	get_spherical_uv(const t_point3 *p, double *u, double *v)
  * @return t_color The color of the texture at point of intersection
  * imagining the sphere build as solid blocks of color
  */
-t_color	checker_texture_value(const void *self, double u, double v,
+t_color	checker_texture_value(const void *self, double uv[2],
 		const t_point3 *p)
 {
 	int		xint;
@@ -94,8 +93,7 @@ t_color	checker_texture_value(const void *self, double u, double v,
 	int		zint;
 	bool	is_even;
 
-	(void)u;
-	(void)v;
+	(void)uv;
 	xint = (int)floor(p->x * ((t_checker_texture *)self)->inv_scale);
 	yint = (int)floor(p->y * ((t_checker_texture *)self)->inv_scale);
 	zint = (int)floor(p->z * ((t_checker_texture *)self)->inv_scale);
@@ -142,7 +140,7 @@ void	img_texture_init(t_img_texture *img_texture, char *filename)
  * If we have no texture data, then return solid cyan as a debugging aid.
  * The pixel is a pointer to the first byte of the RGB triplet.
  */
-t_color	img_texture_value(const void *self, double u, double v,
+t_color	img_texture_value(const void *self, double uv[2],
 		const t_point3 *p)
 {
 	t_img_texture	*image;
@@ -159,11 +157,11 @@ t_color	img_texture_value(const void *self, double u, double v,
 	if (height(image) <= 0)
 		return (color(0, 1, 1));
 	// Clamp input texture coordinates to [0,1] x [1,0]
-	u = clamp(interval(0, 1), u);
-	v = 1.0 - clamp(interval(0, 1), v); // Flip V to image coordinates
+	uv[0] = clamp(interval(0, 1), uv[0]);
+	uv[1] = 1.0 - clamp(interval(0, 1), uv[1]); // Flip V to image coordinates
 	// printf("u = %f,		v = %f\n", u, v);
-	i = (int)(u * width(image));
-	j = (int)(v * height(image));
+	i = (int)(uv[0] * width(image));
+	j = (int)(uv[1] * height(image));
 	// pixel is a pointer to the first byte of the RGB triplet
 	pixel = pixel_data(image, i, j);
 	// Scale color values to [0,1]

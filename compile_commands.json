@@ -1535,5 +1535,157 @@
    "obj/mersenne_twister.o"
   ],
   "file": "src/mersenne_twister.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/bilateral_filter.c",
+   "-o",
+   "obj/bilateral_filter.o"
+  ],
+  "file": "src/bilateral_filter.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/bilateral_filter2.c",
+   "-o",
+   "obj/bilateral_filter2.o"
+  ],
+  "file": "src/bilateral_filter2.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/sphere_utils.c",
+   "-o",
+   "obj/sphere_utils.o"
+  ],
+  "file": "src/sphere_utils.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/rtw_stb_image2.c",
+   "-o",
+   "obj/rtw_stb_image2.o"
+  ],
+  "file": "src/rtw_stb_image2.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/vec3_utils.c",
+   "-o",
+   "obj/vec3_utils.o"
+  ],
+  "file": "src/vec3_utils.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/vec3_utils2.c",
+   "-o",
+   "obj/vec3_utils2.o"
+  ],
+  "file": "src/vec3_utils2.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/vec3_utils3.c",
+   "-o",
+   "obj/vec3_utils3.o"
+  ],
+  "file": "src/vec3_utils3.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/vec3_utils4.c",
+   "-o",
+   "obj/vec3_utils4.o"
+  ],
+  "file": "src/vec3_utils4.c"
  }
 ]

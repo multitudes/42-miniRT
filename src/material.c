@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:43:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:59:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 16:19:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ void	lambertian_init_tex(t_lambertian *lambertian_material, t_texture *tex)
 	lambertian_material->base.emit = emitzero;
 	lambertian_material->base.scattering_pdf = lambertian_scattering_pdf;
 	lambertian_material->texture = tex;
-	lambertian_material->albedo = tex->value(tex, 0, 0, &(t_point3){.x = 0,
+	double uv[2] = {0, 0};
+	lambertian_material->albedo = tex->value(tex, uv, &(t_point3){.x = 0,
 			.y = 0, .z = 0});
 }
 
@@ -126,12 +127,11 @@ bool	noscatter(void *self, t_ray *r_in, t_hit_record *rec,
 /**
  * No emisssion as default for lambertian and metal materials
  */
-t_color	emitzero(void *self, t_hit_record rec, double u, double v, t_point3 p)
+t_color	emitzero(void *self, t_hit_record rec, double uv[2], t_point3 p)
 {
 	(void)self;
 	(void)rec;
-	(void)u;
-	(void)v;
+	(void)uv;
 	(void)p;
 	return (color(0, 0, 0));
 }
@@ -153,7 +153,7 @@ bool	lambertian_scatter(void *self, t_ray *r_in, t_hit_record *rec,
 
 	(void)r_in;
 	lamb = (t_lambertian *)self;
-	srec->attenuation = lamb->texture->value(lamb->texture, rec->u, rec->v,
+	srec->attenuation = lamb->texture->value(lamb->texture, rec->uv,
 			&rec->p);
 	cosine_pdf_init(&srec->cosine_pdf, &rec->normal);
 	srec->pdf_ptr = (t_pdf *)&(srec->cosine_pdf);
@@ -196,12 +196,12 @@ bool	metal_scatter(void *self, t_ray *r_in, t_hit_record *rec,
 	return (true);
 }
 
-t_color	emitlight(void *self, t_hit_record rec, double u, double v, t_point3 p)
+t_color	emitlight(void *self, t_hit_record rec, double uv[2], t_point3 p)
 {
 	t_diffuse_light	*light;
 
 	light = (t_diffuse_light *)self;
 	if (!rec.front_face)
 		return (color(0, 0, 0));
-	return (light->texture->value(light->texture, u, v, &p));
+	return (light->texture->value(light->texture, uv, &p));
 }

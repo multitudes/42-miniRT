@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:49:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 13:33:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_mrt
 	void				*mlx;
 	void				*win_ptr;
 	mlx_image_t			*image;
+	mlx_image_t			*filt_img;
 	mlx_image_t			*seconds_str;
 	mlx_image_t			*cores_str;
 	double				mlx_time;

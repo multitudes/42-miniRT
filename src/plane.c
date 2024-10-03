@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:00:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ double	plane_pdf_value(const void *self, const t_point3 *orig,
 	if (!hit_plane(pl, &r, interval(0.001, 1e30), &rec))
 		return (0);
 	// Calculate the distance squared from the origin to the hit point
-	distance_squared = length_squared(vec3substr(rec.p, *orig));
+	distance_squared = len_sqrd(vec3substr(rec.p, *orig));
 	// Calculate the cosine of the angle between the ray and the plane normal
 	cosine = fabs(dot(*dir, pl->normal));
 	// Calculate the area of the infinite plane (which is infinite)

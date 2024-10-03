@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:59:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ bool	hit_disk(const void *self, const t_ray *r, t_interval ray_t,
 	intersection = point_at(r, t);
 	planar_hitpt_vector = vec3substr(intersection, disk->center);
 	// Determine the hit point lies within the planar shape using its plane coordinates.
-	distance_squared = length_squared(planar_hitpt_vector);
+	distance_squared = len_sqrd(planar_hitpt_vector);
 	// Check if the intersection point is within the disk's radius
 	if (distance_squared > disk->radius * disk->radius)
 		return (false);
@@ -166,8 +166,8 @@ bool	is_interior_disk(double a, double b, t_hit_record *rec, t_vec3 u,
 	distance_squared = u_squared + v_squared - 2 * uv * cos_theta;
 	if (distance_squared > radius_squared)
 		return (false);
-	rec->u = a;
-	rec->v = b;
+	rec->uv[0] = a;
+	rec->uv[1] = b;
 	return (true);
 }
 
@@ -185,7 +185,7 @@ double	disk_pdf_value(const void *self, const t_point3 *orig,
 	if (!hit_disk(d, &r, interval(0.001, 1e30), &rec))
 		return (0);
 	// Calculate the distance squared from the origin to the hit point
-	distance_squared = length_squared(vec3substr(rec.p, *orig));
+	distance_squared = len_sqrd(vec3substr(rec.p, *orig));
 	// Calculate the cosine of the angle between the ray and the disk normal
 	cosine = fabs(dot(*dir, d->normal));
 	// Calculate the area of the disk
