@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:34:54 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 18:37:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_vec3	vec3divscalar(const t_vec3 a, double t)
  * @brief get the squared length of a vector
  * Used for normalization
  */
-double	length_squared(const t_vec3 v)
+double	len_sqrd(const t_vec3 v)
 {
 	return (v.x * v.x + v.y * v.y + v.z * v.z);
 }
@@ -66,5 +66,5 @@ double	length_squared(const t_vec3 v)
  */
 double	length(const t_vec3 v)
 {
-	return (sqrt(length_squared(v)));
+	return (sqrt(len_sqrd(v)));
 }

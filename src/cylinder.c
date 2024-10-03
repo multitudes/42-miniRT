@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:15:38 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,7 +242,7 @@ double obj_cylinder_pdf_value(const void *self, const t_point3 *orig, const t_ve
 
     // Calculate distance squared from origin to cylinder axis
     t_vec3 axis_vector =  vec3substr(cyl->center, *orig);
-    double axis_distance_squared = length_squared(axis_vector);
+    double axis_distance_squared = len_sqrd(axis_vector);
 
     // Prevent division by zero
     if (axis_distance_squared == 0) {

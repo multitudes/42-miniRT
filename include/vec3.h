@@ -43,7 +43,7 @@ t_vec3			vec3mult(const t_vec3 a, const t_vec3 b);
 t_vec3			vec3multscalar(const t_vec3 a, double t);
 t_vec3			vec3divscalar(const t_vec3 a, double t);
 t_vec3			cross(const t_vec3 a, const t_vec3 b);
-double			length_squared(const t_vec3 v);
+double			len_sqrd(const t_vec3 v);
 double			length(const t_vec3 v);
 void			print_vec3(const t_vec3 *v);
 double			dot(const t_vec3 a, const t_vec3 b);

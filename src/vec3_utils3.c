@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:41:55 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 10:31:34 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_vec3	random_in_unit_disk(void)
 	while (1)
 	{
 		p = vec3(random_double(-1, 1), random_double(-1, 1), 0);
-		if (length_squared(p) < 1)
+		if (len_sqrd(p) < 1)
 			return (p);
 	}
 }
@@ -48,7 +48,7 @@ t_vec3	random_in_unit_sphere(void)
 	while (1)
 	{
 		p = random_vec3_min_max(-1, 1);
-		if (length_squared(p) < 1)
+		if (len_sqrd(p) < 1)
 			return (p);
 	}
 }

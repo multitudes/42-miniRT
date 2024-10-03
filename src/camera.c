@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:58:25 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:12:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 	cam->center = center;
 	t_point3 lookat = vec3add(cam->center, cam->direction);
 	cam->hfov = clamp(interval(1, 170), hfov);
-	ambient(&cam->ambient, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
+	if (cam->ambient.ratio == 0)
+		ambient(&cam->ambient, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
     cam->w = unit_vector(vec3substr(cam->center, lookat));
     cam->u = unit_vector(cross(cam->vup, cam->w));
     cam->v = cross(cam->w, cam->u);

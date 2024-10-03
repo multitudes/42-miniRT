@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:44:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 18:45:08 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ t_vec3	refract(const t_vec3 uv, const t_vec3 n, double etai_over_etat)
 	r_out_perp = vec3multscalar(vec3add(uv, vec3multscalar(n, cos_theta)),
 			etai_over_etat);
 	r_out_parallel = vec3multscalar(n, -sqrt(fabs(1.0
-					- length_squared(r_out_perp))));
+					- len_sqrd(r_out_perp))));
 	return vec3add(r_out_perp, r_out_parallel);
 }
 

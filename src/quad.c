@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:19:59 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ double quad_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 	if (!hit_quad(qd, &r, interval(0.001, 1e30), &rec))
 		return 0;
 
-	double distance_squared = length_squared(*dir) * rec.t * rec.t;
+	double distance_squared = len_sqrd(*dir) * rec.t * rec.t;
 	double cosine = (fabs(dot(*dir, rec.normal))) / length(*dir);
 
 	return distance_squared / (cosine * qd->area);

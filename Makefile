@@ -37,7 +37,7 @@ LIBS 			+= 	$(LIBFTDIR)/libft.a
 INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
-SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c color.c ray.c rtw_stb_image.c \
+SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c color.c ray.c rtw_stb_image.c \
 						rtw_stb_image2.c vec3.c vec3_utils.c vec3_utils2.c vec3_utils3.c vec3_utils4.c \
 						hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
 						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c hooks_utils.c \
