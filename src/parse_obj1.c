@@ -27,8 +27,8 @@ void	get_ambient(t_mrt *data)
 			&data->objects);
 	if (count_tokens(tokens) != 3)
 		call_error("invalid token amount", "ambient", &data->objects);
-	ambient(&data->cam.ambient, ft_atod(tokens[1]), set_rgb(&data->objects, 2,
-			"ambient"));
+	ambient(&data->cam.ambient, ft_atod(tokens[1]), \
+		set_rgb(&data->objects, 2, "ambient"));
 	already_set = 1;
 }
 
@@ -51,7 +51,7 @@ void	get_camera(t_mrt *data)
 	hfov = ft_atod(tokens[3]);
 	if (hfov < 0. || hfov > 180.)
 		call_error("fov must be in range [0;180]", "camera", &data->objects);
-	init_cam(&data->cam, set_vec3(&data->objects, 1, "camera", 0),
+	init_cam(&data->cam, set_vec3(&data->objects, 1, "camera", 0), \
 		set_vec3(&data->objects, 2, "camera", 1), hfov);
 	already_set = 1;
 }
