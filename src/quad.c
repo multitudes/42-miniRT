@@ -14,7 +14,7 @@
 #include "hittable.h"
 #include "utils.h"
 #include "color.h"
-
+#include <stdio.h>
 
 /**
  * @brief Initialize a quad object with a given position q, and two vectors u and v.

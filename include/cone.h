@@ -30,13 +30,6 @@ typedef struct s_cone
 	t_vec3			axis;		// the axis
 	double			radius;		// radius of the base
 	double			height;		// height of the whole cone axis
-	
-	/* maybe dont need theese */
-	double			angle;		// half angle
-	double			cosa;		// 
-	
-	
-	
 	t_color			color;
 	t_material		*mat;
 	union
@@ -55,8 +48,12 @@ typedef struct
 }					t_cone;
 
 /* init function */
+void	cone_uncap_rgb(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, double height, \
+	t_rgb rgbcolor);
 void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
 	t_rgb rgbcolor);
+void	cone_uncap_mat(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, double height, \
+	t_material *mat);
 void	cone_mat(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
 	t_material *mat);
 
