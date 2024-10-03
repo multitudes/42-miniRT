@@ -63,13 +63,15 @@ typedef struct s_objects
 	t_sphere			spheres[SPHERES_COUNT];
 	t_plane				planes[OBJECT_COUNT];
 	t_cylinder_capped	cylinders[CYLINDER_COUNT];
+	t_cylinder			cylinders_u[CYLINDER_COUNT];
 	t_quad				quads[OBJECT_COUNT];
 	t_disk				disks[OBJECT_COUNT];
 	t_triangle			triangles[OBJECT_COUNT];
 	t_cone				cones[OBJECT_COUNT];
+	t_cone_uncap		cones_u[OBJECT_COUNT];
 	t_box				boxes[OBJECT_COUNT];
-	t_hittable			*hit_list[OBJECT_COUNT * 7 + SPHERES_COUNT \
-						+ CYLINDER_COUNT];
+	t_hittable			*hit_list[OBJECT_COUNT * 8 + SPHERES_COUNT \
+						+  (2 * CYLINDER_COUNT)];
 	int					hit_idx;
 	t_hittable			*light_hit[OBJECT_COUNT + 1];
 	int					light_hit_idx;
