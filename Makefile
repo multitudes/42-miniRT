@@ -41,7 +41,7 @@ SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c color.
 						rtw_stb_image2.c vec3.c vec3_utils.c vec3_utils2.c vec3_utils3.c vec3_utils4.c \
 						hittable.c interval.c utils.c ambient.c plane.c plane_utils.c cylinder.c \
 						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c hooks_utils.c \
-						disk.c box.c triangle.c rotated.c translated.c mersenne_twister.c cone.c\
+						disk.c disk_utils.c box.c triangle.c rotated.c translated.c mersenne_twister.c cone.c\
 						 bilateral_filter.c bilateral_filter2.c)
 
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
