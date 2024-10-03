@@ -613,6 +613,41 @@ static void	get_cone (t_objects *obj)
 }
 
 /*
+ * The UNCAPPED cone
+ * usage:
+ * default - "co_u" [apex] [axis] [diam] [height] [color]
+ * metalic - "co_u" [apex] [axis] [diam] [height] [color] [fuzz]
+ *  
+ * apex - the pointy end of the cone
+ * axis - axis of cone (goes up from the apex)
+ * diam - the diameter of the base of the cone
+*/
+static void	get_cone_u (t_objects *obj)
+{
+	static int	set_index;
+	char		**tokens;
+
+	tokens = obj->_tokens;
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "cone_u", obj);
+	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
+		call_error("invalid token amount", "cone_u", obj);
+	if (count_tokens(tokens) == 7)
+	{
+		metal_init(&obj->cones_u[set_index].metal, set_rgb(obj, 5, "cone_u"), ft_atod(tokens[6]));
+		cone_uncap_mat(&obj->cones_u[set_index], set_vec3(obj, 1, "cone_u", 0), set_vec3(obj, 2, "cone_u", 1), \
+			ft_atod(tokens[3]), ft_atod(tokens[4]), (t_material*)&obj->cones_u[set_index].metal);
+	}
+	else
+	{
+		cone_uncap_rgb(&obj->cones_u[set_index], set_vec3(obj, 1, "cone_u", 0), set_vec3(obj, 2, "cone_u", 1), \
+			ft_atod(tokens[3]), ft_atod(tokens[4]), set_rgb(obj, 5, "cone_u"));
+	}
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cones_u[set_index];
+	obj->hit_idx++;
+	set_index++;
+}
+/*
  * usage:
  * default - "box" [origin] [diagonal point] [color]
  * metalic - "box" [origin] [diagonal point] [color] [fuzz(double)]
@@ -659,7 +694,7 @@ static void	update_struct(t_mrt *data)
 		get_plane(&data->objects);
 	else if (ft_strncmp("cy", data->objects._tokens[0], 3) == 0)
 		get_cylinder(&data->objects);
-	else if (ft_strncmp("cyu", data->objects._tokens[0], 3) == 0)
+	else if (ft_strncmp("cy_u", data->objects._tokens[0], 3) == 0)
 		get_cylinder_u(&data->objects);
 	else if (ft_strncmp("qd", data->objects._tokens[0], 3) == 0)
 		get_quad(&data->objects);
@@ -671,6 +706,8 @@ static void	update_struct(t_mrt *data)
 		get_box(&data->objects);
 	else if (ft_strncmp("co", data->objects._tokens[0], 3) == 0)
 		get_cone(&data->objects);
+	else if (ft_strncmp("co_u", data->objects._tokens[0], 3) == 0)
+		get_cone_u(&data->objects);
 	else
 		call_error("invalid object identifier", data->objects._tokens[0],
 			&data->objects);

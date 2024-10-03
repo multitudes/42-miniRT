@@ -20,6 +20,27 @@ double	obj_cone_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *
 t_vec3	obj_cone_random(const void *self, const t_point3 *orig);
 
 /*
+ * Inits an uncapped cone with an rgb color.
+*/
+void	cone_uncap_rgb(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, double height, \
+	t_rgb rgbcolor)
+{
+	c->base.hit = hit_cone;
+	c->base.random = obj_cone_random;
+	c->base.pdf_value = obj_cone_pdf_value;
+
+	c->apex = apex;
+	c->axis = unit_vector(vec3multscalar(axis, -1));
+	c->radius = diam / 2;
+	c->height = height;
+	
+	c->color = rgb_to_color(rgbcolor);
+	solid_color_init(&(c->texture), c->color);
+	lambertian_init_tex(&(c->lambertian_mat), (t_texture*)&(c->texture));
+	c->mat = (t_material*)&(c->lambertian_mat);
+}
+
+/*
  * Inits a capped cone with an rgb color.
 */
 void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height, \
@@ -30,48 +51,40 @@ void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height,
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	
-	// this for the body only (uncapped)
-	c->body.base.hit = hit_cone;
-	c->body.base.random = obj_cone_random;
-	c->body.base.pdf_value = obj_cone_pdf_value;
-
-	c->body.apex = apex;
-	c->body.axis = unit_vector(vec3multscalar(axis, -1));
-	c->body.radius = diam / 2;
-	c->body.height = height;
-	
-	c->body.color = rgb_to_color(rgbcolor);
-	solid_color_init(&(c->body.texture), c->body.color);
-	lambertian_init_tex(&(c->body.lambertian_mat), (t_texture*)&(c->body.texture));
-	c->body.mat = (t_material*)&(c->body.lambertian_mat);
-	
+	cone_uncap_rgb(&c->body, apex, axis, diam, height, rgbcolor);
 	t_point3 bottom_center = vec3add(apex, vec3multscalar(c->body.axis, height));
 	disk(&c->bottom, bottom_center, axis, diam, rgbcolor);
 }
 
 /*
- * Inits a capped cone with a material (metal).
+ * Inits an uncapped cone with a material.
+*/
+void	cone_uncap_mat(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, double height, \
+	t_material *mat)
+{
+	c->base.hit = hit_cone;
+	c->base.random = obj_cone_random;
+	c->base.pdf_value = obj_cone_pdf_value;
+
+	c->apex = apex;
+	c->axis = unit_vector(vec3multscalar(axis, -1));
+	c->radius = diam / 2;
+	c->height = height;
+	
+	c->mat = mat;
+}
+
+/*
+ * Inits a capped cone with an material.
 */
 void	cone_mat(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height, \
 	t_material *mat)
 {
-	// this for the whole cylinder
 	c->base.hit = hit_cone_cap;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	
-	// this for the body only (uncapped)
-	c->body.base.hit = hit_cone;
-	c->body.base.random = obj_cone_random;
-	c->body.base.pdf_value = obj_cone_pdf_value;
-
-	c->body.apex = apex;
-	c->body.axis = unit_vector(vec3multscalar(axis, -1));
-	c->body.radius = diam / 2;
-	c->body.height = height;
-	
-	c->body.mat = mat;
-	
+	cone_uncap_mat(&c->body, apex, axis, diam, height, mat);
 	t_point3 bottom_center = vec3add(apex, vec3multscalar(c->body.axis, height));
 	disk_mat(&c->bottom, bottom_center, axis, diam, mat);
 }
@@ -206,6 +219,8 @@ t_vec3 obj_cone_random(const void *self, const t_point3 *orig)
 {
 	const t_cone_uncap *cone = (const t_cone_uncap *)self;
 
+	double angle = atan(cone->radius / cone->height);
+	
     // Generate a random angle phi
     double r1 = ((double)rand() / RAND_MAX);
     double phi = 2.0 * PI * r1; // Random angle in [0, 2π]
@@ -215,7 +230,7 @@ t_vec3 obj_cone_random(const void *self, const t_point3 *orig)
     double h = r2 * cone->height; // Random height in [0, height]
 
     // Calculate the radius at this height
-    double radius_at_height = (cone->height - h) * tan(cone->angle);
+    double radius_at_height = (cone->height - h) * tan(angle);
 
     // Calculate the x and z coordinates on the cone's surface
     double x = radius_at_height * cos(phi);
