@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 15:01:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "hittable.h"
 #include "utils.h"
 #include "color.h"
-
+#include <stdio.h>
 
 /**
  * @brief Initialize a quad object with a given position q, and two vectors u and v.

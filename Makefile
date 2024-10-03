@@ -39,7 +39,7 @@ INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c color.c ray.c rtw_stb_image.c \
 						rtw_stb_image2.c vec3.c vec3_utils.c vec3_utils2.c vec3_utils3.c vec3_utils4.c \
-						hittable.c interval.c utils.c ambient.c plane.c cylinder.c \
+						hittable.c interval.c utils.c ambient.c plane.c plane_utils.c cylinder.c \
 						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c hooks_utils.c \
 						disk.c box.c triangle.c rotated.c translated.c mersenne_twister.c cone.c\
 						 bilateral_filter.c bilateral_filter2.c)

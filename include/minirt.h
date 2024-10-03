@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 13:33:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 14:27:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,15 @@ typedef struct s_mrt
 	void				(*renderscene)(struct s_mrt *, const t_hittablelist *, \
 						const t_hittablelist *);
 }						t_mrt;
+
+typedef struct s_init_params
+{
+	t_point3	center;
+	t_vec3		normal;
+	double		diam;
+	t_rgb		rgbcolor;
+	t_material	*mat;
+}				t_init_params;
 
 void					parse_input(char *filename, t_mrt *data);
 
