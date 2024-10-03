@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:41:55 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 18:44:35 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 10:31:34 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,21 @@ t_vec3	random_in_unit_sphere(void)
 	}
 }
 
+/**
+ * @brief Random vector on hemisphere
+ * @param normal normal vector
+ * @return t_vec3
+ *
+ * returns a random unit vector in the same
+ * hemisphere as the normal
+ */
 t_vec3	random_on_hemisphere(const t_vec3 normal)
 {
 	t_vec3	on_unit_sphere;
 
 	on_unit_sphere = random_unit_vector();
 	if (dot(on_unit_sphere, normal) > 0.0)
-		// In the same hemisphere as the normal
-		return on_unit_sphere;
+		return (on_unit_sphere);
 	else
-		return vec3negate(on_unit_sphere);
+		return (vec3negate(on_unit_sphere));
 }
