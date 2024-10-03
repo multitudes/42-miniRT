@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cone.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:06:01 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/16 16:06:02 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/09/30 09:25:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 # include "vec3.h"
 # include <stdbool.h>
 
-typedef struct
+typedef struct s_cone
 {
+
 	/* like cylinder: */
 	t_hittable		base;
 	t_point3		apex;		// the top of the cone
@@ -59,7 +60,9 @@ void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double heigh
 void	cone_mat(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
 	t_material *mat);
 
+
 /* hit function */
-bool	hit_cone(const void *self, const t_ray *ray, t_interval closest, t_hit_record *rec);
+bool					hit_cone(const void *self, const t_ray *ray,
+							t_interval closest, t_hit_record *rec);
 
 #endif

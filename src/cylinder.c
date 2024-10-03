@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cylinder.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 17:13:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:05:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,64 +138,63 @@ void		print_cylinder(const void *self)
  */
 bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec)
 {
-	const t_cylinder *cyl = (t_cylinder*)self;
-	t_vec3	delta_p, cross_rd_cd, cross_dp_cd;
 
-	delta_p = vec3substr(r->orig, cyl->center);
-	cross_rd_cd = cross(r->dir, cyl->axis);
-	cross_dp_cd = cross(delta_p, cyl->axis);
+    const t_cylinder *cyl = (t_cylinder*)self;
+    t_vec3 delta_p, cross_rd_cd, cross_dp_cd;
 
-	double a = dot(cross_rd_cd, cross_rd_cd);
-	double b = 2 * dot(cross_rd_cd, cross_dp_cd);
-	double c = dot(cross_dp_cd, cross_dp_cd) - pow(cyl->radius, 2);
+    delta_p = vec3substr(r->orig, cyl->center);
+    cross_rd_cd = cross(r->dir, cyl->axis);
+    cross_dp_cd = cross(delta_p, cyl->axis);
 
     // Solve the quadratic equation
+    double a = dot(cross_rd_cd, cross_rd_cd);
+    double b = 2 * dot(cross_rd_cd, cross_dp_cd);
+    double c = dot(cross_dp_cd, cross_dp_cd) - pow(cyl->radius, 2);
+  
     double discriminant = b * b - 4 * a * c;
     if (discriminant < 0)
-    	return false;
+        return false;
 
     double t0 = (-b - sqrt(discriminant)) / (2 * a);
     double t1 = (-b + sqrt(discriminant)) / (2 * a);
 
-    // return false;
-	// Initialize variables to track the closest intersection point
     double closest_t = -1;
     t_vec3 closest_point;
     t_vec3 normal;
 
-	bool hit = false;
 
-    // Check both intersections
-	if (surrounds(&ray_t, t0)) {
-		t_vec3 point = point_at(r, t0);
-		t_vec3 delta_point = vec3substr(point, cyl->center);
-		double height = dot(delta_point, cyl->axis);
-		if (cyl->min < height && height < cyl->max)
-		{
-			// Check if this intersection point is closer to the origin
-			if (closest_t < 0 || t0 < closest_t) {
-				closest_t = t0;
-				closest_point = point;
-				normal = unit_vector(cross(cyl->axis, delta_point));
-				hit = true;
-			}
-		}
-	}
-	if (surrounds(&ray_t, t1))
-	{
-		t_vec3 point = point_at(r, t1);
-		t_vec3 delta_point = vec3substr(point, cyl->center);
-		double height = dot(delta_point, cyl->axis);
-		if (cyl->min < height && height < cyl->max) {		// this is the cutoff
-			// Check if this intersection point is closer to the origin
-			if (closest_t < 0 || t1 < closest_t) {
-				closest_t = t1;
-				closest_point = point;
-				normal = unit_vector(cross(cyl->axis, delta_point));
-				hit = true;
-			}
-		}
-	}
+    bool hit = false;
+
+    if (surrounds(&ray_t, t0)) {
+        t_vec3 point = point_at(r, t0);
+        t_vec3 delta_point = vec3substr(point, cyl->center);
+        double height = dot(delta_point, cyl->axis);
+        if (cyl->min < height && height < cyl->max) {
+            if (closest_t < 0 || t0 < closest_t) {
+                closest_t = t0;
+                closest_point = point;
+                // changed this for correct shadows
+                // normal = unit_vector(cross(cyl->axis, delta_point));
+                normal = unit_vector(vec3substr(point, vec3add(cyl->center, vec3multscalar(cyl->axis, height))));
+                hit = true;
+            }
+        }
+    }
+    if (surrounds(&ray_t, t1)) {
+        t_vec3 point = point_at(r, t1);
+        t_vec3 delta_point = vec3substr(point, cyl->center);
+        double height = dot(delta_point, cyl->axis);
+        if (cyl->min < height && height < cyl->max) {
+            if (closest_t < 0 || t1 < closest_t) {
+                closest_t = t1;
+                closest_point = point;
+				// changed this for correct shadows
+                // normal = unit_vector(cross(cyl->axis, delta_point));
+                normal = unit_vector(vec3substr(point, vec3add(cyl->center, vec3multscalar(cyl->axis, height))));
+                hit = true;
+            }
+        }
+    }
 
 
     if (closest_t >= 0 && hit) {
@@ -204,7 +203,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
         rec->normal = normal;
         set_face_normal(rec, r, rec->normal);
         rec->mat = cyl->mat;
-		get_cylinder_uncappedv(rec->normal, &rec->u, &rec->v);
+        get_cylinder_uncappedv(rec->normal, &rec->u, &rec->v);
         return true;
     }
 
@@ -243,6 +242,11 @@ double obj_cylinder_pdf_value(const void *self, const t_point3 *orig, const t_ve
     // Calculate distance squared from origin to cylinder axis
     t_vec3 axis_vector =  vec3substr(cyl->center, *orig);
     double axis_distance_squared = length_squared(axis_vector);
+
+    // Prevent division by zero
+    if (axis_distance_squared == 0) {
+        return 0;
+    }
 
     // Project the ray direction onto the cylinder axis
     double cos_theta = dot(axis_vector, *dir) / sqrt(axis_distance_squared);

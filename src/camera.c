@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/27 11:24:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/30 10:05:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,34 @@
 #include <stdint.h>
 
 void apply_bilateral_filter_to_image(t_mrt *data);
+
+void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
+{
+    cam->cores = 16;
+	if (direction.x == 0 && direction.z == 0)
+		direction.z -= 0.1;
+	cam->direction = unit_vector(direction);
+	cam->original_dir = cam->direction;
+	cam->original_pos = center;
+	cam->samples_per_pixel = 200;
+	cam->max_depth = 200;
+	cam->aspect_ratio = ASPECT_RATIO;
+	cam->image_width = IMAGE_WIDTH;
+	cam->image_height = (int)(IMAGE_WIDTH / cam->aspect_ratio);
+	if (cam->image_height < 1)
+		cam->image_height = 1;
+	cam->center = center;
+	t_point3 lookat = vec3add(cam->center, cam->direction);
+	cam->hfov = clamp(interval(1, 170), hfov);
+	if (cam->ambient.ratio == 0)
+		ambient(&cam->ambient, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
+    cam->w = unit_vector(vec3substr(cam->center, lookat));
+    cam->u = unit_vector(cross(cam->vup, cam->w));
+    cam->v = cross(cam->w, cam->u);
+	cam->vup = vec3(0,1,0);
+	cam->print = print_camera;
+	update_cam_resize(cam, cam->image_width, cam->image_height);
+}
 
 /**
  * @brief update a camera object when the orientation changes
@@ -55,30 +83,6 @@ void update_cam_orientation(t_camera *cam)
     cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
 
-// void update_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
-// {
-// 	cam->hfov = hfov;
-// 	cam->center = center;
-// 	cam->direction = direction;
-//     t_point3 lookat = vec3add(cam->center, cam->direction);
-// 	double focal_length = length(vec3substr(cam->center, lookat));
-// 	double theta = degrees_to_radians(cam->hfov);
-//     double h = tan(theta/2);
-// 	double viewport_width = 2 * h * focal_length;
-//     double viewport_height = viewport_width * ((double)cam->image_height/cam->image_width);
-//     cam->w = unit_vector(vec3substr(cam->center, lookat));
-//     cam->u = unit_vector(cross(cam->vup, cam->w));
-//     cam->v = cross(cam->w, cam->u);
-//     t_vec3 viewport_u = vec3multscalar(cam->u, viewport_width);
-// 	t_vec3 viewport_v = vec3multscalar(vec3negate(cam->v), viewport_height);
-// 	cam->pixel_delta_u = vec3divscalar(viewport_u, cam->image_width);
-// 	cam->pixel_delta_v = vec3divscalar(viewport_v, cam->image_height);
-// 	t_point3 part1 = vec3substr(cam->center, vec3multscalar(cam->w, focal_length));
-// 	t_point3 part2 = vec3substr(part1, vec3divscalar(viewport_u, 2));
-// 	t_point3 viewport_upper_left = vec3substr(part2, vec3divscalar(viewport_v, 2));
-// 	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
-// }
-
 void update_cam_resize(t_camera *cam, int new_width, int new_height)
 {
 	if (cam->direction.x == 0 && cam->direction.z == 0)
@@ -105,32 +109,6 @@ void update_cam_resize(t_camera *cam, int new_width, int new_height)
 	cam->pixel00_loc = vec3add(viewport_upper_left, vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
 
-// TODO: what happens in direction vector is 0,0,0 at the start?
-void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
-{
-	if (direction.x == 0 && direction.z == 0)
-		direction.z -= 0.1;
-	cam->direction = unit_vector(direction);
-	cam->original_dir = cam->direction;
-	cam->original_pos = center;
-	cam->samples_per_pixel = 100;
-	cam->max_depth = 200;
-	cam->aspect_ratio = ASPECT_RATIO;
-	cam->image_width = IMAGE_WIDTH;
-	cam->image_height = (int)(IMAGE_WIDTH / cam->aspect_ratio);
-	if (cam->image_height < 1)
-		cam->image_height = 1;
-	cam->center = center;
-	t_point3 lookat = vec3add(cam->center, cam->direction);
-	cam->hfov = clamp(interval(1, 170), hfov);
-	ambient(&cam->ambient, 0.2, (t_rgb){.r = 10, .g = 10, .b = 10});
-    cam->w = unit_vector(vec3substr(cam->center, lookat));
-    cam->u = unit_vector(cross(cam->vup, cam->w));
-    cam->v = cross(cam->w, cam->u);
-	cam->vup = vec3(0,1,0);
-	cam->print = print_camera;
-	update_cam_resize(cam, cam->image_width, cam->image_height);
-}
 
 /**
  * @brief one of the most important functions in the raytracer
@@ -299,31 +277,32 @@ void render_thread(void *args)
  */
 void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* lights)
 {
-    double fps; 	// remove later
     double start_time = mlx_get_time();
-	pthread_t threads[CORES];
-	t_thread_data thread_data[CORES];
+    mlx_delete_image(data->mlx, data->seconds_str);
+    mlx_delete_image(data->mlx, data->cores_str);
+	
 
-    int sliceheight = data->cam.image_height / CORES;
+
+    int sliceheight = data->cam.image_height / data->cam.cores;
 	int thread_idx = 0;
-	while (thread_idx < CORES)
+	while (thread_idx < data->cam.cores)
 	{
-		thread_data[thread_idx].data = data;
-		thread_data[thread_idx].thread_id = thread_idx;
-		thread_data[thread_idx].world = world;
-		thread_data[thread_idx].lights = lights;
-		thread_data[thread_idx].starty = thread_idx * sliceheight;
-		if (thread_idx == CORES - 1)
-			thread_data[thread_idx].endy = data->cam.image_height;
+		data->cam.thread_data[thread_idx].data = data;
+		data->cam.thread_data[thread_idx].thread_id = thread_idx;
+		data->cam.thread_data[thread_idx].world = world;
+		data->cam.thread_data[thread_idx].lights = lights;
+		data->cam.thread_data[thread_idx].starty = thread_idx * sliceheight;
+		if (thread_idx == data->cam.cores - 1)
+			data->cam.thread_data[thread_idx].endy = data->cam.image_height;
 		else
-			thread_data[thread_idx].endy = (thread_idx + 1) * sliceheight;
-		pthread_create(&threads[thread_idx], NULL, (void *)render_thread, &thread_data[thread_idx]);
+			data->cam.thread_data[thread_idx].endy = (thread_idx + 1) * sliceheight;
+		pthread_create(&data->cam.threads[thread_idx], NULL, (void *)render_thread, &data->cam.thread_data[thread_idx]);
 		thread_idx++;
 	}
 	thread_idx = 0;
-	while (thread_idx < CORES)
+	while (thread_idx < data->cam.cores)
 	{
-		pthread_join(threads[thread_idx], NULL);
+		pthread_join(data->cam.threads[thread_idx], NULL);
 		thread_idx++;
 	}
 	if (data->needs_render)
@@ -333,10 +312,15 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
     
     // Calculate time taken and FPS
     double time_taken = ((double)(mlx_get_time() - start_time));
-    fps = 1.0 / time_taken;
-    // char *fps_str = {"Hello"};
+    char time_str[25];
+    char cores_str[25]; 
+    sprintf(cores_str, "cores: %d", data->cam.cores);
+    sprintf(time_str, "time: %.1f sec", time_taken);
+
     apply_bilateral_filter_to_image(data);
-	// mlx_put_string(data->mlx, fps_str, 10, 10);
+
+	data->seconds_str =  mlx_put_string(data->mlx, time_str, 10, 10);
+    data->cores_str = mlx_put_string(data->mlx, cores_str, 10, 30);
 }
 
 /**
@@ -358,47 +342,6 @@ bool is_near_zero(double value) {
     return fabs(value) < EPSILON;
 }
 
-// probably i will not need this.. i just wanted to visualize the axes...
-bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
-    // Check for intersection with x-axis (line along the x-axis)
-    if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
-        // The ray intersects the x-axis when y = 0 and z = 0
-        if (!is_near_zero(r->orig.y) || !is_near_zero(r->orig.z)) {
-            // Ray origin is not on the yz-plane, so calculate the intersection point
-            double t = -r->orig.y / r->dir.y; // Find where y = 0
-            double z_at_t = r->orig.z + t * r->dir.z;
-            return is_near_zero(z_at_t); // Check if z also equals 0
-        }
-        return true; // If the ray origin is on the yz-plane
-    }
-
-    // Check for intersection with y-axis (line along the y-axis)
-    if (axis->x == 0 && axis->y != 0 && axis->z == 0) {
-        // The ray intersects the y-axis when x = 0 and z = 0
-        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.z)) {
-            // Ray origin is not on the xz-plane, so calculate the intersection point
-            double t = -r->orig.x / r->dir.x; // Find where x = 0
-            double z_at_t = r->orig.z + t * r->dir.z;
-            return is_near_zero(z_at_t); // Check if z also equals 0
-        }
-        return true; // If the ray origin is on the xz-plane
-    }
-
-    // Check for intersection with z-axis (line along the z-axis)
-    if (axis->x == 0 && axis->y == 0 && axis->z != 0) {
-        // The ray intersects the z-axis when x = 0 and y = 0
-        if (!is_near_zero(r->orig.x) || !is_near_zero(r->orig.y)) {
-            // Ray origin is not on the xy-plane, so calculate the intersection point
-            double t = -r->orig.x / r->dir.x; // Find where x = 0
-            double y_at_t = r->orig.y + t * r->dir.y;
-            return is_near_zero(y_at_t); // Check if y also equals 0
-        }
-        return true; // If the ray origin is on the xy-plane
-    }
-
-    // If none of the conditions match, the ray does not intersect the line
-    return false;
-}
 
 
 unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
@@ -409,14 +352,46 @@ unsigned int	mlx_get_pixel(mlx_image_t *data, int x, int y)
 	return (*(unsigned int *)dst);
 }
 
+typedef struct {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+} t_rgb8;
 
 
-
-double gaussian(double x, double sigma) {
-    return exp(-(x * x) / (2 * sigma * sigma)) / (2 * PI * sigma * sigma);
+/**
+ * @brief gaussian function
+ * 
+ * @param x
+ * @param sigma
+ * 
+ * @return double
+ * 
+ * implements the Gaussian probability density function (PDF), 
+ * often referred to as the normal distribution or bell curve.  
+ * It's a widely used statistical distribution in various fields, 
+ * including signal processing, image processing, and machine learning.
+ * The Gaussian PDF describes a continuous probability distribution 
+ * that is symmetric around its mean (which is usually 0 in this context) 
+ * and has a characteristic bell shape.
+ * 
+ */
+double gaussian(double x, double sigma)
+{
+    return (1 / (sigma * sqrt(2 * PI))) * exp(-(x * x) / (2 * sigma * sigma));
 }
 
-t_rgb bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, double sigma_r) {
+/**
+ * @brief apply the bilateral filter to a single pixel
+ * 
+ * @param image the image to apply the filter to
+ * @param x the x coordinate of the pixel
+ * @param y the y coordinate of the pixel
+ * @param sigma_s the spatial sigma
+ * @param sigma_r the range sigma
+ * 
+ */
+t_rgb8 bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, double sigma_r) {
     double rs = 0, gs = 0, bs = 0;
     double w_sum = 0;
 
@@ -430,8 +405,8 @@ t_rgb bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, d
                 uint8_t *neighbor_pixel = &image->pixels[(ny * image->width + nx) * 4];
                 uint8_t *center_pixel = &image->pixels[(y * image->width + x) * 4];
 
-                t_rgb neighbor = {neighbor_pixel[0], neighbor_pixel[1], neighbor_pixel[2]};
-                t_rgb center = {center_pixel[0], center_pixel[1], center_pixel[2]};
+                t_rgb8 neighbor = {neighbor_pixel[0], neighbor_pixel[1], neighbor_pixel[2]};
+                t_rgb8 center = {center_pixel[0], center_pixel[1], center_pixel[2]};
 
                 double spatial_weight = gaussian(sqrt(i * i + j * j), sigma_s);
                 double range_weight = gaussian(sqrt(
@@ -450,15 +425,15 @@ t_rgb bilateral_filter_pixel(mlx_image_t *image, int x, int y, double sigma_s, d
         }
     }
 
-    t_rgb result;
-    result.r = (uint8_t)(rs / w_sum);
-    result.g = (uint8_t)(gs / w_sum);
-    result.b = (uint8_t)(bs / w_sum);
+    t_rgb8 result;
+    result.r = (uint8_t)fmax(0, fmin(rs / w_sum, 255));
+    result.g = (uint8_t)fmax(0, fmin(gs / w_sum, 255));
+    result.b = (uint8_t)fmax(0, fmin(bs / w_sum, 255));
     return result;
 }
 
 void apply_bilateral_filter(mlx_image_t *image, double sigma_s, double sigma_r) {
-    t_rgb *filtered_pixels = (t_rgb *)malloc(image->width * image->height * sizeof(t_rgb));
+    t_rgb8 *filtered_pixels = (t_rgb8 *)malloc(image->width * image->height * sizeof(t_rgb8));
 
     for (int y = 0; y < image->height; ++y) {
         for (int x = 0; x < image->width; ++x) {

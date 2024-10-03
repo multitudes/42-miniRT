@@ -1,0 +1,41 @@
+C   737,-690,2142   0.000,0.371,-0.928   70
+
+A   1     255,255,255
+
+# l  0.000,1000,1600     10.0    255,255,230   200.0        
+
+## LIGHT (RECTANGLE) ##########################################################################################################################################
+# | position             | orientation | width  | height | color       | brightness | sampling factor | #######################################################
+###############################################################################################################################################################
+# lr  6.000,8.000,0.000   -Y            2.5      1.5      255,255,255   100.0        1
+
+## LIGHT (DISC) ###############################################################################################################################################
+# | position             | direction            | radius | color       | brightness | sampling factor | #######################################################
+###############################################################################################################################################################
+# ld  -6.000,8.000,0.000   1.000,-1.000,0.000   1.0      255,255,255   100.0        1
+
+
+# | position             | direction            | color       | material                   | ##################################################################
+# pl  0.000,0.000,0.000   0.000,1.000,0.000   30,50,50 
+
+# | position             | radius |       | color       | material                   | cb  | texture                   | #############################
+sp  4000,100,100   3800   img:rtw_image/sun.jpg
+sp  1700,100,100    30  img:rtw_image/mercury.jpg
+sp  1600,100,100    40    img:rtw_image/venus.jpg
+sp  1400,100,100    50    img:rtw_image/earth.jpg
+sp  1200,100,100    14   img:rtw_image/mars.jpg
+sp  800,100,100     286  img:rtw_image/jupiter.jpg
+sp  300,100,100     240   img:rtw_image/saturn.jpg
+sp  -10,100,100     102   img:rtw_image/uranus.jpg
+sp  -200,100,100     100   img:rtw_image/neptune.jpg
+
+#actual scale according to the diameter of the planets (copilot)
+# sp  4000,100,100   13910   img:rtw_image/sun.jpg
+# sp  1700,100,100    49  img:rtw_image/mercury.jpg
+# sp  1600,100,100    121    img:rtw_image/venus.jpg
+# sp  1400,100,100    127   img:rtw_image/earth.jpg
+# sp  1200,100,100    68   img:rtw_image/mars.jpg
+# sp  800,100,100     1398  img:rtw_image/jupiter.jpg
+# sp  300,100,100     1165   img:rtw_image/saturn.jpg
+# sp  -10,100,100     507   img:rtw_image/uranus.jpg
+# sp  -200,100,100     492   img:rtw_image/neptune.jpg
