@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 17:07:38 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 17:35:41 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 18:12:17 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@
  * recursively with the scattered ray and return the color of the object.
  *
  */
-t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *world, const t_hittablelist *lights)
+t_color	ray_color(t_scene scene, t_ray *r, int depth)
 {
 	t_hit_record rec;
 	t_scatter_record srec;
@@ -67,33 +67,32 @@ t_color	ray_color(t_camera *cam, t_ray *r, int depth, const t_hittablelist *worl
 	
 	if (depth <= 0)
         return color(0,0,0);
-	if (!world->hit_objects(world, r, interval(0.001, 100000), &rec))
+	if (!scene.world->hit_objects(scene.world, r, interval(0.001, 100000), &rec))
 		return color(0.0,0.0,0.0);
 	t_color color_from_emission = rec.mat->emit(rec.mat, rec, rec.uv, rec.p);
 	init_scatter_record(&srec);
 	if (!rec.mat->scatter(rec.mat, r, &rec, &srec))
-	{
 		return color_from_emission;
-	}
+		
 	t_ray scattered = srec.skip_pdf_ray;
 
 	if (srec.skip_pdf) {
-		t_color ambient_light = cam->ambient.color;
+		t_color ambient_light = scene.cam->ambient.color;
 		t_metal *metal = (t_metal *)rec.mat;
 		t_color ambient_material = vec3multscalar(vec3add(metal->albedo, vec3multscalar(ambient_light, 0.1)), 0.01);
-		t_color reflected_color = vec3mult(srec.attenuation, ray_color(cam, &scattered, depth - 1, world, lights));
+		t_color reflected_color = vec3mult(srec.attenuation, ray_color(scene, &scattered, depth - 1));
 		return vec3add(ambient_material, reflected_color);
     }
 
 	recorded_pdf = srec.pdf_ptr;
-	hittable_pdf_init(&light_pdf, lights, &rec.p);
+	hittable_pdf_init(&light_pdf, scene.lights, &rec.p);
 	t_mixture_pdf mix_pdf;
 	mixture_pdf_init(&mix_pdf, recorded_pdf, (t_pdf *)&light_pdf);
 	scattered = ray(rec.p, mixture_pdf_generate(&mix_pdf));
 	double pdf_value = mixture_pdf_value(&mix_pdf, &scattered.dir);
 	double scattering_pdf = rec.mat->scattering_pdf(rec.mat, r, &rec, &scattered);
-	t_color sample_color = ray_color(cam, &scattered, depth-1, world, lights);
-	t_color ambient = cam->ambient.color;
+	t_color sample_color = ray_color(scene, &scattered, depth-1);
+	t_color ambient = scene.cam->ambient.color;
 	t_color ambient_samplecolor = vec3add(ambient, sample_color);
 	t_color attenuationxscattering_pdf = vec3multscalar(srec.attenuation, scattering_pdf);
 	t_color color_from_scatter_partial = vec3mult(attenuationxscattering_pdf, ambient_samplecolor);
@@ -177,7 +176,7 @@ void render_thread(void *args)
 			{
 				t_ray r = get_ray(thread_data->data->cam, x, y);
 
-				pixel_color = vec3add(pixel_color, ray_color(&(thread_data->data->cam), &r, thread_data->data->cam.max_depth ,thread_data->world, thread_data->lights));
+				pixel_color = vec3add(pixel_color, ray_color(thread_data->scene, &r, thread_data->data->cam.max_depth));
 				i++;
 			}
 
@@ -196,15 +195,17 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
     double start_time = mlx_get_time();
     mlx_delete_image(data->mlx, data->seconds_str);
     mlx_delete_image(data->mlx, data->cores_str);
-	
+	    // Initialize the scene
+    
     int sliceheight = data->cam.img_height / data->cam.cores;
 	int thread_idx = 0;
 	while (thread_idx < data->cam.cores)
 	{
 		data->cam.thread_data[thread_idx].data = data;
 		data->cam.thread_data[thread_idx].thread_id = thread_idx;
-		data->cam.thread_data[thread_idx].world = world;
-		data->cam.thread_data[thread_idx].lights = lights;
+		data->cam.thread_data[thread_idx].scene.world = world;
+		data->cam.thread_data[thread_idx].scene.lights = lights;
+		data->cam.thread_data[thread_idx].scene.cam = &data->cam;
 		data->cam.thread_data[thread_idx].starty = thread_idx * sliceheight;
 		if (thread_idx == data->cam.cores - 1)
 			data->cam.thread_data[thread_idx].endy = data->cam.img_height;

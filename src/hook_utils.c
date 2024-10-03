@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 17:34:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 18:25:14 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ void	hook(void *param)
 				- data->mlx_time);
 			debug("F2 cores toggle pressed\n");
 			if (data->cam.cores == 1)
-				data->cam.cores = 16;
+				data->cam.cores = 20;
 			else
 				data->cam.cores = 1;
 			debug("cores: %d\n", data->cam.cores);

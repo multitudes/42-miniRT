@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 17:42:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 18:29:22 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 void	update_cam_orientation(t_camera *cam)
 {
 	t_point3	viewport_upper_left;
-	t_point3	part2;
+	t_point3	part;
 	double		focal_length;
 	double		viewport_width;
 	double		viewport_height;
@@ -67,9 +67,9 @@ void	update_cam_orientation(t_camera *cam)
 	cam->viewport_v = vec3multscalar(vec3negate(cam->v), viewport_height);
 	cam->pixel_delta_u = vec3divscalar(cam->viewport_u, cam->img_width);
 	cam->pixel_delta_v = vec3divscalar(cam->viewport_v, cam->img_height);
-	part2 = vec3substr((vec3substr(cam->orig, vec3multscalar(cam->w,
+	part = vec3substr((vec3substr(cam->orig, vec3multscalar(cam->w,
 						focal_length))), vec3divscalar(cam->viewport_u, 2));
-	viewport_upper_left = vec3substr(part2, vec3divscalar(cam->viewport_v, 2));
+	viewport_upper_left = vec3substr(part, vec3divscalar(cam->viewport_v, 2));
 	cam->pixel00_loc = vec3add(viewport_upper_left,
 			vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
