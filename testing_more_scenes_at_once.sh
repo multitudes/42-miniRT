@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Run each miniRT command in the background and store the PIDs
-./miniRT z_scenes/billard.rt &
+# ./miniRT z_scenes/billard.rt &
+./miniRT scenes/cylinder_test.rt &
 pid1=$!
 ./miniRT z_scenes/planets.rt &
 pid2=$!
@@ -15,6 +16,7 @@ pid5=$!
 pid6=$!
 ./miniRT z_scenes/coordinate_system.rt &
 pid7=$!
+./miniRT scenes/cone_test.rt &
 
 # Wait for all background processes to finish
 wait $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:56:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 17:34:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,16 +338,16 @@ int	main_camera_center()
 int init_window(t_mrt *data)
 {
 
-    data->mlx = mlx_init(data->cam.image_width, data->cam.image_height, WINDOW_TITLE, true);
+    data->mlx = mlx_init(data->cam.img_width, data->cam.img_height, WINDOW_TITLE, true);
 	if (data->mlx == NULL)
 		return (FALSE);
-	data->image = mlx_new_image(data->mlx, (uint32_t)data->cam.image_width, (uint32_t)data->cam.image_height);
+	data->image = mlx_new_image(data->mlx, (uint32_t)data->cam.img_width, (uint32_t)data->cam.img_height);
 	if (!(data->image))
 	{
 		mlx_close_window(data->mlx);
 		ft_printf("%s\n", mlx_strerror(mlx_errno));
 	}
-	ft_memset(data->image->pixels, (int)0, (size_t)data->cam.image_width * (size_t)data->cam.image_height * (size_t)BPP);
+	ft_memset(data->image->pixels, (int)0, (size_t)data->cam.img_width * (size_t)data->cam.img_height * (size_t)BPP);
 	if (mlx_image_to_window(data->mlx, data->image, 0, 0) == -1)
 	{
 		mlx_close_window(data->mlx);
@@ -396,8 +396,8 @@ is controlled differently in the background by the system.
 void	_resize_hook(int new_width, int new_height, void *params)
 {
 	t_mrt *data = ((t_mrt *)params);
-	data->cam.image_width = new_width;
-	data->cam.image_height = new_height;
+	data->cam.img_width = new_width;
+	data->cam.img_height = new_height;
 	update_cam_resize(&data->cam, new_width, new_height);
 	mlx_resize_image(data->image, (uint32_t)new_width, (uint32_t)new_height);
 	data->needs_render = true;

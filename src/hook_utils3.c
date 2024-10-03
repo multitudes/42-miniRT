@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:52:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 16:02:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 17:34:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,6 @@ t_point3	rotate_camera(t_point3 camera, double angle_degrees)
 
 void	translate_camera(t_camera *cam, t_vec3 translation)
 {
-	cam->center = vec3add(cam->center, translation);
-	update_cam_resize(cam, cam->image_width, cam->image_height);
+	cam->orig = vec3add(cam->orig, translation);
+	update_cam_resize(cam, cam->img_width, cam->img_height);
 }

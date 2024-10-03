@@ -43,7 +43,7 @@ SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c color.
 						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c \
 						hook_utils.c hook_utils2.c hook_utils3.c hook_utils4.c \
 						disk.c disk_utils.c box.c triangle.c mersenne_twister.c cone.c\
-						bilateral_filter.c bilateral_filter2.c)
+						bilateral_filter.c bilateral_filter2.c camera_ray_color.c )
 
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \

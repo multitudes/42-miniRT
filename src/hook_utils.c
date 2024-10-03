@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 16:02:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 17:34:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void	hook(void *param)
 		rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov
 				* ROTATION_DEG));
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
@@ -45,9 +45,9 @@ void	hook(void *param)
 		rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov \
 		* -ROTATION_DEG));
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
@@ -57,9 +57,9 @@ void	hook(void *param)
 		rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov
 				* ROTATION_DEG));
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
@@ -69,17 +69,17 @@ void	hook(void *param)
 		rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov \
 		* -ROTATION_DEG));
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_F1))
 	{
 		debug("F1 reset pressed\n");
-		data->cam.center = data->cam.original_pos;
-		data->cam.direction = data->cam.original_dir;
+		data->cam.orig = data->cam.original_pos;
+		data->cam.dir = data->cam.original_dir;
 		update_cam_orientation(&data->cam);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
@@ -102,67 +102,67 @@ void	hook(void *param)
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_W))
 	{
-		move_camera_up(&(data->cam), data->cam.image_height / 20);
+		move_camera_up(&(data->cam), data->cam.img_height / 20);
 		debug("W UP key pressed");
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_S))
 	{
-		move_camera_up(&(data->cam), -data->cam.image_height / 20);
+		move_camera_up(&(data->cam), -data->cam.img_height / 20);
 		debug("S DOWN key pressed");
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_A))
 	{
-		move_camera_right(&(data->cam), -data->cam.image_width / 20);
+		move_camera_right(&(data->cam), -data->cam.img_width / 20);
 		debug("A move left key pressed");
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_D))
 	{
-		move_camera_right(&(data->cam), data->cam.image_width / 20);
+		move_camera_right(&(data->cam), data->cam.img_width / 20);
 		debug("D more right key pressed");
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
 	{
-		move_camera_forward(&(data->cam), -data->cam.image_width / 20);
+		move_camera_forward(&(data->cam), -data->cam.img_width / 20);
 		debug("S key pressed");
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
-		move_camera_forward(&(data->cam), data->cam.image_width / 10);
+		move_camera_forward(&(data->cam), data->cam.img_width / 10);
 		debug("Left shift key pressed");
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
-			data->cam.center.x, data->cam.center.y, data->cam.center.z,
-			data->cam.direction.x, data->cam.direction.y,
-			data->cam.direction.z);
+			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
+			data->cam.dir.x, data->cam.dir.y,
+			data->cam.dir.z);
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
