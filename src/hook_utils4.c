@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:52:34 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:56:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 16:03:10 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	move_camera_forward(t_camera *cam, double distance)
 	translate_camera(cam, translation);
 }
 
-// Function to calculate the new camera direction vector (pointing toward the origin)
+// Function to calculate the new camera direction vector (pointing 
+// toward the origin)
 t_point3	calculate_direction(t_point3 camera_pos)
 {
 	t_point3	direction;

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:56:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 16:02:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	hook(void *param)
 {
 	mlx_t	*mlx;
 	t_mrt	*data;
-
 
 	data = (t_mrt *)param;
 	mlx = data->mlx;
@@ -43,7 +42,8 @@ void	hook(void *param)
 	if (mlx_is_key_down(mlx, MLX_KEY_DOWN))
 	{
 		debug("pitch Arrow down pressed\n");
-		rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov * -ROTATION_DEG));
+		rotate_camera_pitch(&(data->cam), degrees_to_radians(data->cam.hfov \
+		* -ROTATION_DEG));
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
 			data->cam.center.x, data->cam.center.y, data->cam.center.z,
 			data->cam.direction.x, data->cam.direction.y,
@@ -66,8 +66,8 @@ void	hook(void *param)
 	if (mlx_is_key_down(mlx, MLX_KEY_RIGHT))
 	{
 		debug("yaw + Arrow right pressed\n");
-		rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov *
-				-ROTATION_DEG));
+		rotate_camera_yaw(&(data->cam), degrees_to_radians(data->cam.hfov \
+		* -ROTATION_DEG));
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
 			data->cam.center.x, data->cam.center.y, data->cam.center.z,
 			data->cam.direction.x, data->cam.direction.y,
@@ -77,7 +77,6 @@ void	hook(void *param)
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_F1))
 	{
-		// reset camera to original position
 		debug("F1 reset pressed\n");
 		data->cam.center = data->cam.original_pos;
 		data->cam.direction = data->cam.original_dir;

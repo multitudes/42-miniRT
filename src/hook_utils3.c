@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:52:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:56:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 16:02:51 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include "libft.h"
 #include "minirt.h"
 #include "utils.h"
-
 
 // Function to rotate the camera around the x-axis (pitch)
 void	rotate_camera_pitch(t_camera *cam, double angle)
@@ -60,12 +59,9 @@ t_point3	rotate_camera(t_point3 camera, double angle_degrees)
 	double	new_z;
 
 	angle_radians = degrees_to_radians(angle_degrees);
-	// Keep the y coordinate the same
 	new_y = camera.y;
-	// Calculate the new x and z using the rotation matrix
 	new_x = camera.x * cos(angle_radians) - camera.z * sin(angle_radians);
 	new_z = camera.x * sin(angle_radians) + camera.z * cos(angle_radians);
-	// Return the new camera position
 	return (point3(new_x, new_y, new_z));
 }
 
