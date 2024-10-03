@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 14:27:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 16:48:08 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_objects
 	t_cone_uncap		cones_u[OBJECT_COUNT];
 	t_box				boxes[OBJECT_COUNT];
 	t_hittable			*hit_list[OBJECT_COUNT * 8 + SPHERES_COUNT \
-						+  (2 * CYLINDER_COUNT)];
+						+ (2 * CYLINDER_COUNT)];
 	int					hit_idx;
 	t_hittable			*light_hit[OBJECT_COUNT + 1];
 	int					light_hit_idx;
