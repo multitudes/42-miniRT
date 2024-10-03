@@ -12,8 +12,6 @@
 
 #include "parse.h"
 
-
-
 /*
  * usage:
  * default, capped cylinder
@@ -90,35 +88,35 @@ static void	get_cylinder_u(t_objects *obj)
 /*
  * usage:
  * default quad -	"qd" [origin] [side_vector1] [side_vector2] [color]
- * metalic quad
-		-	"qd" [origin] [side_vector1] [side_vector2] [color] [fuzz(double)]
+ * metalic quad -	"qd" [origin] [side_vector1] [side_vector2] [color] [fuzz(double)]
  * (for quad light check quad_light())
  */
 /* TODO: cant get quad to render, might just be the coords */
 static void	get_quad(t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "quad", obj);
 	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "quad", obj);
+	params.center = set_vec3(obj, 1, "quad", 0);
+	params.side1 = set_vec3(obj, 2, "quad", 0);
+	params.side2 = set_vec3(obj, 3, "quad", 0);
+	params.rgbcolor = set_rgb(obj, 4, "quad");
+	
 	if (count_tokens(tokens) == 6)
 	{
 		metal_init(&obj->quads[set_index].metal, set_rgb(obj, 4, "quad"),
 			ft_atod(tokens[4]));
-		quad_mat(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0),
-			set_vec3(obj, 2, "quad", 0), set_vec3(obj, 3, "quad", 0),
-			(t_material *)&obj->quads[set_index].metal);
+		params.mat = (t_material*)&obj->quads[set_index].metal;
+		quad_mat(&obj->quads[set_index], params);
 	}
 	else
-	{
-		quad_rgb(&obj->quads[set_index], set_vec3(obj, 1, "quad", 0),
-			set_vec3(obj, 2, "quad", 0), set_vec3(obj, 3, "quad", 0),
-			set_rgb(obj, 4, "quad"));
-	}
+		quad_rgb(&obj->quads[set_index], params);
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->quads[set_index];
 	obj->hit_idx++;
 	set_index++;
@@ -362,9 +360,13 @@ static void	sanitize_line(char *line)
 static void	init_light_struct(t_mrt *data)
 {
 	t_empty_material	empty_material;
+	t_init_params		params;
 
-	quad_mat(&data->objects.lights[0].q_body, point3(0.1, 0.1, 0.1), vec3(0.1,
-			1, 0.1), vec3(1, 0.1, 0.1), (t_material *)&empty_material);
+	params.center = point3(0.1, 0.1, 0.1);
+	params.side1 = vec3(0.1, 0.1, 0.1);
+	params.side2 = vec3(0.1, 0.1, 0.1);
+	params.mat = (t_material*)&empty_material;
+	quad_mat(&data->objects.lights[0].q_body, params);
 	data->objects.light_hit[0] = (t_hittable *)&data->objects.lights[0].q_body;
 	data->objects.light_hit_idx++;
 }

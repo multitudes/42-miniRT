@@ -18,6 +18,7 @@
 # include "material.h"
 # include "ray.h"
 # include "vec3.h"
+# include "utils.h"
 
 /*
  * A quad is a 4-pointed polygon in 3D space
@@ -55,15 +56,16 @@ typedef struct s_quad
 	void				(*print)(const void *self);
 }						t_quad;
 
-void					quad_rgb(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v,
-							t_rgb rgbcolor);
-void					quad_mat(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v,
-							t_material *mat);
+/* solves header hell (quad and minirt include each other) */
+typedef struct s_init_params t_init_params;
+
+void					quad_rgb(t_quad *qd, t_init_params param);
+void					quad_mat(t_quad *qd, t_init_params param);
 void					print_quad(const void *self);
-bool					hit_quad(const void *self, const t_ray *r,
+bool					hit_quad(const void *self, const t_ray *r, \
 							t_interval ray_t, t_hit_record *rec);
 bool					is_interior(double a, double b, t_hit_record *rec);
-double					quad_pdf_value(const void *self, const t_point3 *orig,
+double					quad_pdf_value(const void *self, const t_point3 *orig, \
 							const t_vec3 *dir);
 t_vec3					quad_random(const void *self, const t_point3 *orig);
 

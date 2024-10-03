@@ -27,12 +27,12 @@ void	set_box_quad(t_box *box, t_point3 min, t_point3 max, t_rgb rgb)
 	dx = vec3(max.x - min.x, 0, 0);
 	dy = vec3(0, max.y - min.y, 0);
 	dz = vec3(0, 0, max.z - min.z);
-	quad_rgb(&box->q1, point3(min.x, min.y, max.z), dx, dy, rgb);
-	quad_rgb(&box->q2, point3(max.x, min.y, max.z), vec3negate(dz), dy, rgb);
-	quad_rgb(&box->q3, point3(max.x, min.y, min.z), vec3negate(dx), dy, rgb);
-	quad_rgb(&box->q4, point3(min.x, min.y, min.z), dz, dy, rgb);
-	quad_rgb(&box->q5, point3(min.x, max.y, max.z), dx, vec3negate(dz), rgb);
-	quad_rgb(&box->q6, point3(min.x, min.y, min.z), dx, dz, rgb);
+	quad_rgb(&box->q1, (t_init_params){.center = point3(min.x, min.y, max.z), .side1 = dx, .side2 = dy, .rgbcolor = rgb});
+	quad_rgb(&box->q2, (t_init_params){.center = point3(max.x, min.y, max.z), .side1 = vec3negate(dz), .side2 = dy, .rgbcolor = rgb});
+	quad_rgb(&box->q3, (t_init_params){.center = point3(max.x, min.y, min.z), .side1 = vec3negate(dx), .side2 = dy, .rgbcolor = rgb});
+	quad_rgb(&box->q4, (t_init_params){.center = point3(min.x, min.y, min.z), .side1 = dz, .side2 = dy, .rgbcolor = rgb});
+	quad_rgb(&box->q5, (t_init_params){.center = point3(min.x, max.y, max.z), .side1 = dx, .side2 = vec3negate(dz), .rgbcolor = rgb});
+	quad_rgb(&box->q6, (t_init_params){.center = point3(min.x, min.y, min.z), .side1 = dx, .side2 = dz, .rgbcolor = rgb});
 }
 
 /**
@@ -82,12 +82,12 @@ void	box(t_box *box, t_point3 a, t_point3 b, t_material *mat)
 	dx = vec3(max.x - min.x, 0, 0);
 	dy = vec3(0, max.y - min.y, 0);
 	dz = vec3(0, 0, max.z - min.z);
-	quad_mat(&box->q1, point3(min.x, min.y, max.z), dx, dy, mat);
-	quad_mat(&box->q2, point3(max.x, min.y, max.z), vec3negate(dz), dy, mat);
-	quad_mat(&box->q3, point3(max.x, min.y, min.z), vec3negate(dx), dy, mat);
-	quad_mat(&box->q4, point3(min.x, min.y, min.z), dz, dy, mat);
-	quad_mat(&box->q5, point3(min.x, max.y, max.z), dx, vec3negate(dz), mat);
-	quad_mat(&box->q6, point3(min.x, min.y, min.z), dx, dz, mat);
+	quad_mat(&box->q1, (t_init_params){.center = point3(min.x, min.y, max.z), .side1 = dx, .side2 = dy, .mat = mat});
+	quad_mat(&box->q2, (t_init_params){.center = point3(max.x, min.y, max.z), .side1 = vec3negate(dz), .side2 = dy, .mat = mat});
+	quad_mat(&box->q3, (t_init_params){.center = point3(max.x, min.y, min.z), .side1 = vec3negate(dx), .side2 = dy, .mat = mat});
+	quad_mat(&box->q4, (t_init_params){.center = point3(min.x, min.y, min.z), .side1 = dz, .side2 = dy, .mat = mat});
+	quad_mat(&box->q5, (t_init_params){.center = point3(min.x, max.y, max.z), .side1 = dx, .side2 = vec3negate(dz), .mat = mat});
+	quad_mat(&box->q6, (t_init_params){.center = point3(min.x, min.y, min.z), .side1 = dx, .side2 = dz, .mat = mat});
 	box->rgb = rgb(0, 0, 0);
 	box->base.hit = hit_box;
 	box->base.pdf_value = obj_pdf_value;

@@ -62,8 +62,9 @@ void	get_camera(t_mrt *data)
 */
 void	quad_light(t_objects *obj, int set_index)
 {
-	t_color	color;
-	t_rgb	rgbcolor;
+	t_color			color;
+	t_rgb			rgbcolor;
+	t_init_params	params;
 
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds_array size", "q_light", obj);
@@ -75,9 +76,11 @@ void	quad_light(t_objects *obj, int set_index)
 	solid_color_init(&obj->lights[set_index].color, color);
 	diffuse_light_init(&obj->lights[set_index].difflight,
 		(t_texture *)&obj->lights[set_index].color);
-	quad_mat(&obj->lights[set_index].q_body, set_vec3(obj, 2, "q_light", 0),
-		set_vec3(obj, 3, "q_light", 0), set_vec3(obj, 4, "q_light", 0),
-		(t_material *)&obj->lights[set_index].difflight);
+	params.center = set_vec3(obj, 2, "q_light", 0);
+	params.side1 = set_vec3(obj, 3, "q_light", 0);
+	params.side2 = set_vec3(obj, 4, "q_light", 0);
+	params.mat = (t_material*)&obj->lights[set_index].difflight;
+	quad_mat(&obj->lights[set_index].q_body, params);
 }
 
 /* Makes a light object, which is a sphere or a quad with a light texture.
