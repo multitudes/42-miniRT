@@ -64,3 +64,27 @@ t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
 	free_split(coord_tok);
 	return (vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
+
+/*
+ * Checks if a string represents a float number.
+ * (the string can have just a single dot and digits)
+ */
+bool	is_float(char *str)
+{
+	int		i;
+	bool	has_dot;
+
+	has_dot = false;
+	i = -1;
+	while (str[++i])
+	{
+		if (ft_isdigit(str[i]) == false)
+		{
+			if (str[i] == '.' && has_dot == false)
+				has_dot = true;
+			else
+				return (false);
+		}
+	}
+	return (true);
+}

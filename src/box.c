@@ -51,9 +51,6 @@ void	box_rgb(t_box *box, t_point3 a, t_point3 b, t_rgb rgb)
 {
 	t_point3	min;
 	t_point3	max;
-	t_vec3		dx;
-	t_vec3		dy;
-	t_vec3		dz;
 
 	box->a = a;
 	box->b = b;

@@ -27,6 +27,7 @@ double	ft_atod(char *str);
 /* parse_utils2.c */
 t_rgb	set_rgb(t_objects *obj, int index, char *func_name);
 t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized);
+bool	is_float(char *str);
 
 /* parse_obj1.c */
 void	get_ambient(t_mrt *data);
@@ -34,7 +35,9 @@ void	get_camera(t_mrt *data);
 void	quad_light(t_objects *obj, int set_index);
 void	get_light(t_objects *obj);
 
-
+/* parse_obj2.c */
+void	get_sphere(t_objects *obj);
+void	get_plane(t_objects *obj);
 
 
 

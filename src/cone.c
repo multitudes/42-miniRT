@@ -196,7 +196,7 @@ bool	hit_cone_cap(const void* self, const t_ray *r, t_interval closest, t_hit_re
 double obj_cone_pdf_value(const void *self, const t_point3 *orig, const t_vec3 *dir)
 {
 	const t_cone *cone = (t_cone *)self;
-	
+	(void) dir;
     // Calculate distance squared from origin to cylinder axis
     t_vec3 apex_to_orig =  vec3substr(*orig, cone->body.apex);
     // double apex_to_orig_len = length_squared(apex_to_orig);
