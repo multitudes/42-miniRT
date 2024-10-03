@@ -40,13 +40,14 @@ INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c color.c ray.c rtw_stb_image.c \
 						rtw_stb_image2.c vec3.c vec3_utils.c vec3_utils2.c vec3_utils3.c vec3_utils4.c \
 						hittable.c interval.c utils.c utils2.c ambient.c plane.c plane_utils.c cylinder.c \
-						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c hooks_utils.c \
+						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c \
+						hook_utils.c hook_utils2.c hook_utils3.c hook_utils4.c \
 						disk.c disk_utils.c box.c triangle.c rotated.c translated.c mersenne_twister.c cone.c\
-						 bilateral_filter.c bilateral_filter2.c)
+						bilateral_filter.c bilateral_filter2.c)
 
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
-						hittable.h hittable_list.h minirt.h color.h hooks_utils.h \
+						hittable.h hittable_list.h minirt.h color.h hook_utils.h \
 						utils.h ambient.h plane.h cylinder.h texture.h \
 						material.h onb.h pdf.h quad.h disk.h bilateral_filter.h\
 						box.h triangle.h rotated.h translated.h mersenne_twister.h)
