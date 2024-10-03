@@ -25,6 +25,7 @@
 # include "sphere.h"
 # include "texture.h"
 # include "triangle.h"
+# include "vec3.h"
 # include <MLX42/MLX42.h>
 # include <limits.h>
 
@@ -96,15 +97,6 @@ typedef struct s_mrt
 	void				(*renderscene)(struct s_mrt *, const t_hittablelist *, \
 						const t_hittablelist *);
 }						t_mrt;
-
-typedef struct s_init_params
-{
-	t_point3	center;
-	t_vec3		normal;
-	double		diam;
-	t_rgb		rgbcolor;
-	t_material	*mat;
-}				t_init_params;
 
 void					parse_input(char *filename, t_mrt *data);
 

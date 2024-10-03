@@ -13,13 +13,13 @@
 #ifndef UTILS_H
 # define UTILS_H
 
-# include <math.h>
-# include <stdint.h>
-# include <stdlib.h>
-
 # ifndef PI
 #  define PI 3.1415926535897932385
 # endif
+
+# include "vec3.h"
+# include "color.h"
+# include <stdlib.h>
 
 // Epsilon value for floating-point comparison
 # define EPSILON 1e-6
@@ -35,23 +35,30 @@
 # define C 1013904223
 # define M 4294967296 // 2^32
 
+/*	put this in utils, because it is an underused header -
+	will not cause circular depencancies */
+typedef struct s_init_params
+{
+	t_point3	center;
+	t_vec3		normal;
+	double		diam;
+	t_rgb		rgbcolor;
+	t_vec3		side1;		// quad
+	t_vec3		side2;		// quad
+	t_material	*mat;
+}				t_init_params;
+
+
 unsigned int	rand_rt(void);
 
-/*
- * Comverts degrees to radians.
- */
+/* Comverts degrees to radians. */
 double			degrees_to_radians(double degrees);
 
-/*
- * Returns a random real in [0,1).
- */
+/* Returns a random real in [0,1). */
 double			random_d(void);
 
-/*
- * Returns a random real in [min,max).
- */
+/* Returns a random real in [min,max). */
 double			random_double(double min, double max);
-
 int				random_int(int min, int max);
 
 #endif
