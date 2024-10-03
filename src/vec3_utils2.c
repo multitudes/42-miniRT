@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:37:29 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 18:41:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 15:37:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "vec3.h"
 
 /*
- * @brief dot product of vectors 
+ * @brief dot product of vectors
  * a . b = a1*b1 + a2*b2 + a3*b3
  */
 double	dot(const t_vec3 a, const t_vec3 b)
@@ -59,13 +59,15 @@ t_vec3	random_vec3_min_max(double min, double max)
 
 /**
  * @brief Check if a vector is close to zero
- * 
+ *
  * @param v the vector to check
  * @return true if the vector is close to zero in all dimensions
+ * 
+ * I use a near zero value of 1e-8 as a double precision floating point
  */
 bool	near_zero(t_vec3 e)
 {
 	const double	s = 1e-8;
 
-	return (fabs(e.x) < s) && (fabs(e.y) < s) && (fabs(e.z) < s);
+	return ((fabs(e.x) < s) && (fabs(e.y) < s) && (fabs(e.z) < s));
 }
