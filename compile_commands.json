@@ -1687,5 +1687,24 @@
    "obj/vec3_utils4.o"
   ],
   "file": "src/vec3_utils4.c"
+ },
+ {
+  "directory": "/home/lbrusa/DEV/42-miniRT",
+  "arguments": [
+   "cc",
+   "-Iinclude",
+   "-Isrc",
+   "-Ilib/external",
+   "-g",
+   "-I./include",
+   "-I./lib/external",
+   "-I./lib/MLX42/include",
+   "-I./lib/libft",
+   "-c",
+   "src/cone.c",
+   "-o",
+   "obj/cone.o"
+  ],
+  "file": "src/cone.c"
  }
 ]

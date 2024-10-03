@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:10:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 15:45:58 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,78 +15,49 @@
 #include <time.h>
 
 /**
- *  @brief Our random int generator.
+ *  @brief Our random int generators.
  *
  * @return unsigned int
+ *
+ * We have three different random number generators to test
+ * the performance. The first one is a simple linear congruential
+ * generator (LCG) that i got from copilot. With the
+ * __thread keyword, we make sure that each thread has its own
+ * seed. It is very fast I think it has a good randomness.
+ * The second one is the rand() function from the C standard library
+ * which is so slow when used in a multithreaded environment that
+ * it is actually a true bottleneck. It is not thread safe.
+ * The last is the Mersenne Twister which is a very good random
+ * number generator. It is also thread safe. The problem is that
+ * the effects on the minirt images are somewhat unpredictable.
+ * the shadows disappear for instance.
  */
 #if RANDOM_SYSTEM == 0
+
 unsigned int	rand_rt(void)
 {
-	static __thread unsigned int seed = 1;
+	static __thread unsigned int	seed = 1;
+
 	seed = (A * seed + C) % M;
 	return (seed);
 }
 #elif RANDOM_SYSTEM == 1
+
 unsigned int	rand_rt(void)
 {
-	static __thread int initialized = 0;
+	static __thread int	initialized = 0;
+
 	if (!initialized)
 	{
-		srand(time(NULL) ^ (uintptr_t)&initialized);
-			// Seed the random number generator with a unique seed per thread
+		srand(time(NULL) ^ (uintptr_t) & initialized);
 		initialized = 1;
 	}
 	return (rand());
 }
 #elif RANDOM_SYSTEM == 2
+
 unsigned int	rand_rt(void)
 {
 	return (mt_genrand_int32());
 }
 #endif
-
-/*
- * Comverts degrees to radians.
- */
-double	degrees_to_radians(double degrees)
-{
-	return (degrees * PI / 180.0);
-}
-
-/*
- * @brief Returns a random int in [min,max).
- *
- * max is excluded.
- */
-int	random_int(int min, int max)
-{
-	int	diff;
-
-	diff = max - min;
-	if (diff <= 0)
-		diff = 1;
-	// if (CORES > 1)
-	// {
-	//     unsigned int seed  = rand();
-	//     return (min + rand_r(&seed) % diff);
-		// maybe remove and use our random func
-	// }
-	return (min + rand_rt() % diff);
-}
-
-/*
- * @brief Returns a random real in [0,1), 1 excluded.
- */
-double	random_d(void)
-{
-	return (rand_rt() / (UINT32_MAX + 1.0));
-}
-
-/*
- * @brief Returns a random real in [min,max)
- * and max excluded.
- */
-double	random_double(double min, double max)
-{
-	return (min + (max - min) * random_d());
-}
