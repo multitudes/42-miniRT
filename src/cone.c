@@ -130,7 +130,10 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
             {
                 closest_t = t0;
                 closest_point = point;
-                normal = unit_vector(cross(cone->axis, delta_point));
+                // normal = unit_vector(cross(cone->axis, delta_point));
+                t_vec3 v_proj = vec3multscalar(cone->axis, dot(delta_point, cone->axis));
+                t_vec3 v_perp = vec3substr(delta_point, v_proj);
+                normal = unit_vector(v_perp);
                 hit = true;
             }
         }
@@ -147,7 +150,10 @@ bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *
             {
                 closest_t = t1;
                 closest_point = point;
-                normal = unit_vector(cross(cone->axis, delta_point));
+                // normal = unit_vector(cross(cone->axis, delta_point));
+                t_vec3 v_proj = vec3multscalar(cone->axis, dot(delta_point, cone->axis));
+                t_vec3 v_perp = vec3substr(delta_point, v_proj);
+                normal = unit_vector(v_perp);
                 hit = true;
             }
         }
