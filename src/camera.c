@@ -6,27 +6,16 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 17:39:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 17:42:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bilateral_filter.h"
 #include "camera.h"
-#include "color.h"
 #include "debug.h"
-#include "hittable_list.h"
-#include "interval.h"
 #include "minirt.h"
-#include "pdf.h"
 #include "ray.h"
 #include "utils.h"
 #include "vec3.h"
-#include <MLX42/MLX42.h>
-#include <math.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <time.h>
 
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
@@ -107,10 +96,9 @@ void	update_cam_resize(t_camera *cam, int new_width, int new_height)
 	cam->viewport_v = vec3multscalar(vec3negate(cam->v), viewport_h);
 	cam->pixel_delta_u = vec3divscalar(cam->viewport_u, cam->img_width);
 	cam->pixel_delta_v = vec3divscalar(cam->viewport_v, cam->img_height);
-	viewport_upper_left = vec3substr(vec3substr((vec3substr(cam->orig,
-						vec3multscalar(cam->w, foc_len))),
-				vec3divscalar(cam->viewport_u, 2)),
-			vec3divscalar(cam->viewport_v, 2));
+	viewport_upper_left = vec3substr(vec3substr((vec3substr(cam->orig, \
+	vec3multscalar(cam->w, foc_len))), vec3divscalar(cam->viewport_u, 2)), \
+	vec3divscalar(cam->viewport_v, 2));
 	cam->pixel00_loc = vec3add(viewport_upper_left,
 			vec3divscalar(vec3add(cam->pixel_delta_u, cam->pixel_delta_v), 2));
 }
