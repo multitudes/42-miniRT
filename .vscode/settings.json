@@ -59,7 +59,8 @@
 		"stdint.h": "c",
 		"time.h": "c",
 		"math.h": "c",
-		"string.h": "c"
+		"string.h": "c",
+		"plane.h": "c"
 	},
 	"cmake.sourceDirectory": "/home/lbrusa/DEV/42-miniRT/lib/MLX42"
 }
