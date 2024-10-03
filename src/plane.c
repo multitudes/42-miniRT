@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 13:46:17 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,18 @@
 #include "utils.h"
 #include <stdio.h>
 
+/**
+ * @brief plane - Initialize a plane object
+ * 
+ * @param pl the plane object (already on the stack)
+ * @param point a point in the plane
+ * @param normal the normal vector of the plane
+ * @param rgbcol the color of the plane
+ * 
+ * The plane is defined by a point and a normal vector to the plane
+ * The normal vector is normalized. I use PLANE_MAX to limit the plane to 
+ * avoid wasting resources since the ray will take a long time to hit the plane
+ */
 void	plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol)
 {
 	pl->base.hit = hit_plane;
@@ -21,16 +33,14 @@ void	plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol)
 	pl->base.random = plane_random;
 	pl->q = point;
 	pl->normal = unit_vector(normal);
-	pl->d = -dot(pl->normal, point); // Calculate D for the plane equation
+	pl->d = -dot(pl->normal, point);
 	pl->u = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
 	pl->v = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
 	pl->rgb = rgbcol;
 	pl->color = rgb_to_color(rgbcol);
-	// Initialize texture and material as I did for the quad
 	solid_color_init(&(pl->solid), pl->color);
 	lambertian_init_tex(&(pl->lambertian_mat), (t_texture *)&(pl->solid));
 	pl->mat = (t_material *)&(pl->lambertian_mat);
-	// print plane for the rt file
 	pl->print = print_plane;
 }
 
@@ -41,11 +51,10 @@ void	plane_mat(t_plane *pl, t_point3 point, t_vec3 normal, t_material *mat)
 	pl->base.random = plane_random;
 	pl->q = point;
 	pl->normal = unit_vector(normal);
-	pl->d = -dot(pl->normal, point); // Calculate D for the plane equation
+	pl->d = -dot(pl->normal, point);
 	pl->u = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
 	pl->v = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
 	pl->mat = mat;
-	//->colors are depnding of the type of mat which i dont know yet
 	pl->rgb = rgb(0, 0, 0);
 	pl->color = color(0, 0, 0);
 	pl->print = print_plane;
@@ -66,6 +75,17 @@ void	print_plane(const void *self)
 		p->rgb.b);
 }
 
+/**
+ * @brief hit_plane - Check if a ray hits a plane
+ * 
+ * @param self the plane object
+ * @param r the ray
+ * @param ray_t the interval of the ray
+ * @param rec the hit record
+ * @return true if the ray hits the plane
+ * 
+ * 	no hit if ray is parallel to the plane
+ */
 bool	hit_plane(const void *self, const t_ray *r, t_interval ray_t,
 		t_hit_record *rec)
 {
@@ -73,12 +93,9 @@ bool	hit_plane(const void *self, const t_ray *r, t_interval ray_t,
 	double			denom;
 	double			t;
 
-	// printf("hit_quad ----------------------********\n");
 	denom = dot(pl->normal, r->dir);
-	// no hit if ray is parallel to the quad
 	if (fabs(denom) < 1e-8)
 		return (false);
-	// Return false if the hit point parameter t is outside the ray interval.
 	t = (-pl->d - dot(pl->normal, r->orig)) / denom;
 	if (!contains(&ray_t, t))
 		return (false);
@@ -89,37 +106,37 @@ bool	hit_plane(const void *self, const t_ray *r, t_interval ray_t,
 	return (true);
 }
 
-double	plane_pdf_value(const void *self, const t_point3 *orig,
-		const t_vec3 *dir)
-{
-	const t_plane	*pl = (t_plane *)self;
-	t_hit_record	rec;
-	const t_ray		r = ray(*orig, *dir);
-	double			distance_squared;
-	double			cosine;
-	double			area;
+// /**
+//  * @brief plane_pdf_value - Computes the PDF value for a plane
+//  */
+// double	plane_pdf_value(const void *self, const t_point3 *orig,
+// 		const t_vec3 *dir)
+// {
+// 	const t_plane	*pl = (t_plane *)self;
+// 	t_hit_record	rec;
+// 	const t_ray		r = ray(*orig, *dir);
+// 	double			distance_squared;
+// 	double			cosine;
+// 	double			area;
 
-	if (!hit_plane(pl, &r, interval(0.001, 1e30), &rec))
-		return (0);
-	// Calculate the distance squared from the origin to the hit point
-	distance_squared = len_sqrd(vec3substr(rec.p, *orig));
-	// Calculate the cosine of the angle between the ray and the plane normal
-	cosine = fabs(dot(*dir, pl->normal));
-	// Calculate the area of the infinite plane (which is infinite)
-	area = 1e30;
-	return (distance_squared / (cosine * area));
-}
+// 	if (!hit_plane(pl, &r, interval(0.001, 1e30), &rec))
+// 		return (0);
+// 	distance_squared = len_sqrd(vec3substr(rec.p, *orig));
+// 	cosine = fabs(dot(*dir, pl->normal));
+// 	area = 1e30;
+// 	return (distance_squared / (cosine * area));
+// }
 
-t_vec3	plane_random(const void *self, const t_point3 *orig)
-{
-	const t_plane	*pl = (t_plane *)self;
-	double			max_u;
-	double			max_v;
-	t_vec3			p;
+// t_vec3	plane_random(const void *self, const t_point3 *orig)
+// {
+// 	const t_plane	*pl = (t_plane *)self;
+// 	double			max_u;
+// 	double			max_v;
+// 	t_vec3			p;
 
-	max_u = random_double(0, 1) * PLANE_MAX;
-	max_v = random_double(0, 1) * PLANE_MAX;
-	p = vec3add(pl->q, vec3add(vec3multscalar(pl->u, max_u),
-				vec3multscalar(pl->v, max_v)));
-	return (vec3substr(p, *orig));
-}
+// 	max_u = random_double(0, 1) * PLANE_MAX;
+// 	max_v = random_double(0, 1) * PLANE_MAX;
+// 	p = vec3add(pl->q, vec3add(vec3multscalar(pl->u, max_u),
+// 				vec3multscalar(pl->v, max_v)));
+// 	return (vec3substr(p, *orig));
+// }
