@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:06:45 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 10:50:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "hittable.h"
 #include "utils.h"
 #include "color.h"
+#include <stdio.h>
 
 
 /**
