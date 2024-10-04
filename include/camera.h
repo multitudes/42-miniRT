@@ -6,19 +6,21 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 14:22:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 16:54:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CAMERA_H
 # define CAMERA_H
 
+# include "material.h"
 # include "ambient.h"
 # include "hittable_list.h"
 # include "ray.h"
 # include "utils.h"
 # include "vec3.h"
 # include <pthread.h>
+# include "pdf.h"
 
 # define ASPECT_RATIO 1
 # define IMAGE_WIDTH 400
@@ -71,11 +73,26 @@ typedef struct s_camera
 	void			(*print)(const void *self);
 }							t_camera;
 
+typedef struct s_rcparams
+{
+	t_hit_record rec;
+	t_scatter_record srec;
+	t_hittable_pdf light_pdf;
+	t_pdf *recorded_pdf;
+	t_color color_from_emission;
+	t_ray scattered; 
+	double pdf_value; 
+	double scattering_pdf;
+	t_mixture_pdf mix_pdf;
+	t_color sample_color; 
+}	t_rcparams;
+
 void		init_cam(t_camera *cam, t_point3 center,
 				t_vec3 direction, double hfov);
 void		render(t_mrt *data, const t_hittablelist *world,
 				const t_hittablelist *lights);
 t_color		ray_color(t_scene scene, t_ray *r, int depth);
+t_ray		get_ray(t_camera cam, int i, int j);
 void		write_color(t_mrt *data, int x, int y,
 				t_color colorvector);
 void		print_camera(const void *self);
@@ -83,5 +100,10 @@ uint32_t	color_gamma_corrected(t_color color);
 void		update_cam_resize(t_camera *cam, int new_width,
 				int new_height);
 void		update_cam_orientation(t_camera *cam);
+t_color		metal_color_mix(t_scene scene, t_hit_record rec, \
+						t_scatter_record srec, int depth);
+void		init_rcparams(t_rcparams *params);
+t_color		get_color_from_scatter(t_rcparams params, t_scene scene, t_ray *r, \
+								int depth);
 
 #endif

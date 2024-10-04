@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 14:22:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 15:11:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "ray.h"
 #include "utils.h"
 #include "vec3.h"
-
 
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
