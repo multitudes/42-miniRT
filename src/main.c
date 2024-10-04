@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 14:06:52 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 15:08:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int init_window(t_mrt *data);
 bool init_data(t_mrt *data);
 int main_plane_orientation();
 int main_quad();
-int main_showcase_all();
+int main_disklight_experimant();
 
 
 int main(int argc, char **argv)
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 	}
 	else 
 	{	
-		int scene = 6;
+		int scene = 10;
 
 		switch (scene)
 		{
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
 			main_quad();
 			break;
 		case 10:
-			main_showcase_all();
+			main_disklight_experimant();
 			break;
 		default:
 			break;
@@ -104,9 +104,87 @@ int main(int argc, char **argv)
 	}
 }
 
-int main_showcase_all()
+int main_disklight_experimant()
 {
+	t_mrt data;
+	if (!init_data(&data))
+        return (1);
+
+	/***************************** */
+	/* 			camera 			   */
+	/***************************** */
+	t_point3 center = point3( 0.000000, 10, -250.000000);
+	t_vec3 direction = vec3(0,0,1);
+	init_cam(&data.cam, center, direction, 90);
+	data.cam.print((void*)(&(data.cam)));
+
+	/***************************** */
+	/* 		ambient light		   */
+	/***************************** */
+	ambient(&data.cam.ambient, 0.5, rgb(110,100,100));
+	data.cam.ambient.print((void*)&data.cam.ambient);
+
+	/***********************************/
+	/* 			light        		   */
+	/***********************************/
+	t_diffuse_light difflight;
+	t_solid_color difflight_color;
+	solid_color_init(&difflight_color, color(200, 200, 200));
+	diffuse_light_init(&difflight, (t_texture*)&difflight_color);
+
+	// world ================================================== world ==================================================
+	t_hittable *list[10];
+
+	// red sphere
+	t_sphere s1;
+	sphere(&s1, vec3(343, 90, 332), 180, rgb(166, 13, 13));
+	s1.print((void*)&s1);
+
+// light top
+	t_disk d6;
+	disk_mat(&d6, point3(343,554,332), vec3(0,-200,0), 200, (t_material*)&difflight);
+
+	t_quad s6;
+	quad_mat(&s6, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&difflight);
 	
+
+	list[0] = (t_hittable*)(&s1); // red sphere
+	list[1] = (t_hittable*)(&s6);  // light quad
+	list[2] = (t_hittable*)(&d6);  // light disk
+
+	const t_hittablelist world = hittablelist(list, 2);
+
+	t_empty_material empty_material;
+	empty_material_init(&empty_material);
+
+//void	disk_mat(t_disk *d, t_point3 center, t_vec3 normal, double diam, t_material *mat)
+	t_disk l6;
+	disk_mat(&l6, point3(343,554,332), vec3(0,-200,0), 100, (t_material*)&empty_material);
+
+	t_quad l7;
+	quad_mat(&l7, point3(343,554,332), vec3(-200,0,0), vec3(0,0,-200), (t_material*)&empty_material);
+
+	t_hittable *list_lights[2];
+	list_lights[0] = (t_hittable*)(&l7);
+	list_lights[1] = (t_hittable*)(&l6);
+	const t_hittablelist lights = hittablelist(list_lights, 2);
+
+    debug("Start of minirt %s", "helllo !! ");
+	if (!init_window(&data))
+		return (EXIT_FAILURE);
+
+	data.world= world;
+	data.lights = lights;
+
+	render(&data, &world, &lights);
+
+	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+    mlx_loop_hook(data.mlx, &hook, (void *)&data);
+    mlx_loop(data.mlx);
+    ft_printf("\nbyebye!\n");
+    mlx_terminate(data.mlx);
+
+    return (EXIT_SUCCESS);
 	return 0;
 }
 
@@ -115,7 +193,7 @@ int main_showcase_all()
 int main_quad()
 {
 
-t_mrt data;
+	t_mrt data;
 	// world
 	t_hittable *list[7];
 
