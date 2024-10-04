@@ -385,7 +385,7 @@ static void	init_light_struct(t_mrt *data)
 	params.mat = (t_material*)&empty_material;
 	quad_mat(&data->objects.lights[0].q_body, params);
 	data->objects.light_hit[0] = (t_hittable *)&data->objects.lights[0].q_body;
-	data->objects.light_hit_idx++;
+	data->objects.light_idx++;
 }
 
 static bool	ft_isspace(char *str)
@@ -434,7 +434,7 @@ void	parse_input(char *filename, t_mrt *data)
 			&data->objects);
 	data->world = hittablelist(data->objects.hit_list, data->objects.hit_idx);
 	data->lights = hittablelist(data->objects.light_hit,
-			data->objects.light_hit_idx);
+			data->objects.light_idx);
 	if (close(data->objects._file_fd) == -1)
 		perror("MiniRT: close()");
 }
