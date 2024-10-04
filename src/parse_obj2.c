@@ -14,12 +14,16 @@
 
 static void	sphere_5_tokens(t_objects *obj, int set_index, char **tokens, double diam)
 {
+	t_init_params params;
+
+	params.center = set_vec3(obj, 1, "sphere", 0);
+	params.diam = diam;
 	if (is_float(tokens[4]))
 	{
 		metal_init(&obj->spheres[set_index].metal, set_rgb(obj, 3, "sphere"),
 			ft_atod(tokens[4]));
-		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0),
-			diam, (t_material *)&obj->spheres[set_index].metal);
+		params.mat = (t_material*)&obj->spheres[set_index].metal;
+		sphere_mat(&obj->spheres[set_index], params);
 	}
 	else
 	{
@@ -27,24 +31,30 @@ static void	sphere_5_tokens(t_objects *obj, int set_index, char **tokens, double
 			set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat,
 			(t_texture *)&obj->spheres[set_index].checker);
-		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0),
-			diam, (t_material *)&obj->spheres[set_index].lambertian_mat);
+		params.mat  = (t_material*)&obj->spheres[set_index].lambertian_mat;
+		sphere_mat(&obj->spheres[set_index], params);
 	}
 }
 
 static void sphere_4_tokens(t_objects *obj, int set_index, char **tokens, int diam)
 {
+	t_init_params params;
+
+	params.center = set_vec3(obj, 1, "sphere", 0);
+	params.diam = diam;
 	if (ft_strncmp(tokens[3], "img:", 4) == 0)
 	{
 		img_texture_init(&obj->spheres[set_index].img_texture, &tokens[3][4]);
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat,
 			(t_texture *)&obj->spheres[set_index].img_texture);
-		sphere_mat(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0),
-			diam, (t_material *)&obj->spheres[set_index].lambertian_mat);
+		params.mat = (t_material*)&obj->spheres[set_index].lambertian_mat;
+		sphere_mat(&obj->spheres[set_index], params);
 	}
 	else
-		sphere(&obj->spheres[set_index], set_vec3(obj, 1, "sphere", 0), diam,
-			set_rgb(obj, 3, "sphere"));
+	{
+		params.rgbcolor = set_rgb(obj, 3, "sphere");
+		sphere(&obj->spheres[set_index], params);
+	}
 }
 
 /*

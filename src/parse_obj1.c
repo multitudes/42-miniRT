@@ -34,7 +34,7 @@ void	get_ambient(t_mrt *data)
 
 /* Inits the camera struct inside of t_mrt.
  * usage:
- * "C" [origin] [orientation(view) vector (normalized values)] [horiz. fow (double)]
+ * "C" [origin] [view vector (normalized values)] [horiz. fow (double)]
 */
 void	get_camera(t_mrt *data)
 {
@@ -93,34 +93,34 @@ void	quad_light(t_objects *obj, int set_index)
  */
 void	get_light(t_objects *obj)
 {
-	static int	set_index;
-	int			diam;
-	t_color		color;
-	t_rgb		rgbcolor;
-	char		**tokens;
+	static int		set_index;
+	t_color			color;
+	char			**tokens;
+	t_init_params	params;
 
 	if (ft_strncmp(obj->_tokens[1], "qd", 3) == 0)
 		quad_light(obj, set_index);
 	else
 	{
-		diam = 100;
+		params.diam = 100;
 		tokens = obj->_tokens;
 		if (set_index >= OBJECT_COUNT)
 			call_error("exceeds array size", "light", obj);
 		if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
 			call_error("invalid token amount", "light", obj);
-		rgbcolor = set_rgb(obj, 3, "light");
-		color = vec3multscalar(rgb_to_color(rgbcolor), 100
+		params.rgbcolor = set_rgb(obj, 3, "light");
+		color = vec3multscalar(rgb_to_color(params.rgbcolor), 100
 				* ft_atod(tokens[2]));
 		solid_color_init(&obj->lights[set_index].color, color);
 		diffuse_light_init(&obj->lights[set_index].difflight,
 			(t_texture *)&obj->lights[set_index].color);
 		if (count_tokens(tokens) == 5)
-			diam = ft_atod(tokens[4]);
-		if (diam < 0)
+			params.diam = ft_atod(tokens[4]);
+		if (params.diam < 0)
 			call_error("diameter cannot be negative...", "light", obj);
-		sphere_mat(&obj->lights[set_index].s_body, set_vec3(obj, 1, "light", 0),
-			diam, (t_material *)&obj->lights[set_index].difflight);
+		params.center = set_vec3(obj, 1, "light", 0);
+		params.mat = (t_material*)&obj->lights[set_index].difflight;
+		sphere_mat(&obj->lights[set_index].s_body, params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].s_body;
 	obj->hit_idx++;
