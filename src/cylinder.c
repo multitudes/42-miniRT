@@ -86,8 +86,10 @@ void cylinder_capped(t_cylinder_capped *c, t_init_params params)
 	t_vec3 axis = unit_vector(params.normal);
 	t_point3 top_center = vec3add(params.center, vec3multscalar(axis, params.height / 2));
     t_point3 bottom_center = vec3add(params.center, vec3multscalar(axis, -params.height / 2));
-	disk_mat(&c->top, top_center, params.normal, params.diam, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), params.diam, c->cylinder_uncapped.mat);
+    params.center = top_center;
+	disk(&c->top, params);
+	params.center = bottom_center;
+	disk(&c->bottom, params);
 	c->print = &print_cylinder_capped;
 }
 
@@ -101,8 +103,10 @@ void cylinder_mat_capped(t_cylinder_capped *c, t_init_params params)
 	t_vec3 axis = unit_vector(params.normal);
     t_point3 top_center = vec3add(params.center, vec3multscalar(axis, params.height / 2));
     t_point3 bottom_center = vec3add(params.center, vec3multscalar(axis, -(params.height / 2)));
-	disk_mat(&c->top, top_center, axis, params.diam, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), params.diam, c->cylinder_uncapped.mat);
+    params.center = top_center;
+	disk_mat(&c->top, params);
+	params.center = bottom_center;
+	disk_mat(&c->bottom, params);
 	c->print = &print_cylinder_capped;
 }
 

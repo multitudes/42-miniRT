@@ -14,10 +14,8 @@
 
 /*
  * usage:
- * default, capped cylinder
-		-	"cy" [origin] [axis normal] [diameter] [height] [rgb color]
- * metalic, capped cylinder
-		-	"cy" [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
+ * default, capped cylinder -	"cy" [origin] [axis normal] [diameter] [height] [rgb color]
+ * metalic, capped cylinder -	"cy" [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
  */
 static void	get_cylinder(t_objects *obj)
 {
@@ -111,7 +109,6 @@ static void	get_quad(t_objects *obj)
 	params.side1 = set_vec3(obj, 2, "quad", 0);
 	params.side2 = set_vec3(obj, 3, "quad", 0);
 	params.rgbcolor = set_rgb(obj, 4, "quad");
-	
 	if (count_tokens(tokens) == 6)
 	{
 		metal_init(&obj->quads[set_index].metal, set_rgb(obj, 4, "quad"),
@@ -129,31 +126,33 @@ static void	get_quad(t_objects *obj)
 /*
  * usage:
  * default -	"dsk" [origin] [surface normal] [diameter] [rgb color]
- * metalic
-		-	"dsk" [origin] [surface normal] [diameter] [rgb color] [fuzz(double)]
+ * metalic -	"dsk" [origin] [surface normal] [diameter] [rgb color] [fuzz(double)]
  */
 static void	get_disk(t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "disk", obj);
 	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "disk", obj);
+	params.center = set_vec3(obj, 1, "disk", 0);
+	params.normal = set_vec3(obj, 2, "disk", 1);
+	params.diam = ft_atod(tokens[3]);
 	if (count_tokens(tokens) == 6)
 	{
 		metal_init(&obj->disks[set_index].metal, set_rgb(obj, 4, "disk"),
 			ft_atod(tokens[4]));
-		disk_mat(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0),
-			set_vec3(obj, 2, "disk", 0), ft_atod(tokens[3]),
-			(t_material *)&obj->disks[set_index].metal);
+		params.mat = (t_material*)&obj->disks[set_index].metal;
+		disk_mat(&obj->disks[set_index], params);
 	}
 	else
 	{
-		disk(&obj->disks[set_index], set_vec3(obj, 1, "disk", 0), set_vec3(obj,
-				2, "disk", 1), ft_atod(tokens[3]), set_rgb(obj, 4, "disk"));
+		params.rgbcolor = set_rgb(obj, 4, "disk");
+		disk(&obj->disks[set_index], params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->disks[set_index];
 	obj->hit_idx++;
