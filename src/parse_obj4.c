@@ -94,3 +94,36 @@ void	get_triangle(t_objects *obj)
 	obj->hit_idx++;
 	set_index++;
 }
+
+/*
+ * usage:
+ * default - "box" [origin] [diagonal point] [color]
+ * metalic - "box" [origin] [diagonal point] [color] [fuzz(double)]
+ */
+void	get_box(t_objects *obj)
+{
+	static int		set_index;
+	t_init_params	params;
+
+	if (set_index >= OBJECT_COUNT)
+		call_error("exceeds array size", "box", obj);
+	if (count_tokens(obj->_tokens) != 4 && count_tokens(obj->_tokens) != 5)
+		call_error("invalid token amount", "box", obj);
+	params.a = set_vec3(obj, 1, "box", 0);
+	params.b = set_vec3(obj, 2, "box", 0);
+	if (count_tokens(obj->_tokens) == 5)
+	{
+		metal_init(&obj->boxes[set_index].metal, set_rgb(obj, 3, "box"),
+			ft_atod(obj->_tokens[4]));
+		params.mat = (t_material *)&obj->boxes[set_index].metal;
+		box(&obj->boxes[set_index], params);
+	}
+	else
+	{
+		params.rgbcolor = set_rgb(obj, 3, "box");
+		box_rgb(&obj->boxes[set_index], params);
+	}
+	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->boxes[set_index];
+	obj->hit_idx++;
+	set_index++;
+}
