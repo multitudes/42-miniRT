@@ -6,21 +6,16 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 17:07:38 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 17:10:50 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 17:14:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "camera.h"
 #include "color.h"
 #include "debug.h"
-#include "hittable_list.h"
-#include "interval.h"
 #include "minirt.h"
-#include "pdf.h"
 #include "ray.h"
 #include "utils.h"
-#include "vec3.h"
-#include <stdbool.h>
 
 /**
  * @brief one of the most important functions in the raytracer
