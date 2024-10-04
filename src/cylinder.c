@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include "material.h"
 #include "utils.h"
-#include "debug.h"
 
 /**
  * @brief: initializer for a cylinder uncapped standard material
@@ -30,20 +29,20 @@
  * the cylinder height
  * R,G,B colors in range [0,255]
 */
-void		cylinder_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
+void		cylinder_uncapped(t_cylinder *c, t_init_params params)
 {
 	c->base.hit = hit_cylinder;
 	c->base.pdf_value = obj_cylinder_pdf_value;
 	c->base.random = obj_cylinder_random;
-	c->center = center;
+	c->center = params.center;
 	// TODO: normalize axis??
-	c->axis = axis;
-	c->radius = diameter / 2;
-	c->height = height;
-	c->min = -height / 2;
-	c->max = height / 2;
-	c->rgb = rgbcolor;
-	c->color = rgb_to_color(rgbcolor);
+	c->axis = unit_vector(params.normal);
+	c->radius = params.diam / 2;
+	c->height = params.height;
+	c->min = -params.height / 2;
+	c->max = params.height / 2;
+	c->rgb = params.rgbcolor;
+	c->color = rgb_to_color(params.rgbcolor);
 	solid_color_init(&(c->texture), c->color);
 	lambertian_init_tex(&(c->lambertian_mat), (t_texture*)&(c->texture));
  	c->mat = (t_material*)&(c->lambertian_mat);
@@ -56,18 +55,18 @@ void		cylinder_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diam
  * the rt file will have the following format:
  *
  */
-void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
+void		cylinder_mat_uncapped(t_cylinder *c, t_init_params params)
 {
 	c->base.hit = hit_cylinder;
 	c->base.pdf_value = obj_cylinder_pdf_value;
 	c->base.random = obj_cylinder_random;
-	c->center = center;
-	c->axis = axis;
-	c->radius = diameter / 2;
-	c->height = height;
-	c->min = -height / 2;
-	c->max = height / 2;
-	c->mat = mat;
+	c->center = params.center;
+	c->axis = unit_vector(params.normal);
+	c->radius = params.diam / 2;
+	c->height = params.height;
+	c->min = -params.height / 2;
+	c->max = params.height / 2;
+	c->mat = params.mat;
 	c->print = &print_cylinder;
 }
 
@@ -77,32 +76,33 @@ void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double 
  * the rt file will have the following format:
  *
  */
-void cylinder_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_rgb rgbcolor)
+void cylinder_capped(t_cylinder_capped *c, t_init_params params)
 {
-	axis = unit_vector(axis);
 	c->base.hit = hit_cylinder_capped;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
-	cylinder_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, rgbcolor);
-	
-	t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
-    t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -height / 2));
-	disk_mat(&c->top, top_center, axis, diameter, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), diameter, c->cylinder_uncapped.mat);
+	cylinder_uncapped(&c->cylinder_uncapped, params);
+
+	t_vec3 axis = unit_vector(params.normal);
+	t_point3 top_center = vec3add(params.center, vec3multscalar(axis, params.height / 2));
+    t_point3 bottom_center = vec3add(params.center, vec3multscalar(axis, -params.height / 2));
+	disk_mat(&c->top, top_center, params.normal, params.diam, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), params.diam, c->cylinder_uncapped.mat);
 	c->print = &print_cylinder_capped;
 }
 
-void cylinder_mat_capped(t_cylinder_capped *c, t_point3 center, t_vec3 axis, double diameter, double height, t_material *mat)
+void cylinder_mat_capped(t_cylinder_capped *c, t_init_params params)
 {
-	axis = unit_vector(axis);
 	c->base.hit = hit_cylinder_capped;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
-	cylinder_mat_uncapped(&c->cylinder_uncapped, center, axis, diameter, height, mat);
-    t_point3 top_center = vec3add(center, vec3multscalar(axis, height / 2));
-    t_point3 bottom_center = vec3add(center, vec3multscalar(axis, -(height / 2)));
-	disk_mat(&c->top, top_center, axis, diameter, c->cylinder_uncapped.mat);
-	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), diameter, c->cylinder_uncapped.mat);
+	cylinder_mat_uncapped(&c->cylinder_uncapped, params);
+	
+	t_vec3 axis = unit_vector(params.normal);
+    t_point3 top_center = vec3add(params.center, vec3multscalar(axis, params.height / 2));
+    t_point3 bottom_center = vec3add(params.center, vec3multscalar(axis, -(params.height / 2)));
+	disk_mat(&c->top, top_center, axis, params.diam, c->cylinder_uncapped.mat);
+	disk_mat(&c->bottom, bottom_center, vec3multscalar(axis, -1), params.diam, c->cylinder_uncapped.mat);
 	c->print = &print_cylinder_capped;
 }
 

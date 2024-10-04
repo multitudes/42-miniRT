@@ -17,6 +17,7 @@
 # include "disk.h"
 # include "hittable.h"
 # include "material.h"
+#include "quad.h"
 # include "vec3.h"
 
 /**
@@ -60,18 +61,10 @@ typedef struct s_cylinder_capped
 	void				(*print)(const void *self);
 }						t_cylinder_capped;
 
-void					cylinder_uncapped(t_cylinder *c, t_point3 center,
-							t_vec3 axis, double diameter, double height,
-							t_rgb rgbcolor);
-void					cylinder_mat_uncapped(t_cylinder *c, t_point3 center,
-							t_vec3 axis, double diameter, double height,
-							t_material *mat);
-void					cylinder_capped(t_cylinder_capped *c, t_point3 center,
-							t_vec3 axis, double diameter, double height,
-							t_rgb rgbcolor);
-void					cylinder_mat_capped(t_cylinder_capped *c,
-							t_point3 center, t_vec3 axis, double diameter,
-							double height, t_material *mat);
+void					cylinder_uncapped(t_cylinder *c, t_init_params params);
+void					cylinder_mat_uncapped(t_cylinder *c, t_init_params params);
+void					cylinder_capped(t_cylinder_capped *c, t_init_params params);
+void					cylinder_mat_capped(t_cylinder_capped *c, t_init_params params);
 bool					hit_cylinder_capped(const void *self, const t_ray *r,
 							t_interval closest, t_hit_record *rec);
 void					print_cylinder(const void *self);

@@ -13,6 +13,7 @@
 #ifndef UTILS_H
 # define UTILS_H
 
+#include <math.h>
 # ifndef PI
 #  define PI 3.1415926535897932385
 # endif
@@ -42,6 +43,7 @@ typedef struct s_init_params
 	t_point3	center;
 	t_vec3		normal;
 	double		diam;
+	double		height;
 	t_rgb		rgbcolor;
 	t_vec3		side1;		// quad
 	t_vec3		side2;		// quad

@@ -21,28 +21,30 @@
  */
 static void	get_cylinder(t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= CYLINDER_COUNT)
 		call_error("exceeds array size", "cylinder", obj);
 	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
 		call_error("invalid token amount", "cylinder", obj);
+	params.center = set_vec3(obj, 1, "cylinder", 0);
+	params.normal = set_vec3(obj, 2, "cylinder", 1);
+	params.diam = ft_atod(tokens[3]);
+	params.height = ft_atod(tokens[4]);
 	if (count_tokens(tokens) == 7)
 	{
 		metal_init(&obj->cylinders[set_index].cylinder_uncapped.metal,
 			set_rgb(obj, 3, "cylinder"), ft_atod(tokens[4]));
-		cylinder_mat_capped(&obj->cylinders[set_index], set_vec3(obj, 1,
-				"cylinder", 0), set_vec3(obj, 2, "cylinder", 1),
-			ft_atod(tokens[3]), ft_atod(tokens[4]),
-			(t_material *)&obj->cylinders[set_index].cylinder_uncapped.metal);
+		params.mat = (t_material*)&obj->cylinders[set_index].cylinder_uncapped.metal;
+		cylinder_mat_capped(&obj->cylinders[set_index], params);
 	}
 	else
 	{
-		cylinder_capped(&obj->cylinders[set_index], set_vec3(obj, 1, "cylinder",
-				0), set_vec3(obj, 2, "cylinder", 1), ft_atod(tokens[3]),
-			ft_atod(tokens[4]), set_rgb(obj, 5, "cylinder"));
+		params.rgbcolor = set_rgb(obj, 5, "cylinder");
+		cylinder_capped(&obj->cylinders[set_index], params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders[set_index];
 	obj->hit_idx++;
@@ -58,28 +60,30 @@ static void	get_cylinder(t_objects *obj)
  */
 static void	get_cylinder_u(t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= CYLINDER_COUNT)
 		call_error("exceeds array size", "cylinder_u", obj);
 	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
-		call_error("invalid token amount", "cylinde_u", obj);
+		call_error("invalid token amount", "cylinder_u", obj);
+	params.center = set_vec3(obj, 1, "cylinder_u", 0);
+	params.normal = set_vec3(obj, 2, "cylinder_u", 1);
+	params.diam = ft_atod(tokens[3]);
+	params.height = ft_atod(tokens[4]);
 	if (count_tokens(tokens) == 7)
 	{
 		metal_init(&obj->cylinders_u[set_index].metal,
 			set_rgb(obj, 3, "cylinder_u"), ft_atod(tokens[4]));
-		cylinder_mat_uncapped(&obj->cylinders_u[set_index], set_vec3(obj, 1,
-				"cylinder_u", 0), set_vec3(obj, 2, "cylinder_u", 1),
-			ft_atod(tokens[3]), ft_atod(tokens[4]),
-			(t_material *)&obj->cylinders_u[set_index].metal);
+		params.mat = (t_material*)&obj->cylinders_u[set_index].metal;
+		cylinder_mat_uncapped(&obj->cylinders_u[set_index], params);
 	}
 	else
 	{
-		cylinder_uncapped(&obj->cylinders_u[set_index], set_vec3(obj, 1, "cylinder_u",
-				0), set_vec3(obj, 2, "cylinder_u", 1), ft_atod(tokens[3]),
-			ft_atod(tokens[4]), set_rgb(obj, 5, "cylinder_u"));
+		params.rgbcolor = set_rgb(obj, 5, "cylinder_u");
+		cylinder_uncapped(&obj->cylinders_u[set_index], params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cylinders_u[set_index];
 	obj->hit_idx++;
