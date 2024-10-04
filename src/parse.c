@@ -12,39 +12,21 @@
 
 #include "parse.h"
 
-/*
- * usage:
- * default - "box" [origin] [diagonal point] [color]
- * metalic - "box" [origin] [diagonal point] [color] [fuzz(double)]
- */
-static void	get_box(t_objects *obj)
+static void	update_struct_pt2(t_mrt *data)
 {
-	static int		set_index;
-	char			**tokens;
-	t_init_params	params;
-
-	tokens = obj->_tokens;
-	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "box", obj);
-	if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
-		call_error("invalid token amount", "box", obj);
-	params.a = set_vec3(obj, 1, "box", 0);
-	params.b = set_vec3(obj, 2, "box", 0);
-	if (count_tokens(tokens) == 5)
-	{
-		metal_init(&obj->boxes[set_index].metal, set_rgb(obj, 3, "box"),
-			ft_atod(tokens[4]));
-		params.mat = (t_material*)&obj->boxes[set_index].metal;
-		box(&obj->boxes[set_index], params);
-	}
+	if (ft_strncmp("dsk", data->objects._tokens[0], 4) == 0)
+		get_disk(&data->objects);
+	else if (ft_strncmp("tr", data->objects._tokens[0], 3) == 0)
+		get_triangle(&data->objects);
+	else if (ft_strncmp("box", data->objects._tokens[0], 4) == 0)
+		get_box(&data->objects);
+	else if (ft_strncmp("co", data->objects._tokens[0], 3) == 0)
+		get_cone(&data->objects);
+	else if (ft_strncmp("co_u", data->objects._tokens[0], 3) == 0)
+		get_cone_u(&data->objects);
 	else
-	{
-		params.rgbcolor = set_rgb(obj, 3, "box");
-		box_rgb(&obj->boxes[set_index], params);
-	}
-	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->boxes[set_index];
-	obj->hit_idx++;
-	set_index++;
+		call_error("invalid object identifier", data->objects._tokens[0],
+			&data->objects);
 }
 
 static void	update_struct(t_mrt *data)
@@ -66,39 +48,8 @@ static void	update_struct(t_mrt *data)
 		get_cylinder_u(&data->objects);
 	else if (ft_strncmp("qd", data->objects._tokens[0], 3) == 0)
 		get_quad(&data->objects);
-	else if (ft_strncmp("dsk", data->objects._tokens[0], 4) == 0)
-		get_disk(&data->objects);
-	else if (ft_strncmp("tr", data->objects._tokens[0], 3) == 0)
-		get_triangle(&data->objects);
-	else if (ft_strncmp("box", data->objects._tokens[0], 4) == 0)
-		get_box(&data->objects);
-	else if (ft_strncmp("co", data->objects._tokens[0], 3) == 0)
-		get_cone(&data->objects);
-	else if (ft_strncmp("co_u", data->objects._tokens[0], 3) == 0)
-		get_cone_u(&data->objects);
 	else
-		call_error("invalid object identifier", data->objects._tokens[0],
-			&data->objects);
-}
-
-/* replaces tabs and newlines, so thta ft_split can split
-on just the space. removes comments as well */
-static void	sanitize_line(char *line)
-{
-	int	i;
-
-	i = -1;
-	while (line[++i])
-	{
-		if (line[i] == '\t' || line[i] == '\n')
-			line[i] = ' ';
-		else if (line[i] == '#')
-		{
-			line[i] = ' ';
-			line[++i] = '\0';
-			return ;
-		}
-	}
+		update_struct_pt2(data);
 }
 
 /*
@@ -118,36 +69,21 @@ static void	init_light_struct(t_mrt *data)
 	params.center = point3(0.1, 0.1, 0.1);
 	params.side1 = vec3(0.1, 0.1, 0.1);
 	params.side2 = vec3(0.1, 0.1, 0.1);
-	params.mat = (t_material*)&empty_material;
+	params.mat = (t_material *)&empty_material;
 	quad_mat(&data->objects.lights[0].q_body, params);
 	data->objects.light_hit[0] = (t_hittable *)&data->objects.lights[0].q_body;
 	data->objects.light_idx++;
 }
 
-static bool	ft_isspace(char *str)
-{
-	int	i;
-
-	i = -1;
-	while (str[++i])
-		if (str[i] != ' ')
-			return (false);
-	return (true);
-}
-
-/* in case or error, the parser calls exit() */
-void	parse_input(char *filename, t_mrt *data)
+static void	parse_line_loop(t_mrt *data)
 {
 	char	*line;
 
-	if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
-		call_error("invalid file extension", NULL, NULL);
-	data->objects._file_fd = open(filename, O_RDONLY);
-	if (data->objects._file_fd == -1)
-		perror(filename), exit(1);
-	init_light_struct(data);
-	while ((line = get_next_line(data->objects._file_fd)) != NULL)
+	while (1)
 	{
+		line = get_next_line(data->objects._file_fd);
+		if (line == NULL)
+			break ;
 		sanitize_line(line);
 		if (ft_strlen(line) == 1 || ft_isspace(line) == true)
 		{
@@ -164,6 +100,21 @@ void	parse_input(char *filename, t_mrt *data)
 		update_struct(data);
 		free_split(data->objects._tokens);
 	}
+}
+
+/* in case or error, the parser calls exit() */
+void	parse_input(char *filename, t_mrt *data)
+{
+	if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)
+		call_error("invalid file extension", NULL, NULL);
+	data->objects._file_fd = open(filename, O_RDONLY);
+	if (data->objects._file_fd == -1)
+	{
+		perror(filename);
+		exit(1);
+	}
+	init_light_struct(data);
+	parse_line_loop(data);
 	data->objects._tokens = NULL;
 	if (data->cam.aspect_ratio == 0)
 		call_error("There has to be a camera object!!!", "parse_input",

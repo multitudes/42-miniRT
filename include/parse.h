@@ -28,18 +28,30 @@ double	ft_atod(char *str);
 t_rgb	set_rgb(t_objects *obj, int index, char *func_name);
 t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized);
 bool	is_float(char *str);
+void	sanitize_line(char *line);
+bool	ft_isspace(char *str);
 
 /* parse_obj1.c */
 void	get_ambient(t_mrt *data);
 void	get_camera(t_mrt *data);
-void	quad_light(t_objects *obj, int set_index);
 void	get_light(t_objects *obj);
 
 /* parse_obj2.c */
 void	get_sphere(t_objects *obj);
 void	get_plane(t_objects *obj);
 
+/* parse_obj3.c */
+void	get_cylinder(t_objects *obj);
+void	get_cylinder_u(t_objects *obj);
+void	get_quad(t_objects *obj);
 
+/* parse_obj4.c */
+void	get_disk(t_objects *obj);
+void	get_triangle(t_objects *obj);
+void	get_box(t_objects *obj);
 
+/* parse_obj5.c */
+void	get_cone (t_objects *obj);
+void	get_cone_u (t_objects *obj);
 
 #endif

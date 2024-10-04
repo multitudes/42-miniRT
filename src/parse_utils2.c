@@ -88,3 +88,34 @@ bool	is_float(char *str)
 	}
 	return (true);
 }
+
+/* replaces tabs and newlines, so thta ft_split can split
+on just the space. removes comments as well */
+void	sanitize_line(char *line)
+{
+	int	i;
+
+	i = -1;
+	while (line[++i])
+	{
+		if (line[i] == '\t' || line[i] == '\n')
+			line[i] = ' ';
+		else if (line[i] == '#')
+		{
+			line[i] = ' ';
+			line[++i] = '\0';
+			return ;
+		}
+	}
+}
+
+bool	ft_isspace(char *str)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+		if (str[i] != ' ')
+			return (false);
+	return (true);
+}
