@@ -19,6 +19,7 @@
 # include "material.h"
 # include "texture.h"
 # include "vec3.h"
+# include "utils.h"
 # include <stdbool.h>
 
 typedef struct s_cone
@@ -48,14 +49,10 @@ typedef struct
 }					t_cone;
 
 /* init function */
-void	cone_uncap_rgb(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, double height, \
-	t_rgb rgbcolor);
-void	cone_rgb(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
-	t_rgb rgbcolor);
-void	cone_uncap_mat(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, double height, \
-	t_material *mat);
-void	cone_mat(t_cone *c, t_point3 center, t_vec3 axis, double diam, double height, \
-	t_material *mat);
+void	cone_uncap_rgb(t_cone_uncap *c, t_init_params params);
+void	cone_rgb(t_cone *c, t_init_params params);
+void	cone_uncap_mat(t_cone_uncap *c, t_init_params params);
+void	cone_mat(t_cone *c, t_init_params params);
 
 
 /* hit function */

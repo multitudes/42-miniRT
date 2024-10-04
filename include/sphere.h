@@ -16,6 +16,7 @@
 # include "color.h"
 # include "hittable.h"
 # include "material.h"
+#include "quad.h"
 # include "ray.h"
 # include "texture.h"
 # include "vec3.h"
@@ -43,10 +44,8 @@ typedef struct s_sphere
 	void					(*print)(const void *self);
 }							t_sphere;
 
-void						sphere(t_sphere *s, t_point3 center,
-								double diameter, t_rgb color);
-void						sphere_mat(t_sphere *s, t_point3 center,
-								double diameter, t_material *mat);
+void						sphere(t_sphere *s, t_init_params params);
+void						sphere_mat(t_sphere *s, t_init_params params);
 void						print_sphere(const void *self);
 void						print_sphere_mat(const void *self);
 bool						hit_sphere(const void *self, const t_ray *r,

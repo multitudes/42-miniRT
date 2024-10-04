@@ -18,22 +18,21 @@
 #include "vec3.h"
 #include <stdio.h>
 
-void	triangle(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c,
-		t_rgb rgbcolor)
+void	triangle(t_triangle *tri, t_init_params params)
 {
 	tri->base.hit = hit_triangle;
 	tri->base.pdf_value = triangle_pdf_value;
 	tri->base.random = triangle_random;
-	tri->a = a;
-	tri->b = b;
-	tri->c = c;
-	tri->edge1 = vec3substr(b, a);
-	tri->edge2 = vec3substr(c, a);
-	tri->rgb = rgbcolor;
-	tri->color = rgb_to_color(rgbcolor);
+	tri->a = params.a;
+	tri->b = params.b;
+	tri->c = params.c;
+	tri->edge1 = vec3substr(params.b, params.a);
+	tri->edge2 = vec3substr(params.c, params.a);
+	tri->rgb = params.rgbcolor;
+	tri->color = rgb_to_color(params.rgbcolor);
 	tri->normal = unit_vector(cross(tri->edge2, tri->edge1));
-	tri->d = dot(tri->normal, a);
-	tri->area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
+	tri->d = dot(tri->normal, params.a);
+	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a), vec3substr(params.c, params.a)));
 	// Initialize texture and material as before
 	solid_color_init(&(tri->texture), tri->color);
 	lambertian_init_tex(&(tri->lambertian_mat), (t_texture *)&(tri->texture));
@@ -41,21 +40,20 @@ void	triangle(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c,
 	tri->print = print_triangle;
 }
 
-void	triangle_mat(t_triangle *tri, t_point3 a, t_point3 b, t_point3 c,
-		t_material *mat)
+void	triangle_mat(t_triangle *tri, t_init_params params)
 {
 	tri->base.hit = hit_triangle;
 	tri->base.pdf_value = triangle_pdf_value;
 	tri->base.random = triangle_random;
-	tri->a = a;
-	tri->b = b;
-	tri->c = c;
-	tri->edge1 = vec3substr(b, a);
-	tri->edge2 = vec3substr(c, a);
+	tri->a = params.a;
+	tri->b = params.b;
+	tri->c = params.c;
+	tri->edge1 = vec3substr(params.b, params.a);
+	tri->edge2 = vec3substr(params.c, params.a);
 	tri->normal = unit_vector(cross(tri->edge2, tri->edge1));
-	tri->d = dot(tri->normal, a);
-	tri->area = 0.5 * length(cross(vec3substr(b, a), vec3substr(c, a)));
-	tri->mat = mat;
+	tri->d = dot(tri->normal, params.a);
+	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a), vec3substr(params.c, params.a)));
+	tri->mat = params.mat;
 	tri->print = print_triangle;
 }
 

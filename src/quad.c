@@ -19,19 +19,19 @@
 /**
  * @brief Initialize a quad object with a given position q, and two vectors u and v.
  */
-void	quad_rgb(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
+void	quad_rgb(t_quad *qd, t_init_params params)
 {
 	qd->base.hit = hit_quad;
 	qd->base.pdf_value = quad_pdf_value;
 	qd->base.random = quad_random;
-	qd->q = q;
-	qd->u = u;
-	qd->v = v;
-	qd->rgb = rgbcolor;
-	qd->color = rgb_to_color(rgbcolor);
-	t_vec3 n = cross(u, v);
+	qd->q = params.center;
+	qd->u = params.side1;
+	qd->v = params.side2;
+	qd->rgb = params.rgbcolor;
+	qd->color = rgb_to_color(params.rgbcolor);
+	t_vec3 n = cross(params.side1, params.side2);
 	qd->normal = unit_vector(n);
-	qd->d = dot(qd->normal, q);
+	qd->d = dot(qd->normal, params.center);
 	qd->w = vec3divscalar(n, dot(n, n));
 	qd->area = length(n);
 	solid_color_init(&(qd->texture), qd->color);
@@ -41,20 +41,22 @@ void	quad_rgb(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_rgb rgbcolor)
 }
 
 
-void quad_mat(t_quad *qd, t_point3 q, t_vec3 u, t_vec3 v, t_material *mat)
+void	quad_mat(t_quad *qd, t_init_params params)
 {
 	qd->base.hit = hit_quad;
 	qd->base.pdf_value = quad_pdf_value;
 	qd->base.random = quad_random;
-	qd->q = q;
-	qd->u = u;
-	qd->v = v;
-	t_vec3 n = cross(u, v);
+	qd->q = params.center;
+	qd->u = params.side1;
+	qd->v = params.side2;
+	qd->rgb = params.rgbcolor;
+	qd->color = rgb_to_color(params.rgbcolor);
+	t_vec3 n = cross(params.side1, params.side2);
 	qd->normal = unit_vector(n);
-	qd->d = dot(qd->normal, q);
+	qd->d = dot(qd->normal, params.center);
 	qd->w = vec3divscalar(n, dot(n, n));
 	qd->area = length(n);
- 	qd->mat = mat;
+ 	qd->mat = params.mat;
 	qd->print = print_quad;
 }
 

@@ -10,12 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "debug.h"
 #include "disk.h"
-#include "hittable.h"
-#include "minirt.h"
-#include "utils.h"
-#include <stdio.h>
 
 /**
  * @brief Initialize a disk object with a given position, normal, and radius.
@@ -27,8 +22,7 @@
  * @param diam diameter of the disk
  * @param rgbcolor color of the disk
  */
-void	disk(t_disk *d, t_point3 center, t_vec3 normal, double diam,
-		t_rgb rgbcolor)
+void	disk(t_disk *d, t_init_params params)
 {
 	t_vec3	u;
 	t_vec3	v;
@@ -36,53 +30,23 @@ void	disk(t_disk *d, t_point3 center, t_vec3 normal, double diam,
 	d->base.hit = hit_disk;
 	d->base.pdf_value = disk_pdf_value;
 	d->base.random = disk_random;
-	d->center = center;
-	d->radius = diam / 2;
-	d->normal = unit_vector(normal);
-	d->d = dot(d->normal, center);
+	d->center = params.center;
+	d->radius = params.diam / 2;
+	d->normal = unit_vector(params.normal);
+	d->d = dot(d->normal, params.center);
 	if (fabs(d->normal.x) > fabs(d->normal.y))
 		u = vec3(-d->normal.z, 0, d->normal.x);
 	else
 		u = vec3(0, d->normal.z, -d->normal.y);
 	u = unit_vector(u);
 	v = unit_vector(cross(d->normal, u));
-	u = vec3multscalar(u, diam / 2);
-	v = vec3multscalar(v, diam / 2);
+	u = vec3multscalar(u, params.diam / 2);
+	v = vec3multscalar(v, params.diam / 2);
 	d->u = u;
 	d->v = v;
 	d->w = vec3divscalar(cross(u, v), dot(cross(u, v), cross(u, v)));
-	d->rgb = rgbcolor;
-	d->color = rgb_to_color(rgbcolor);
-	solid_color_init(&(d->texture), d->color);
-	lambertian_init_tex(&(d->lambertian_mat), (t_texture *)&(d->texture));
-	d->mat = (t_material *)&(d->lambertian_mat);
-	d->print = print_disk;
-}
-
-// will be the new int from params
-void	disk_o(t_disk *d, t_init_params obj)
-{
-	t_vec3	u;
-	t_vec3	v;
-
-	d->base.hit = hit_disk;
-	d->base.pdf_value = disk_pdf_value;
-	d->base.random = disk_random;
-	d->center = obj.center;
-	d->radius = obj.diam / 2;
-	d->normal = unit_vector(obj.normal);
-	d->d = dot(d->normal, obj.center);
-	if (fabs(d->normal.x) > fabs(d->normal.y))
-		u = unit_vector(vec3(-d->normal.z, 0, d->normal.x));
-	else
-		u = unit_vector(vec3(0, d->normal.z, -d->normal.y));
-	v = vec3multscalar(unit_vector(cross(d->normal, u)), obj.diam / 2);
-	u = vec3multscalar(u, obj.diam / 2);
-	d->u = u;
-	d->v = v;
-	d->w = vec3divscalar(cross(u, v), dot(cross(u, v), cross(u, v)));
-	d->rgb = obj.rgbcolor;
-	d->color = rgb_to_color(obj.rgbcolor);
+	d->rgb = params.rgbcolor;
+	d->color = rgb_to_color(params.rgbcolor);
 	solid_color_init(&(d->texture), d->color);
 	lambertian_init_tex(&(d->lambertian_mat), (t_texture *)&(d->texture));
 	d->mat = (t_material *)&(d->lambertian_mat);
@@ -98,8 +62,7 @@ void	disk_o(t_disk *d, t_init_params obj)
  * @param v second vector of the disk
  * @param mat material of the disk
  */
-void	disk_mat(t_disk *d, t_point3 center, t_vec3 normal, double diam,
-		t_material *mat)
+void	disk_mat(t_disk *d, t_init_params params)
 {
 	t_vec3	u;
 	t_vec3	v;
@@ -107,49 +70,22 @@ void	disk_mat(t_disk *d, t_point3 center, t_vec3 normal, double diam,
 	d->base.hit = hit_disk;
 	d->base.pdf_value = disk_pdf_value;
 	d->base.random = disk_random;
-	d->center = center;
-	d->radius = diam / 2;
-	d->normal = unit_vector(normal);
-	d->d = dot(d->normal, center);
+	d->center = params.center;
+	d->radius = params.diam / 2;
+	d->normal = unit_vector(params.normal);
+	d->d = dot(d->normal, params.center);
 	if (fabs(d->normal.x) > fabs(d->normal.y))
 		u = unit_vector(vec3(-d->normal.z, 0, d->normal.x));
 	else
 		u = unit_vector(vec3(0, d->normal.z, -d->normal.y));
-	v = vec3multscalar(unit_vector(cross(d->normal, u)), diam / 2);
-	u = vec3multscalar(u, diam / 2);
+	v = vec3multscalar(unit_vector(cross(d->normal, u)), params.diam / 2);
+	u = vec3multscalar(u, params.diam / 2);
 	d->u = u;
 	d->v = v;
 	d->w = vec3divscalar(cross(u, v), dot(cross(u, v), cross(u, v)));
 	d->rgb = rgb(0, 0, 0);
 	d->color = color(0, 0, 0);
-	d->mat = mat;
-	d->print = print_disk;
-}
-
-void	disk_mat_o(t_disk *d, t_init_params obj)
-{
-	t_vec3	u;
-	t_vec3	v;
-
-	d->base.hit = hit_disk;
-	d->base.pdf_value = disk_pdf_value;
-	d->base.random = disk_random;
-	d->center = obj.center;
-	d->radius = obj.diam / 2;
-	d->normal = unit_vector(obj.normal);
-	d->d = dot(d->normal, obj.center);
-	if (fabs(d->normal.x) > fabs(d->normal.y))
-		u = unit_vector(vec3(-d->normal.z, 0, d->normal.x));
-	else
-		u = unit_vector(vec3(0, d->normal.z, -d->normal.y));
-	v = vec3multscalar(unit_vector(cross(d->normal, u)), obj.diam / 2);
-	u = vec3multscalar(u, obj.diam / 2);
-	d->u = u;
-	d->v = v;
-	d->w = vec3divscalar(cross(u, v), dot(cross(u, v), cross(u, v)));
-	d->rgb = rgb(0, 0, 0);
-	d->color = color(0, 0, 0);
-	d->mat = obj.mat;
+	d->mat = params.mat;
 	d->print = print_disk;
 }
 
