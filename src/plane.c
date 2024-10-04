@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "plane.h"
-#include "utils.h"
 #include <stdio.h>
 
 /**
@@ -26,35 +25,35 @@
  * The normal vector is normalized. I use PLANE_MAX to limit the plane to
  * avoid wasting resources since the ray will take a long time to hit the plane
  */
-void	plane(t_plane *pl, t_point3 point, t_vec3 normal, t_rgb rgbcol)
+void	plane(t_plane *pl, t_init_params params)
 {
 	pl->base.hit = hit_plane;
 	pl->base.pdf_value = plane_pdf_value;
 	pl->base.random = plane_random;
-	pl->q = point;
-	pl->normal = unit_vector(normal);
-	pl->d = -dot(pl->normal, point);
+	pl->q = params.center;
+	pl->normal = unit_vector(params.normal);
+	pl->d = -dot(pl->normal, params.center);
 	pl->u = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
 	pl->v = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
-	pl->rgb = rgbcol;
-	pl->color = rgb_to_color(rgbcol);
+	pl->rgb = params.rgbcolor;
+	pl->color = rgb_to_color(params.rgbcolor);
 	solid_color_init(&(pl->solid), pl->color);
 	lambertian_init_tex(&(pl->lambertian_mat), (t_texture *)&(pl->solid));
 	pl->mat = (t_material *)&(pl->lambertian_mat);
 	pl->print = print_plane;
 }
 
-void	plane_mat(t_plane *pl, t_point3 point, t_vec3 normal, t_material *mat)
+void	plane_mat(t_plane *pl, t_init_params params)
 {
 	pl->base.hit = hit_plane;
 	pl->base.pdf_value = plane_pdf_value;
 	pl->base.random = plane_random;
-	pl->q = point;
-	pl->normal = unit_vector(normal);
-	pl->d = -dot(pl->normal, point);
+	pl->q = params.center;
+	pl->normal = unit_vector(params.normal);
+	pl->d = -dot(pl->normal, params.center);
 	pl->u = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
 	pl->v = vec3(PLANE_MAX, PLANE_MAX, PLANE_MAX);
-	pl->mat = mat;
+	pl->mat = params.mat;
 	pl->rgb = rgb(0, 0, 0);
 	pl->color = color(0, 0, 0);
 	pl->print = print_plane;

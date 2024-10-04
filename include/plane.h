@@ -17,6 +17,7 @@
 # include "hittable.h"
 # include "material.h"
 # include "texture.h"
+#include "utils.h"
 # include "vec3.h"
 
 # define PLANE_MAX 1000
@@ -56,10 +57,8 @@ typedef struct s_plane
 /*
  * a sort of initializer for a plane
  */
-void						plane(t_plane *pl, t_point3 point, t_vec3 normal,
-								t_rgb rgbcol);
-void						plane_mat(t_plane *pl, t_point3 point,
-								t_vec3 normal, t_material *mat);
+void						plane(t_plane *pl, t_init_params params);
+void						plane_mat(t_plane *pl, t_init_params params);
 void						print_plane(const void *self);
 /* if the ray hits the sphere, return the t value */
 bool						hit_plane(const void *self, const t_ray *r,

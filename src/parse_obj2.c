@@ -87,15 +87,14 @@ void	get_sphere(t_objects *obj)
 	set_index++;
 }
 
-static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens)
+static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens, t_init_params params)
 {
 	if (is_float(tokens[4]))
 	{
-		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "plane"),
+		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "plane"), \
 			ft_atod(tokens[4]));
-		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0),
-			set_vec3(obj, 2, "plane", 1),
-			(t_material *)&obj->planes[set_index].metal);
+		params.mat = (t_material*)&obj->planes[set_index].metal;
+		plane_mat(&obj->planes[set_index], params);
 	}
 	else 
 	{
@@ -103,9 +102,8 @@ static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens)
 			set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
 		lambertian_init_tex(&obj->planes[set_index].lambertian_mat,
 			(t_texture *)&obj->planes[set_index].checker);
-		plane_mat(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0),
-			set_vec3(obj, 2, "plane", 1),
-			(t_material *)&obj->planes[set_index].lambertian_mat);
+		params.mat = (t_material*)&obj->planes[set_index].lambertian_mat;
+		plane_mat(&obj->planes[set_index], params);
 	}
 }
 
@@ -117,20 +115,23 @@ static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens)
  */
 void	get_plane(t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "plane", obj);
 	if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
 		call_error("invalid token amount", "plane", obj);
+	params.center = set_vec3(obj, 1, "plane", 0);
+	params.normal = set_vec3(obj, 2, "plane", 1);
 	if (count_tokens(tokens) == 5)
-		plane_5_tokens(obj, set_index, tokens);
+		plane_5_tokens(obj, set_index, tokens, params);
 	else
 	{
-		plane(&obj->planes[set_index], set_vec3(obj, 1, "plane", 0),
-			set_vec3(obj, 2, "plane", 1), set_rgb(obj, 3, "plane"));
+		params.rgbcolor = set_rgb(obj, 3, "plane");
+		plane(&obj->planes[set_index], params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->planes[set_index];
 	obj->hit_idx++;
