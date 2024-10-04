@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:16:46 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 14:24:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 // Epsilon value for floating-point comparison
 # define EPSILON 1e-6
-// #define CORES 16
+# define CORES 20
 # define RANDOM_SYSTEM 0
 
 // Define constants for the LCG
@@ -35,23 +35,11 @@
 # define C 1013904223
 # define M 4294967296 // 2^32
 
-unsigned int	rand_rt(void);
-
-/*
- * Comverts degrees to radians.
- */
+uint32_t		rand_rt(void);
 double			degrees_to_radians(double degrees);
-
-/*
- * Returns a random real in [0,1).
- */
 double			random_d(void);
-
-/*
- * Returns a random real in [min,max).
- */
 double			random_double(double min, double max);
-
 int				random_int(int min, int max);
+// int				get_num_cores(void); 
 
 #endif

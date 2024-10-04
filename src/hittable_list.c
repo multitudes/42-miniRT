@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:23:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:59:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 14:51:14 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,12 @@ bool	hit_objects(const void *self, const t_ray *r, t_interval ray_t,
 		t_hit_record *rec)
 {
 	int				i;
-	bool			hit_anything;
 	t_hit_record	temp_rec;
 	t_hittablelist	*objects;
-	double			closest_so_far;
 	t_interval		closest;
+	double			closest_so_far;
 
 	i = 0;
-	hit_anything = false;
 	objects = (t_hittablelist *)self;
 	closest_so_far = ray_t.max;
 	if (!objects || !objects->size || !objects->list || !objects->list[0])
@@ -47,13 +45,12 @@ bool	hit_objects(const void *self, const t_ray *r, t_interval ray_t,
 		closest = interval(ray_t.min, closest_so_far);
 		if (objects->list[i]->hit(objects->list[i], r, closest, &temp_rec))
 		{
-			hit_anything = true;
 			closest_so_far = temp_rec.t;
 			*rec = temp_rec;
 		}
 		i++;
 	}
-	return (hit_anything);
+	return (closest_so_far != ray_t.max);
 }
 
 /* Init function for a hittable list. */
@@ -77,10 +74,7 @@ double	obj_pdf_value(const void *self, const t_point3 *o, const t_vec3 *v)
 
 	objects = (t_hittablelist *)self;
 	if (!objects || !objects->size || !objects->list || !objects->list[0])
-	{
-		// debug("no objects in the list\n");
 		return (0.0);
-	}
 	sum = 0.0;
 	i = 0;
 	while (i < objects->size)
@@ -99,10 +93,7 @@ t_vec3	obj_random(const void *self, const t_vec3 *o)
 
 	objects = (t_hittablelist *)self;
 	if (!objects || !objects->size || !objects->list || !objects->list[0])
-	{
-		// debug("no objects in the list\n");
 		return (vec3(0, 0, 0));
-	}
 	random_i = random_int(0, objects->size);
 	return (objects->list[random_i]->random(objects->list[random_i], o));
 }

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:45:58 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 14:24:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,3 +61,15 @@ unsigned int	rand_rt(void)
 	return (mt_genrand_int32());
 }
 #endif
+
+// int get_num_cores(void) 
+// {
+//     long	num_cores;
+
+// 	num_cores = sysconf(_SC_NPROCESSORS_ONLN);
+//     if (num_cores == -1) {
+//         perror("sysconf");
+//         exit(EXIT_FAILURE);
+//     }
+//     return (int)num_cores;
+// }

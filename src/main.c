@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 17:34:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 14:06:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int main_showcase_all();
 
 int main(int argc, char **argv)
 {
-
+	long num_cores = sysconf(_SC_NPROCESSORS_ONLN);
+	debug("Number of cores: %ld\n", num_cores);
     (void)argv;
 	(void)argc;
 
