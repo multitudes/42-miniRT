@@ -35,7 +35,6 @@ void		cylinder_uncapped(t_cylinder *c, t_init_params params)
 	c->base.pdf_value = obj_cylinder_pdf_value;
 	c->base.random = obj_cylinder_random;
 	c->center = params.center;
-	// TODO: normalize axis??
 	c->axis = unit_vector(params.normal);
 	c->radius = params.diam / 2;
 	c->height = params.height;

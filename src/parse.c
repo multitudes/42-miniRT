@@ -206,24 +206,29 @@ static void	get_triangle(t_objects *obj)
 */
 static void	get_cone (t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "cone", obj);
 	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
 		call_error("invalid token amount", "cone", obj);
+	params.center = set_vec3(obj, 1, "cone", 0);
+	params.normal = set_vec3(obj, 2, "cone", 1);
+	params.diam = ft_atod(tokens[3]);
+	params.height = ft_atod(tokens[4]);
 	if (count_tokens(tokens) == 7)
 	{
 		metal_init(&obj->cones[set_index].body.metal, set_rgb(obj, 5, "cone"), ft_atod(tokens[6]));
-		cone_mat(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
-			ft_atod(tokens[3]), ft_atod(tokens[4]), (t_material*)&obj->cones[set_index].body.metal);
+		params.mat = (t_material*)&obj->cones[set_index].body.metal;
+		cone_mat(&obj->cones[set_index], params);
 	}
 	else
 	{
-		cone_rgb(&obj->cones[set_index], set_vec3(obj, 1, "cone", 0), set_vec3(obj, 2, "cone", 1), \
-			ft_atod(tokens[3]), ft_atod(tokens[4]), set_rgb(obj, 5, "cone"));
+		params.rgbcolor = set_rgb(obj, 5, "cone");
+		cone_rgb(&obj->cones[set_index], params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cones[set_index];
 	obj->hit_idx++;
@@ -242,24 +247,29 @@ static void	get_cone (t_objects *obj)
 */
 static void	get_cone_u (t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "cone_u", obj);
 	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
 		call_error("invalid token amount", "cone_u", obj);
+	params.center = set_vec3(obj, 1, "cone_u", 0);
+	params.normal = set_vec3(obj, 2, "cone_u", 1);
+	params.diam = ft_atod(tokens[3]);
+	params.height = ft_atod(tokens[4]);
 	if (count_tokens(tokens) == 7)
 	{
 		metal_init(&obj->cones_u[set_index].metal, set_rgb(obj, 5, "cone_u"), ft_atod(tokens[6]));
-		cone_uncap_mat(&obj->cones_u[set_index], set_vec3(obj, 1, "cone_u", 0), set_vec3(obj, 2, "cone_u", 1), \
-			ft_atod(tokens[3]), ft_atod(tokens[4]), (t_material*)&obj->cones_u[set_index].metal);
+		params.mat = (t_material*)&obj->cones_u[set_index].metal;
+		cone_uncap_mat(&obj->cones_u[set_index], params);
 	}
 	else
 	{
-		cone_uncap_rgb(&obj->cones_u[set_index], set_vec3(obj, 1, "cone_u", 0), set_vec3(obj, 2, "cone_u", 1), \
-			ft_atod(tokens[3]), ft_atod(tokens[4]), set_rgb(obj, 5, "cone_u"));
+		params.rgbcolor = set_rgb(obj, 5, "cone_u");
+		cone_uncap_rgb(&obj->cones_u[set_index], params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->cones_u[set_index];
 	obj->hit_idx++;

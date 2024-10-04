@@ -13,6 +13,7 @@
 #include "cone.h"
 #include "utils.h"
 #include <math.h>
+#include <stdbool.h>
 
 /* forward declaration */
 bool	hit_cone_cap(const void* self, const t_ray *r, t_interval closest, t_hit_record *rec);
@@ -22,19 +23,18 @@ t_vec3	obj_cone_random(const void *self, const t_point3 *orig);
 /*
  * Inits an uncapped cone with an rgb color.
 */
-void	cone_uncap_rgb(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, double height, \
-	t_rgb rgbcolor)
+void	cone_uncap_rgb(t_cone_uncap *c, t_init_params params)
 {
 	c->base.hit = hit_cone;
 	c->base.random = obj_cone_random;
 	c->base.pdf_value = obj_cone_pdf_value;
 
-	c->apex = apex;
-	c->axis = unit_vector(vec3multscalar(axis, -1));
-	c->radius = diam / 2;
-	c->height = height;
+	c->apex = params.center;
+	c->axis = unit_vector(vec3multscalar(params.normal, -1));
+	c->radius = params.diam / 2;
+	c->height = params.height;
 	
-	c->color = rgb_to_color(rgbcolor);
+	c->color = rgb_to_color(params.rgbcolor);
 	solid_color_init(&(c->texture), c->color);
 	lambertian_init_tex(&(c->lambertian_mat), (t_texture*)&(c->texture));
 	c->mat = (t_material*)&(c->lambertian_mat);
@@ -43,50 +43,48 @@ void	cone_uncap_rgb(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, do
 /*
  * Inits a capped cone with an rgb color.
 */
-void	cone_rgb(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height, \
-	t_rgb rgbcolor)
+void	cone_rgb(t_cone *c, t_init_params params)
 {
 	// this for the whole cylinder
 	c->base.hit = hit_cone_cap;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	
-	cone_uncap_rgb(&c->body, apex, axis, diam, height, rgbcolor);
-	t_point3 bottom_center = vec3add(apex, vec3multscalar(c->body.axis, height));
-	disk(&c->bottom, bottom_center, axis, diam, rgbcolor);
+	cone_uncap_rgb(&c->body, params);
+	t_point3 bottom_center = vec3add(params.center, vec3multscalar(c->body.axis, params.height));
+	params.center = bottom_center;
+	disk(&c->bottom, params);
 }
 
 /*
  * Inits an uncapped cone with a material.
 */
-void	cone_uncap_mat(t_cone_uncap *c, t_point3 apex, t_vec3 axis, double diam, double height, \
-	t_material *mat)
+void	cone_uncap_mat(t_cone_uncap *c, t_init_params params)
 {
 	c->base.hit = hit_cone;
 	c->base.random = obj_cone_random;
 	c->base.pdf_value = obj_cone_pdf_value;
 
-	c->apex = apex;
-	c->axis = unit_vector(vec3multscalar(axis, -1));
-	c->radius = diam / 2;
-	c->height = height;
-	
-	c->mat = mat;
+	c->apex = params.center;
+	c->axis = unit_vector(vec3multscalar(params.normal, -1));
+	c->radius = params.diam / 2;
+	c->height = params.height;
+	c->mat = params.mat;
 }
 
 /*
  * Inits a capped cone with an material.
 */
-void	cone_mat(t_cone *c, t_point3 apex, t_vec3 axis, double diam, double height, \
-	t_material *mat)
+void	cone_mat(t_cone *c, t_init_params params)
 {
 	c->base.hit = hit_cone_cap;
 	c->base.pdf_value = obj_pdf_value;
 	c->base.random = obj_random;
 	
-	cone_uncap_mat(&c->body, apex, axis, diam, height, mat);
-	t_point3 bottom_center = vec3add(apex, vec3multscalar(c->body.axis, height));
-	disk_mat(&c->bottom, bottom_center, axis, diam, mat);
+	cone_uncap_mat(&c->body, params);
+	t_point3 bottom_center = vec3add(params.center, vec3multscalar(c->body.axis, params.height));
+	params.center = bottom_center;
+	disk_mat(&c->bottom, params);
 }
 
 bool hit_cone(const void* self, const t_ray *r, t_interval ray_t, t_hit_record *rec)
