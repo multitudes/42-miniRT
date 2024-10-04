@@ -129,7 +129,7 @@ cone [apex] [axis normal] [diameter] [height] [rgb color]
 ```
 ### metal:
 ```
-cone [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
+co [origin] [axis normal] [diameter] [height] [rgb color] [fuzz(double)]
 ```
 
 *apex* - the top point of the cone (the tip)
