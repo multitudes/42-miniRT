@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:49:10 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 14:27:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,15 @@ typedef struct s_objects
 	t_sphere			spheres[SPHERES_COUNT];
 	t_plane				planes[OBJECT_COUNT];
 	t_cylinder_capped	cylinders[CYLINDER_COUNT];
+	t_cylinder			cylinders_u[CYLINDER_COUNT];
 	t_quad				quads[OBJECT_COUNT];
 	t_disk				disks[OBJECT_COUNT];
 	t_triangle			triangles[OBJECT_COUNT];
 	t_cone				cones[OBJECT_COUNT];
+	t_cone_uncap		cones_u[OBJECT_COUNT];
 	t_box				boxes[OBJECT_COUNT];
-	t_hittable			*hit_list[OBJECT_COUNT * 7 + SPHERES_COUNT \
-						+ CYLINDER_COUNT];
+	t_hittable			*hit_list[OBJECT_COUNT * 8 + SPHERES_COUNT \
+						+  (2 * CYLINDER_COUNT)];
 	int					hit_idx;
 	t_hittable			*light_hit[OBJECT_COUNT + 1];
 	int					light_hit_idx;
@@ -82,6 +84,7 @@ typedef struct s_mrt
 	void				*mlx;
 	void				*win_ptr;
 	mlx_image_t			*image;
+	mlx_image_t			*filt_img;
 	mlx_image_t			*seconds_str;
 	mlx_image_t			*cores_str;
 	double				mlx_time;
@@ -93,6 +96,15 @@ typedef struct s_mrt
 	void				(*renderscene)(struct s_mrt *, const t_hittablelist *, \
 						const t_hittablelist *);
 }						t_mrt;
+
+typedef struct s_init_params
+{
+	t_point3	center;
+	t_vec3		normal;
+	double		diam;
+	t_rgb		rgbcolor;
+	t_material	*mat;
+}				t_init_params;
 
 void					parse_input(char *filename, t_mrt *data);
 

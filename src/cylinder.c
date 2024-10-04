@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:05:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void		cylinder_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double diam
 	c->base.pdf_value = obj_cylinder_pdf_value;
 	c->base.random = obj_cylinder_random;
 	c->center = center;
+	// TODO: normalize axis??
 	c->axis = axis;
 	c->radius = diameter / 2;
 	c->height = height;
@@ -67,8 +68,6 @@ void		cylinder_mat_uncapped(t_cylinder *c, t_point3 center, t_vec3 axis, double 
 	c->min = -height / 2;
 	c->max = height / 2;
 	c->mat = mat;
-	c->rgb = rgb(0, 0, 0);
-	c->color = color(0, 0, 0);
 	c->print = &print_cylinder;
 }
 
@@ -147,11 +146,11 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
     cross_rd_cd = cross(r->dir, cyl->axis);
     cross_dp_cd = cross(delta_p, cyl->axis);
 
+    // Solve the quadratic equation
     double a = dot(cross_rd_cd, cross_rd_cd);
     double b = 2 * dot(cross_rd_cd, cross_dp_cd);
     double c = dot(cross_dp_cd, cross_dp_cd) - pow(cyl->radius, 2);
-
-
+  
     double discriminant = b * b - 4 * a * c;
     if (discriminant < 0)
         return false;
@@ -204,7 +203,7 @@ bool hit_cylinder(const void* self, const t_ray *r, t_interval ray_t, t_hit_reco
         rec->normal = normal;
         set_face_normal(rec, r, rec->normal);
         rec->mat = cyl->mat;
-        get_cylinder_uncappedv(rec->normal, &rec->u, &rec->v);
+        get_cylinder_uncappedv(rec->normal, rec->uv);
         return true;
     }
 
@@ -242,7 +241,7 @@ double obj_cylinder_pdf_value(const void *self, const t_point3 *orig, const t_ve
 
     // Calculate distance squared from origin to cylinder axis
     t_vec3 axis_vector =  vec3substr(cyl->center, *orig);
-    double axis_distance_squared = length_squared(axis_vector);
+    double axis_distance_squared = len_sqrd(axis_vector);
 
     // Prevent division by zero
     if (axis_distance_squared == 0) {
@@ -290,7 +289,7 @@ t_vec3 obj_cylinder_random(const void *self, const t_point3 *orig) {
     return unit_vector(direction);
 }
 
-void get_cylinder_uncappedv(t_vec3 normal, double* u, double* v)
+void get_cylinder_uncappedv(t_vec3 normal, double uv[2])
 {
     double theta;
     double phi;
@@ -302,6 +301,6 @@ void get_cylinder_uncappedv(t_vec3 normal, double* u, double* v)
     phi = acos(normal.y);
 
     // Map theta and phi to UV coordinates
-    *u = theta / (2 * PI);
-    *v = phi / PI;
+    uv[0] = theta / (2 * PI);
+    uv[1] = phi / PI;
 }

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:04:25 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:10:30 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ double	triangle_pdf_value(const void *self, const t_point3 *orig,
 
 	if (!hit_triangle(tri, &r, interval(0.001, 1e30), &rec))
 		return (0);
-	distance_squared = length_squared(vec3substr(rec.p, *orig));
+	distance_squared = len_sqrd(vec3substr(rec.p, *orig));
 	cosine = fabs(dot(*dir, tri->normal));
 	// Calculate the area of the triangle
 	e1 = vec3substr(tri->b, tri->a);

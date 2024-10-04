@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:05:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 15:56:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 #include <time.h>
 #include "mersenne_twister.h"
 #include "rtw_stb_image.h"
-#include "hooks_utils.h"
+#include "hook_utils.h"
 
 
 #define WINDOW_TITLE "miniRT"

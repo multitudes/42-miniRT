@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:14:44 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/03 11:34:20 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,38 +43,19 @@ typedef struct s_sphere
 	void					(*print)(const void *self);
 }							t_sphere;
 
-/*
- * a sort of initializer for a sphere
- */
 void						sphere(t_sphere *s, t_point3 center,
 								double diameter, t_rgb color);
 void						sphere_mat(t_sphere *s, t_point3 center,
 								double diameter, t_material *mat);
-
 void						print_sphere(const void *self);
 void						print_sphere_mat(const void *self);
-/* if the ray hits the sphere, return the t value */
 bool						hit_sphere(const void *self, const t_ray *r,
 								t_interval closest, t_hit_record *rec);
-void						get_sphere_uv(t_vec3 normal, double *u, double *v);
-
-/**
- * sphere_pdf_value - Computes the PDF value for a uniform sphere.
- * @self: Pointer to the object
- * @direction: Pointer to the t_vec3 direction vector
- *
- * This function returns the probability density function (PDF) value for a
- * uniformly distributed direction over the surface of a sphere. Since the
- * distribution is uniform, the PDF value is constant and equal to the inverse
- * of the surface area of the sphere, which is 1 / (4 * PI).
- *
- * Return: A double representing the PDF value for a uniform sphere.
- */
+void						get_sphere_uv(t_vec3 normal, double uv[2]);
 double						obj_sphere_pdf_value(const void *self,
 								const t_point3 *orig, const t_vec3 *dir);
 t_vec3						obj_sphere_random(const void *self,
 								const t_point3 *orig);
-// Function to generate a random direction within the sphere's volume
 t_vec3						random_to_sphere(double radius,
 								double distance_squared);
 

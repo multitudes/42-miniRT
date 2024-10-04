@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:02:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:16:18 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/02 17:11:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@
  */
 typedef struct s_texture
 {
-	t_color			(*value)(const void *self, double u, double v, \
-						const t_point3 *p);
+	t_color			(*value)(const void *self, double uv[2], const t_point3 *p);
 }					t_texture;
 
 /**
@@ -79,7 +78,7 @@ typedef struct s_img_texture
 	char			*filename;
 	int				bytes_per_pixel;
 	float			*fdata;
-	unsigned char	*bdata;
+	uint8_t			*bdata;
 	int				image_width;
 	int				image_height;
 	int				bytes_per_scanline;
@@ -87,26 +86,26 @@ typedef struct s_img_texture
 
 void				solid_color_init(t_solid_color *solid_color_texture,
 						t_color albedo);
-t_color				solid_color_value(const void *self, double u, double v,
+t_color				solid_color_value(const void *self, double uv[2],
 						const t_point3 *p);
 
 void				checker_texture_init(t_checker_texture *checker_texture,
 						double scale, t_rgb even_rgb, t_rgb odd_rgb);
-t_color				checker_texture_value(const void *self, double u, double v,
+t_color				checker_texture_value(const void *self, double uv[2],
 						const t_point3 *p);
 
 void				img_texture_init(t_img_texture *img_texture,
 						char *filename);
-t_color				img_texture_value(const void *self, double u, double v,
+t_color				img_texture_value(const void *self, double uv[2],
 						const t_point3 *p);
 
 /* for image handling */
-unsigned char		float_to_byte(float value);
+uint8_t				float_to_byte(float value);
 void				convert_to_bytes(t_img_texture *img);
 unsigned char		*pixel_data(const t_img_texture *img, int x, int y);
 int					width(const t_img_texture *img);
 int					height(const t_img_texture *img);
-int					load(t_img_texture *img, const char *filename);
+bool				load(t_img_texture *img, const char *filename);
 int					clamp_rtw(int x, int low, int high);
 void				free_rtw_image(t_img_texture *img);
 

@@ -21,7 +21,7 @@
 # include <pthread.h>
 
 # define ASPECT_RATIO 1
-# define IMAGE_WIDTH 200
+# define IMAGE_WIDTH 400
 # define BONUS 1
 
 typedef struct s_mrt		t_mrt;

@@ -25,9 +25,9 @@ sp  1600,100,100    40    img:rtw_image/venus.jpg
 sp  1400,100,100    50    img:rtw_image/earth.jpg
 sp  1200,100,100    14   img:rtw_image/mars.jpg
 sp  800,100,100     286  img:rtw_image/jupiter.jpg
-sp  300,100,100     240   img:rtw_image/saturn.jpg
-sp  -10,100,100     102   img:rtw_image/uranus.jpg
-sp  -200,100,100     100   img:rtw_image/neptune.jpg
+sp  200,100,100     240   img:rtw_image/saturn.jpg 
+sp  -300,100,100     102   img:rtw_image/uranus.jpg
+sp  -600,100,100     100   img:rtw_image/neptune.jpg
 
 #actual scale according to the diameter of the planets (copilot)
 # sp  4000,100,100   13910   img:rtw_image/sun.jpg
@@ -39,3 +39,7 @@ sp  -200,100,100     100   img:rtw_image/neptune.jpg
 # sp  300,100,100     1165   img:rtw_image/saturn.jpg
 # sp  -10,100,100     507   img:rtw_image/uranus.jpg
 # sp  -200,100,100     492   img:rtw_image/neptune.jpg
+
+#saturn disks
+dsk 200,100,100 -0.1,0.5,0.3 500 220,195,71 0.2
+dsk 200,100,100 -0.1,0.5,0.3 350 0,0,0  0.1

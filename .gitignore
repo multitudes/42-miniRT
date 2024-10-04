@@ -106,7 +106,7 @@ lib/libft/get_next_line/*.o
 .cache/clangd/index/cone.h.F236C00BFF2B4FDB.idx
 .cache/clangd/index/cylinder.h.9A09FE5DA23C7A54.idx
 .cache/clangd/index/disk.h.F2F08410146437D1.idx
-.cache/clangd/index/hooks_utils.h.A0D5D9D0075C4B95.idx
+.cache/clangd/index/hook_utils.h.A0D5D9D0075C4B95.idx
 .cache/clangd/index/material.h.87C7989E26E1D78D.idx
 .cache/clangd/index/mersenne_twister.h.189D33B5AAC44788.idx
 .cache/clangd/index/onb.h.6557C0D0152D03C7.idx
