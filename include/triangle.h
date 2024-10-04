@@ -16,6 +16,7 @@
 # include "hittable.h"
 # include "interval.h"
 # include "material.h"
+#include "quad.h"
 # include "ray.h"
 # include "vec3.h"
 
@@ -43,12 +44,8 @@ typedef struct s_triangle
 	void				(*print)(const void *self);
 }						t_triangle;
 
-// create vertices struct
-
-void					triangle(t_triangle *tri, t_point3 a, t_point3 b,
-							t_point3 c, t_rgb rgbcolor);
-void					triangle_mat(t_triangle *tri, t_point3 a, t_point3 b,
-							t_point3 c, t_material *mat);
+void					triangle(t_triangle *tri, t_init_params params);
+void					triangle_mat(t_triangle *tri, t_init_params params);
 void					print_triangle(const void *self);
 bool					hit_triangle(const void *self, const t_ray *r,
 							t_interval ray_t, t_hit_record *rec);

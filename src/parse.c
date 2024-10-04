@@ -165,30 +165,31 @@ static void	get_disk(t_objects *obj)
  * metalic -	"tr" [vertice1] [vertice2] [vertice3] [rbg color] [fuzz(double)]
  * (vertices are points in 3d space)
  */
-/* TODO: might not be rendering - the same as quad*/
 static void	get_triangle(t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "triangle", obj);
 	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "triangle", obj);
+	params.a = set_vec3(obj, 1, "triangle", 0);
+	params.b = set_vec3(obj, 2, "triangle", 0);
+	params.c = set_vec3(obj, 3, "triangle", 0);
 	if (count_tokens(tokens) == 6)
 	{
 		metal_init(&obj->triangles[set_index].metal, set_rgb(obj, 4,
 				"triangle"), ft_atod(tokens[5]));
-		triangle_mat(&obj->triangles[set_index], set_vec3(obj, 1, "triangle",
-				0), set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3,
-				"triangle", 0), (t_material *)&obj->triangles[set_index].metal);
+		params.mat = (t_material*)&obj->triangles[set_index].metal;
+		triangle_mat(&obj->triangles[set_index], params);
 	}
 	else
 	{
-		triangle(&obj->triangles[set_index], set_vec3(obj, 1, "triangle", 0),
-			set_vec3(obj, 2, "triangle", 0), set_vec3(obj, 3, "triangle", 0),
-			set_rgb(obj, 4, "triangle"));
+		params.rgbcolor = set_rgb(obj, 4, "triangle");
+		triangle(&obj->triangles[set_index], params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->triangles[set_index];
 	obj->hit_idx++;
