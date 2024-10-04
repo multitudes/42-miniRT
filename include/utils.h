@@ -47,8 +47,8 @@ typedef struct s_init_params
 	t_rgb		rgbcolor;
 	t_vec3		side1;		// quad
 	t_vec3		side2;		// quad
-	t_point3	a;			// triangle
-	t_point3	b;			// triangle
+	t_point3	a;			// triangle		// box
+	t_point3	b;			// triangle		// box
 	t_point3	c;			// triangle
 	t_material	*mat;
 }				t_init_params;

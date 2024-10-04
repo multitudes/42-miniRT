@@ -43,9 +43,8 @@ typedef struct s_box
 	void				(*print)(const void *self);
 }						t_box;
 
-void					box_rgb(t_box *box, t_point3 a, t_point3 b, t_rgb rgb);
-void					box(t_box *box, t_point3 a, t_point3 b,
-							t_material *mat);
+void					box_rgb(t_box *box, t_init_params params);
+void					box(t_box *box, t_init_params params);
 void					print_box(const void *self);
 bool					hit_box(const void *self, const t_ray *r,
 							t_interval ray_t, t_hit_record *rec);

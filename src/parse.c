@@ -283,25 +283,28 @@ static void	get_cone_u (t_objects *obj)
  */
 static void	get_box(t_objects *obj)
 {
-	static int	set_index;
-	char		**tokens;
+	static int		set_index;
+	char			**tokens;
+	t_init_params	params;
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
 		call_error("exceeds array size", "box", obj);
 	if (count_tokens(tokens) != 4 && count_tokens(tokens) != 5)
 		call_error("invalid token amount", "box", obj);
+	params.a = set_vec3(obj, 1, "box", 0);
+	params.b = set_vec3(obj, 2, "box", 0);
 	if (count_tokens(tokens) == 5)
 	{
 		metal_init(&obj->boxes[set_index].metal, set_rgb(obj, 3, "box"),
 			ft_atod(tokens[4]));
-		box(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0), set_vec3(obj, 2,
-				"box", 0), (t_material *)&obj->boxes[set_index].metal);
+		params.mat = (t_material*)&obj->boxes[set_index].metal;
+		box(&obj->boxes[set_index], params);
 	}
 	else
 	{
-		box_rgb(&obj->boxes[set_index], set_vec3(obj, 1, "box", 0),
-			set_vec3(obj, 2, "box", 0), set_rgb(obj, 3, "box"));
+		params.rgbcolor = set_rgb(obj, 3, "box");
+		box_rgb(&obj->boxes[set_index], params);
 	}
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->boxes[set_index];
 	obj->hit_idx++;
