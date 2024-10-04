@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 17:07:38 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 16:56:47 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 17:02:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,15 @@ t_color	ray_color(t_scene scene, t_ray *r, int depth)
  * @param c the color 
  * @return t_color the gamma corrected color
  *
- * 
  * gamma corrects the colorvector.  
  * squareroots the color values. 
  */
 uint32_t    color_gamma_corrected(t_color color)
 {
+	t_rgb a;
 	t_interval intensity;
 
 	intensity = interval(0.0,0.999);
-	t_rgb a;
 	a = color_to_rgb((t_color){
 		.r = clamp(intensity, linear_to_gamma(color.r)),
 		.g = clamp(intensity, linear_to_gamma(color.g)),
@@ -104,15 +103,16 @@ uint32_t    color_gamma_corrected(t_color color)
 
 /*
 this is my draw pixel function. I write directly to the buffer
-and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib!
+and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib.
 */
 void write_color(t_mrt *data, int x, int y, t_color colorvector)
 {
-    unsigned int color = color_gamma_corrected(colorvector);
-    int offset;
+    uint32_t color;
+	int offset;
     mlx_image_t *image;
     uint8_t *pixel;
 
+	color = color_gamma_corrected(colorvector);
     image = data->image;
     offset = y * data->cam.img_width + x;
     pixel = &image->pixels[offset * 4];
@@ -126,7 +126,6 @@ void write_color(t_mrt *data, int x, int y, t_color colorvector)
  * @brief get a ray from the camera through a pixel
  * 
  * Creates a ray that goes from the cam through (i, j) on the viewport
- *  
 */ 
 t_ray	get_ray(t_camera cam, int i, int j)
 {
@@ -135,9 +134,6 @@ t_ray	get_ray(t_camera cam, int i, int j)
 	offset = sample_square();
 	t_vec3 iu = vec3multscalar(cam.pixel_delta_u, i + offset.x);
 	t_vec3 ju = vec3multscalar(cam.pixel_delta_v, j + offset.y);
-	t_vec3 partial = vec3add(iu, ju);
-	t_point3 pixel_sample = vec3add(cam.pixel00_loc, partial);
-	t_point3 ray_origin = cam.orig;
-	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin);
-	return ray(ray_origin, ray_direction);
+	t_point3 pixel_sample = vec3add(cam.pixel00_loc, vec3add(iu, ju));
+	return ray(cam.orig, (vec3substr(pixel_sample, cam.orig)));
 }
