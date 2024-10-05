@@ -41,7 +41,8 @@ SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c \
 						color.c color_utils.c ray.c rtw_stb_image.c \
 						rtw_stb_image2.c vec3.c vec3_utils.c vec3_utils2.c vec3_utils3.c vec3_utils4.c \
 						interval.c utils.c utils2.c ambient.c plane.c plane_utils.c cylinder.c \
-						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c \
+						texture.c material.c onb.c pdf.c quad.c hittable_list.c \
+						parse.c parse_obj1.c parse_obj2.c parse_utils1.c parse_utils2.c \
 						hook_utils.c hook_utils2.c hook_utils3.c hook_utils4.c \
 						disk.c disk_utils.c box.c triangle.c mersenne_twister.c cone.c\
 						bilateral_filter.c bilateral_filter2.c camera_ray_color.c camera_ray_color_utils.c \
@@ -52,7 +53,7 @@ HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.
 						hittable.h hittable_list.h minirt.h color.h hook_utils.h \
 						utils.h ambient.h plane.h cylinder.h texture.h \
 						material.h onb.h pdf.h quad.h disk.h bilateral_filter.h\
-						box.h triangle.h mersenne_twister.h)
+						box.h triangle.h mersenne_twister.h parse.h)
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a

@@ -6,13 +6,14 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 09:38:33 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/05 09:43:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/05 10:02:23 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "camera.h"
 #include "utils.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 /**
  * @brief print the camera information
