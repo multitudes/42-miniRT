@@ -66,11 +66,10 @@ static void	init_light_struct(t_mrt *data)
 	t_empty_material	empty_material;
 	t_init_params		params;
 
-	params.center = point3(0.1, 0.1, 0.1);
-	params.side1 = vec3(0.1, 0.1, 0.1);
-	params.side2 = vec3(0.1, 0.1, 0.1);
+	params.center = point3(0, 0, 0);
+	params.diam = 10;
 	params.mat = (t_material *)&empty_material;
-	quad_mat(&data->objects.lights[0].q_body, params);
+	sphere_mat(&data->objects.lights[0].s_body, params);
 	data->objects.light_hit[0] = (t_hittable *)&data->objects.lights[0].q_body;
 	data->objects.light_idx++;
 }
