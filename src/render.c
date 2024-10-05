@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:12:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/05 09:42:50 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/05 10:31:34 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_color	get_pixel_color(t_thread_data *thread_data, int xyi[3])
 
 void	render_thread(void *args)
 {
-	t_ray			r;
+	// t_ray			r;
 	int				xyi[3];
 	t_thread_data	*thread_data;
 	t_color			pixel_color;
@@ -119,7 +119,7 @@ void	render(t_mrt *data, const t_hittablelist *world,
 		const t_hittablelist *lights)
 {
 	double	start_time;
-	int		sliceheight;
+	// int		sliceheight;
 	int		thread_idx;
 
 	start_time = mlx_get_time();

@@ -6,11 +6,12 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 09:44:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/05 09:46:44 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/05 10:26:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "color.h"
+#include "utils.h"
 
 /**
  * @brief Convert a linear component to gamma

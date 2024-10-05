@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 08:24:08 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/01 16:30:41 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/05 10:30:44 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ uint32_t	pixel_value(t_bil_filter bf)
 	return (result);
 }
 
-void	get_bil_weight(t_bil_filter *bf, mlx_image_t *image, int xy[2],
+void	get_bil_weight(t_bil_filter *bf, mlx_image_t *image, uint32_t xy[2],
 		int i[2])
 {
 	bf->center_pixel = &image->pixels[(xy[1] * image->width + xy[0]) * 4];
@@ -90,11 +90,11 @@ void	init_bilateral_filter(t_bil_filter *bf, t_sigmas *sigmas)
  * @param sigma_r the range sigma
  *
  */
-uint32_t	bilateral_filter_pixel(mlx_image_t *image, int xy[2],
+uint32_t	bilateral_filter_pixel(mlx_image_t *image, uint32_t xy[2],
 		t_sigmas sigmas)
 {
-	int				nx;
-	int				ny;
+	uint32_t				nx;
+	uint32_t				ny;
 	int				i[2];
 	t_bil_filter	bf;
 

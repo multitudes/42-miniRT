@@ -10,7 +10,7 @@
 NAME 			= 	miniRT
 CC 				= 	cc
 
-# CFLAGS 			:= -Wall -Wextra -Werror
+CFLAGS 			:= -Wall -Wextra -Werror
 CFLAGS 			+= -Iinclude
 CFLAGS			+= -Isrc -Ilib/external
 CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
