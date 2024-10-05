@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 16:54:37 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/04 17:57:32 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,6 @@ t_color		metal_color_mix(t_scene scene, t_hit_record rec, \
 void		init_rcparams(t_rcparams *params);
 t_color		get_color_from_scatter(t_rcparams params, t_scene scene, t_ray *r, \
 								int depth);
+void		update_time(double start_time, t_mrt *data);
 
 #endif
