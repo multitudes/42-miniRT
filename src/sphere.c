@@ -37,15 +37,15 @@
  * by using the address of the texture. This will be a property of the
  * sphere object.
  */
-void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb rgbcolor)
+void	sphere(t_sphere *s, t_init_params params)
 {
 	s->base.hit = hit_sphere;
 	s->base.pdf_value = obj_sphere_pdf_value;
 	s->base.random = obj_sphere_random;
-	s->center = center;
-	s->radius = fmax(0, diameter / 2);
-	s->rgb = rgbcolor;
-	s->color = rgb_to_color(rgbcolor);
+	s->center = params.center;
+	s->radius = fmax(0, params.diam / 2);
+	s->rgb = params.rgbcolor;
+	s->color = rgb_to_color(params.rgbcolor);
 	solid_color_init(&(s->texture), s->color);
 	lambertian_init_tex(&(s->lambertian_mat), (t_texture *)&(s->texture));
 	s->mat = (t_material *)&(s->lambertian_mat);
@@ -65,17 +65,16 @@ void	sphere(t_sphere *s, t_point3 center, double diameter, t_rgb rgbcolor)
  * Supported are checkers and metal materials. Textures like solid color
  * and images are also supported
  */
-void	sphere_mat(t_sphere *s, t_point3 center, double diameter,
-		t_material *mat)
+void	sphere_mat(t_sphere *s, t_init_params params)
 {
 	s->base.hit = hit_sphere;
 	s->base.pdf_value = obj_sphere_pdf_value;
 	s->base.random = obj_sphere_random;
-	s->center = center;
-	s->radius = fmax(0, diameter / 2);
+	s->center = params.center;
+	s->radius = fmax(0, params.diam / 2);
 	s->rgb = rgb(0, 0, 0);
 	s->color = color(0, 0, 0);
-	s->mat = mat;
+	s->mat = params.mat;
 	s->print = print_sphere;
 }
 

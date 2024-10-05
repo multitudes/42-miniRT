@@ -13,11 +13,11 @@ CC 				= 	cc
 # CFLAGS 			:= -Wall -Wextra -Werror
 CFLAGS 			+= -Iinclude
 CFLAGS			+= -Isrc -Ilib/external
-# CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
-# CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
-# CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math
-# CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
-# CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
+CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
+CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math
+CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
+CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
 CFLAGS 			+=  -g
 # CFLAGS 			+=  -DNDEBUG
 

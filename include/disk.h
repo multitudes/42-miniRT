@@ -17,6 +17,7 @@
 # include "hittable.h"
 # include "interval.h"
 # include "material.h"
+#include "quad.h"
 # include "ray.h"
 # include "vec3.h"
 
@@ -43,10 +44,8 @@ typedef struct s_disk
 	void				(*print)(const void *self);
 }						t_disk;
 
-void					disk(t_disk *d, t_point3 center, t_vec3 normal,
-							double diam, t_rgb rgbcolor);
-void					disk_mat(t_disk *d, t_point3 center, t_vec3 normal,
-							double diam, t_material *mat);
+void					disk(t_disk *d, t_init_params params);
+void					disk_mat(t_disk *d, t_init_params params);
 void					print_disk(const void *self);
 bool					hit_disk(const void *self, const t_ray *r,
 							t_interval ray_t, t_hit_record *rec);
