@@ -34,5 +34,13 @@ void		create_yaw_rotation_matrix(double angle, double matrix[3][3]);
 void		create_pitch_rotation_matrix(double angle, double matrix[3][3]);
 void		create_roll_rotation_matrix(double angle, double matrix[3][3]);
 void		rotate_camera_yaw(t_camera *cam, double angle);
+void 		handle_arrow_keys(t_mrt *data, mlx_t *mlx);
+void		handle_reset_key(t_mrt *data, mlx_t *mlx);
+void		handle_hfow_key(t_mrt *data, mlx_t *mlx);
+void		handle_direction_key(t_mrt *data, mlx_t *mlx);
+void		handle_zoom_key(t_mrt *data, mlx_t *mlx);
+void		handle_multithreading_key(t_mrt *data, mlx_t *mlx);
+void		render_if_needed(t_mrt *data);
+void		print_position(t_camera cam);
 
 #endif

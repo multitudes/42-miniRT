@@ -9,6 +9,8 @@
 - S - Move down the y axis
 - A - Move left on the x axis
 - D - Move right on the x axis	
+- F - decrease hfov
+- G - increase hfov
 - Left Shift - Move the camera down the z axis towards you 
 - Space - Move the camera up the z axis away from you
 - Left Arrow - Rotate the camera left
