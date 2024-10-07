@@ -40,14 +40,14 @@ INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c \
 						color.c color_utils.c ray.c rtw_stb_image.c \
 						rtw_stb_image2.c vec3.c vec3_utils.c vec3_utils2.c vec3_utils3.c vec3_utils4.c \
-						interval.c utils.c utils2.c ambient.c plane.c plane_utils.c cylinder.c \
+						interval.c interval2.c utils.c utils2.c ambient.c plane.c plane_utils.c cylinder.c \
 						texture.c material.c onb.c pdf.c quad.c hittable_list.c \
 						parse.c parse_obj1.c parse_obj2.c \
 						parse_obj3.c parse_obj4.c parse_obj5.c parse_utils1.c parse_utils2.c \
-						hook_utils.c hook_utils2.c hook_utils3.c hook_utils4.c \
+						hook_utils.c hook_utils2.c hook_utils3.c hook_utils4.c hook_utils5.c \
 						disk.c disk_utils.c box.c triangle.c mersenne_twister.c cone.c\
 						bilateral_filter.c bilateral_filter2.c camera_ray_color.c camera_ray_color_utils.c \
-						render.c render_utils.c)
+						render.c render_utils.c )
 
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
