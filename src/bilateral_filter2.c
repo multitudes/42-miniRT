@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:29:16 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/05 10:29:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 13:08:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,7 @@ void	apply_bilateral_filter(t_mrt *data)
 {
 	t_sigmas	sigmas;
 	double		start;
-	// uint32_t	filt_px;
-	// int			offset;
-	uint32_t			xy[2];
+	uint32_t	xy[2];
 
 	sigmas = (t_sigmas){0.5, 0.5};
 	start = mlx_get_time();

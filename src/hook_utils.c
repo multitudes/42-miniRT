@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 14:25:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 12:27:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ void	hook(void *param)
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
 	{
 		move_camera_forward(&(data->cam), -data->cam.img_width / 20);
-		debug("S key pressed");
+		debug("Space key pressed");
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
 			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,
 			data->cam.dir.x, data->cam.dir.y,
@@ -157,7 +157,7 @@ void	hook(void *param)
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
-		move_camera_forward(&(data->cam), data->cam.img_width / 10);
+		move_camera_forward(&(data->cam), data->cam.img_width / 20);
 		debug("Left shift key pressed");
 		debug("camera center point = %f %f %f and direction %f %f %f\n",
 			data->cam.orig.x, data->cam.orig.y, data->cam.orig.z,

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 08:24:08 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/05 10:30:44 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 13:08:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ void	init_bilateral_filter(t_bil_filter *bf, t_sigmas *sigmas)
 uint32_t	bilateral_filter_pixel(mlx_image_t *image, uint32_t xy[2],
 		t_sigmas sigmas)
 {
-	uint32_t				nx;
-	uint32_t				ny;
+	uint32_t		nx;
+	uint32_t		ny;
 	int				i[2];
 	t_bil_filter	bf;
 

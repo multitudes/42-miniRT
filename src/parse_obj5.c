@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_obj5.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 17:36:46 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/04 17:36:59 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:31:39 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ static void	cone_7_tokens(t_objects *obj, int set_index, char **tokens, \
 
 /*
  * usage:
- * default - "co" [apex] [axis] [diam] [height] [color]
- * metalic - "co" [apex] [axis] [diam] [height] [color] [fuzz]
+ * default - co [apex] [axis] [diam] [height] [color]
+ * metalic - co [apex] [axis] [diam] [height] [color] [fuzz]
  *  
  * apex - the pointy end of the cone
  * axis - axis of cone (goes up from the apex)
@@ -69,8 +69,8 @@ static void	cone_u_7_tokens(t_objects *obj, int set_index, char **tokens, \
 /*
  * The UNCAPPED cone
  * usage:
- * default - "co_u" [apex] [axis] [diam] [height] [color]
- * metalic - "co_u" [apex] [axis] [diam] [height] [color] [fuzz]
+ * default - co_u [apex] [axis] [diam] [height] [color]
+ * metalic - co_u [apex] [axis] [diam] [height] [color] [fuzz]
  *  
  * apex - the pointy end of the cone
  * axis - axis of cone (goes up from the apex)
@@ -84,9 +84,9 @@ void	get_cone_u(t_objects *obj)
 
 	tokens = obj->_tokens;
 	if (set_index >= OBJECT_COUNT)
-		call_error("exceeds array size", "cone_u", obj);
+		call_error("exceeds array size", "co_u", obj);
 	if (count_tokens(tokens) != 6 && count_tokens(tokens) != 7)
-		call_error("invalid token amount", "cone_u", obj);
+		call_error("invalid token amount", "co_u", obj);
 	params.center = set_vec3(obj, 1, "cone_u", 0);
 	params.normal = set_vec3(obj, 2, "cone_u", 1);
 	params.diam = ft_atod(tokens[3]);
