@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 12:27:49 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 13:53:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,8 @@
 #include "minirt.h"
 #include "utils.h"
 
-void	hook(void *param)
+void 	handle_arrow_keys(t_mrt *data, mlx_t *mlx)
 {
-	mlx_t	*mlx;
-	t_mrt	*data;
-
-	data = (t_mrt *)param;
-	mlx = data->mlx;
-	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
-		exit_gracefully(mlx);
 	if (mlx_is_key_down(mlx, MLX_KEY_UP))
 	{
 		debug("Arrow Up  - pitch up- pressed\n");
@@ -75,6 +68,10 @@ void	hook(void *param)
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
+}
+
+void	handle_reset_key(t_mrt *data, mlx_t *mlx)
+{
 	if (mlx_is_key_down(mlx, MLX_KEY_F1))
 	{
 		debug("F1 reset pressed\n");
@@ -84,6 +81,21 @@ void	hook(void *param)
 		data->needs_render = true;
 		data->mlx_time = mlx_get_time();
 	}
+}
+
+void	hook(void *param)
+{
+	mlx_t	*mlx;
+	t_mrt	*data;
+
+	data = (t_mrt *)param;
+	mlx = data->mlx;
+	if (mlx_is_key_down(mlx, MLX_KEY_ESCAPE))
+		exit_gracefully(mlx);
+
+	handle_arrow_keys(data, mlx);
+	handle_reset_key(data, mlx);
+
 	if (mlx_is_key_down(mlx, MLX_KEY_F))
 	{
 		data->cam.hfov += 1;
