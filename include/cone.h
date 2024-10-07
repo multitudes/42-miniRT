@@ -22,9 +22,8 @@
 # include "utils.h"
 # include <stdbool.h>
 
-typedef struct s_cone
+typedef struct s_cone_uncap
 {
-
 	/* like cylinder: */
 	t_hittable		base;
 	t_point3		apex;		// the top of the cone
@@ -41,7 +40,7 @@ typedef struct s_cone
 	t_solid_color	texture;
 }		t_cone_uncap;
 
-typedef struct
+typedef struct s_cone
 {
 	t_hittable		base;
 	t_cone_uncap	body;
@@ -54,9 +53,8 @@ void	cone_rgb(t_cone *c, t_init_params params);
 void	cone_uncap_mat(t_cone_uncap *c, t_init_params params);
 void	cone_mat(t_cone *c, t_init_params params);
 
-
 /* hit function */
-bool					hit_cone(const void *self, const t_ray *ray,
-							t_interval closest, t_hit_record *rec);
+bool	hit_cone(const void *self, const t_ray *ray, \
+	t_interval closest, t_hit_record *rec);
 
 #endif
