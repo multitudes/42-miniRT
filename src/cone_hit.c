@@ -11,9 +11,6 @@
 /* ************************************************************************** */
 
 #include "cone.h"
-#include "utils.h"
-#include <math.h>
-#include <stdbool.h>
 
 static bool	cone_quadratic(const t_cone_uncap *cone, const t_ray *r, \
 	double *t0, double *t1)

@@ -42,6 +42,7 @@ void	cone_rgb(t_cone *c, t_init_params params)
 	cone_uncap_rgb(&c->body, params);
 	bottom_center = vec3add(params.center, \
 		vec3multscalar(c->body.axis, params.height));
+	params.diam += 1;
 	params.center = bottom_center;
 	disk(&c->bottom, params);
 }
@@ -74,6 +75,7 @@ void	cone_mat(t_cone *c, t_init_params params)
 	cone_uncap_mat(&c->body, params);
 	bottom_center = vec3add(params.center, \
 		vec3multscalar(c->body.axis, params.height));
+	params.diam += 1;
 	params.center = bottom_center;
 	disk_mat(&c->bottom, params);
 }
