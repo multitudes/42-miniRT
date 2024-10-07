@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 12:06:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:36:08 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 17:34:30 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,19 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+/**
+ * @brief Initialize a solid color texture with the given color
+ */
 void	solid_color_init(t_solid_color *solid_color_texture, t_color albedo)
 {
 	solid_color_texture->base.value = solid_color_value;
 	solid_color_texture->color_albedo = albedo;
 }
 
-t_color	solid_color_value(const void *self, double uv[2],
-		const t_point3 *p)
+/**
+ * @brief Get the color of the texture at the given coordinates
+ */
+t_color	solid_color_value(const void *self, double uv[2], const t_point3 *p)
 {
 	t_solid_color	*solid_color;
 
@@ -35,12 +40,12 @@ t_color	solid_color_value(const void *self, double uv[2],
 	return (solid_color->color_albedo);
 }
 
-/*
-** Checker texture
-* colors for the checkerboard ex
-* even_color = color(0.5, 0.0, 0.5); // Purple
-* odd_color = color(1.0, 1.0, 1.0); // White
-*/
+/**
+ * @brief - Checker texture
+ * colors for the checkerboard ex
+ * even_color = color(0.5, 0.0, 0.5); // Purple
+ * odd_color = color(1.0, 1.0, 1.0); // White
+ */
 void	checker_texture_init(t_checker_texture *checker_texture, double scale,
 		t_rgb even_rgb, t_rgb odd_rgb)
 {
@@ -68,10 +73,13 @@ void	checker_texture_init(t_checker_texture *checker_texture, double scale,
  */
 void	get_spherical_uv(const t_point3 *p, double uv[2])
 {
-	double phi = atan2(p->z, p->x); // Azimuthal angle
-	double theta = acos(p->y);      // Polar angle
-	uv[0] = (phi + PI) / (2 * PI); // u is in the range [0, 1]
-	uv[1] = theta / PI;            // v is in the range [0, 1]
+	double	phi;
+	double	theta;
+
+	phi = atan2(p->z, p->x);
+	theta = acos(p->y);
+	uv[0] = (phi + PI) / (2 * PI);
+	uv[1] = theta / PI;
 }
 
 /**
@@ -85,8 +93,7 @@ void	get_spherical_uv(const t_point3 *p, double uv[2])
  * @return t_color The color of the texture at point of intersection
  * imagining the sphere build as solid blocks of color
  */
-t_color	checker_texture_value(const void *self, double uv[2],
-		const t_point3 *p)
+t_color	checker_texture_value(const void *self, double uv[2], const t_point3 *p)
 {
 	int		xint;
 	int		yint;
@@ -102,72 +109,4 @@ t_color	checker_texture_value(const void *self, double uv[2],
 		return (((t_checker_texture *)self)->even.color_albedo);
 	else
 		return (((t_checker_texture *)self)->odd.color_albedo);
-}
-
-/**
- * @brief Initialize an image texture with the given image
- *
- * @param img_texture The image texture object
- * @param img The image to use as texture from the t_rtw_image struct
- */
-void	img_texture_init(t_img_texture *img_texture, char *filename)
-{
-	img_texture->base.value = img_texture_value;
-	img_texture->bytes_per_pixel = 3;
-	img_texture->fdata = NULL;
-	img_texture->bdata = NULL;
-	img_texture->image_width = 0;
-	img_texture->image_height = 0;
-	img_texture->bytes_per_scanline = 0;
-	printf("filename = %s\n", filename);
-	if (load(img_texture, filename) == 0)
-	{
-		fprintf(stderr, "Failed to load image %s\n", filename);
-		exit(1);
-	}
-	printf("Image loaded\n");
-}
-
-/**
- * @brief Get the color of the texture at the given coordinates
- *
- * @param self The texture object
- * @param u The u texture coordinate
- * @param v The v texture coordinate
- * @param p The point in 3D space
- * @return t_color The color of the texture at the given coordinates
- *
- * If we have no texture data, then return solid cyan as a debugging aid.
- * The pixel is a pointer to the first byte of the RGB triplet.
- */
-t_color	img_texture_value(const void *self, double uv[2],
-		const t_point3 *p)
-{
-	t_img_texture	*image;
-	int				i;
-	int				j;
-	unsigned char	*pixel;
-	double			color_scale;
-	double			r;
-	double			g;
-	double			b;
-
-	(void)p;
-	image = (t_img_texture *)self;
-	if (height(image) <= 0)
-		return (color(0, 1, 1));
-	// Clamp input texture coordinates to [0,1] x [1,0]
-	uv[0] = clamp(interval(0, 1), uv[0]);
-	uv[1] = 1.0 - clamp(interval(0, 1), uv[1]); // Flip V to image coordinates
-	// printf("u = %f,		v = %f\n", u, v);
-	i = (int)(uv[0] * width(image));
-	j = (int)(uv[1] * height(image));
-	// pixel is a pointer to the first byte of the RGB triplet
-	pixel = pixel_data(image, i, j);
-	// Scale color values to [0,1]
-	color_scale = 1.0 / 255.0;
-	r = *pixel * color_scale;
-	g = *(++pixel) * color_scale;
-	b = *(++pixel) * color_scale;
-	return (color(r, g, b));
 }
