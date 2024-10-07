@@ -8,7 +8,7 @@ Inits the camera struct inside of t_mrt.	(MUST BE INITED)
 
 usage:
 ```
-"C" [origin] [orientation(view) vector (normalized values)] [fow (double)]
+C [origin] [orientation(view) vector (normalized values)] [fow (double)]
 ```
 *fow* - horizontal field of view
 
@@ -17,7 +17,7 @@ usage:
 Inits the ambient struct inside of t_mrt->t_camera.  
 usage:
 ```
-"A" [intensity([0.0;1.0])] [rgb color]
+A [intensity([0.0;1.0])] [rgb color]
 ```
 -----
 ## Light
@@ -26,12 +26,12 @@ The defaut light is a sphere or a quad with a light texture. ("l" or "L" can be 
 
 ### default sphere light:
 ```
-"l" [origin] [intensity([0.0;1,0])] [rgb color] [optional : diameter(default value=100)]
+l [origin] [intensity([0.0;1,0])] [rgb color] [optional : diameter(default value=100)]
 ```
 
 ### quad light source:
 ``` 
-"l" "qd" [origin] [side_vector1] [side_vector2] [rgb color] [intensity ([0.0;1.0])]
+l qd [origin] [side_vector1] [side_vector2] [rgb color] [intensity ([0.0;1.0])]
 ```
 -----
 ## Sphere
@@ -125,7 +125,7 @@ box [origin] [diagonal point] [rgb color] [fuzz(double)]
 ## Cone
 ### default:
 ```
-cone [apex] [axis normal] [diameter] [height] [rgb color]
+co [apex] [axis normal] [diameter] [height] [rgb color]
 ```
 ### metal:
 ```
