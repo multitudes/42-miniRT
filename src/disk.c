@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:06:30 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 13:44:39 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,6 @@
  */
 void	disk(t_disk *d, t_init_params params)
 {
-	t_vec3	u;
-	t_vec3	v;
-
 	d->base.hit = hit_disk;
 	d->base.pdf_value = disk_pdf_value;
 	d->base.random = disk_random;
@@ -35,16 +32,15 @@ void	disk(t_disk *d, t_init_params params)
 	d->normal = unit_vector(params.normal);
 	d->d = dot(d->normal, params.center);
 	if (fabs(d->normal.x) > fabs(d->normal.y))
-		u = vec3(-d->normal.z, 0, d->normal.x);
+		d->u = vec3(-d->normal.z, 0, d->normal.x);
 	else
-		u = vec3(0, d->normal.z, -d->normal.y);
-	u = unit_vector(u);
-	v = unit_vector(cross(d->normal, u));
-	u = vec3multscalar(u, params.diam / 2);
-	v = vec3multscalar(v, params.diam / 2);
-	d->u = u;
-	d->v = v;
-	d->w = vec3divscalar(cross(u, v), dot(cross(u, v), cross(u, v)));
+		d->u = vec3(0, d->normal.z, -d->normal.y);
+	d->u = unit_vector(d->u);
+	d->v = unit_vector(cross(d->normal, d->u));
+	d->u = vec3multscalar(d->u, params.diam / 2);
+	d->v = vec3multscalar(d->v, params.diam / 2);
+	d->w = vec3divscalar(cross(d->u, d->v), dot(cross(d->u, d->v), \
+				cross(d->u, d->v)));
 	d->rgb = params.rgbcolor;
 	d->color = rgb_to_color(params.rgbcolor);
 	solid_color_init(&(d->texture), d->color);
@@ -64,9 +60,6 @@ void	disk(t_disk *d, t_init_params params)
  */
 void	disk_mat(t_disk *d, t_init_params params)
 {
-	t_vec3	u;
-	t_vec3	v;
-
 	d->base.hit = hit_disk;
 	d->base.pdf_value = disk_pdf_value;
 	d->base.random = disk_random;
@@ -75,14 +68,13 @@ void	disk_mat(t_disk *d, t_init_params params)
 	d->normal = unit_vector(params.normal);
 	d->d = dot(d->normal, params.center);
 	if (fabs(d->normal.x) > fabs(d->normal.y))
-		u = unit_vector(vec3(-d->normal.z, 0, d->normal.x));
+		d->u = unit_vector(vec3(-d->normal.z, 0, d->normal.x));
 	else
-		u = unit_vector(vec3(0, d->normal.z, -d->normal.y));
-	v = vec3multscalar(unit_vector(cross(d->normal, u)), params.diam / 2);
-	u = vec3multscalar(u, params.diam / 2);
-	d->u = u;
-	d->v = v;
-	d->w = vec3divscalar(cross(u, v), dot(cross(u, v), cross(u, v)));
+		d->u = unit_vector(vec3(0, d->normal.z, -d->normal.y));
+	d->v = vec3multscalar(unit_vector(cross(d->normal, d->u)), params.diam / 2);
+	d->u = vec3multscalar(d->u, params.diam / 2);
+	d->w = vec3divscalar(cross(d->u, d->v), dot(cross(d->u, d->v), \
+				cross(d->u, d->v)));
 	d->rgb = rgb(0, 0, 0);
 	d->color = color(0, 0, 0);
 	d->mat = params.mat;
