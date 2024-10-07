@@ -75,7 +75,7 @@ typedef struct s_objects
 						+ (2 * CYLINDER_COUNT)];
 	int					hit_idx;
 	t_hittable			*light_hit[OBJECT_COUNT + 1];
-	int					light_hit_idx;
+	int					light_idx;
 	int					_file_fd;
 	char				**_tokens;
 }						t_objects;
