@@ -12,9 +12,10 @@
 
 #include "parse.h"
 
-static void	sphere_5_tokens(t_objects *obj, int set_index, char **tokens, double diam)
+static void	sphere_5_tokens(t_objects *obj, int set_index, char **tokens, \
+	double diam)
 {
-	t_init_params params;
+	t_init_params	params;
 
 	params.center = set_vec3(obj, 1, "sphere", 0);
 	params.diam = diam;
@@ -22,7 +23,7 @@ static void	sphere_5_tokens(t_objects *obj, int set_index, char **tokens, double
 	{
 		metal_init(&obj->spheres[set_index].metal, set_rgb(obj, 3, "sphere"),
 			ft_atod(tokens[4]));
-		params.mat = (t_material*)&obj->spheres[set_index].metal;
+		params.mat = (t_material *)&obj->spheres[set_index].metal;
 		sphere_mat(&obj->spheres[set_index], params);
 	}
 	else
@@ -31,14 +32,15 @@ static void	sphere_5_tokens(t_objects *obj, int set_index, char **tokens, double
 			set_rgb(obj, 3, "sphere"), set_rgb(obj, 4, "sphere"));
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat,
 			(t_texture *)&obj->spheres[set_index].checker);
-		params.mat  = (t_material*)&obj->spheres[set_index].lambertian_mat;
+		params.mat = (t_material *)&obj->spheres[set_index].lambertian_mat;
 		sphere_mat(&obj->spheres[set_index], params);
 	}
 }
 
-static void sphere_4_tokens(t_objects *obj, int set_index, char **tokens, int diam)
+static void	sphere_4_tokens(t_objects *obj, int set_index, char **tokens, \
+	int diam)
 {
-	t_init_params params;
+	t_init_params	params;
 
 	params.center = set_vec3(obj, 1, "sphere", 0);
 	params.diam = diam;
@@ -47,7 +49,7 @@ static void sphere_4_tokens(t_objects *obj, int set_index, char **tokens, int di
 		img_texture_init(&obj->spheres[set_index].img_texture, &tokens[3][4]);
 		lambertian_init_tex(&obj->spheres[set_index].lambertian_mat,
 			(t_texture *)&obj->spheres[set_index].img_texture);
-		params.mat = (t_material*)&obj->spheres[set_index].lambertian_mat;
+		params.mat = (t_material *)&obj->spheres[set_index].lambertian_mat;
 		sphere_mat(&obj->spheres[set_index], params);
 	}
 	else
@@ -69,7 +71,7 @@ void	get_sphere(t_objects *obj)
 	static int	set_index;
 	char		**tokens;
 	double		diam;
-	
+
 	tokens = obj->_tokens;
 	if (set_index >= SPHERES_COUNT)
 		call_error("exceeds array size", "sphere", obj);
@@ -87,13 +89,14 @@ void	get_sphere(t_objects *obj)
 	set_index++;
 }
 
-static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens, t_init_params params)
+static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens, \
+	t_init_params params)
 {
 	if (is_float(tokens[4]))
 	{
 		metal_init(&obj->planes[set_index].metal, set_rgb(obj, 3, "plane"), \
 			ft_atod(tokens[4]));
-		params.mat = (t_material*)&obj->planes[set_index].metal;
+		params.mat = (t_material *)&obj->planes[set_index].metal;
 		plane_mat(&obj->planes[set_index], params);
 	}
 	else 
@@ -102,16 +105,18 @@ static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens, t_init_
 			set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
 		lambertian_init_tex(&obj->planes[set_index].lambertian_mat,
 			(t_texture *)&obj->planes[set_index].checker);
-		params.mat = (t_material*)&obj->planes[set_index].lambertian_mat;
+		params.mat = (t_material *)&obj->planes[set_index].lambertian_mat;
 		plane_mat(&obj->planes[set_index], params);
 	}
 }
 
 /*
  * usage:
- * regular plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color]
- * metal plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color] [fuzz(double)]
- * checker plane -	"pl" [origin] [surface normal ([0;1],[0;1],[0;1])] [rgb color1] [rgb color2]
+ * regular plane -	"pl" [origin] [surface normal] [rgb color]
+ * metal plane -	"pl" [origin] [surface normal] [rgb color] [fuzz(double)]
+ * checker plane -	"pl" [origin] [surface normal] [rgb color1] [rgb color2]
+ *
+ * surface normal in the form - ([0;1],[0;1],[0;1])
  */
 void	get_plane(t_objects *obj)
 {
