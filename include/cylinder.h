@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:57:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:15:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/08 18:09:53 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,15 @@ typedef struct s_cylinder_capped
 	t_disk				bottom;
 	void				(*print)(const void *self);
 }						t_cylinder_capped;
+
+typedef struct s_cyl_utils
+{
+	t_cylinder		*cyl;
+	const t_ray		*r;
+	double			closest_t;
+	t_vec3			closest_point;
+	t_vec3			normal;
+}			t_cyl_utils;
 
 void					cylinder_uncapped(t_cylinder *c, t_init_params params);
 void					cylinder_mat_uncapped(t_cylinder *c, t_init_params params);
