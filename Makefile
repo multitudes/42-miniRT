@@ -46,7 +46,7 @@ SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c \
 						parse.c parse_obj1.c parse_obj2.c \
 						parse_obj3.c parse_obj4.c parse_obj5.c parse_utils1.c parse_utils2.c \
 						hook_utils.c hook_utils2.c hook_utils3.c hook_utils4.c hook_utils5.c \
-						disk.c disk_utils.c box.c triangle.c mersenne_twister.c cone.c\
+						disk.c disk_utils.c box.c triangle.c triangle2.c mersenne_twister.c cone.c\
 						bilateral_filter.c bilateral_filter2.c camera_ray_color.c camera_ray_color_utils.c \
 						render.c render_utils.c )
 
