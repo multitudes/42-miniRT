@@ -20,9 +20,16 @@ void	cone_uncap_rgb(t_cone_uncap *c, t_init_params params)
 	c->base.hit = hit_cone;
 	c->base.random = obj_cone_random;
 	c->base.pdf_value = obj_cone_pdf_value;
+	c->apex = params.center;
 	c->axis = unit_vector(vec3multscalar(params.normal, -1));
 	c->radius = params.diam / 2;
 	c->height = params.height;
+	if (c->radius / c->height >= 0.7)
+	{
+		if (c->radius / c->height > 1)
+			c->radius = c->height;
+		c->radius *= 0.7;
+	}
 	c->color = rgb_to_color(params.rgbcolor);
 	solid_color_init(&(c->texture), c->color);
 	lambertian_init_tex(&(c->lambertian_mat), (t_texture *)&(c->texture));
@@ -42,7 +49,7 @@ void	cone_rgb(t_cone *c, t_init_params params)
 	cone_uncap_rgb(&c->body, params);
 	bottom_center = vec3add(params.center, \
 		vec3multscalar(c->body.axis, params.height));
-	params.diam += 1;
+	// params.diam += 1.5;
 	params.center = bottom_center;
 	disk(&c->bottom, params);
 }
@@ -75,7 +82,7 @@ void	cone_mat(t_cone *c, t_init_params params)
 	cone_uncap_mat(&c->body, params);
 	bottom_center = vec3add(params.center, \
 		vec3multscalar(c->body.axis, params.height));
-	params.diam += 1;
+	// params.diam += 1;
 	params.center = bottom_center;
 	disk_mat(&c->bottom, params);
 }
