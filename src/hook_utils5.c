@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 16:32:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/08 13:36:39 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	handle_zoom_key(t_mrt *data, mlx_t *mlx)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
 	{
-		move_camera_forward(&(data->cam), -data->cam.img_width / 20);
+		move_camera_forward(&(data->cam), -data->cam.img_width / 40);
 		debug("Space key pressed");
 		print_position(data->cam);
 		data->needs_render = true;
@@ -49,7 +49,7 @@ void	handle_zoom_key(t_mrt *data, mlx_t *mlx)
 	}
 	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
-		move_camera_forward(&(data->cam), data->cam.img_width / 20);
+		move_camera_forward(&(data->cam), data->cam.img_width / 40);
 		debug("Left shift key pressed");
 		print_position(data->cam);
 		data->needs_render = true;

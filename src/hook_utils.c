@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 16:32:46 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/08 13:36:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,13 @@ void	handle_reset_key(t_mrt *data, mlx_t *mlx)
 void	handle_direction_key(t_mrt *data, mlx_t *mlx)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_W))
-		move_camera_up(&(data->cam), data->cam.img_height / 20);
+		move_camera_up(&(data->cam), data->cam.img_height / 40);
 	else if (mlx_is_key_down(mlx, MLX_KEY_S))
-		move_camera_up(&(data->cam), -data->cam.img_height / 20);
+		move_camera_up(&(data->cam), -data->cam.img_height / 40);
 	else if (mlx_is_key_down(mlx, MLX_KEY_A))
-		move_camera_right(&(data->cam), -data->cam.img_width / 20);
+		move_camera_right(&(data->cam), -data->cam.img_width / 40);
 	else if (mlx_is_key_down(mlx, MLX_KEY_D))
-		move_camera_right(&(data->cam), data->cam.img_width / 20);
+		move_camera_right(&(data->cam), data->cam.img_width / 40);
 	else
 		return ;
 	print_position(data->cam);
