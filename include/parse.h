@@ -51,7 +51,7 @@ void	get_triangle(t_objects *obj);
 void	get_box(t_objects *obj);
 
 /* parse_obj5.c */
-void	get_cone (t_objects *obj);
-void	get_cone_u (t_objects *obj);
+void	get_cone(t_objects *obj);
+void	get_cone_u(t_objects *obj);
 
 #endif

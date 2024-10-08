@@ -12,6 +12,8 @@
 
 #include "disk.h"
 
+
+#include <stdio.h>
 /**
  * @brief Initialize a disk object with a given position, normal, and radius.
  *
@@ -29,6 +31,9 @@ void	disk(t_disk *d, t_init_params params)
 	d->base.random = disk_random;
 	d->center = params.center;
 	d->radius = params.diam / 2;
+	
+	printf("disk radius %f\n", d->radius);
+	
 	d->normal = unit_vector(params.normal);
 	d->d = dot(d->normal, params.center);
 	if (fabs(d->normal.x) > fabs(d->normal.y))
