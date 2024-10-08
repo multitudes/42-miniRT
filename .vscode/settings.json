@@ -62,7 +62,8 @@
 		"string.h": "c",
 		"plane.h": "c",
 		"disk.h": "c",
-		"hook_utils.h": "c"
+		"hook_utils.h": "c",
+		"cone.h": "c"
 	},
 	"cmake.sourceDirectory": "/home/lbrusa/DEV/42-miniRT/lib/MLX42"
 }
