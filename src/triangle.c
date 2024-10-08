@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:04:25 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 18:46:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:20:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	triangle(t_triangle *tri, t_init_params params)
 	tri->color = rgb_to_color(params.rgbcolor);
 	tri->normal = unit_vector(cross(tri->edge2, tri->edge1));
 	tri->d = dot(tri->normal, params.a);
-	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a), \
-					vec3substr(params.c, params.a)));
+	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a),
+				vec3substr(params.c, params.a)));
 	solid_color_init(&(tri->texture), tri->color);
 	lambertian_init_tex(&(tri->lambertian_mat), (t_texture *)&(tri->texture));
 	tri->mat = (t_material *)&(tri->lambertian_mat);
@@ -52,7 +52,7 @@ void	triangle_mat(t_triangle *tri, t_init_params params)
 	tri->edge2 = vec3substr(params.c, params.a);
 	tri->normal = unit_vector(cross(tri->edge2, tri->edge1));
 	tri->d = dot(tri->normal, params.a);
-	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a), \
+	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a),
 				vec3substr(params.c, params.a)));
 	tri->mat = params.mat;
 	tri->print = print_triangle;
@@ -98,68 +98,29 @@ void	print_triangle(const void *self)
 bool	hit_triangle(const void *self, const t_ray *r, t_interval ray_t,
 		t_hit_record *rec)
 {
-	t_vec3				dirxe2;
-	double				det;
-	double				f;
-	t_vec3				p1;
-	t_vec3				oxe1;
+	t_vec3	dirxe2;
+	double	det;
+	double	f;
+	t_vec3	p1;
+	t_vec3	oxe1;
 
-	dirxe2 = cross(r->dir, ( (t_triangle *)self)->edge2);
-	det = dot(( (t_triangle *)self)->edge1, dirxe2);
+	dirxe2 = cross(r->dir, ((t_triangle *)self)->edge2);
+	det = dot(((t_triangle *)self)->edge1, dirxe2);
 	if (fabs(det) < EPSILON)
 		return (false);
 	f = 1.0 / det;
-	p1 = vec3substr(r->orig, ( (t_triangle *)self)->a);
+	p1 = vec3substr(r->orig, ((t_triangle *)self)->a);
 	if ((f * dot(p1, dirxe2)) < 0 || (f * dot(p1, dirxe2)) > 1)
 		return (false);
 	oxe1 = cross(p1, ((t_triangle *)self)->edge1);
-	if ((f * dot(r->dir, oxe1)) < 0 || (f * dot(p1, dirxe2)) + \
-	(f * dot(r->dir, oxe1)) > 1)
+	if ((f * dot(r->dir, oxe1)) < 0 || (f * dot(p1, dirxe2)) + (f * dot(r->dir,
+				oxe1)) > 1)
 		return (false);
-	rec->t = f * dot(( (t_triangle *)self)->edge2, oxe1);
-	if (!contains(&ray_t, rec->t ))
+	rec->t = f * dot(((t_triangle *)self)->edge2, oxe1);
+	if (!contains(&ray_t, rec->t))
 		return (false);
 	rec->p = point_at(r, rec->t);
-	rec->mat = ( (t_triangle *)self)->mat;
-	set_face_normal(rec, r, ( (t_triangle *)self)->normal);
+	rec->mat = ((t_triangle *)self)->mat;
+	set_face_normal(rec, r, ((t_triangle *)self)->normal);
 	return (true);
-}
-/**
- * @brief Calculate the probability density function value for the triangle.
- */
-double	triangle_pdf_value(const void *self, const t_point3 *orig,
-		const t_vec3 *dir)
-{
-	t_hit_record		rec;
-	const t_ray			r = ray(*orig, *dir);
-	t_vec3				e1;
-	t_vec3				e2;
-	double				area;
-
-	if (!hit_triangle((t_triangle *)self, &r, interval(0.001, 1e30), &rec))
-		return (0);
-	e1 = vec3substr(((t_triangle *)self)->b, ((t_triangle *)self)->a);
-	e2 = vec3substr(((t_triangle *)self)->c, ((t_triangle *)self)->a);
-	area = 0.5 * length(cross(e1, e2));
-	return (len_sqrd(vec3substr(rec.p, *orig)) / (fabs(dot(*dir, \
-			((t_triangle *)self)->normal)) * area));
-}
-
-t_vec3	triangle_random(const void *self, const t_point3 *orig)
-{
-	const t_triangle	*tri = (t_triangle *)self;
-	double				u;
-	double				v;
-	t_vec3				p;
-
-	u = random_double(0, 1);
-	v = random_double(0, 1);
-	if (u + v > 1)
-	{
-		u = 1 - u;
-		v = 1 - v;
-	}
-	p = vec3add(tri->a, vec3add(vec3multscalar(vec3substr(tri->b, tri->a), u),
-				vec3multscalar(vec3substr(tri->c, tri->a), v)));
-	return (vec3substr(p, *orig));
 }

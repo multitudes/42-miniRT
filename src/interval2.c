@@ -6,12 +6,11 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:45:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 16:46:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:18:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "interval.h"
-
 
 /*
  * Returns an empty interval
@@ -37,4 +36,3 @@ double	clamp(t_interval t, double x)
 		return (t.max);
 	return (x);
 }
-
