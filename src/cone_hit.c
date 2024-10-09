@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 16:06:09 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/30 09:59:18 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/09 11:17:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static bool	cone_quadratic(const t_cone_uncap *cone, const t_ray *r, \
 	return (true);
 }
 
-static void	cone_intesection_check(double t, t_interval *ray_t, \
+static void	cone_intersection_check(double t, t_interval *ray_t, \
 	t_cone_utils *utils)
 {
 	t_vec3	point;
@@ -93,8 +93,8 @@ bool	hit_cone(const void *self, const t_ray *r, t_interval ray_t, \
 	if (cone_quadratic(utils.cone, utils.r, &t0, &t1) == false)
 		return (false);
 	utils.closest_t = -1;
-	cone_intesection_check(t0, &ray_t, &utils);
-	cone_intesection_check(t1, &ray_t, &utils);
+	cone_intersection_check(t0, &ray_t, &utils);
+	cone_intersection_check(t1, &ray_t, &utils);
 	if (utils.closest_t >= 0)
 	{
 		rec->t = utils.closest_t;
