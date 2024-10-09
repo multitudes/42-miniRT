@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:47:01 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/09 16:22:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/09 17:09:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,7 @@ t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
 		call_error("ft_split() fail", func_name, obj);
 	i = -1;
 	while (++i < 3)
-	{
 		coord_val[i] = ft_atod(coord_tok[i]);
-		// if (normalized && (coord_val[i] < -1.0 || coord_val[i] > 1.0))
-		// {
-		// 	free_split(coord_tok);
-		// 	call_error("vector not normalized", func_name, obj);
-		// }
-	}
 	free_split(coord_tok);
 	return (vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
