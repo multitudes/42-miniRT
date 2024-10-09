@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:47:01 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/03 16:47:09 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:22:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
 	char	**coord_tok;
 	double	coord_val[3];
 	int		i;
+	(void)normalized;
 
 	coord_tok = ft_split(obj->_tokens[index], ',');
 	if (*coord_tok == NULL)
@@ -55,11 +56,11 @@ t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
 	while (++i < 3)
 	{
 		coord_val[i] = ft_atod(coord_tok[i]);
-		if (normalized && (coord_val[i] < -1.0 || coord_val[i] > 1.0))
-		{
-			free_split(coord_tok);
-			call_error("vector not normalized", func_name, obj);
-		}
+		// if (normalized && (coord_val[i] < -1.0 || coord_val[i] > 1.0))
+		// {
+		// 	free_split(coord_tok);
+		// 	call_error("vector not normalized", func_name, obj);
+		// }
 	}
 	free_split(coord_tok);
 	return (vec3(coord_val[0], coord_val[1], coord_val[2]));

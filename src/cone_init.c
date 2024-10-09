@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cone_init.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:07:42 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/07 15:07:50 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:07:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	cone_rgb(t_cone *c, t_init_params params)
 	cone_uncap_rgb(&c->body, params);
 	bottom_center = vec3add(params.center, \
 		vec3multscalar(c->body.axis, params.height));
-	// params.diam += 1.5;
 	params.center = bottom_center;
 	disk(&c->bottom, params);
 }
@@ -82,7 +81,6 @@ void	cone_mat(t_cone *c, t_init_params params)
 	cone_uncap_mat(&c->body, params);
 	bottom_center = vec3add(params.center, \
 		vec3multscalar(c->body.axis, params.height));
-	// params.diam += 1;
 	params.center = bottom_center;
 	disk_mat(&c->bottom, params);
 }
