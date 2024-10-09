@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 18:11:42 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/09 11:11:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/09 11:13:36 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,7 @@ bool	hit_cylinder(const void *self, const t_ray *r, t_interval ray_t,
 	utils.closest_t = -1;
 	utils.normal = vec3(0, 0, 0);
 	utils.closest_point = point3(0, 0, 0);
-	hit = false;
-	hit = cylinder_intersection_check(t0, &ray_t, &utils) || hit;
+	hit = cylinder_intersection_check(t0, &ray_t, &utils);
 	hit = cylinder_intersection_check(t1, &ray_t, &utils) || hit;
 	if (utils.closest_t >= 0 && hit)
 	{
@@ -107,9 +106,9 @@ bool	hit_cylinder(const void *self, const t_ray *r, t_interval ray_t,
 /**
  * @brief: check if the ray hits the cylinder capped object
  *
-
-	* This is essentially creating a hittable list with the cylinder and the two disks
- * and using the hit function for the hittable list on them
+ * This is essentially creating a hittable list with the cylinder
+ * and the two disks and using the hit function for the hittable
+ * list on them
  */
 bool	hit_cylinder_capped(const void *self, const t_ray *r,
 		t_interval closest, t_hit_record *rec)
