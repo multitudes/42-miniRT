@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/08 13:36:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 12:58:18 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,33 @@ void	handle_zoom_key(t_mrt *data, mlx_t *mlx)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
 	{
-		move_camera_forward(&(data->cam), -data->cam.img_width / 40);
+		move_camera_forward(&(data->cam), -data->cam.img_width / PIX_AMOUNT);
 		debug("Space key pressed");
-		print_position(data->cam);
-		data->needs_render = true;
-		data->mlx_time = mlx_get_time();
 	}
-	if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
+	else if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
-		move_camera_forward(&(data->cam), data->cam.img_width / 40);
+		move_camera_forward(&(data->cam), data->cam.img_width / PIX_AMOUNT);
 		debug("Left shift key pressed");
-		print_position(data->cam);
-		data->needs_render = true;
-		data->mlx_time = mlx_get_time();
 	}
+	else 
+		return ;
+	print_position(data->cam);
+	data->needs_render = true;
+	data->mlx_time = mlx_get_time();
 }
 
+/**
+ * @brief Handle the key to switch between single and multithreading
+ * 
+ * @param data The main data structure
+ * @param mlx The MLX42 library
+ * 
+ * Here it was important to handle the rebound correctly
+ * so that the key is not triggered multiple times which 
+ * would lead to problem by toggling the multithreading
+ * I use a magic number of 0.1 to prevent the key from being
+ * retriggered too fast. mlx_get_time returns the time in seconds
+ */
 void	handle_multithreading_key(t_mrt *data, mlx_t *mlx)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_F2))

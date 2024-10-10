@@ -16,6 +16,7 @@
 # include "MLX42/MLX42.h"
 # include "camera.h"
 # define ROTATION_DEG 0.005
+# define PIX_AMOUNT 100
 
 void		exit_gracefully(mlx_t *mlx);
 void		rotate_camera_yaw(t_camera *cam, double angle);
@@ -27,7 +28,6 @@ void		move_camera_up(t_camera *cam, double distance);
 void		_resize_hook(int new_width, int new_height, void *params);
 void		hook(void *param);
 t_point3	calculate_direction(t_point3 camera_pos);
-t_point3	rotate_camera(t_point3 camera, double angle_degrees);
 void		translate_camera(t_camera *cam, t_vec3 translation);
 t_vec3		rotate_vector(t_vec3 v, double matrix[3][3]);
 void		create_yaw_rotation_matrix(double angle, double matrix[3][3]);

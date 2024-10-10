@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/09 16:13:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 12:44:40 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ void	hook(void *param)
 
 void	print_position(t_camera cam)
 {
-	debug("camera center point = %f %f %f and direction %f %f %f\n", cam.orig.x,
+	debug("###############################################");
+	debug("\ncamera center point = %f %f %f \n direction %f %f %f\n", cam.orig.x,
 		cam.orig.y, cam.orig.z, cam.dir.x, cam.dir.y, cam.dir.z);
+	debug("horixontal field of view = %f", cam.hfov);
+	debug("###############################################");
 }
 
 void	handle_arrow_keys(t_mrt *data, mlx_t *mlx)
@@ -87,13 +90,13 @@ void	handle_reset_key(t_mrt *data, mlx_t *mlx)
 void	handle_direction_key(t_mrt *data, mlx_t *mlx)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_W))
-		move_camera_up(&(data->cam), data->cam.img_height / 40);
+		move_camera_up(&(data->cam), data->cam.img_height / PIX_AMOUNT);
 	else if (mlx_is_key_down(mlx, MLX_KEY_S))
-		move_camera_up(&(data->cam), -data->cam.img_height / 40);
+		move_camera_up(&(data->cam), -data->cam.img_height / PIX_AMOUNT);
 	else if (mlx_is_key_down(mlx, MLX_KEY_A))
-		move_camera_right(&(data->cam), -data->cam.img_width / 40);
+		move_camera_right(&(data->cam), -data->cam.img_width / PIX_AMOUNT);
 	else if (mlx_is_key_down(mlx, MLX_KEY_D))
-		move_camera_right(&(data->cam), data->cam.img_width / 40);
+		move_camera_right(&(data->cam), data->cam.img_width / PIX_AMOUNT);
 	else
 		return ;
 	print_position(data->cam);

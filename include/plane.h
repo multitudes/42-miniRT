@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:53:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 13:47:38 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 12:30:17 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include "vec3.h"
 
 # define PLANE_MAX 1000
-# define PLANE_MIN 0.00001
 
 /**
  * @brief a plane object
