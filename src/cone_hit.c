@@ -11,32 +11,7 @@
 /* ************************************************************************** */
 
 #include "cone.h"
-#include <complex.h>
-#include <stdio.h>
-#include "utils.h"
 
-// static double	cone_radius_height(const t_cone_uncap *cone)
-// {
-// 	double	result;
-// 	static int	printed;
-// 	result = cone->radius / cone->height;
-// 	if (printed == 0)
-// 	{
-// 		printf("radius / height: %f\n", result);
-// 		printed = 1;
-// 	}
-// 	return (result);
-// }
-// replaced
-// a = dot(cross(r->dir, cone->axis), cross(r->dir, cone->axis)) - 
-// 	dot(r->dir, r->dir) * pow(cone_radius_height(cone), 2);
-// b = 2 * (dot(cross(r->dir, cone->axis), cross(delta_p, cone->axis)) - 
-// 	dot(r->dir, delta_p) * pow(cone_radius_height(cone), 2));
-// c = dot(cross(delta_p, cone->axis), cross(delta_p, cone->axis)) - 
-// 	dot(delta_p, delta_p) * pow(cone_radius_height(cone), 2);
-/**
- * @brief 
- */
 static bool	cone_quadratic(const t_cone_uncap *cone, const t_ray *r, \
 	double *t0, double *t1)
 {

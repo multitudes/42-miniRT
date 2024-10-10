@@ -65,6 +65,12 @@ void	cone_uncap_mat(t_cone_uncap *c, t_init_params params)
 	c->axis = unit_vector(vec3multscalar(params.normal, -1));
 	c->radius = params.diam / 2;
 	c->height = params.height;
+	if (c->radius / c->height >= 0.7)
+	{
+		if (c->radius / c->height > 1)
+			c->radius = c->height;
+		c->radius *= 0.7;
+	}
 	c->mat = params.mat;
 }
 
