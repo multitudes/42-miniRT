@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:29:16 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 13:43:59 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 13:08:19 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "bilateral_filter.h"
 #include "debug.h"
 
-void	write_filtered_px(t_mrt *data, int xy[2], t_sigmas sigmas)
+void	write_filtered_px(t_mrt *data, uint32_t xy[2], t_sigmas sigmas)
 {
 	uint32_t	filt_px;
 	uint32_t	offset;
@@ -42,9 +42,7 @@ void	apply_bilateral_filter(t_mrt *data)
 {
 	t_sigmas	sigmas;
 	double		start;
-	uint32_t	filt_px;
-	int			offset;
-	int			xy[2];
+	uint32_t	xy[2];
 
 	sigmas = (t_sigmas){0.5, 0.5};
 	start = mlx_get_time();

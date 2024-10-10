@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:52:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 16:02:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 12:54:53 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	rotate_camera_pitch(t_camera *cam, double angle)
 	cam->u = rotate_vector(cam->u, rotation_matrix);
 	cam->v = rotate_vector(cam->v, rotation_matrix);
 	cam->w = rotate_vector(cam->w, rotation_matrix);
+	print_position(*cam);
 	update_cam_orientation(cam);
 }
 
@@ -39,6 +40,7 @@ void	rotate_camera_roll(t_camera *cam, double angle)
 	cam->u = rotate_vector(cam->u, rotation_matrix);
 	cam->v = rotate_vector(cam->v, rotation_matrix);
 	cam->w = rotate_vector(cam->w, rotation_matrix);
+	print_position(*cam);
 	update_cam_orientation(cam);
 }
 
@@ -50,23 +52,9 @@ void	exit_gracefully(mlx_t *mlx)
 	exit(EXIT_SUCCESS);
 }
 
-// keep y the same rotate around the y axis
-t_point3	rotate_camera(t_point3 camera, double angle_degrees)
-{
-	double	angle_radians;
-	double	new_y;
-	double	new_x;
-	double	new_z;
-
-	angle_radians = degrees_to_radians(angle_degrees);
-	new_y = camera.y;
-	new_x = camera.x * cos(angle_radians) - camera.z * sin(angle_radians);
-	new_z = camera.x * sin(angle_radians) + camera.z * cos(angle_radians);
-	return (point3(new_x, new_y, new_z));
-}
-
 void	translate_camera(t_camera *cam, t_vec3 translation)
 {
-	cam->center = vec3add(cam->center, translation);
-	update_cam_resize(cam, cam->image_width, cam->image_height);
+	cam->orig = vec3add(cam->orig, translation);
+	print_position(*cam);
+	update_cam_resize(cam, cam->img_width, cam->img_height);
 }

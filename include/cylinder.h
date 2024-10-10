@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:57:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 16:15:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/09 11:10:34 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "disk.h"
 # include "hittable.h"
 # include "material.h"
-#include "quad.h"
+# include "quad.h"
 # include "vec3.h"
 
 /**
@@ -61,10 +61,25 @@ typedef struct s_cylinder_capped
 	void				(*print)(const void *self);
 }						t_cylinder_capped;
 
+typedef struct s_cyl_utils
+{
+	t_cylinder			*cyl;
+	const t_ray			*r;
+	double				closest_t;
+	t_vec3				closest_point;
+	t_vec3				normal;
+	double				a;
+	double				b;
+	double				c;
+}						t_cyl_utils;
+
 void					cylinder_uncapped(t_cylinder *c, t_init_params params);
-void					cylinder_mat_uncapped(t_cylinder *c, t_init_params params);
-void					cylinder_capped(t_cylinder_capped *c, t_init_params params);
-void					cylinder_mat_capped(t_cylinder_capped *c, t_init_params params);
+void					cylinder_mat_uncapped(t_cylinder *c,
+							t_init_params params);
+void					cylinder_capped(t_cylinder_capped *c,
+							t_init_params params);
+void					cylinder_mat_capped(t_cylinder_capped *c,
+							t_init_params params);
 bool					hit_cylinder_capped(const void *self, const t_ray *r,
 							t_interval closest, t_hit_record *rec);
 void					print_cylinder(const void *self);

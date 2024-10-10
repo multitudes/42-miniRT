@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 14:49:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:59:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 13:11:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,34 +69,7 @@ unsigned int	rgb_to_uint(t_rgb rgbcolor)
 {
 	unsigned int	result;
 
-	result = ((rgbcolor.r << 24) | (rgbcolor.g << 16) | (rgbcolor.b << 8) | 0xFF);
+	result = ((rgbcolor.r << 24) | (rgbcolor.g << 16) | (rgbcolor.b << 8) \
+				| 0xFF);
 	return (result);
-}
-
-/**
- * @brief Convert a linear component to gamma
- */
-double	linear_to_gamma(double linear_component)
-{
-	if (linear_component > 0)
-		return (sqrt(linear_component));
-	return (0);
-}
-
-/**
- * @brief Generate a random color
- */
-t_color	color_random(void)
-{
-	return (color(random_double(0, 1), random_double(0, 1), random_double(0,
-				1)));
-}
-
-/**
- * @brief Generate a random color with components between min and max
- */
-t_color	color_random_min_max(double min, double max)
-{
-	return (color(random_double(min, max), random_double(min, max),
-			random_double(min, max)));
 }

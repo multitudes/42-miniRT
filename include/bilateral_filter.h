@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 08:24:40 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/01 16:27:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:40:59 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@ typedef struct s_bil_filter
 }				t_bil_filter;
 
 void			apply_bilateral_filter(t_mrt *data);
-uint32_t		bilateral_filter_pixel(mlx_image_t *image, int xy[2],
+uint32_t		bilateral_filter_pixel(mlx_image_t *image, uint32_t xy[2],
 					t_sigmas sigmas);
 double			gaussian(double x, double sigma);
 uint32_t		pixel_value(t_bil_filter bf);
-void			write_filtered_px(t_mrt *data, int xy[2], t_sigmas sigmas);
-void			get_bil_weight(t_bil_filter *bf, mlx_image_t *image, int xy[2],
-					int i[2]);
+void			write_filtered_px(t_mrt *data, uint32_t xy[2], t_sigmas sigmas);
+void			get_bil_weight(t_bil_filter *bf, mlx_image_t *image, \
+								uint32_t xy[2], int i[2]);
 void			init_bilateral_filter(t_bil_filter *bf, t_sigmas *sigmas);
 
 #endif

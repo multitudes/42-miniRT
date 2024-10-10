@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:42:10 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/03 16:42:13 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:29:58 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,9 @@ void	get_box(t_objects *obj);
 /* parse_obj5.c */
 void	get_cone(t_objects *obj);
 void	get_cone_u(t_objects *obj);
+
+/* parse_obj6.c */
+void	quad_light_empty(t_objects *obj, int set_index);
+void	sphere_light_empty(t_objects *obj, int set_index);
 
 #endif

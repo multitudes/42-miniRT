@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 14:27:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:40:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,15 @@ typedef struct s_light
 {
 	union
 	{
-		t_quad			q_body;
-		t_sphere		s_body;
+		t_quad				q_body;
+		t_sphere			s_body;
 	};
-	t_solid_color		color;
-	t_diffuse_light		difflight;
+	t_solid_color			color;
+	union
+	{
+		t_diffuse_light		difflight;
+		t_empty_material	no_material;
+	};
 }						t_light;
 
 /**
@@ -61,6 +65,7 @@ typedef struct s_light
 typedef struct s_objects
 {
 	t_light				lights[OBJECT_COUNT];
+	t_light				empty_lights[OBJECT_COUNT];
 	t_sphere			spheres[SPHERES_COUNT];
 	t_plane				planes[OBJECT_COUNT];
 	t_cylinder_capped	cylinders[CYLINDER_COUNT];
@@ -71,8 +76,8 @@ typedef struct s_objects
 	t_cone				cones[OBJECT_COUNT];
 	t_cone_uncap		cones_u[OBJECT_COUNT];
 	t_box				boxes[OBJECT_COUNT];
-	t_hittable			*hit_list[OBJECT_COUNT * 8 + SPHERES_COUNT \
-						+  (2 * CYLINDER_COUNT)];
+	t_hittable			*hit_list[OBJECT_COUNT * 9 + SPHERES_COUNT + (2 * \
+									CYLINDER_COUNT)];
 	int					hit_idx;
 	t_hittable			*light_hit[OBJECT_COUNT + 1];
 	int					light_idx;
@@ -95,7 +100,7 @@ typedef struct s_mrt
 	t_hittablelist		world;
 	t_hittablelist		lights;
 	void				(*renderscene)(struct s_mrt *, const t_hittablelist *, \
-						const t_hittablelist *);
+										const t_hittablelist *);
 }						t_mrt;
 
 void					parse_input(char *filename, t_mrt *data);

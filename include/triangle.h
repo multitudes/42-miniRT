@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:05:35 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:16:43 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:41:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "hittable.h"
 # include "interval.h"
 # include "material.h"
-#include "quad.h"
+# include "quad.h"
 # include "ray.h"
 # include "vec3.h"
 

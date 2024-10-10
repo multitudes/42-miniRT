@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:46:44 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 10:00:40 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/07 17:28:42 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,10 @@ const t_vec3	*ray_direction(const t_ray *ray)
 
 t_point3	point_at(const t_ray *ray, double t)
 {
-	t_point3 result;
-	t_vec3 scaled_dir;
+	t_point3	result;
+	t_vec3		scaled_dir;
 
 	scaled_dir = vec3multscalar(ray->dir, t);
 	result = vec3add(ray->orig, scaled_dir);
-
 	return (result);
 }

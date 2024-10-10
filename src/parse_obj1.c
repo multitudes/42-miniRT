@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_obj1.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:46:16 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/03 16:46:16 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:27:05 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /* Inits the ambient struct inside of t_mrt->t_camera.
  * usage:
  * "A" [intensity([0.0;1.0])] [rgb color]
-*/
+ */
 void	get_ambient(t_mrt *data)
 {
 	static int	already_set;
@@ -27,15 +27,15 @@ void	get_ambient(t_mrt *data)
 			&data->objects);
 	if (count_tokens(tokens) != 3)
 		call_error("invalid token amount", "ambient", &data->objects);
-	ambient(&data->cam.ambient, ft_atod(tokens[1]), \
-		set_rgb(&data->objects, 2, "ambient"));
+	ambient(&data->cam.ambient, ft_atod(tokens[1]), set_rgb(&data->objects, 2,
+			"ambient"));
 	already_set = 1;
 }
 
 /* Inits the camera struct inside of t_mrt.
  * usage:
  * "C" [origin] [view vector (normalized values)] [horiz. fow (double)]
-*/
+ */
 void	get_camera(t_mrt *data)
 {
 	static int	already_set;
@@ -51,7 +51,7 @@ void	get_camera(t_mrt *data)
 	hfov = ft_atod(tokens[3]);
 	if (hfov < 0. || hfov > 180.)
 		call_error("fov must be in range [0;180]", "camera", &data->objects);
-	init_cam(&data->cam, set_vec3(&data->objects, 1, "camera", 0), \
+	init_cam(&data->cam, set_vec3(&data->objects, 1, "camera", 0),
 		set_vec3(&data->objects, 2, "camera", 1), hfov);
 	already_set = 1;
 }
@@ -59,7 +59,7 @@ void	get_camera(t_mrt *data)
 /* Quad light.
  * usage:
  * "l" "qd" [origin] [side_vec1] [side_vec2] [rgbcolor] [intensity ([0.0;1.0])]
-*/
+ */
 static void	quad_light(t_objects *obj, int set_index)
 {
 	t_color			color;
@@ -79,7 +79,7 @@ static void	quad_light(t_objects *obj, int set_index)
 	params.center = set_vec3(obj, 2, "q_light", 0);
 	params.side1 = set_vec3(obj, 3, "q_light", 0);
 	params.side2 = set_vec3(obj, 4, "q_light", 0);
-	params.mat = (t_material *) &obj->lights[set_index].difflight;
+	params.mat = (t_material *)&obj->lights[set_index].difflight;
 	quad_mat(&obj->lights[set_index].q_body, params);
 }
 
@@ -122,7 +122,7 @@ static void	sphere_light(t_objects *obj, int set_index)
  */
 void	get_light(t_objects *obj)
 {
-	static int		set_index;
+	static int	set_index;
 
 	if (ft_strncmp(obj->_tokens[1], "qd", 3) == 0)
 		quad_light(obj, set_index);
@@ -130,8 +130,12 @@ void	get_light(t_objects *obj)
 		sphere_light(obj, set_index);
 	obj->hit_list[obj->hit_idx] = (t_hittable *)&obj->lights[set_index].s_body;
 	obj->hit_idx++;
-	obj->light_hit[obj->light_idx] = \
-		(t_hittable *)&obj->lights[set_index].s_body;
+	if (ft_strncmp(obj->_tokens[1], "qd", 3) == 0)
+		quad_light_empty(obj, set_index);
+	else
+		sphere_light_empty(obj, set_index);
+	obj->light_hit[obj->light_idx] = (t_hittable *)&obj->\
+										empty_lights[set_index].s_body;
 	obj->light_idx++;
 	set_index++;
 }

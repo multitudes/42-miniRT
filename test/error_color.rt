@@ -1,8 +1,11 @@
 C	278,279,-800    0,0,1		90.0	# this is a commnent
 A	0.1   111,111,111
 
-# so i guess the color is off because i get green instead of white?
-l 	qd 343,554,332	-130,1,0 1,130,0  0.7,0.5,1	10
-# l qd 500,600.9,800  130,0,0  0,0,105  110,100,1  10
+# the rgb color for the light needs to be in the range [0, 255]
+# but at the same time i need at least one of them 
+# to be zero or i get a white light
+l 	qd 343,554,332	-130,1,0 1,130,0  255,100,1	1
+l 	qd 343,554,600  0,130,0  0,105,0  110,100,1  1
 
-# l qd 500,600.9,800  130,0,0  0,0,105  110,110,0  10
+
+sp  0,0,0  100  255,255,255

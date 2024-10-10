@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:04:25 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/08 16:20:02 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void	triangle(t_triangle *tri, t_init_params params)
 	tri->color = rgb_to_color(params.rgbcolor);
 	tri->normal = unit_vector(cross(tri->edge2, tri->edge1));
 	tri->d = dot(tri->normal, params.a);
-	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a), vec3substr(params.c, params.a)));
-	// Initialize texture and material as before
+	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a),
+				vec3substr(params.c, params.a)));
 	solid_color_init(&(tri->texture), tri->color);
 	lambertian_init_tex(&(tri->lambertian_mat), (t_texture *)&(tri->texture));
 	tri->mat = (t_material *)&(tri->lambertian_mat);
@@ -52,7 +52,8 @@ void	triangle_mat(t_triangle *tri, t_init_params params)
 	tri->edge2 = vec3substr(params.c, params.a);
 	tri->normal = unit_vector(cross(tri->edge2, tri->edge1));
 	tri->d = dot(tri->normal, params.a);
-	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a), vec3substr(params.c, params.a)));
+	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a),
+				vec3substr(params.c, params.a)));
 	tri->mat = params.mat;
 	tri->print = print_triangle;
 }
@@ -97,83 +98,29 @@ void	print_triangle(const void *self)
 bool	hit_triangle(const void *self, const t_ray *r, t_interval ray_t,
 		t_hit_record *rec)
 {
-	const t_triangle	*tri = (t_triangle *)self;
-	t_vec3				e1;
-	t_vec3				e2;
-	t_vec3				dir_cross_e2;
-	double				det;
-	double				f;
-	t_vec3				p1_to_origin;
-	double				u;
-	t_vec3				origin_cross_e1;
-	double				v;
-	double				t;
+	t_vec3	dirxe2;
+	double	det;
+	double	f;
+	t_vec3	p1;
+	t_vec3	oxe1;
 
-	e1 = tri->edge1;
-	e2 = tri->edge2;
-	dir_cross_e2 = cross(r->dir, e2);
-	det = dot(e1, dir_cross_e2);
+	dirxe2 = cross(r->dir, ((t_triangle *)self)->edge2);
+	det = dot(((t_triangle *)self)->edge1, dirxe2);
 	if (fabs(det) < EPSILON)
 		return (false);
 	f = 1.0 / det;
-	p1_to_origin = vec3substr(r->orig, tri->a);
-	u = f * dot(p1_to_origin, dir_cross_e2);
-	if (u < 0 || u > 1)
+	p1 = vec3substr(r->orig, ((t_triangle *)self)->a);
+	if ((f * dot(p1, dirxe2)) < 0 || (f * dot(p1, dirxe2)) > 1)
 		return (false);
-	origin_cross_e1 = cross(p1_to_origin, e1);
-	v = f * dot(r->dir, origin_cross_e1);
-	if (v < 0 || u + v > 1)
+	oxe1 = cross(p1, ((t_triangle *)self)->edge1);
+	if ((f * dot(r->dir, oxe1)) < 0 || (f * dot(p1, dirxe2)) + (f * dot(r->dir,
+				oxe1)) > 1)
 		return (false);
-	t = f * dot(e2, origin_cross_e1);
-	if (!contains(&ray_t, t))
+	rec->t = f * dot(((t_triangle *)self)->edge2, oxe1);
+	if (!contains(&ray_t, rec->t))
 		return (false);
-	rec->t = t;
-	rec->p = point_at(r, t);
-	rec->mat = tri->mat;
-	set_face_normal(rec, r, tri->normal);
+	rec->p = point_at(r, rec->t);
+	rec->mat = ((t_triangle *)self)->mat;
+	set_face_normal(rec, r, ((t_triangle *)self)->normal);
 	return (true);
-}
-
-double	triangle_pdf_value(const void *self, const t_point3 *orig,
-		const t_vec3 *dir)
-{
-	const t_triangle	*tri = (t_triangle *)self;
-	t_hit_record		rec;
-	const t_ray			r = ray(*orig, *dir);
-	double				distance_squared;
-	double				cosine;
-	t_vec3				e1;
-	t_vec3				e2;
-	double				area;
-
-	if (!hit_triangle(tri, &r, interval(0.001, 1e30), &rec))
-		return (0);
-	distance_squared = len_sqrd(vec3substr(rec.p, *orig));
-	cosine = fabs(dot(*dir, tri->normal));
-	// Calculate the area of the triangle
-	e1 = vec3substr(tri->b, tri->a);
-	e2 = vec3substr(tri->c, tri->a);
-	area = 0.5 * length(cross(e1, e2));
-	return (distance_squared / (cosine * area));
-}
-
-t_vec3	triangle_random(const void *self, const t_point3 *orig)
-{
-	const t_triangle	*tri = (t_triangle *)self;
-	double				u;
-	double				v;
-	t_vec3				p;
-
-	// Generate random points within the unit triangle (0, 1) × (0, 1)
-	u = random_double(0, 1);
-	v = random_double(0, 1);
-	if (u + v > 1)
-	{
-		u = 1 - u;
-		v = 1 - v;
-	}
-	// Calculate the point on the triangle corresponding to the random coordinates
-	p = vec3add(tri->a, vec3add(vec3multscalar(vec3substr(tri->b, tri->a), u),
-				vec3multscalar(vec3substr(tri->c, tri->a), v)));
-	return (vec3substr(p, *orig));
 }

@@ -10,14 +10,14 @@
 NAME 			= 	miniRT
 CC 				= 	cc
 
-# CFLAGS 			:= -Wall -Wextra -Werror
-# CFLAGS 			+= -Iinclude
-# CFLAGS			+= -Isrc -Ilib/external
-# CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
-# CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
-# CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math
-# CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
-# CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
+CFLAGS 			:= -Wall -Wextra -Werror
+CFLAGS 			+= -Iinclude
+CFLAGS			+= -Isrc -Ilib/external
+CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
+CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math
+CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
+CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
 CFLAGS 			+=  -g
 # CFLAGS 			+=  -DNDEBUG
 
@@ -37,21 +37,26 @@ LIBS 			+= 	$(LIBFTDIR)/libft.a
 INCLUDES		=  	-I./include -I./lib/external -I$(LIBMLX)/include -I$(LIBFTDIR)
 #INCLUDES		=  	-I./include -I$(LIBMLX)/include -I$(LIBFTDIR) -I/opt/homebrew/opt/glfw/include #petras mac
 
-SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c color.c ray.c rtw_stb_image.c \
+SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c \
+						color.c color_utils.c ray.c rtw_stb_image.c \
 						rtw_stb_image2.c vec3.c vec3_utils.c vec3_utils2.c vec3_utils3.c vec3_utils4.c \
-						hittable.c interval.c utils.c utils2.c ambient.c plane.c plane_utils.c cylinder.c \
-						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c parse_obj1.c parse_obj2.c \
-						parse_obj3.c parse_obj4.c parse_obj5.c parse_utils1.c parse_utils2.c hook_utils.c \
-						hook_utils2.c hook_utils3.c hook_utils4.c disk.c disk_utils.c box.c triangle.c \
-						rotated.c translated.c mersenne_twister.c cone_init.c cone_hit.c cone_utils.c \
-						bilateral_filter.c bilateral_filter2.c)
+						interval.c interval2.c utils.c utils2.c ambient.c plane.c plane_utils.c \
+						cylinder.c cylinder_hit.c cylinder_utils.c cylinder_print.c \
+						texture.c texture2.c material.c material2.c material3.c onb.c pdf.c pdf2.c pdf3.c \
+						quad.c quad2.c hittable_list.c \
+						parse.c parse_obj1.c parse_obj2.c parse_obj3.c parse_obj4.c parse_obj5.c parse_obj6.c \
+						parse_utils1.c parse_utils2.c \
+						hook_utils.c hook_utils2.c hook_utils3.c hook_utils4.c hook_utils5.c \
+						disk.c disk_utils.c box.c triangle.c triangle2.c mersenne_twister.c \
+						bilateral_filter.c bilateral_filter2.c camera_ray_color.c camera_ray_color_utils.c \
+						render.c render_utils.c cone_init.c cone_hit.c cone_utils.c)
 
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
 HDRS 			= $(addprefix include/, debug.h camera.h vec3.h sphere.h ray.h interval.h \
 						hittable.h hittable_list.h minirt.h color.h hook_utils.h \
 						utils.h ambient.h plane.h cylinder.h texture.h \
 						material.h onb.h pdf.h quad.h disk.h bilateral_filter.h\
-						box.h triangle.h rotated.h translated.h mersenne_twister.h parse.h)
+						box.h triangle.h mersenne_twister.h parse.h)
 HDRS			+= $(addprefix lib/, external/stb_image.h external/stb_image_write.h)
 
 LIBFT 			= $(LIBFTDIR)/libft.a
