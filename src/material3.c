@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:58:17 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 16:58:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 18:15:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,5 @@ t_color	emitlight(void *self, t_hit_record rec, double uv[2], t_point3 p)
 	light = (t_diffuse_light *)self;
 	if (!rec.front_face)
 		return (color(0, 0, 0));
-	return (light->texture->value(light->texture, uv, &p));
+	return (vec3multscalar(light->texture->value(light->texture, uv, &p), 100));
 }

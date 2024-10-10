@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 17:07:38 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 17:14:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 18:22:53 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "minirt.h"
 #include "ray.h"
 #include "utils.h"
+#include "vec3.h"
 
 /**
  * @brief one of the most important functions in the raytracer
@@ -89,10 +90,10 @@ uint32_t	color_gamma_corrected(t_color col)
 	t_color		corrected;
 
 	intensity = interval(0.0, 0.999);
-	corrected = color(clamp(intensity, linear_to_gamma(col.r)), \
-					clamp(intensity, linear_to_gamma(col.g)), \
-					clamp(intensity, linear_to_gamma(col.b)));
-	return (rgb_to_uint(color_to_rgb(corrected)));
+	corrected = color(linear_to_gamma(col.r), \
+					linear_to_gamma(col.g), \
+					linear_to_gamma(col.b));
+	return (rgb_to_uint(color_to_rgb(clamp_color(corrected))));
 }
 
 /*
