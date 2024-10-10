@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:40:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 20:31:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 # define SPHERES_COUNT 1000
 # define CYLINDER_COUNT 100
 # define CHECKER_SIZE 50
+# define TRIANGLE_COUNT 100
 
 /**
  * @brief A light source
@@ -72,12 +73,12 @@ typedef struct s_objects
 	t_cylinder			cylinders_u[CYLINDER_COUNT];
 	t_quad				quads[OBJECT_COUNT];
 	t_disk				disks[OBJECT_COUNT];
-	t_triangle			triangles[OBJECT_COUNT];
+	t_triangle			triangles[TRIANGLE_COUNT];
 	t_cone				cones[OBJECT_COUNT];
 	t_cone_uncap		cones_u[OBJECT_COUNT];
 	t_box				boxes[OBJECT_COUNT];
-	t_hittable			*hit_list[OBJECT_COUNT * 9 + SPHERES_COUNT + (2 * \
-									CYLINDER_COUNT)];
+	t_hittable			*hit_list[OBJECT_COUNT * 8 + SPHERES_COUNT + (2 * \
+									CYLINDER_COUNT) + TRIANGLE_COUNT];
 	int					hit_idx;
 	t_hittable			*light_hit[OBJECT_COUNT + 1];
 	int					light_idx;
