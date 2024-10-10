@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:47:01 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/09 17:09:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:21:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
 	char	**coord_tok;
 	double	coord_val[3];
 	int		i;
-	(void)normalized;
 
+	(void)normalized;
 	coord_tok = ft_split(obj->_tokens[index], ',');
 	if (*coord_tok == NULL)
 		call_error("ft_split() fail", func_name, obj);
