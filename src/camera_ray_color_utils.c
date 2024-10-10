@@ -69,6 +69,5 @@ t_color	get_color_from_scatter(t_rcparams params, t_scene scene, t_ray *r,
 			params.scattering_pdf);
 	color_from_scatter_partial = vec3mult(attenuationxscattering_pdf,
 			ambient_samplecolor);
-	debug("color ambient: %f %f %f", ambient.x, ambient.y, ambient.z);
 	return (vec3divscalar(color_from_scatter_partial, params.pdf_value));
 }
