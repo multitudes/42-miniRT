@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:38:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:55:50 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 // Epsilon value for floating-point comparison
 # define EPSILON 1e-6
-# define CORES 20
+# define CORES 24
 # define RANDOM_SYSTEM 0
 
 // Define constants for the LCG
