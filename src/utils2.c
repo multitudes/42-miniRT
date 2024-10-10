@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:46:09 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:46:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:36:21 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,9 @@ double	random_d(void)
 double	random_double(double min, double max)
 {
 	return (min + (max - min) * random_d());
+}
+
+t_vec3	clamp_color(t_vec3 v)
+{
+	return (vec3divscalar(v, clamp(interval(1, length(v)), length(v))));
 }

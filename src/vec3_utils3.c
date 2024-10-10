@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 18:41:55 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 18:20:55 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:27:50 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,6 @@ t_vec3	sample_square(void)
 t_vec3	unit_vector(t_vec3 v)
 {
 	return (vec3divscalar(v, length(v)));
-}
-
-t_vec3	clamp_color(t_vec3 v)
-{
-	return (vec3divscalar(v, clamp(interval(1,length(v)), length(v))));
 }
 
 t_vec3	random_in_unit_disk(void)

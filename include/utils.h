@@ -6,20 +6,20 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/05 09:56:49 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:38:29 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 # define UTILS_H
 
-#include <math.h>
+# include <math.h>
 # ifndef PI
 #  define PI 3.1415926535897932385
 # endif
 
-# include "vec3.h"
 # include "color.h"
+# include "vec3.h"
 # include <stdlib.h>
 
 // Epsilon value for floating-point comparison
@@ -45,20 +45,20 @@ typedef struct s_init_params
 	double		diam;
 	double		height;
 	t_rgb		rgbcolor;
-	t_vec3		side1;		// quad
-	t_vec3		side2;		// quad
-	t_point3	a;			// triangle		// box
-	t_point3	b;			// triangle		// box
-	t_point3	c;			// triangle
+	t_vec3		side1;
+	t_vec3		side2;
+	t_point3	a;
+	t_point3	b;
+	t_point3	c;
 	t_material	*mat;
 }				t_init_params;
-
 
 uint32_t		rand_rt(void);
 double			degrees_to_radians(double degrees);
 double			random_d(void);
 double			random_double(double min, double max);
 int				random_int(int min, int max);
-// int				get_num_cores(void); 
+t_color			clamp_color(t_vec3 color);
+// int				get_num_cores(void);
 
 #endif

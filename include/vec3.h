@@ -60,6 +60,5 @@ t_vec3			random_cosine_direction(void);
 t_vec3			reflect(const t_vec3 v, const t_vec3 n);
 t_vec3			refract(const t_vec3 uv, const t_vec3 n, double etai_over_etat);
 double			reflectance(double cosine, double refraction_index);
-t_color			clamp_color(t_vec3 color);
 
 #endif

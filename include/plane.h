@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:53:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 12:30:17 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 19:38:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "hittable.h"
 # include "material.h"
 # include "texture.h"
-#include "utils.h"
+# include "utils.h"
 # include "vec3.h"
 
 # define PLANE_MAX 1000
