@@ -11,13 +11,13 @@ NAME 			= 	miniRT
 CC 				= 	cc
 
 # CFLAGS 			:= -Wall -Wextra -Werror
-CFLAGS 			+= -Iinclude
-CFLAGS			+= -Isrc -Ilib/external
-CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
-CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
-CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math
-CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
-CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
+# CFLAGS 			+= -Iinclude
+# CFLAGS			+= -Isrc -Ilib/external
+# CFLAGS			+= -O3 -Ofast -march=native -funroll-loops -Wunreachable-code
+# CFLAGS 			+= -finline-functions -fno-rtti -fno-exceptions -fno-stack-protector
+# CFLAGS 			+= -Wno-overlength-strings -fno-signed-zeros -fno-trapping-math
+# CFLAGS 			+= -fomit-frame-pointer -ffast-math -fno-math-errno -funsafe-math-optimizations
+# CFLAGS 			+= -fassociative-math -freciprocal-math -ffinite-math-only -frounding-math
 CFLAGS 			+=  -g
 # CFLAGS 			+=  -DNDEBUG
 
@@ -43,7 +43,7 @@ SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c color.
 						texture.c material.c onb.c pdf.c quad.c hittable_list.c parse.c parse_obj1.c parse_obj2.c \
 						parse_obj3.c parse_obj4.c parse_obj5.c parse_utils1.c parse_utils2.c hook_utils.c \
 						hook_utils2.c hook_utils3.c hook_utils4.c disk.c disk_utils.c box.c triangle.c \
-						rotated.c translated.c mersenne_twister.c cone.c \
+						rotated.c translated.c mersenne_twister.c cone_init.c cone_hit.c cone_utils.c \
 						bilateral_filter.c bilateral_filter2.c)
 
 OBJS 			= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))

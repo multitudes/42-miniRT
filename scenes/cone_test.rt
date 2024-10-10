@@ -1,6 +1,14 @@
-C	0,0,0		0,0,-1 80
+C	0,0,0		0,0,-1 60
 A	0.3			255,255,255
 
 l	-30,-100,-100		0.3	255,255,255		40
-pl	0,-100,0	0,1,0  111,111,111
-co	-30,30,-100		0,1,0.9	40	80		200,20,90  0.2
+# pl	0,-100,0	0,1,0  111,111,111
+# co	-30,60,-200		0,1,0	40	80	200,20,90
+co	30,-10,-200		0.2,-1,-0.3 	60 31  200,20,90
+# cy	0,-50,-300			0,1,0	40	80			200,20,90
+
+# TODO: problems with cone
+# 1. when height < diam / 2, only the base renders (diam: 60, height: 29)
+# 2. when height == diam / 2, the whoe scene is messed up (diam: 60, height: 30)
+# 3. when height > diam / 2, but is very close do diam / 2, the base is much smaller
+# than the cone base opening (diam: 60. height: 32)
