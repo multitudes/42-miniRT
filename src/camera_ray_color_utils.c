@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:47:49 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 17:15:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/10 15:31:20 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,6 @@ t_color	get_color_from_scatter(t_rcparams params, t_scene scene, t_ray *r,
 			params.scattering_pdf);
 	color_from_scatter_partial = vec3mult(attenuationxscattering_pdf,
 			ambient_samplecolor);
+	debug("color ambient: %f %f %f", ambient.x, ambient.y, ambient.z);
 	return (vec3divscalar(color_from_scatter_partial, params.pdf_value));
 }
