@@ -25,7 +25,7 @@ void		rotate_camera_roll(t_camera *cam, double angle);
 void		move_camera_forward(t_camera *cam, double distance);
 void		move_camera_right(t_camera *cam, double distance);
 void		move_camera_up(t_camera *cam, double distance);
-void		_resize_hook(int new_width, int new_height, void *params);
+void		resize_hook(int new_width, int new_height, void *params);
 void		hook(void *param);
 t_point3	calculate_direction(t_point3 camera_pos);
 void		translate_camera(t_camera *cam, t_vec3 translation);
