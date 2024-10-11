@@ -245,3 +245,21 @@ https://alain.xyz/blog/ray-tracing-denoising
 
 https://planetpixelemporium.com/earth8081.html  
 https://www.solarsystemscope.com/textures/
+
+
+## inspiration and creqdit
+The code and approach are completely different but I also got inspired by some of the scenes from the following projects:  
+https://github.com/ricardoreves/42-minirt  for the atom scene, mindblowing! 
+Nice to see the implementation of the obj files which we did not do.
+https://github.com/tdameros  
+For denoising... and resources  
+https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction  
+searchig for the cone formula I found this:  
+https://github.com/QuantitativeBytes/qbRayTrace/blob/main/Ep8Code/qbRayTrace/qbPrimatives/cone.cpp  
+also part of a very good youtube video series  
+
+
+https://en.wikipedia.org/wiki/Sobel_operator  
+
+testing the random functions
+https://linux.die.net/man/3/rand_r
