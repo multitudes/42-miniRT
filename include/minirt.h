@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 21:08:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 12:21:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@
 # define CYLINDER_COUNT 100
 # define CHECKER_SIZE 1
 # define TRIANGLE_COUNT 100
+# ifndef PATH_MAX
+#  define PATH_MAX 256
+# endif
 
 /**
  * @brief A light source
@@ -90,6 +93,7 @@ typedef struct s_mrt
 {
 	void				*mlx;
 	void				*win_ptr;
+	char				win_title[PATH_MAX];
 	mlx_image_t			*image;
 	mlx_image_t			*filt_img;
 	mlx_image_t			*seconds_str;

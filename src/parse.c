@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/09/30 10:00:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 12:23:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void	parse_input(char *filename, t_mrt *data)
 		perror(filename);
 		exit(1);
 	}
+	ft_strlcpy(data->win_title, filename, FILENAME_MAX);
 	init_light_struct(data);
 	parse_line_loop(data);
 	data->objects._tokens = NULL;

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 13:03:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 12:38:39 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,25 @@ void	render_if_needed(t_mrt *data)
 			render(data, &(data->world), &(data->lights));
 		}
 	}
+}
+
+/*
+This is the callback of
+mlx_resize_hook(params.mlx, &_resize_hook, (void*)&params);
+The prototype of the function is given already.
+I receive the new height and width from the system.
+This works when resizing the window with the handles and also when going in
+fullscreen mode for some reason, even if the full screen mode
+is controlled differently in the background by the system.
+*/
+void	resize_hook(int new_width, int new_height, void *params)
+{
+	t_mrt	*data;
+
+	data = ((t_mrt *)params);
+	data->cam.img_width = new_width;
+	data->cam.img_height = new_height;
+	update_cam_resize(&data->cam, new_width, new_height);
+	mlx_resize_image(data->image, (uint32_t)new_width, (uint32_t)new_height);
+	data->needs_render = true;
 }

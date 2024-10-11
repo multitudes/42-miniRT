@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:41:25 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 14:19:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,12 @@
 
 # define ASPECT_RATIO 1
 # define IMAGE_WIDTH 400
-# define BONUS 1
+
+# ifdef DOBONUS
+#  define BONUS 1
+# else
+#  define BONUS 0
+# endif
 
 typedef struct s_mrt		t_mrt;
 typedef struct s_camera		t_camera;

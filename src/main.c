@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 16:55:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 12:38:07 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,14 @@
 #include "vec3.h"
 #include <MLX42/MLX42.h>
 #include <time.h>
+#include "hook_utils.h"
 
-#define WINDOW_TITLE "miniRT"
 #define BPP 4
 #define TRUE 1
 #define FALSE 0
 
-int		render_from_file(char *filename);
-int		init_window(t_mrt *data);
-bool	init_data(t_mrt *data);
-
-void	parse_input(char *filename, t_mrt *data);
+static int		render_from_file(char *filename);
+static int		init_window(t_mrt *data);
 
 int	main(int argc, char **argv)
 {
@@ -49,12 +46,12 @@ int	main(int argc, char **argv)
 		ft_printf("Usage: %s <filename>\n", argv[0]);
 }
 
-int	init_window(t_mrt *data)
+static int	init_window(t_mrt *data)
 {
 	void	*cursor;
 
 	data->mlx = mlx_init(data->cam.img_width, data->cam.img_height,
-			WINDOW_TITLE, true);
+			data->win_title, true);
 	if (data->mlx == NULL)
 		return (FALSE);
 	data->image = mlx_new_image(data->mlx, (uint32_t)data->cam.img_width,
@@ -78,43 +75,7 @@ int	init_window(t_mrt *data)
 	return (TRUE);
 }
 
-bool	init_data(t_mrt *data)
-{
-	data->mlx = NULL;
-	data->win_ptr = NULL;
-	data->cores_str = NULL;
-	data->seconds_str = NULL;
-	data->mlx_time = 0;
-	data->image = NULL;
-	data->renderscene = render;
-	data->needs_render = true;
-	if (BONUS)
-		mt_init_genrand(time(NULL));
-	return (true);
-}
-
-/*
-This is the callback of
-mlx_resize_hook(params.mlx, &_resize_hook, (void*)&params);
-The prototype of the function is given already.
-I receive the new height and width from the system.
-This works when resizing the window with the handles and also when going in
-fullscreen mode for some reason, even if the full screen mode
-is controlled differently in the background by the system.
-*/
-void	_resize_hook(int new_width, int new_height, void *params)
-{
-	t_mrt	*data;
-
-	data = ((t_mrt *)params);
-	data->cam.img_width = new_width;
-	data->cam.img_height = new_height;
-	update_cam_resize(&data->cam, new_width, new_height);
-	mlx_resize_image(data->image, (uint32_t)new_width, (uint32_t)new_height);
-	data->needs_render = true;
-}
-
-int	render_from_file(char *filename)
+static int	render_from_file(char *filename)
 {
 	t_mrt	data;
 	long	num_cores;
@@ -124,15 +85,14 @@ int	render_from_file(char *filename)
 		debug("Bonus is enabled\n");
 		num_cores = sysconf(_SC_NPROCESSORS_ONLN);
 		debug("Number of cores: %ld\n", num_cores);
-		data.cam.cores = (uint8_t)num_cores;
 	}
 	ft_memset(&data, 0, sizeof(t_mrt));
 	parse_input(filename, &data);
-	debug("Start of minirt %s", "helllo !! ");
+	debug("input file parsed: %s", data.win_title);
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 	render(&data, &data.world, &data.lights);
-	mlx_resize_hook(data.mlx, &_resize_hook, (void *)&data);
+	mlx_resize_hook(data.mlx, &resize_hook, (void *)&data);
 	mlx_loop_hook(data.mlx, &hook, (void *)&data);
 	mlx_loop(data.mlx);
 	ft_printf("\nbyebye!\n");
