@@ -106,9 +106,8 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 $(NAME): $(OBJS) $(HDRS)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) -o $(NAME)
 
-bonus: $(OBJS) $(HDRS)
-	$(CFLAGS) += -DDOBONUS=1
-	$(CC) $(CFLAGS) $(INCLUDES) $(OBJS) $(LIBS) -o $(NAME)
+bonus: CFLAGS += -DDOBONUS
+bonus: re
 
 clean:
 	rm -f $(OBJS)

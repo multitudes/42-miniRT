@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:55:50 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 14:39:32 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,14 @@
 
 // Epsilon value for floating-point comparison
 # define EPSILON 1e-6
+
+# ifdef DOBONUS
 # define CORES 24
+# else
+# define CORES 1
+# endif
+
+
 # define RANDOM_SYSTEM 0
 
 // Define constants for the LCG
