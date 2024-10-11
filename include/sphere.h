@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:38:56 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 14:29:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ typedef struct s_sphere
 	{
 		t_checker_texture	checker;
 		t_solid_color		texture;
-		t_img_texture		img_texture;
 	};
+	t_img_texture			img_texture;
 	void					(*print)(const void *self);
 }							t_sphere;
 
