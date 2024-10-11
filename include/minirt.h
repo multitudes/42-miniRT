@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:34:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/11 16:31:32 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 18:13:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define CYLINDER_COUNT 100
 # define CHECKER_SIZE 1
 # define TRIANGLE_COUNT 100
-# define DISK_COUNT 200
+# define DISK_COUNT 250
 
 # ifndef PATH_MAX
 #  define PATH_MAX 256
