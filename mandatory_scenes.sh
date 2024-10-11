@@ -9,6 +9,7 @@ pid1=$!
 
 ./miniRT scenes/deep_space_ambient0fulllight.rt &
 pid2=$!
+
 ./miniRT scenes/deep_space_ambient0blue.rt &
 pid3=$!
 
