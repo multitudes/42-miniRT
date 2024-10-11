@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 13:06:49 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 15:02:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	hook(void *param)
 void	print_position(t_camera cam)
 {
 	debug("###############################################");
-	debug("\ncamera center point = %f %f %f \ndirection %f %f %f\n", cam.orig.x,
+	debug("\ncamera center point = %f,%f,%f \ndirection %f,%f,%f\n", cam.orig.x,
 		cam.orig.y, cam.orig.z, cam.dir.x, cam.dir.y, cam.dir.z);
 	debug("horixontal field of view = %f", cam.hfov);
 	debug("###############################################");

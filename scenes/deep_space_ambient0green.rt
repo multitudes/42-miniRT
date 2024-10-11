@@ -1,0 +1,11 @@
+C       218,230,-802            -0.057567,0.010477,0.998287         60
+
+
+# ambient light set to green
+A       1               0,255,0
+
+# white ball for ref
+sp      0,250,-50               120             255,255,255 
+
+#colored ball
+sp      400,90,190              90              166,13,13 # reddish diffuse
