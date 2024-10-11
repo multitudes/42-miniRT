@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 16:55:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 12:23:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	init_window(t_mrt *data)
 	void	*cursor;
 
 	data->mlx = mlx_init(data->cam.img_width, data->cam.img_height,
-			WINDOW_TITLE, true);
+			data->win_title, true);
 	if (data->mlx == NULL)
 		return (FALSE);
 	data->image = mlx_new_image(data->mlx, (uint32_t)data->cam.img_width,
