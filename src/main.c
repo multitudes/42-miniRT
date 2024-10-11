@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/11 12:38:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 15:40:42 by ralgaran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,19 @@ static int	init_window(t_mrt *data)
 	return (TRUE);
 }
 
+/* loop through the sphere objects and free images if set*/
+static void	free_images(t_mrt *data)
+{
+	int			i;
+
+	i = -1;
+	while (++i < SPHERES_COUNT)
+	{
+		if (data->objects.spheres[i].img_texture.image_height != 0)
+			free_rtw_image(&data->objects.spheres->img_texture);
+	}
+}
+
 static int	render_from_file(char *filename)
 {
 	t_mrt	data;
@@ -97,5 +110,6 @@ static int	render_from_file(char *filename)
 	mlx_loop(data.mlx);
 	ft_printf("\nbyebye!\n");
 	mlx_terminate(data.mlx);
+	free_images(&data);
 	return (EXIT_SUCCESS);
 }
