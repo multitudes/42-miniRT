@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:40:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 13:09:03 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:05:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,13 +131,3 @@ bool	hit_box(const void *self, const t_ray *r, t_interval ray_t,
 	box_hittable_list = hittablelist(list, 6);
 	return (hit_objects(&box_hittable_list, r, ray_t, rec));
 }
-
-// void	print_box(const void *self)
-// {
-// 	t_box	*box;
-
-// 	box = (t_box *)self;
-// 	printf("box\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%d,%d,%d\n", box->a.x,
-// 		box->a.y, box->a.z, box->b.x, box->b.y, box->b.z, box->rgb.r,
-// 		box->rgb.g, box->rgb.b);
-// }

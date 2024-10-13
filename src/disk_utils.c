@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:04:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:07:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:11:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "minirt.h"
 #include "utils.h"
 #include <stdio.h>
+#include "libft.h"
 
 /**
  * @brief Computes the PDF value for a uniform disk.
@@ -87,7 +88,7 @@ void	print_disk(const void *self)
 {
 	const t_disk	*d = (const t_disk *)self;
 
-	printf("disk\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n",
+	ft_printf("disk\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n",
 		d->center.x, d->center.y, d->center.z, d->u.x, d->u.y, d->u.z, d->v.x,
 		d->v.y, d->v.z, d->rgb.r, d->rgb.g, d->rgb.b);
 }

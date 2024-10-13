@@ -6,12 +6,13 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 13:54:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:10:20 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "plane.h"
 #include <stdio.h>
+#include "libft.h"
 
 /**
  * @brief plane - Initialize a plane object
@@ -69,7 +70,7 @@ void	print_plane(const void *self)
 {
 	const t_plane	*p = (const t_plane *)self;
 
-	printf("pl\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", p->q.x, p->q.y,
+	ft_printf("pl\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", p->q.x, p->q.y,
 		p->q.z, p->normal.x, p->normal.y, p->normal.z, p->rgb.r, p->rgb.g,
 		p->rgb.b);
 }

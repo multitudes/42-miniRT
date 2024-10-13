@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 17:26:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:11:23 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "quad.h"
 #include "utils.h"
 #include <stdio.h>
+#include "libft.h"
 
 /**
  * @brief Initialize a quad object with a given position q,
@@ -75,7 +76,7 @@ void	print_quad(const void *self)
 {
 	const t_quad	*qd = (t_quad *)self;
 
-	printf("quad   %.f,%.f,%.f    %.f,%.f,%.f    %.f,%.f,%.f  %d,%d,%d\n",
+	ft_printf("quad   %.f,%.f,%.f    %.f,%.f,%.f    %.f,%.f,%.f  %d,%d,%d\n",
 		qd->q.x, qd->q.y, qd->q.z, qd->u.x, qd->u.y, qd->u.z, qd->v.x, qd->v.y,
 		qd->v.z, qd->rgb.r, qd->rgb.g, qd->rgb.b);
 }

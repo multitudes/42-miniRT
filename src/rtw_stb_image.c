@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:17:08 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 17:21:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:09:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "libft.h"
 
 // need to include only once and not in the header file
 #define STB_IMAGE_IMPLEMENTATION
@@ -60,7 +61,7 @@ bool	load(t_img_texture *img, const char *filename)
 			img->bytes_per_pixel);
 	if (img->fdata == NULL)
 		return (false);
-	printf("Image loaded - got fdata as array of float\n");
+	ft_printf("Image loaded - got fdata as array of float\n");
 	img->bytes_per_scanline = img->image_width * img->bytes_per_pixel;
 	convert_to_bytes(img);
 	return (true);

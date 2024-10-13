@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:04:25 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/08 16:20:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:11:42 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "utils.h"
 #include "vec3.h"
 #include <stdio.h>
+#include "libft.h"
 
 void	triangle(t_triangle *tri, t_init_params params)
 {
@@ -63,7 +64,7 @@ void	print_triangle(const void *self)
 	t_triangle	*tri;
 
 	tri = (t_triangle *)self;
-	printf("tri %.f,%.f,%.f %.f,%.f,%.f %.f,%.f,%.f %d,%d,%d\n", tri->a.x,
+	ft_printf("tri %.f,%.f,%.f %.f,%.f,%.f %.f,%.f,%.f %d,%d,%d\n", tri->a.x,
 		tri->a.y, tri->a.z, tri->b.x, tri->b.y, tri->b.z, tri->c.x, tri->c.y,
 		tri->c.z, tri->rgb.r, tri->rgb.g, tri->rgb.b);
 }

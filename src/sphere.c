@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 12:00:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:09:23 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "libft.h"
+
 
 /*
  * @brief: initializer for a sphere
@@ -90,7 +92,7 @@ void	print_sphere(const void *self)
 {
 	const t_sphere	*s = (const t_sphere *)self;
 
-	printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n", s->center.x, s->center.y,
+	ft_printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n", s->center.x, s->center.y,
 		s->center.z, s->radius * 2, s->rgb.r, s->rgb.g, s->rgb.b);
 }
 

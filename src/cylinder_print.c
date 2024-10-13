@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:55:34 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/09 10:56:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:05:35 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	print_cylinder(const void *self)
 {
 	const t_cylinder	*c = (const t_cylinder *)self;
 
-	printf("cy\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\t%.f\t%d,%d,%d\n",
+	ft_printf("cy\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f\t%.f\t%d,%d,%d\n",
 		c->center.x, c->center.y, c->center.z, c->axis.x, c->axis.y, c->axis.z,
 		c->radius * 2, c->height, c->rgb.r, c->rgb.g, c->rgb.b);
 }

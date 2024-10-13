@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:53:45 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:58:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 14:10:14 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "color.h"
 #include "debug.h"
 #include <stdio.h>
+#include "libft.h"
 
 void	ambient(t_ambient *result, double ratio, t_rgb rgb)
 {
@@ -27,6 +28,6 @@ void	print_ambient(const void *self)
 {
 	const t_ambient	*ambient = self;
 
-	printf("A\t%f\t\t%d,%d,%d\n", ambient->ratio, ambient->rgbcolor.r,
+	ft_printf("A\t%f\t\t%d,%d,%d\n", ambient->ratio, ambient->rgbcolor.r,
 		ambient->rgbcolor.g, ambient->rgbcolor.b);
 }
