@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 11:55:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/19 17:54:36 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,11 @@
 #include <math.h>
 #include <time.h>
 #include <pthread.h>
+#include <stdio.h>
+#include "libft.h"
 
-
+// void apply_sobel_filter(t_mrt *data);
+void apply_sobel_filterbw(t_mrt *data);
 
 void update_cam(t_camera *cam, int new_width, int new_height)
 {
@@ -182,18 +185,22 @@ t_ray get_ray(t_camera cam, int i, int j)
 	t_point3 ray_origin = cam.center;
 	t_vec3 ray_direction = vec3substr(pixel_sample, ray_origin); 
 	return ray(ray_origin, ray_direction);
-
 }
 
 void render_thread(void *args)
 {
-	clock_t start_time, end_time;
-    double time_taken, fps;
+	int i;
+	int x;
+	int y;
 	t_thread_data *thread_data;
+
+	i = 0;
+	x = 0;
 	thread_data = (t_thread_data *)args;
-	int y = thread_data->starty;
-	int x = 0;
-	int i = 0;
+	y = thread_data->starty;
+	
+    double time_taken, fps;
+	clock_t start_time, end_time;
     start_time = clock();
     while (y < thread_data->endy)
     {	
@@ -215,17 +222,14 @@ void render_thread(void *args)
 			x++;
         }
 		y++;
-
     }
-	
 	end_time = clock();
 
     // Calculate time taken and FPS
     time_taken = ((double)(end_time - start_time)) / CLOCKS_PER_SEC;
     fps = 1.0 / time_taken;
-	debug("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
+	printf("thread %d  - Frame rendered in %.2f seconds (FPS: %.2f)\n", thread_data->thread_id, time_taken, fps);
 	fflush(stderr);
-
 }
 
 
@@ -259,6 +263,8 @@ void    render(t_mrt *data, const t_hittablelist* world, const t_hittablelist* l
 		pthread_join(threads[thread_idx], NULL);
 		thread_idx++;
 	}
+	if (thread_data->filter)
+		apply_sobel_filterbw(thread_data->data);
 }
 
 /** 
@@ -280,7 +286,8 @@ bool is_near_zero(double value) {
     return fabs(value) < EPSILON;
 }
 
-// Function to check if a ray intersects an axis-aligned line
+// this was a test.... will be removed - i wanted to see the axis 
+// aligned lines in the scene but it was not working as expected
 bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
     // Check for intersection with x-axis (line along the x-axis)
     if (axis->x != 0 && axis->y == 0 && axis->z == 0) {
@@ -320,4 +327,66 @@ bool ray_intersects_line(const t_ray *r, const t_vec3 *axis) {
 
     // If none of the conditions match, the ray does not intersect the line
     return false;
+}
+#include <math.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+void apply_sobel_filterbw(t_mrt *data)
+{
+    int width = data->cam.image_width;
+    int height = data->cam.image_height;
+    mlx_image_t *image = data->image;
+    uint8_t *sobel_pixels = malloc(width * height * 4);
+
+    int sobel_x[3][3] = {
+        {-1, 0, 1},
+        {-2, 0, 2},
+        {-1, 0, 1}
+    };
+
+    int sobel_y[3][3] = {
+        {-1, -2, -1},
+        {0, 0, 0},
+        {1, 2, 1}
+    };
+
+    for (int y = 1; y < height - 1; y++)
+    {
+        for (int x = 1; x < width - 1; x++)
+        {
+            int gx = 0, gy = 0;
+
+            for (int ky = -1; ky <= 1; ky++)
+            {
+                for (int kx = -1; kx <= 1; kx++)
+                {
+                    int pixel_index = ((y + ky) * width + (x + kx)) * 4;
+                    uint8_t r = image->pixels[pixel_index];
+                    uint8_t g = image->pixels[pixel_index + 1];
+                    uint8_t b = image->pixels[pixel_index + 2];
+
+                    // Convert to grayscale using the luminosity method
+                    uint8_t gray = (uint8_t)(0.21 * r + 0.72 * g + 0.07 * b);
+
+                    gx += sobel_x[ky + 1][kx + 1] * gray;
+                    gy += sobel_y[ky + 1][kx + 1] * gray;
+                }
+            }
+
+            int magnitude = (int)sqrt(gx * gx + gy * gy);
+            uint8_t edge_value = (uint8_t)fmin(magnitude, 255);
+
+            int sobel_index = (y * width + x) * 4;
+            sobel_pixels[sobel_index] = edge_value;
+            sobel_pixels[sobel_index + 1] = edge_value;
+            sobel_pixels[sobel_index + 2] = edge_value;
+            sobel_pixels[sobel_index + 3] = 255; // Alpha channel
+        }
+    }
+
+    // Copy the Sobel-filtered pixels back to the image
+    memcpy(image->pixels, sobel_pixels, width * height * 4);
+    free(sobel_pixels);
 }

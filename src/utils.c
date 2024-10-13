@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 10:58:42 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/19 17:17:28 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "camera.h"
 
 #include "utils.h"
-#define CORES 16
+#define CORES 10
 
 
 /**
@@ -23,7 +23,7 @@
  */
 unsigned int rand_rt() 
 {
-	static unsigned int seed = 1;
+	static __thread unsigned int seed = 1;
     seed = (A * seed + C) % M;
     return seed;
 }

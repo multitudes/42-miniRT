@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/14 18:27:36 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/19 17:01:37 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@
 #define C 1013904223
 #define M 4294967296 // 2^32
 
+/**
+ * @brief Our random int generator.
+ */
 unsigned int rand_rt();
 
 /*
@@ -37,15 +40,18 @@ unsigned int rand_rt();
 double degrees_to_radians(double degrees);
 
 /*
- * Returns a random real in [0,1).
+ * Returns a random double in [0,1], 1 excluded.
  */
 double random_d();
 
 /*
- * Returns a random real in [min,max).
+ * Returns a random double in [min,max]
  */
 double random_double(double min, double max);
 
+/**
+ * @brief Returns a random int in [min,max] max excluded
+ */
 int random_int(int min, int max);
 
 #endif

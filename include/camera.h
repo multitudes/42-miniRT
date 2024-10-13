@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/18 10:05:25 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/09/19 17:26:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 #include <pthread.h>
 
 #define ASPECT_RATIO (double)16.0/16.0
-#define IMAGE_WIDTH 100
-#define CORES 16
+#define IMAGE_WIDTH 800
+#define CORES 10
 
 typedef struct s_mrt t_mrt;
 
@@ -34,6 +34,7 @@ typedef struct	s_thread_data
 	const t_hittablelist *lights;
 	int starty;
 	int endy;
+	bool filter;
 } 				t_thread_data;
 
 typedef struct	s_camera
@@ -46,7 +47,6 @@ typedef struct	s_camera
 	int    		image_height;   // Rendered image height
 	t_vec3   	u, v, w;              // Camera frame basis vectors
 	double		hfov;			   // hotizontal Field of view
-
 	int 		samples_per_pixel;
 	int			max_depth;		   // Maximum number of ray bounces into scene
 
@@ -59,9 +59,10 @@ typedef struct	s_camera
     t_vec3		pixel_delta_u;  // Offset to pixel to the right
     t_vec3		pixel_delta_v;  // Offset to pixel below
 
-	t_ambient  ambient_light;
-	pthread_t threads[CORES];
-	t_thread_data thread_data[CORES];
+	t_ambient	ambient_light;
+	pthread_t	threads[CORES];
+	t_thread_data	thread_data[CORES];
+	bool		sobel_filter;
 	void		(*print)(const void* self);
 	
 } 				t_camera;
@@ -73,8 +74,6 @@ void 			write_color(t_mrt *data, int x, int y, t_color colorvector);
 void			print_camera(const void *self);
 unsigned int    color_gamma_corrected(t_color color);
 void 			update_cam(t_camera *cam, int new_width, int new_height);
-// t_ray		get_ray(t_camera *c, int u, int v);
-// t_vec3		sample_square();
-
+t_ray			get_ray(t_camera cam, int i, int j);
 
 #endif
