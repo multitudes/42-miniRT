@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/27 18:37:17 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 17:05:08 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 13:17:42 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	onb_build_from_w(t_onb *basis, const t_vec3 *w)
 	t_vec3	unit_w;
 
 	unit_w = unit_vector(*w);
-	if (fabs(unit_w.x) > 0.9) 
+	if (fabs(unit_w.x) > 0.9)
 		a = vec3(0, 1, 0);
 	else
 		a = vec3(1, 0, 0);

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:12:33 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 17:18:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 13:21:39 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /*
  * @brief Clamp a value to a range and returns it. 
@@ -62,7 +63,7 @@ void	convert_to_bytes(t_img_texture *img)
 	img->bdata = malloc(total_bytes * sizeof(unsigned char));
 	if (img->bdata == NULL)
 	{
-		fprintf(stderr, "Failed to allocate memory for image data\n");
+		write(STDERR_FILENO, "Failed to allocate memory for image data\n", 42);
 		exit(1);
 	}
 	bptr = img->bdata;

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/11 12:38:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/13 13:18:08 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	handle_zoom_key(t_mrt *data, mlx_t *mlx)
 		move_camera_forward(&(data->cam), data->cam.img_width / PIX_AMOUNT);
 		debug("Left shift key pressed");
 	}
-	else 
+	else
 		return ;
 	print_position(data->cam);
 	data->needs_render = true;

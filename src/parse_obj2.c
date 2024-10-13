@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_obj2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 17:32:22 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/03 17:32:32 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/10/13 13:18:17 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens, \
 		params.mat = (t_material *)&obj->planes[set_index].metal;
 		plane_mat(&obj->planes[set_index], params);
 	}
-	else 
+	else
 	{
 		checker_texture_init(&obj->planes[set_index].checker, CHECKER_SIZE,
 			set_rgb(obj, 3, "plane"), set_rgb(obj, 4, "plane"));
