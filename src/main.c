@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/11 15:40:42 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/10/14 09:40:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static int	render_from_file(char *filename)
 
 	if (BONUS)
 	{
-		debug("Bonus is enabled\n");
+		ft_printf("Bonus is enabled\n");
 		num_cores = sysconf(_SC_NPROCESSORS_ONLN);
 		debug("Number of cores: %ld\n", num_cores);
 	}
