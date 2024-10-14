@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:29:16 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 15:15:23 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:05:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,5 @@ void	apply_bilateral_filter(t_mrt *data)
 	mlx_image_to_window(data->mlx, data->filt_img, 0, 0);
 	mlx_delete_image(data->mlx, data->image);
 	data->image = data->filt_img;
-	write(2, "\033[0;92mBilateral filter applied\n\033[0m", 35);
+	write(2, "\033[0;92mBilateral filter applied\033[0m\n", 36);
 }

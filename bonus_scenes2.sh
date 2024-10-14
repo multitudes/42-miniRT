@@ -11,13 +11,18 @@ pid1=$!
 
 ./miniRT scenes/atom.rt
 
-
+main_cyl_uncapped_disk.rt
 
 ./miniRT scenes/coloured_lights.rt
 
 ./miniRT scenes/cone_ball.rt
 
 ./miniRT scenes/billard.rt
+
+cyl_cone_test.rt
+template.rt
+
+main_checkerfloors.rt
 
 
 # Wait for all background processes to finish

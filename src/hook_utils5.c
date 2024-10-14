@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 14:55:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:00:44 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	render_if_needed(t_mrt *data)
 		if (mlx_get_time() - data->mlx_time > 0.05)
 		{
 			data->needs_render = false;
-			write(2, "Rendering scene....\n", 19);
+			write(2, "Rendering scene....\n", 21);
 			render(data, &(data->world), &(data->lights));
 		}
 	}
