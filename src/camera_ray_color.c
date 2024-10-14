@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 17:07:38 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 18:22:53 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 15:16:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,8 @@ t_color	ray_color(t_scene scene, t_ray *r, int depth)
  */
 uint32_t	color_gamma_corrected(t_color col)
 {
-	t_interval	intensity;
 	t_color		corrected;
 
-	intensity = interval(0.0, 0.999);
 	corrected = color(linear_to_gamma(col.r), \
 					linear_to_gamma(col.g), \
 					linear_to_gamma(col.b));
