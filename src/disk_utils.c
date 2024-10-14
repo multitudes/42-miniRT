@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:04:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 11:05:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 13:57:15 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,3 @@ t_vec3	disk_random(const void *self, const t_point3 *orig)
 	direction = vec3substr(point_on_disk, *orig);
 	return (unit_vector(direction));
 }
-

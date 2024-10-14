@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 13:06:34 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 09:54:55 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 13:58:31 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ including the macro below which is not allowed by norminette.
 // # ifdef NDEBUG
 // # define debug(M, ...)
 // # else
-// # define debug(M, ...) fprintf(stderr, "\033[0;92mDEBUG %s:%s:%d: " M "\033[0m\n",\
+// # define debug(M, ...) fprintf(stderr, "\033[0;92mDEBUG %s:%s:%d: 
+//" M "\033[0m\n",\
 //         __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
 // # endif
 

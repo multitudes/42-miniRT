@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:53:45 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 11:04:08 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 13:57:26 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,4 +21,3 @@ void	ambient(t_ambient *result, double ratio, t_rgb rgb)
 	result->rgbcolor = rgb;
 	result->color = vec3multscalar(rgb_to_color(rgb), ratio);
 }
-
