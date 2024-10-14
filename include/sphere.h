@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:56 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/11 14:29:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:03:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ typedef struct s_sphere
 
 void						sphere(t_sphere *s, t_init_params params);
 void						sphere_mat(t_sphere *s, t_init_params params);
-void						print_sphere(const void *self);
-void						print_sphere_mat(const void *self);
 bool						hit_sphere(const void *self, const t_ray *r,
 								t_interval closest, t_hit_record *rec);
 void						get_sphere_uv(t_vec3 normal, double uv[2]);

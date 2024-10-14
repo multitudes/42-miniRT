@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 09:44:20 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 10:52:47 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ void	handle_zoom_key(t_mrt *data, mlx_t *mlx)
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
 	{
 		move_camera_forward(&(data->cam), -data->cam.img_width / PIX_AMOUNT);
-		debug("Space key pressed");
+		write(2, "Space key pressed", 17);
 	}
 	else if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
 		move_camera_forward(&(data->cam), data->cam.img_width / PIX_AMOUNT);
-		debug("Left shift key pressed");
+		write(2, "Left shift key pressed", 23);
 	}
 	else 
 		return ;
@@ -95,7 +95,7 @@ void	render_if_needed(t_mrt *data)
 		if (mlx_get_time() - data->mlx_time > 0.05)
 		{
 			data->needs_render = false;
-			debug("Rendering scene....");
+			write(2, "Rendering scene....", 19);
 			render(data, &(data->world), &(data->lights));
 		}
 	}

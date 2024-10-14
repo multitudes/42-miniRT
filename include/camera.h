@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 09:36:17 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:03:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,6 @@ t_color						ray_color(t_scene scene, t_ray *r, int depth);
 t_ray						get_ray(t_camera cam, int i, int j);
 void						write_color(t_mrt *data, int x, int y,
 								t_color colorvector);
-void						print_camera(const void *self);
 uint32_t					color_gamma_corrected(t_color color);
 void						update_cam_resize(t_camera *cam, int new_width,
 								int new_height);

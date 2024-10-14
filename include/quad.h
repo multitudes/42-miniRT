@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:07:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:41:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:03:44 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ typedef struct s_init_params	t_init_params;
 
 void							quad_rgb(t_quad *qd, t_init_params param);
 void							quad_mat(t_quad *qd, t_init_params param);
-void							print_quad(const void *self);
 bool							hit_quad(const void *self, const t_ray *r,
 									t_interval ray_t, t_hit_record *rec);
 bool							is_interior(double a, double b,

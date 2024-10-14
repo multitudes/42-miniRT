@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 08:24:08 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 13:08:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:43:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,17 @@ double	gaussian(double x, double sigma)
 	return (res);
 }
 
+/**
+ * @brief get the pixel value from the bilateral filter struct
+ * 
+ * @param bf the bilateral filter struct
+ * @return uint32_t the pixel value
+ * 
+ * The filter operates with doubles values between 0 and 1 ideally, 
+ * so we need to clamp them and convert them to 8-bit values with a range
+ * between 0 and 255. Then the 4 bytes are combined into a single uint32_t
+ * in the RGBA format.
+ */
 uint32_t	pixel_value(t_bil_filter bf)
 {
 	uint32_t	result;
@@ -50,6 +61,18 @@ uint32_t	pixel_value(t_bil_filter bf)
 	return (result);
 }
 
+/**
+ * @brief get the bilateral filter weight of the pixel
+ * 
+ * @param bf the bilateral filter
+ * @param image the mlx image pointer
+ * @param xy the x and y coordinates of the pixel
+ * 
+ * The weight is calculated by multiplying the spatial and range weights.
+ * The spatial weight is calculated using the Gaussian function with the
+ * spatial sigma. The range weight is calculated using the Gaussian function
+ * with the range sigma. 
+ */
 void	get_bil_weight(t_bil_filter *bf, mlx_image_t *image, uint32_t xy[2],
 		int i[2])
 {
@@ -72,6 +95,12 @@ void	get_bil_weight(t_bil_filter *bf, mlx_image_t *image, uint32_t xy[2],
 	bf->w_sum += bf->weight;
 }
 
+/**
+ * @brief initialize the bilateral filter struct
+ * 
+ * @param bf the bilateral filter struct to be initialized
+ * @param sigmas the sigmas are passed to the struct as a substruct
+ */
 void	init_bilateral_filter(t_bil_filter *bf, t_sigmas *sigmas)
 {
 	*bf = (t_bil_filter){0};
@@ -89,6 +118,13 @@ void	init_bilateral_filter(t_bil_filter *bf, t_sigmas *sigmas)
  * @param sigma_s the spatial sigma
  * @param sigma_r the range sigma
  *
+ * @return uint32_t the filtered pixel value
+ * 
+ * The bilateral filter is a non-linear, edge-preserving, and noise-reducing
+ * smoothing filter for images. It replaces the intensity of each pixel with
+ * a weighted average of intensity values from nearby pixels. The weights are
+ * based on both the spatial distance and the intensity difference between
+ * the center pixel and the neighboring pixels.
  */
 uint32_t	bilateral_filter_pixel(mlx_image_t *image, uint32_t xy[2],
 		t_sigmas sigmas)

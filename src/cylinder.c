@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 15:07:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/09 11:14:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:05:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	cylinder_uncapped(t_cylinder *c, t_init_params params)
 	solid_color_init(&(c->texture), c->color);
 	lambertian_init_tex(&(c->lambertian_mat), (t_texture *)&(c->texture));
 	c->mat = (t_material *)&(c->lambertian_mat);
-	c->print = &print_cylinder;
 }
 
 /**
@@ -66,7 +65,6 @@ void	cylinder_mat_uncapped(t_cylinder *c, t_init_params params)
 	c->min = -params.height / 2;
 	c->max = params.height / 2;
 	c->mat = params.mat;
-	c->print = &print_cylinder;
 }
 
 /**
@@ -94,7 +92,6 @@ void	cylinder_capped(t_cylinder_capped *c, t_init_params params)
 	disk(&c->top, params);
 	params.center = bottom_center;
 	disk(&c->bottom, params);
-	c->print = &print_cylinder_capped;
 }
 
 void	cylinder_mat_capped(t_cylinder_capped *c, t_init_params params)
@@ -116,5 +113,4 @@ void	cylinder_mat_capped(t_cylinder_capped *c, t_init_params params)
 	disk_mat(&c->top, params);
 	params.center = bottom_center;
 	disk_mat(&c->bottom, params);
-	c->print = &print_cylinder_capped;
 }

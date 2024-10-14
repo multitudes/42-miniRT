@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:52:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:17:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:03:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,5 @@ typedef struct s_ambient
 }			t_ambient;
 
 void		ambient(t_ambient *result, double ratio, t_rgb rgb);
-void		print_ambient(const void *self);
 
 #endif

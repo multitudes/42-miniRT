@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:05:35 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:41:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:02:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ typedef struct s_triangle
 
 void					triangle(t_triangle *tri, t_init_params params);
 void					triangle_mat(t_triangle *tri, t_init_params params);
-void					print_triangle(const void *self);
 bool					hit_triangle(const void *self, const t_ray *r,
 							t_interval ray_t, t_hit_record *rec);
 double					triangle_pdf_value(const void *self,

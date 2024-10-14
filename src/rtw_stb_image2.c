@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:12:33 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/02 17:18:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:30:48 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include "libft.h"
 
 /*
  * @brief Clamp a value to a range and returns it. 
@@ -56,13 +58,13 @@ void	convert_to_bytes(t_img_texture *img)
 
 	i = 0;
 	total_bytes = img->image_width * img->image_height * img->bytes_per_pixel;
-	printf("img width height and bytes per pixel = %d %d %d\n",
+	ft_printf("img width height and bytes per pixel = %d %d %d\n",
 		img->image_width, img->image_height, img->bytes_per_pixel);
-	printf("total_bytes = %d\n", total_bytes);
+	ft_printf("total_bytes = %d\n", total_bytes);
 	img->bdata = malloc(total_bytes * sizeof(unsigned char));
 	if (img->bdata == NULL)
 	{
-		fprintf(stderr, "Failed to allocate memory for image data\n");
+		write(2, "Failed to allocate memory for image data\n", 41);
 		exit(1);
 	}
 	bptr = img->bdata;
@@ -78,7 +80,9 @@ void	convert_to_bytes(t_img_texture *img)
 
 /**
  * @brief Get the image width
+ * 
  * @param img the image texture
+ * @return int the image width
  */
 int	width(const t_img_texture *img)
 {
@@ -89,7 +93,9 @@ int	width(const t_img_texture *img)
 
 /**
  * @brief Get the image height
+ * 
  * @param img the image texture
+ * @return int the image height
  */
 int	height(const t_img_texture *img)
 {

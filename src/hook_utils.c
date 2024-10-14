@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 09:59:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:27:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,15 @@
 #include "minirt.h"
 #include "utils.h"
 
+/**
+ * @Brief Handle the directions keys
+ * 
+ * @param data The main data structure
+ * 
+ * I will move the camera in the direction of the arrow keys
+ * and update the camera orientation.
+ * I will also print the new camera position and direction.
+ */
 void	hook(void *param)
 {
 	mlx_t	*mlx;
@@ -43,16 +52,33 @@ void	hook(void *param)
 	handle_multithreading_key(data, mlx);
 	render_if_needed(data);
 }
-//\033[0;92m-\033[0m
+/**
+ * @brief Print the camera position and direction
+ * 
+ * @param cam The camera object
+ * 
+ * Utility function for debugging and orientation purposes.
+ * Now commented out because my ft_printf doesnt take float arguments
+ */
 void	print_position(t_camera cam)
 {
-	ft_printf("###############################################");
-	ft_printf("\ncamera center point = %f,%f,%f \ndirection %f,%f,%f\n", cam.orig.x,
-		cam.orig.y, cam.orig.z, cam.dir.x, cam.dir.y, cam.dir.z);
-	ft_printf("horixontal field of view = %f", cam.hfov);
-	ft_printf("###############################################");
+	(void)cam;
+	// ft_printf("###############################################");
+	// ft_printf("\ncamera center point = %f,%f,%f \ndirection %f,%f,%f\n", cam.orig.x,
+	// 	cam.orig.y, cam.orig.z, cam.dir.x, cam.dir.y, cam.dir.z);
+	// ft_printf("horixontal field of view = %f", cam.hfov);
+	// ft_printf("###############################################");
 }
 
+/**
+ * @brief Handle the arrow keys
+ * 
+ * @param data The main data structure
+ * @param mlx The MLX42 library
+ * 
+ * I will rotate the camera in the direction of the arrow keys
+ * The camera position should not be affected by this.
+ */
 void	handle_arrow_keys(t_mrt *data, mlx_t *mlx)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_UP))
@@ -74,6 +100,15 @@ void	handle_arrow_keys(t_mrt *data, mlx_t *mlx)
 	data->mlx_time = mlx_get_time();
 }
 
+/**
+ * @brief Handle the reset key
+ * 
+ * @param data The main data structure
+ * @param mlx The MLX42 library
+ * 
+ * With some scenes the movements are slow. 
+ * Sometimes I want to go quickly back to the original position.
+ */
 void	handle_reset_key(t_mrt *data, mlx_t *mlx)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_F1))
@@ -87,6 +122,14 @@ void	handle_reset_key(t_mrt *data, mlx_t *mlx)
 	}
 }
 
+/**
+ * @brief Handle the camera movements
+ * 
+ * @param data The main data structure
+ * @param mlx The MLX42 library
+ * 
+ * I will move the camera forward or backward or to the left or right.
+ */
 void	handle_direction_key(t_mrt *data, mlx_t *mlx)
 {
 	if (mlx_is_key_down(mlx, MLX_KEY_W))

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 09:58:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 10:55:24 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static int	render_from_file(char *filename)
 	else
 		data.cam.cores = 1;
 	parse_input(filename, &data);
-	ft_printf("\033[0;92minput file parsed: %s\033[0m", data.win_title);
+	ft_printf("\033[0;92minput file parsed: %s\033[0m\n", data.win_title);
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 	render(&data, &data.world, &data.lights);

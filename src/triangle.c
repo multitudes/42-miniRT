@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:04:25 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/08 16:20:02 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:06:55 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	triangle(t_triangle *tri, t_init_params params)
 	solid_color_init(&(tri->texture), tri->color);
 	lambertian_init_tex(&(tri->lambertian_mat), (t_texture *)&(tri->texture));
 	tri->mat = (t_material *)&(tri->lambertian_mat);
-	tri->print = print_triangle;
 }
 
 void	triangle_mat(t_triangle *tri, t_init_params params)
@@ -55,17 +54,6 @@ void	triangle_mat(t_triangle *tri, t_init_params params)
 	tri->area = 0.5 * length(cross(vec3substr(params.b, params.a),
 				vec3substr(params.c, params.a)));
 	tri->mat = params.mat;
-	tri->print = print_triangle;
-}
-
-void	print_triangle(const void *self)
-{
-	t_triangle	*tri;
-
-	tri = (t_triangle *)self;
-	printf("tri %.f,%.f,%.f %.f,%.f,%.f %.f,%.f,%.f %d,%d,%d\n", tri->a.x,
-		tri->a.y, tri->a.z, tri->b.x, tri->b.y, tri->b.z, tri->c.x, tri->c.y,
-		tri->c.z, tri->rgb.r, tri->rgb.g, tri->rgb.b);
 }
 
 /**

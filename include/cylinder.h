@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:57:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/09 11:10:34 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:03:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ void					cylinder_mat_capped(t_cylinder_capped *c,
 							t_init_params params);
 bool					hit_cylinder_capped(const void *self, const t_ray *r,
 							t_interval closest, t_hit_record *rec);
-void					print_cylinder(const void *self);
-void					print_cylinder_capped(const void *self);
 bool					hit_cylinder(const void *self, const t_ray *r,
 							t_interval closest, t_hit_record *rec);
 double					obj_cylinder_pdf_value(const void *self,

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 17:26:29 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:06:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	quad_rgb(t_quad *qd, t_init_params params)
 	solid_color_init(&(qd->texture), qd->color);
 	lambertian_init_tex(&(qd->lambertian_mat), (t_texture *)&(qd->texture));
 	qd->mat = (t_material *)&(qd->lambertian_mat);
-	qd->print = print_quad;
 }
 
 void	quad_mat(t_quad *qd, t_init_params params)
@@ -61,23 +60,6 @@ void	quad_mat(t_quad *qd, t_init_params params)
 	qd->w = vec3divscalar(n, dot(n, n));
 	qd->area = length(n);
 	qd->mat = params.mat;
-	qd->print = print_quad;
-}
-
-/**
- * @brief: print the quad object
- *
- * @param: self: the quad object
- * the format will be
- * "quad %f,%f,%f    %f,%f,%f     %f,%f,%f      %d,%d,%d"
- */
-void	print_quad(const void *self)
-{
-	const t_quad	*qd = (t_quad *)self;
-
-	printf("quad   %.f,%.f,%.f    %.f,%.f,%.f    %.f,%.f,%.f  %d,%d,%d\n",
-		qd->q.x, qd->q.y, qd->q.z, qd->u.x, qd->u.y, qd->u.z, qd->v.x, qd->v.y,
-		qd->v.z, qd->rgb.r, qd->rgb.g, qd->rgb.b);
 }
 
 bool	hit_quad(const void *self, const t_ray *r, t_interval ray_t,

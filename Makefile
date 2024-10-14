@@ -41,7 +41,7 @@ SRCS 			= $(addprefix $(SRC_DIR), main.c camera.c sphere.c sphere_utils.c \
 						color.c color_utils.c ray.c rtw_stb_image.c \
 						rtw_stb_image2.c vec3.c vec3_utils.c vec3_utils2.c vec3_utils3.c vec3_utils4.c \
 						interval.c interval2.c utils.c utils2.c ambient.c plane.c plane_utils.c \
-						cylinder.c cylinder_hit.c cylinder_utils.c cylinder_print.c \
+						cylinder.c cylinder_hit.c cylinder_utils.c \
 						texture.c texture2.c material.c material2.c material3.c onb.c pdf.c pdf2.c pdf3.c \
 						quad.c quad2.c hittable_list.c \
 						parse.c parse_obj1.c parse_obj2.c parse_obj3.c parse_obj4.c parse_obj5.c parse_obj6.c \
