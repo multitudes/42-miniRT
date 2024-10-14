@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 10:55:24 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:53:42 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,9 @@ static int	render_from_file(char *filename)
 	ft_memset(&data, 0, sizeof(t_mrt));
 	if (BONUS)
 	{
-		write(2, "Bonus is enabled\n", 18);
+		write(2, "\033[0;92mBonus is enabled\033[0m\n", 18);
 		num_cores = sysconf(_SC_NPROCESSORS_ONLN);
-		ft_printf("Number of cores: %ld\n", num_cores);
+		ft_printf("\033[0;92mNumber of cores: %d\033[0m\n", num_cores);
 		data.cam.cores = num_cores;
 	}
 	else
@@ -125,7 +125,7 @@ static int	render_from_file(char *filename)
 	mlx_resize_hook(data.mlx, &resize_hook, (void *)&data);
 	mlx_loop_hook(data.mlx, &hook, (void *)&data);
 	mlx_loop(data.mlx);
-	ft_printf("\nbyebye!\n");
+	write(2, "\n\033[0;92mbyebye!\033[0m\n", 9);
 	mlx_terminate(data.mlx);
 	free_images(&data);
 	return (EXIT_SUCCESS);
