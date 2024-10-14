@@ -28,8 +28,11 @@ pid7=$!
 ./miniRT scenes/deep_space_ambient3.rt &
 pid8=$!
 
+./miniRT scenes/ambient_light_test.rt &
+pid9=$!
+
 # Wait for all background processes to finish
-wait $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7 $pid8
+wait $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7 $pid8 $pid9
 
 # Optionally, terminate all processes (if needed)
 # kill $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7
