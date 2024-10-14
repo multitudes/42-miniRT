@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/11 12:38:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 09:35:32 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static int	render_from_file(char *filename)
 
 	if (BONUS)
 	{
-		debug("Bonus is enabled\n");
+		ft_printf("Bonus is enabled\n");
 		num_cores = sysconf(_SC_NPROCESSORS_ONLN);
 		debug("Number of cores: %ld\n", num_cores);
 	}
