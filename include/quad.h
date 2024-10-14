@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:07:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 11:03:44 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:45:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ typedef struct s_quad
 	t_vec3						normal;
 	t_vec3						w;
 	double						area;
-	void						(*print)(const void *self);
 }								t_quad;
 
 /* solves header hell (quad and minirt include each other) */

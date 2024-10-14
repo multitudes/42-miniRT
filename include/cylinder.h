@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:57:19 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 11:03:16 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:44:15 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ typedef struct s_cylinder
 		t_lambertian	lambertian_mat;
 	};
 	t_solid_color		texture;
-	void				(*print)(const void *self);
 }						t_cylinder;
 
 typedef struct s_cylinder_capped
@@ -58,7 +57,6 @@ typedef struct s_cylinder_capped
 	t_cylinder			cylinder_uncapped;
 	t_disk				top;
 	t_disk				bottom;
-	void				(*print)(const void *self);
 }						t_cylinder_capped;
 
 typedef struct s_cyl_utils

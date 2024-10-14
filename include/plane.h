@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:53:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 11:03:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:45:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ typedef struct s_plane
 		t_checker_texture	checker;
 	};
 	t_material				*mat;
-	void					(*print)(const void *self);
 }							t_plane;
 
 void						plane(t_plane *pl, t_init_params params);

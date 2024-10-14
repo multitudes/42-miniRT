@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 18:05:35 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 11:02:25 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:46:18 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ typedef struct s_triangle
 	t_vec3				normal;
 	t_vec3				w;
 	double				area;
-	void				(*print)(const void *self);
 }						t_triangle;
 
 void					triangle(t_triangle *tri, t_init_params params);

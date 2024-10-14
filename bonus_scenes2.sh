@@ -7,7 +7,12 @@ echo "This is the mandatory part wuth ambbient light scenes."
 ./miniRT scenes/deep_space_ambient0.rt &
 pid1=$!
 
+./miniRT scenes/basic_shapes.rt
 
+./miniRT scenes/atom.rt
+
+
+./miniRT scenes/billard.rt
 # Wait for all background processes to finish
 wait $pid1 
 

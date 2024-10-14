@@ -1,7 +1,5 @@
-C	0,0,100	0,0,-1		70
+C	0,0,100	0,0,-1		60
 A	0.6		255,255,255
 
-l 	200,0,-30	0.8		0,255,0
-pl	0,100,0		0,1,0	255,255,255	0,0,0
-
-# TODO: this scene is weird. why is the light not straight in the middle if the coordinates are put to 0,0,-300 or something?
+l 	20,20,50	  10		133,0,122 10
+pl	0,-1,0		0,1,0	255,255,255	0,0,0

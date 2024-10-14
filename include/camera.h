@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 11:03:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:43:05 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ typedef struct s_camera
 	uint8_t					cores;
 	pthread_t				threads[MAX_CORES];
 	t_thread_data			thread_data[MAX_CORES];
-	void					(*print)(const void *self);
 }							t_camera;
 
 typedef struct s_rcparams
