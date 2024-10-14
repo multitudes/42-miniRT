@@ -12,7 +12,14 @@ pid1=$!
 ./miniRT scenes/atom.rt
 
 
+
+./miniRT scenes/coloured_lights.rt
+
+./miniRT scenes/cone_ball.rt
+
 ./miniRT scenes/billard.rt
+
+
 # Wait for all background processes to finish
 wait $pid1 
 

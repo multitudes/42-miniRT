@@ -16,7 +16,7 @@
 # include "MLX42/MLX42.h"
 # include "camera.h"
 # define ROTATION_DEG 0.005
-# define PIX_AMOUNT 100
+# define PIX_AMOUNT 200
 
 void		exit_gracefully(mlx_t *mlx);
 void		rotate_camera_yaw(t_camera *cam, double angle);

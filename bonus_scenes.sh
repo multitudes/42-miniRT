@@ -17,8 +17,17 @@ pid3=$!
 ./miniRT scenes/deep_space2.rt &
 pid4=$!
 
+./miniRT scenes/checker_floor.rt
+pid5=$!
+
+./miniRT scenes/checker_sphere.rt
+pid6=$!
+
+ ./miniRT scenes/cone_test2.rt
+
 # Wait for all background processes to finish
-wait $pid1 $pid2 $pid3 $pid4
+wait $pid1 $pid2 $pid3 $pid4 $pid5
+
 
 # Optionally, terminate all processes (if needed)
 # kill $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7
