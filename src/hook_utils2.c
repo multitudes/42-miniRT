@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:50:50 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 15:56:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:25:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,16 @@
 #include "minirt.h"
 #include "utils.h"
 
-// Function to rotate a vector using a 3x3 rotation matrix
+/**
+ * @Brief rotate a vector using a 3x3 matrix
+ * 
+ * @param v The vector to rotate
+ * @param matrix The 3x3 matrix to rotate the vector
+ * 
+ * @return t_vec3 The rotated vector
+ * 
+ * In this function I will rotate a vector using a 3x3 matrix.
+ */
 t_vec3	rotate_vector(t_vec3 v, double matrix[3][3])
 {
 	t_vec3	result;
@@ -29,7 +38,16 @@ t_vec3	rotate_vector(t_vec3 v, double matrix[3][3])
 	return (result);
 }
 
-// Function to create a yaw rotation matrix (around the y-axis)
+/**
+ * @Brief Create a rotation matrix for the yaw rotation
+ * 
+ * @param angle The angle in radians
+ * @param matrix The 3x3 matrix to store the result
+ * 
+ * I will create a 3x3 rotation matrix for the yaw rotation
+ * around the y-axis.
+ * The matrix will be stored in the matrix parameter.
+ */
 void	create_yaw_rotation_matrix(double angle, double matrix[3][3])
 {
 	double	cos_angle;
@@ -48,7 +66,15 @@ void	create_yaw_rotation_matrix(double angle, double matrix[3][3])
 	matrix[2][2] = cos_angle;
 }
 
-// Function to create a pitch rotation matrix (around the x-axis)
+/**
+ * @Brief Create a pitch rotation matrix (around the x-axis)
+ * 
+ * @param angle The angle in radians
+ * @param matrix The 3x3 matrix to store the result
+ * 
+ * I will create a 3x3 rotation matrix to rotate a vector around the x-axis
+ * (pitch) and store the result in the matrix parameter.
+ */
 void	create_pitch_rotation_matrix(double angle, double matrix[3][3])
 {
 	double	cos_angle;
@@ -67,7 +93,15 @@ void	create_pitch_rotation_matrix(double angle, double matrix[3][3])
 	matrix[2][2] = cos_angle;
 }
 
-// Function to create a roll rotation matrix (around the z-axis)
+/**
+ * @Brief Create a roll rotation matrix (around the z-axis)
+ * 
+ * @param angle The angle in radians
+ * @param matrix The 3x3 matrix to store the result
+ * 
+ * To rotate the camera around the z-axis (roll) I will create a 3x3 rotation
+ * matrix with the given angle and store the result in the matrix parameter.
+ */
 void	create_roll_rotation_matrix(double angle, double matrix[3][3])
 {
 	double	cos_angle;
@@ -86,7 +120,14 @@ void	create_roll_rotation_matrix(double angle, double matrix[3][3])
 	matrix[2][2] = 1;
 }
 
-// Function to rotate the camera around the y-axis (yaw)
+/**
+ * @Brief Rotate the camera around the y-axis (yaw)
+ * 
+ * @param cam The camera object
+ * @param angle The angle in radians
+ * 
+ * I will rotate the camera around the y-axis (yaw) using a rotation matrix
+ */
 void	rotate_camera_yaw(t_camera *cam, double angle)
 {
 	double	rotation_matrix[3][3];

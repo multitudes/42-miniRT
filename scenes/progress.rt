@@ -23,7 +23,7 @@ box	600,90,190		700,190,290		0,200,200
 sp 650,300,200	100	255,255,255		0,0,0
 
 # earth image
-sp 250,100,-200  100 img:rtw_image/earthmap.jpg
+sp 250,100,-200  100 img:rtw_image/earth.jpg
 
 
 

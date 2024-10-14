@@ -6,13 +6,14 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:29:16 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 13:08:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:05:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MLX42/MLX42.h"
 #include "bilateral_filter.h"
 #include "debug.h"
+#include "libft.h"
 
 void	write_filtered_px(t_mrt *data, uint32_t xy[2], t_sigmas sigmas)
 {
@@ -41,11 +42,9 @@ void	write_filtered_px(t_mrt *data, uint32_t xy[2], t_sigmas sigmas)
 void	apply_bilateral_filter(t_mrt *data)
 {
 	t_sigmas	sigmas;
-	double		start;
 	uint32_t	xy[2];
 
 	sigmas = (t_sigmas){0.5, 0.5};
-	start = mlx_get_time();
 	data->filt_img = mlx_new_image(data->mlx, data->image->width,
 			data->image->height);
 	xy[1] = 0;
@@ -62,5 +61,5 @@ void	apply_bilateral_filter(t_mrt *data)
 	mlx_image_to_window(data->mlx, data->filt_img, 0, 0);
 	mlx_delete_image(data->mlx, data->image);
 	data->image = data->filt_img;
-	debug("Bilateral filter applied in %.2f seconds\n", mlx_get_time() - start);
+	write(2, "\033[0;92mBilateral filter applied\033[0m\n", 36);
 }

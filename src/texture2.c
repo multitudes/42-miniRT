@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 17:33:06 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/13 14:11:17 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:42:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "libft.h"
+#include <unistd.h>
 #include "libft.h"
 
 /**
@@ -38,9 +38,7 @@ void	img_texture_init(t_img_texture *img_texture, char *filename)
 	ft_printf("filename = %s\n", filename);
 	if (load(img_texture, filename) == 0)
 	{
-		write(2, "Failed to load image ", 22);
-		write(2, filename, ft_strlen(filename));
-		write(2, "\n", 1);
+		write(2, "Failed to load image\n", 21);
 		exit(1);
 	}
 	ft_printf("Image loaded\n");

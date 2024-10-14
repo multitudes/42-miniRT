@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/13 14:09:23 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:42:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	sphere(t_sphere *s, t_init_params params)
 	solid_color_init(&(s->texture), s->color);
 	lambertian_init_tex(&(s->lambertian_mat), (t_texture *)&(s->texture));
 	s->mat = (t_material *)&(s->lambertian_mat);
-	s->print = print_sphere;
 }
 
 /**
@@ -77,23 +76,6 @@ void	sphere_mat(t_sphere *s, t_init_params params)
 	s->rgb = rgb(0, 0, 0);
 	s->color = color(0, 0, 0);
 	s->mat = params.mat;
-	s->print = print_sphere;
-}
-
-/**
- * @brief prints the sphere information for the rt file
- *
- * like: sp 	0.0,0.020.6 	12.6	10,0,255
- * where the first 3 values are the center of the sphere
- * the 4th value is the diameter of the sphere
- * the last 3 values are the rgb color of the sphere
- */
-void	print_sphere(const void *self)
-{
-	const t_sphere	*s = (const t_sphere *)self;
-
-	ft_printf("sp\t%.f,%.f,%.f\t\t%.f\t\t%d,%d,%d\n", s->center.x, s->center.y,
-		s->center.z, s->radius * 2, s->rgb.r, s->rgb.g, s->rgb.b);
 }
 
 bool	calculate_root(const t_sphere *s, const t_ray *r, t_interval ray_t,

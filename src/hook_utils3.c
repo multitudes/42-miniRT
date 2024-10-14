@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:52:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 12:54:53 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:03:01 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	rotate_camera_roll(t_camera *cam, double angle)
 
 void	exit_gracefully(mlx_t *mlx)
 {
-	ft_printf("byebye!\n");
+	write(1, "byebye!\n", 8);
 	mlx_close_window(mlx);
 	mlx_terminate(mlx);
 	exit(EXIT_SUCCESS);

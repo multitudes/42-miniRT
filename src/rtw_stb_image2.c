@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:12:33 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/13 14:10:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:41:35 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	convert_to_bytes(t_img_texture *img)
 	img->bdata = malloc(total_bytes * sizeof(unsigned char));
 	if (img->bdata == NULL)
 	{
-		write(STDERR_FILENO, "Failed to allocate memory for image data\n", 42);
+		write(2, "Failed to allocate memory for image data\n", 41);
 		exit(1);
 	}
 	bptr = img->bdata;
@@ -80,7 +80,9 @@ void	convert_to_bytes(t_img_texture *img)
 
 /**
  * @brief Get the image width
+ * 
  * @param img the image texture
+ * @return int the image width
  */
 int	width(const t_img_texture *img)
 {
@@ -91,7 +93,9 @@ int	width(const t_img_texture *img)
 
 /**
  * @brief Get the image height
+ * 
  * @param img the image texture
+ * @return int the image height
  */
 int	height(const t_img_texture *img)
 {

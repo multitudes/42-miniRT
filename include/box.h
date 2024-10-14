@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:38:14 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/09/30 09:17:25 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:43:45 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,10 @@ typedef struct s_box
 	};
 	t_solid_color		texture;
 	t_material			*mat;
-	void				(*print)(const void *self);
 }						t_box;
 
 void					box_rgb(t_box *box, t_init_params params);
 void					box(t_box *box, t_init_params params);
-void					print_box(const void *self);
 bool					hit_box(const void *self, const t_ray *r,
 							t_interval ray_t, t_hit_record *rec);
 

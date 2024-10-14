@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/13 13:18:08 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:40:51 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ void	handle_zoom_key(t_mrt *data, mlx_t *mlx)
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
 	{
 		move_camera_forward(&(data->cam), -data->cam.img_width / PIX_AMOUNT);
-		debug("Space key pressed");
+		write(2, "Space key pressed\n", 17);
 	}
 	else if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
 		move_camera_forward(&(data->cam), data->cam.img_width / PIX_AMOUNT);
-		debug("Left shift key pressed");
+		write(2, "Left shift key pressed\n", 23);
 	}
 	else
 		return ;
@@ -74,11 +74,11 @@ void	handle_multithreading_key(t_mrt *data, mlx_t *mlx)
 	{
 		if (mlx_get_time() - data->mlx_time > 0.1)
 		{
-			if (data->cam.cores == 1)
-				data->cam.cores = CORES;
+			if (data->cam.cores == 1 && BONUS)
+				data->cam.cores = sysconf(_SC_NPROCESSORS_ONLN);
 			else
 				data->cam.cores = 1;
-			debug("cores: %d\n", data->cam.cores);
+			ft_printf("cores: %d\n", data->cam.cores);
 			print_position(data->cam);
 			data->needs_render = true;
 			mlx_delete_image(data->mlx, data->cores_str);
@@ -95,7 +95,7 @@ void	render_if_needed(t_mrt *data)
 		if (mlx_get_time() - data->mlx_time > 0.05)
 		{
 			data->needs_render = false;
-			debug("Rendering scene....");
+			write(2, "Rendering scene....\n", 21);
 			render(data, &(data->world), &(data->lights));
 		}
 	}

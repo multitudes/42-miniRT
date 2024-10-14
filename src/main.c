@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/11 12:38:07 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:53:42 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,14 @@ int	main(int argc, char **argv)
 		ft_printf("Usage: %s <filename>\n", argv[0]);
 }
 
+/**
+ * @brief Initialize the window
+ * 
+ * @param data The main data structure
+ * 
+ * I will initialize the MLX42 window and the image and keep the 
+ * pointers of both in the main t_mrt data structure.
+ */
 static int	init_window(t_mrt *data)
 {
 	void	*cursor;
@@ -71,31 +79,54 @@ static int	init_window(t_mrt *data)
 	}
 	cursor = mlx_create_std_cursor(MLX_CURSOR_CROSSHAIR);
 	mlx_set_cursor(data->mlx, cursor);
-	debug("Window initialized");
+	write(2, "\033[0;92mWindow initialized\033[0m\n", 31);
 	return (TRUE);
 }
 
+/* loop through the sphere objects and free images if set*/
+static void	free_images(t_mrt *data)
+{
+	int			i;
+
+	i = -1;
+	while (++i < SPHERES_COUNT)
+	{
+		if (data->objects.spheres[i].img_texture.image_height != 0)
+			free_rtw_image(&data->objects.spheres->img_texture);
+	}
+}
+
+/**
+ * @brief Render the scene from a file
+ * 
+ * @param filename The filename of the file to render
+ * @return int 0 for success or 1 for failure
+ */
 static int	render_from_file(char *filename)
 {
 	t_mrt	data;
 	long	num_cores;
 
+	ft_memset(&data, 0, sizeof(t_mrt));
 	if (BONUS)
 	{
-		debug("Bonus is enabled\n");
+		write(2, "\033[0;92mBonus is enabled\033[0m\n", 18);
 		num_cores = sysconf(_SC_NPROCESSORS_ONLN);
-		debug("Number of cores: %ld\n", num_cores);
+		ft_printf("\033[0;92mNumber of cores: %d\033[0m\n", num_cores);
+		data.cam.cores = num_cores;
 	}
-	ft_memset(&data, 0, sizeof(t_mrt));
+	else
+		data.cam.cores = 1;
 	parse_input(filename, &data);
-	debug("input file parsed: %s", data.win_title);
+	ft_printf("\033[0;92minput file parsed: %s\033[0m\n", data.win_title);
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 	render(&data, &data.world, &data.lights);
 	mlx_resize_hook(data.mlx, &resize_hook, (void *)&data);
 	mlx_loop_hook(data.mlx, &hook, (void *)&data);
 	mlx_loop(data.mlx);
-	ft_printf("\nbyebye!\n");
+	write(2, "\n\033[0;92mbyebye!\033[0m\n", 9);
 	mlx_terminate(data.mlx);
+	free_images(&data);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/09 16:09:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:05:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	disk(t_disk *d, t_init_params params)
 	solid_color_init(&(d->texture), d->color);
 	lambertian_init_tex(&(d->lambertian_mat), (t_texture *)&(d->texture));
 	d->mat = (t_material *)&(d->lambertian_mat);
-	d->print = print_disk;
 }
 
 /**
@@ -78,7 +77,6 @@ void	disk_mat(t_disk *d, t_init_params params)
 	d->rgb = rgb(0, 0, 0);
 	d->color = color(0, 0, 0);
 	d->mat = params.mat;
-	d->print = print_disk;
 }
 
 /**

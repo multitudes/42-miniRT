@@ -45,7 +45,6 @@ t_vec3			vec3divscalar(const t_vec3 a, double t);
 t_vec3			cross(const t_vec3 a, const t_vec3 b);
 double			len_sqrd(const t_vec3 v);
 double			length(const t_vec3 v);
-void			print_vec3(const t_vec3 *v);
 double			dot(const t_vec3 a, const t_vec3 b);
 t_vec3			random_vec3(void);
 t_vec3			random_vec3_min_max(double min, double max);

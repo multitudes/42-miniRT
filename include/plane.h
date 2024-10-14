@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:53:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:38:47 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:45:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,10 @@ typedef struct s_plane
 		t_checker_texture	checker;
 	};
 	t_material				*mat;
-	void					(*print)(const void *self);
 }							t_plane;
 
-/*
- * a sort of initializer for a plane
- */
 void						plane(t_plane *pl, t_init_params params);
 void						plane_mat(t_plane *pl, t_init_params params);
-void						print_plane(const void *self);
-/* if the ray hits the sphere, return the t value */
 bool						hit_plane(const void *self, const t_ray *r,
 								t_interval closest, t_hit_record *rec);
 double						plane_pdf_value(const void *self,

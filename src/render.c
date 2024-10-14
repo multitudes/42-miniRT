@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 15:12:47 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 17:29:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 10:55:46 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	update_time(double start_time, t_mrt *data)
 	char	cores_str[25];
 	char	*temp;
 
-	debug("DONE\n");
+	write(2, "\033[0;92mDONE\n\033[0m", 17);
 	time_taken = ((int)(mlx_get_time() - start_time));
 	ft_strlcpy(cores_str, "cores: ", 25);
 	temp = ft_itoa(data->cam.cores);

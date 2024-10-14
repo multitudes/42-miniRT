@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:04:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/13 14:11:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:42:12 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,19 +76,4 @@ t_vec3	disk_random(const void *self, const t_point3 *orig)
 					* cos(theta)), vec3multscalar(d->v, r * sin(theta))));
 	direction = vec3substr(point_on_disk, *orig);
 	return (unit_vector(direction));
-}
-
-/**
- * @brief print the disk object
- *
- * format is like this
- * disk 0.0,0.0,-10.0 0.0,1.0,0.0 0,0,225
- */
-void	print_disk(const void *self)
-{
-	const t_disk	*d = (const t_disk *)self;
-
-	ft_printf("disk\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n",
-		d->center.x, d->center.y, d->center.z, d->u.x, d->u.y, d->u.z, d->v.x,
-		d->v.y, d->v.z, d->rgb.r, d->rgb.g, d->rgb.b);
 }

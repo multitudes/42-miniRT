@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:07:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:38:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:44:25 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,10 @@ typedef struct s_disk
 	};
 	t_solid_color		texture;
 	t_material			*mat;
-	void				(*print)(const void *self);
 }						t_disk;
 
 void					disk(t_disk *d, t_init_params params);
 void					disk_mat(t_disk *d, t_init_params params);
-void					print_disk(const void *self);
 bool					hit_disk(const void *self, const t_ray *r,
 							t_interval ray_t, t_hit_record *rec);
 double					disk_pdf_value(const void *self, const t_point3 *orig,

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:57:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/10 20:31:54 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/11 16:31:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	get_disk(t_objects *obj)
 	t_init_params	params;
 
 	tokens = obj->_tokens;
-	if (set_index >= OBJECT_COUNT)
+	if (set_index >= DISK_COUNT)
 		call_error("exceeds array size", "disk", obj);
 	if (count_tokens(tokens) != 5 && count_tokens(tokens) != 6)
 		call_error("invalid token amount", "disk", obj);

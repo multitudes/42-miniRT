@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/11 14:19:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 14:51:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
 # include <pthread.h>
 
 # define ASPECT_RATIO 1
-# define IMAGE_WIDTH 400
+# define IMAGE_WIDTH 250
+# define MAX_CORES 128
 
 # ifdef DOBONUS
 #  define BONUS 1
@@ -73,9 +74,8 @@ typedef struct s_camera
 	t_vec3					original_dir;
 	t_ambient				ambient;
 	uint8_t					cores;
-	pthread_t				threads[CORES];
-	t_thread_data			thread_data[CORES];
-	void					(*print)(const void *self);
+	pthread_t				threads[MAX_CORES];
+	t_thread_data			thread_data[MAX_CORES];
 }							t_camera;
 
 typedef struct s_rcparams
@@ -100,7 +100,6 @@ t_color						ray_color(t_scene scene, t_ray *r, int depth);
 t_ray						get_ray(t_camera cam, int i, int j);
 void						write_color(t_mrt *data, int x, int y,
 								t_color colorvector);
-void						print_camera(const void *self);
 uint32_t					color_gamma_corrected(t_color color);
 void						update_cam_resize(t_camera *cam, int new_width,
 								int new_height);

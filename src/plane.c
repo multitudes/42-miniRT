@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 14:59:39 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/13 14:10:20 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:41:03 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void	plane(t_plane *pl, t_init_params params)
 	solid_color_init(&(pl->solid), pl->color);
 	lambertian_init_tex(&(pl->lambertian_mat), (t_texture *)&(pl->solid));
 	pl->mat = (t_material *)&(pl->lambertian_mat);
-	pl->print = print_plane;
 }
 
 void	plane_mat(t_plane *pl, t_init_params params)
@@ -57,22 +56,6 @@ void	plane_mat(t_plane *pl, t_init_params params)
 	pl->mat = params.mat;
 	pl->rgb = rgb(0, 0, 0);
 	pl->color = color(0, 0, 0);
-	pl->print = print_plane;
-}
-
-/**
- * @brief print the plane object
- *
- * format is like this
- * pl 0.0,0.0,-10.0 0.0,1.0,0.0 0,0,225
- */
-void	print_plane(const void *self)
-{
-	const t_plane	*p = (const t_plane *)self;
-
-	ft_printf("pl\t%.f,%.f,%.f\t\t%.f,%.f,%.f\t\t\t%d,%d,%d\n", p->q.x, p->q.y,
-		p->q.z, p->normal.x, p->normal.y, p->normal.z, p->rgb.r, p->rgb.g,
-		p->rgb.b);
 }
 
 /**

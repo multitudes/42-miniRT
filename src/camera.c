@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 10:28:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 15:11:37 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 11:04:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,17 @@
 #include "utils.h"
 #include "vec3.h"
 
+/**
+ * @brief initialize a camera object
+ * 
+ * @param cam the camera object
+ * @param center the center of the camera
+ * @param direction the direction the camera is facing
+ * @param hfov the horizontal field of view
+ * 
+ */
 void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 {
-	cam->cores = CORES;
 	cam->samples_per_pixel = 200;
 	cam->max_depth = 200;
 	if (direction.x == 0 && direction.z == 0)
@@ -40,7 +48,6 @@ void	init_cam(t_camera *cam, t_point3 center, t_vec3 direction, double hfov)
 	cam->u = unit_vector(cross(cam->vup, cam->w));
 	cam->v = cross(cam->w, cam->u);
 	cam->vup = vec3(0, 1, 0);
-	cam->print = print_camera;
 	update_cam_resize(cam, cam->img_width, cam->img_height);
 }
 
