@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 18:49:26 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 09:40:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 09:45:45 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 # define EPSILON 1e-6
 
 # ifdef DOBONUS
-# define CORES 24
+# define BONUS 1
 # else
-# define CORES 1
+# define BONUS 0
 # endif
 
 

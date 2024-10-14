@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 09:40:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 09:58:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,14 @@ int	main(int argc, char **argv)
 		ft_printf("Usage: %s <filename>\n", argv[0]);
 }
 
+/**
+ * @brief Initialize the window
+ * 
+ * @param data The main data structure
+ * 
+ * I will initialize the MLX42 window and the image and keep the 
+ * pointers of both in the main t_mrt data structure.
+ */
 static int	init_window(t_mrt *data)
 {
 	void	*cursor;
@@ -71,7 +79,7 @@ static int	init_window(t_mrt *data)
 	}
 	cursor = mlx_create_std_cursor(MLX_CURSOR_CROSSHAIR);
 	mlx_set_cursor(data->mlx, cursor);
-	debug("Window initialized");
+	write(2, "\033[0;92mWindow initialized\033[0m\n", 31);
 	return (TRUE);
 }
 
@@ -88,20 +96,29 @@ static void	free_images(t_mrt *data)
 	}
 }
 
+/**
+ * @brief Render the scene from a file
+ * 
+ * @param filename The filename of the file to render
+ * @return int 0 for success or 1 for failure
+ */
 static int	render_from_file(char *filename)
 {
 	t_mrt	data;
 	long	num_cores;
 
+	ft_memset(&data, 0, sizeof(t_mrt));
 	if (BONUS)
 	{
-		ft_printf("Bonus is enabled\n");
+		write(2, "Bonus is enabled\n", 18);
 		num_cores = sysconf(_SC_NPROCESSORS_ONLN);
-		debug("Number of cores: %ld\n", num_cores);
+		ft_printf("Number of cores: %ld\n", num_cores);
+		data.cam.cores = num_cores;
 	}
-	ft_memset(&data, 0, sizeof(t_mrt));
+	else
+		data.cam.cores = 1;
 	parse_input(filename, &data);
-	debug("input file parsed: %s", data.win_title);
+	ft_printf("\033[0;92minput file parsed: %s\033[0m", data.win_title);
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 	render(&data, &data.world, &data.lights);

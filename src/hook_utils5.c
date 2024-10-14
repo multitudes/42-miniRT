@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 09:35:44 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 09:44:20 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	handle_multithreading_key(t_mrt *data, mlx_t *mlx)
 				data->cam.cores = sysconf(_SC_NPROCESSORS_ONLN);
 			else
 				data->cam.cores = 1;
-			debug("cores: %d\n", data->cam.cores);
+			ft_printf("cores: %d\n", data->cam.cores);
 			print_position(data->cam);
 			data->needs_render = true;
 			mlx_delete_image(data->mlx, data->cores_str);
