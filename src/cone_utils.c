@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cone_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:20:34 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/07 15:20:42 by ralgaran         ###   ########.fr       */
+/*   Updated: 2024/10/14 17:01:32 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ t_point3	obj_cone_random(const void *self, const t_point3 *orig)
 	t_point3			point_on_cone;
 
 	cone = (t_cone_uncap *)self;
-	phi = 2.0 * PI * ((double)rand() / RAND_MAX);
-	h = ((double)rand() / RAND_MAX) * cone->height;
+	phi = 2.0 * PI * random_d();
+	h = random_d() * cone->height;
 	radius_at_height = (cone->height - h) * cone->radius / cone->height;
 	point_on_cone = vec3(
 			radius_at_height * cos(phi),

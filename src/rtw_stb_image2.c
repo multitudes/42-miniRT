@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:12:33 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:41:35 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 17:11:06 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ void	convert_to_bytes(t_img_texture *img)
 
 	i = 0;
 	total_bytes = img->image_width * img->image_height * img->bytes_per_pixel;
-	ft_printf("img width height and bytes per pixel = %d %d %d\n",
+	printf("img width height and bytes per pixel = %d %d %d\n",
 		img->image_width, img->image_height, img->bytes_per_pixel);
-	ft_printf("total_bytes = %d\n", total_bytes);
+	printf("total_bytes = %d\n", total_bytes);
 	img->bdata = malloc(total_bytes * sizeof(unsigned char));
 	if (img->bdata == NULL)
 	{

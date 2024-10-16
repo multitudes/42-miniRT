@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:42:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 16:53:46 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "libft.h"
-
 
 /*
  * @brief: initializer for a sphere

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:40:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 17:10:33 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ void	handle_zoom_key(t_mrt *data, mlx_t *mlx)
 	if (mlx_is_key_down(mlx, MLX_KEY_SPACE))
 	{
 		move_camera_forward(&(data->cam), -data->cam.img_width / PIX_AMOUNT);
-		write(2, "Space key pressed\n", 17);
+		write(2, "Space key pressed\n", 18);
 	}
 	else if (mlx_is_key_down(mlx, MLX_KEY_LEFT_SHIFT))
 	{
 		move_camera_forward(&(data->cam), data->cam.img_width / PIX_AMOUNT);
-		write(2, "Left shift key pressed\n", 23);
+		write(2, "Left shift key pressed\n", 24);
 	}
 	else
 		return ;
@@ -78,7 +78,7 @@ void	handle_multithreading_key(t_mrt *data, mlx_t *mlx)
 				data->cam.cores = sysconf(_SC_NPROCESSORS_ONLN);
 			else
 				data->cam.cores = 1;
-			ft_printf("cores: %d\n", data->cam.cores);
+			printf("cores: %d\n", data->cam.cores);
 			print_position(data->cam);
 			data->needs_render = true;
 			mlx_delete_image(data->mlx, data->cores_str);

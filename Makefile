@@ -112,12 +112,12 @@ bonus: re
 clean:
 	rm -f $(OBJS)
 	rm -rf $(OBJ_DIR)
-# $(MAKE) -C $(LIBFTDIR) clean
+	$(MAKE) -C $(LIBFTDIR) clean
 
 fclean: clean
 	rm -rf $(NAME)
-#$(MAKE) -C $(LIBFTDIR) fclean
-	# @rm -rf $(LIBMLX)/build
+	$(MAKE) -C $(LIBFTDIR) fclean
+	@rm -rf $(LIBMLX)/build
 
 re: fclean all
 

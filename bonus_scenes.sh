@@ -20,18 +20,23 @@ pid4=$!
 ./miniRT scenes/checker_floor.rt
 pid5=$!
 
-./miniRT scenes/checker_sphere.rt
+./miniRT scenes/checker_sphere.rt &
 pid6=$!
 
- ./miniRT scenes/cone_test2.rt
+./miniRT scenes/cone_test2.rt &
+pid7=$!
 
-./miniRT scenes/coordinate_system.rt
+./miniRT scenes/coordinate_system.rt &
+pid8=$!
 
-check_colors.rt
-./miniRT scenes/progress.rt
+./miniRT scenes/check_colors.rt &
+pid9=$!
+
+./miniRT scenes/progress.rt &
+pid10=$!
 
 # Wait for all background processes to finish
-wait $pid1 $pid2 $pid3 $pid4 $pid5
+wait $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7 $pid8 $pid9 $pid10
 
 
 # Optionally, terminate all processes (if needed)

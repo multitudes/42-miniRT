@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 17:33:06 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:42:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 17:11:41 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ void	img_texture_init(t_img_texture *img_texture, char *filename)
 	img_texture->image_width = 0;
 	img_texture->image_height = 0;
 	img_texture->bytes_per_scanline = 0;
-	ft_printf("filename = %s\n", filename);
+	printf("filename = %s\n", filename);
 	if (load(img_texture, filename) == 0)
 	{
-		write(2, "Failed to load image\n", 21);
+		printf("Failed to load image\n");
 		exit(1);
 	}
-	ft_printf("Image loaded\n");
+	printf("Image loaded\n");
 }
 
 /**

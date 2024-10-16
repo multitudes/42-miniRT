@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:20:15 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:08:11 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 17:44:51 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,16 @@ void	hook(void *param)
  * @param cam The camera object
  *
  * Utility function for debugging and orientation purposes.
- * Now commented out because my ft_printf doesnt take float arguments
-	// printf("###############################################");
-	// printf("\ncamera center point = %f,%f,%f \ndirection %f,%f,%f\n",
-	// 	cam.orig.x,
-	//  	cam.orig.y, cam.orig.z, cam.dir.x, cam.dir.y, cam.dir.z);
-	// printf("horixontal field of view = %f", cam.hfov);
-	// printf("###############################################");
  */
 void	print_position(t_camera cam)
 {
 	(void)cam;
+	printf("###############################################");
+	printf("\ncamera center point = %f,%f,%f \ndirection %f,%f,%f\n",
+		cam.orig.x,
+		cam.orig.y, cam.orig.z, cam.dir.x, cam.dir.y, cam.dir.z);
+	printf("horixontal field of view = %f", cam.hfov);
+	printf("###############################################");
 }
 
 /**

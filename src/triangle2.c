@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   triangle2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:20:09 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/08 16:20:28 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 17:36:04 by ralgaran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ t_vec3	triangle_random(const void *self, const t_point3 *orig)
 	double				v;
 	t_vec3				p;
 
-	u = random_double(0, 1);
-	v = random_double(0, 1);
+	u = random_d();
+	v = random_d();
 	if (u + v > 1)
 	{
 		u = 1 - u;

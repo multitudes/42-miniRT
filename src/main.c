@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 11:53:42 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 17:13:22 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	main(int argc, char **argv)
 	if (argc > 1 && argc < 3)
 		render_from_file(argv[1]);
 	else
-		ft_printf("Usage: %s <filename>\n", argv[0]);
+		printf("Usage: %s <filename>\n", argv[0]);
 }
 
 /**
@@ -67,7 +67,7 @@ static int	init_window(t_mrt *data)
 	if (!(data->image))
 	{
 		mlx_close_window(data->mlx);
-		ft_printf("%s\n", mlx_strerror(mlx_errno));
+		printf("%s\n", mlx_strerror(mlx_errno));
 	}
 	ft_memset(data->image->pixels, (int)0, (size_t)data->cam.img_width
 		* (size_t)data->cam.img_height * (size_t)BPP);
@@ -75,11 +75,11 @@ static int	init_window(t_mrt *data)
 	{
 		mlx_close_window(data->mlx);
 		mlx_terminate(data->mlx);
-		ft_printf("%s\n", mlx_strerror(mlx_errno));
+		printf("%s\n", mlx_strerror(mlx_errno));
 	}
 	cursor = mlx_create_std_cursor(MLX_CURSOR_CROSSHAIR);
 	mlx_set_cursor(data->mlx, cursor);
-	write(2, "\033[0;92mWindow initialized\033[0m\n", 31);
+	printf("\033[0;92mWindow initialized\033[0m\n");
 	return (TRUE);
 }
 
@@ -110,22 +110,22 @@ static int	render_from_file(char *filename)
 	ft_memset(&data, 0, sizeof(t_mrt));
 	if (BONUS)
 	{
-		write(2, "\033[0;92mBonus is enabled\033[0m\n", 18);
+		printf("\033[0;92mBonus is enabled\033[0m\n");
 		num_cores = sysconf(_SC_NPROCESSORS_ONLN);
-		ft_printf("\033[0;92mNumber of cores: %d\033[0m\n", num_cores);
+		printf("\033[0;92mNumber of cores: %ld\033[0m\n", num_cores);
 		data.cam.cores = num_cores;
 	}
 	else
 		data.cam.cores = 1;
 	parse_input(filename, &data);
-	ft_printf("\033[0;92minput file parsed: %s\033[0m\n", data.win_title);
+	printf("\033[0;92minput file parsed: %s\033[0m\n", data.win_title);
 	if (!init_window(&data))
 		return (EXIT_FAILURE);
 	render(&data, &data.world, &data.lights);
 	mlx_resize_hook(data.mlx, &resize_hook, (void *)&data);
 	mlx_loop_hook(data.mlx, &hook, (void *)&data);
 	mlx_loop(data.mlx);
-	write(2, "\n\033[0;92mbyebye!\033[0m\n", 9);
+	printf("\n\033[0;92mbyebye!\033[0m\n");
 	mlx_terminate(data.mlx);
 	free_images(&data);
 	return (EXIT_SUCCESS);

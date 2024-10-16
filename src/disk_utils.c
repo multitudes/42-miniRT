@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:04:24 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:42:12 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/14 17:04:17 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ t_vec3	disk_random(const void *self, const t_point3 *orig)
 	t_vec3			point_on_disk;
 	t_vec3			direction;
 
-	r = sqrt(random_double(0, 1));
-	theta = 2 * PI * random_double(0, 1);
+	r = sqrt(random_d());
+	theta = 2 * PI * random_d();
 	point_on_disk = vec3add(d->center, vec3add(vec3multscalar(d->u, r
 					* cos(theta)), vec3multscalar(d->v, r * sin(theta))));
 	direction = vec3substr(point_on_disk, *orig);

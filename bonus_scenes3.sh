@@ -1,29 +1,38 @@
 #!/bin/bash
 
 echo "Running multiple miniRT sessions in parallel..."
-echo "This is the mandatory part wuth ambbient light scenes."
+echo "This is the mandatory part wuth ambient light scenes."
 
 # Run each miniRT command in the background and store the PIDs
 ./miniRT scenes/cornellsbox.rt
 pid1=$!
 
-discs_uncapped.rt
-discs.rt
+./miniRT scenes/discs_uncapped.rt
+pid2=$!
 
-earth_and_moon.rt
+./miniRT scenes/discs.rt
+pid3=$!
 
-earth_test.rt
+./miniRT scenes/earth_and_moon.rt
+pid4=$!
+
+./miniRT scenes/earth_test.rt
+pid5=$!
 
 ./miniRT scenes/logo.rt 
+pid6=$!
 
 ./miniRT scenes/planets.rt
+pid7=$!
 
-rubik.rt
+./miniRT scenes/rubik.rt
+pid8=$!
 
-shadows.rt
+./miniRT scenes/shadows.rt
+pid9=$!
 
 # Wait for all background processes to finish
-wait $pid1 
+wait $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7 $pid8 $pid9
 
 # Optionally, terminate all processes (if needed)
 # kill $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7
