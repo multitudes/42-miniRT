@@ -17,7 +17,7 @@ pid3=$!
 ./miniRT scenes/deep_space2.rt &
 pid4=$!
 
-./miniRT scenes/checker_floor.rt
+./miniRT scenes/checker_floor.rt &
 pid5=$!
 
 ./miniRT scenes/checker_sphere.rt &

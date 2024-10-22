@@ -7,31 +7,31 @@ echo "This is the mandatory part wuth ambient light scenes."
 ./miniRT scenes/deep_space_ambient0.rt &
 pid1=$!
 
-./miniRT scenes/basic_shapes.rt
+./miniRT scenes/basic_shapes.rt &
 pid2=$!
 
-./miniRT scenes/atom.rt
+./miniRT scenes/atom.rt &
 pid3=$!
 
-./miniRT scenes/main_cyl_uncapped_disk.rt
+./miniRT scenes/main_cyl_uncapped_disk.rt &
 pid4=$!
 
-./miniRT scenes/coloured_lights.rt
+./miniRT scenes/coloured_lights.rt &
 pid5=$!
 
-./miniRT scenes/cone_ball.rt
+./miniRT scenes/cone_ball.rt &
 pid6=$!
 
-./miniRT scenes/billard.rt
+./miniRT scenes/billard.rt &
 pid7=$!
 
-./miniRT scenes/cyl_cone_test.rt
+./miniRT scenes/cyl_cone_test.rt &
 pid8=$!
 
-./miniRT scenes/template.rt
+./miniRT scenes/template.rt &
 pid9=$!
 
-./miniRT scenes/main_checkerfloors.rt
+./miniRT scenes/main_checkerfloors.rt &
 pid10=$!
 
 # Wait for all background processes to finish

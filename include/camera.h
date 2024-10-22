@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/22 16:37:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 14:51:49 by lbrusa           ###   ########.fr       */
+/*   Updated: 2024/10/15 09:29:58 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <pthread.h>
 
 # define ASPECT_RATIO 1
-# define IMAGE_WIDTH 250
+# define IMAGE_WIDTH 500
 # define MAX_CORES 128
 
 # ifdef DOBONUS
