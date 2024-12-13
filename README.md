@@ -182,25 +182,7 @@ https://en.wikipedia.org/wiki/Sobel_operator
 	- and also [https://www.mathsisfun.com/algebra/vectors-cross-product.html](https://www.mathsisfun.com/algebra/vectors-cross-product.html)
 - dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 
-
-
-## GBD - GNU Debugger
-debug with 
-```bash
-gdb -tui ./miniRT
-set args scene/earth.rt 
-```
-if the interface is scrambled ctrl-l to refresh the screen.  
-```bash
-b main
-r
-p *variable
-n 
-//when segfault where command shows the trace
-where 
-``` 
-
-## trivia  
+## Some Trivia  
 Phong and Crow (1975) first introduced the idea of interpolating per-vertex shading normals to give the appearance of smooth surfaces from polygonal meshes.   
 
 ## courses  
@@ -227,8 +209,7 @@ https://alain.xyz/blog/ray-tracing-denoising
 https://planetpixelemporium.com/earth8081.html  
 https://www.solarsystemscope.com/textures/
 
-
-## inspiration and creqdit
+## inspiration and credits
 The code and approach are completely different but I also got inspired by some of the scenes from the following projects:  
 https://github.com/ricardoreves/42-minirt  for the atom scene, mindblowing! 
 Nice to see the implementation of the obj files which we did not do.
@@ -238,9 +219,6 @@ https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filt
 searchig for the cone formula I found this:  
 https://github.com/QuantitativeBytes/qbRayTrace/blob/main/Ep8Code/qbRayTrace/qbPrimatives/cone.cpp  
 also part of a very good youtube video series  
-
-
 https://en.wikipedia.org/wiki/Sobel_operator  
-
-testing the random functions
+and testing with different random functions
 https://linux.die.net/man/3/rand_r
