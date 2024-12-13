@@ -148,26 +148,6 @@ It actually doesnt have a diffuse component if we follow the ray tracing in a we
 We decide to still add some diffuse scattering to the metal material for edge cases. But this is open to discussion. Ex, a metallic ball in space would reflect the light, but would mirror the blackness, so would i be able to see its intrinsic color?  
 A shiny metallic surface will have a high specular component and a very low diffuse component. 
 
-
-## Links
-- [Raytracing in one weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
-- [Raytracing the next week](https://raytracing.github.io/books/RayTracingTheNextWeek.html)
-- [Raytracing the rest of your life](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html)
-- stb_image.h, a header-only image library available on GitHub: https://github.com/nothings/stb
-- [https://gabrielgambetta.com/computer-graphics-from-scratch/](https://gabrielgambetta.com/computer-graphics-from-scratch/)
-- a raytracer on the back of a business card: [https://fabiensanglard.net/rayTracing_back_of_business_card/](https://fabiensanglard.net/rayTracing_back_of_business_card/)
-- here are a few really good resources by [Fabien Sanglard](https://fabiensanglard.net/about/index.html):
-	- [scratchapixel.com](https://scratchapixel.com): Great raytracer lessons written by professionals that have worked on Toy Story, Avatar, Lord of the Rings, Harry Potter, Pirates of the Caribbean and many 	other movies
-	- An Introduction to Ray Tracing: an old book, but a classic
-	- Physically Based Rendering: heavy on maths, but really good and well explained
-
-- a great youtube series: [https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl](https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl)
-- a guide to git commits: [https://www.conventionalcommits.org/en/v1.0.0](https://www.conventionalcommits.org/en/v1.0.0)
-- cross product: [https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg](https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg)
-	- and also [https://www.mathsisfun.com/algebra/vectors-cross-product.html](https://www.mathsisfun.com/algebra/vectors-cross-product.html)
-- dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
-
-
 ## Links
 
 The Graphical library allowed for this project are either the Minilibx or the MLX42 Codam. We used the second one:  
@@ -186,20 +166,21 @@ Here are a few really good resources by [Fabien Sanglard](https://fabiensanglard
 - scratchapixel.com : Great raytracer lessons written by professionals that have worked on Toy Story, Avatar, Lord of the Rings, Harry Potter, Pirates of the Caribbean and many other movies.  
 - An Introduction to Ray Tracing : An old book but a Classic.  
 - Physically Based Rendering : Heavy on maths but really good and well explained.  
-- http://cosinekitty.com/raytrace/raytrace_us.pdf  
-
-References:
+- http://cosinekitty.com/raytrace/raytrace_us.pdf
+  
+- More References:
 https://graphicscodex.com/app/app.html  
-
-Nice visualizing website:  
+- Nice visualizing website:  
 https://www.desmos.com/calculator  
-
-
-Bump map  
-https://assetsvfx.gumroad.com/l/uHyhPT?layout=profile
-
-Get the outlines black and white - edge detection  
+- Bump map  
+https://assetsvfx.gumroad.com/l/uHyhPT?layout=profile  
+- Get the outlines black and white - edge detection  
 https://en.wikipedia.org/wiki/Sobel_operator  
+- a great youtube series: [https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl](https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl)
+- a guide to git commits: [https://www.conventionalcommits.org/en/v1.0.0](https://www.conventionalcommits.org/en/v1.0.0)
+- cross product: [https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg](https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg)
+	- and also [https://www.mathsisfun.com/algebra/vectors-cross-product.html](https://www.mathsisfun.com/algebra/vectors-cross-product.html)
+- dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 
 
 
