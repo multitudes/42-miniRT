@@ -62,96 +62,575 @@ We are not meant to use libraries like OpenGL or Vulkan, but to create our own i
 - Lighting: Implements ambient and diffuse lighting, including spot brightness and hard shadows.
 - Window Management: Fluid window management with seamless transitions and closures via ESC key or window frame red cross.
  
-## Team
 It is a group project. The team is composed of two students.
 
-### Optimisations
 Multithreading is allowed when doing the bonus part. 
 
-## A ray 
-A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same.  
-considering a Point A and a Direction b the line is a typical stepping function.  
+## The Math behind our mini raytracer
 
-$$  
-P(t) = A + tb  
-$$  
+(These are my notes from online resources and what I learned in the process.)
+At its core, a ray tracer sends rays through pixels and computes the color seen in the direction of those rays. 
 
-Where:
-t is a scalar param tipically representing time.  So I have on my line a point A and a direction b, I can move along the line by changing the value of t and get P.
-If A and P are points in 3D space, then I have automatially a 3D line which can also be expressed like this:  
+The involved steps are:
 
-$$  
-(x,y,z)=(x0,y0,z0)+t(a,b,c)  
-$$  
+- Calculate the ray from the “eye” through the pixel,
+- Determine which objects the ray intersects, and
+- Compute a color for the closest intersection point.
 
-### The Viewport
-The viewport is a virtual rectangle in the 3D world that contains the grid of image pixel locations. If pixels are spaced the same distance horizontally as they are vertically, the viewport that bounds them will have the same aspect ratio as the rendered image. The distance between two adjacent pixels is called the pixel spacing, and square pixels is the standard. 
-We'll initially set the distance between the viewport and the camera center point to be one unit. This distance is often referred to as the focal length.  
-While our 3D space has the conventions above, this conflicts with our image coordinates, where we want to have the zeroth pixel in the top-left and work our way down to the last pixel at the bottom right. This means that our image coordinate Y-axis is inverted: Y increases going down the image. 
- We'll also have the y-axis go up, the x-axis to the right, and the negative z-axis pointing in the viewing direction. (This is commonly referred to as right-handed coordinates.)
+## The aspect ratio
+A 16∶9 aspect ratio means that the ratio of image width to image height is 16∶9.  
+For a practical example, an image 800 pixels wide by 400 pixels high has a 2∶1 aspect ratio. 
 
-Really the size of the viewport is arbitrary. It will have the same aspect ratio of the image we want to render.  
-the idea is that we know the amount of pixel to render which is in the image width and height. Taking a camera "eye" at a certain point and looking at a certain direction, we can imagine the viewport as a window in front of the camera. The center of the viewport is a point and viewport is orthogonal to the ray from the camera center to the middle of the viewport. 
-There are two ways to create the viewport:
-- With the field of view, the angle from the cam to the viewport width (horizontal fov) or height (vertical fov). having one of this angles and the aspect ratio we can calculate the other. 
-- With the width and height of the viewport if we are given a depth of view, the distance beteween the camera eye and the viewport. 
-
-The viewport size doesnt matter unless you want to use the focal length to calculate the depth of field and what will be in focus.  The viewport can be very close to the eyw and so very small, still we will send a ray per pixel out and going through the viewport. 
-
-
-## Right hand vs left hand coordinate system
-In a right-handed coordinate system, the x-axis points to the right, the y-axis points up, and the z-axis points out of the screen towards the viewer. The book and tutorials raytracing in one weekend and the next week use a right-handed coordinate system while the raytracer challenge uses a left-handed coordinate system. As does pixar for instance. There is no right or wrong. it is just a convention. We will use the right-handed coordinate system in this project. 
-
-On your right hand, the thumb is the x-axis, the index is the y-axis and the middle finger is the z-axis pointing to you. This is the right-handed coordinate system.
-
-## What are radians
-One radian is the angle subtended at the center of a circle by an arc that is equal in length to the radius of the circle. So a full circle is $2π$ radians.  
-$$
-radians(deg) = deg/180 * \pi
-$$
-
-Since our input is in degrees and the `cos` and `sin` functions in C use radians, we need to convert the degrees to radians.
-$$
-degrees(radians) = radians * 180 / \pi
-$$
-
-## Which side of the plane is the normal
-In the literature there are two versions. When we calculate the normal for a sphere (and each geometrical obj will have its own formula for the normal...) we have two possible interpretations.  
-In this book we consider the normal to always pointing out of the sphere. The formula is a normalized vector: The point of intersection - the center of the sphere divided by the radius.
-If my ray is in opposite direction of the normal, then I am outside the sphere. If the ray is in the same direction as the normal, then I am inside the sphere. 
-The boolean to know if I am inside or outside the sphere is the dot product of the ray and the normal. If the dot product is positive, then I am outside the sphere.  
-I will use this information to calculate the color of the pixel and reflections. 
-
-# Phong Reflection Model
-Bui Tuong Phong was a Vietnamese-born computer graphics researcher. He developed the Phong reflection model while working on his Ph.D. at the University of Utah.  
-
-So the components are:  
-- Ambient Reflection: Simulates the constant light that is present in the environment.  
-- Diffuse Reflection: Simulates the light scattered in many directions from a rough surface.  
-- Specular Reflection: Simulates the light that reflects in a specific direction from a shiny surface, creating highlights. It depends on the viewer's position, the light source position, and the surface normal. The intensity of the specular reflection is calculated using the angle between the viewer direction and the reflection direction of the light.  
-
-## Ambient Reflection
-It is a constant light that is present in the environment. It is the minimum amount of light that a surface receives. It is the same regardless of the surface's orientation. It has no origin. In the project we can set the ambient light in the scene file. If it is not specified it is set to a small default value.
-
-## Lambertian Reflection Model
-- Diffuse reflection: Light is scattered uniformly in all directions.
-- No specular component: There's no shiny or mirror-like reflection.
-- Idealized surface: Assumes a perfectly rough surface that scatters light equally in all directions.
-- Mathematical representation: The reflected light intensity is proportional to the cosine of the angle between the incoming light direction and the surface normal.
-
-It is the default material in our scene file. 
-
-## Specular Reflection
-
-It accounts for specular components simulating a shiny or mirror-like reflection, where light is reflected in a specific direction. It has a roughness parameter to control the degree of roughness of the surface. A smaller roughness value results in a shinier surface. 
-It actually doesnt have a diffuse component if we follow the ray tracing in a weekend tutorials. 
-We decide to still add some diffuse scattering to the metal material for edge cases. But this is open to discussion. Ex, a metallic ball in space would reflect the light, but would mirror the blackness, so would i be able to see its intrinsic color?  
-A shiny metallic surface will have a high specular component and a very low diffuse component. 
-
-
-## Some Trivia  
-Phong and Crow (1975) first introduced the idea of interpolating per-vertex shading normals to give the appearance of smooth surfaces from polygonal meshes. 
+## The Vec3, Color and Point classes
+For simplicity we will use the same struct (in C) for all three. The Vec3 struct will be used for vectors, colors, and points using a typedef and a union because when using a color having access to r g b is more intuitive than x y z. 
  
+## Using unions in C
+A union is a special data type available in C that allows to store different data types in the same memory location. You can define a union with many members, but only one member can contain a value at any given time. Unions provide an efficient way of using the same memory location for multiple-purpose.
+In my case I have a vector in 3d with x y and z components. Also I have a color type with 3 components too. I can use alias to use the same struct for both. Also I discovered that I can use a union to have access to rgb and xyz at the same time.  In C++ I would use encapsulation and private/public members with getters and setters but in C I dont have this level of abstraction.
+```c
+typedef struct s_vec3 {
+    union {
+        struct {
+            double x, y, z;
+        };
+        struct {
+            double r, g, b;
+        };
+    };
+} t_vec3, t_color, t_point3;
+```
+
+## The Ray
+The ray is essentially a function that takes a param a point in 3D space, and moves this point along the direction vector of the ray. The amount of movement is determined by the time parameter t. Therefore we have a function P(t) = A + tb where A is the origin of the ray and b is the direction of the ray.
+This function gives us a point in 3D space for each value of t.
+
+```c
+t_point3	point_at(const t_ray *ray, double t)
+{
+	t_point3	result;
+	t_vec3 		scaled_dir;
+
+	scaled_dir = vec3multscalar(ray->dir, t);
+	result = vec3add(ray->orig, scaled_dir);
+
+	return (result);
+}
+```
+
+As part of the camera we have function ray_color that uses a lerp function to blend the colors of the sky and the ground effectively creating a soft gradient.  A lerp is  
+
+$$  
+blendedValue = (1 - a) \cdot startValue + a \cdot endValue
+$$
+
+with `a` going from zero to one. When we normalize the vector we get a value between -1 and 1. We can then scale it to 0 and 1. 
+```c
+t_color ray_color(const t_ray *r)
+	...
+	t_vec3 unit_direction = unit_vector(r->dir);
+	double a = 0.5 * (unit_direction.y + 1.0);
+	t_color start = vec3multscalar(color(1.0, 1.0, 1.0), 1.0 - a);
+	t_color end = vec3multscalar(color(0.5, 0.7, 1.0), a);
+	return vec3add(start, end);
+```
+
+## The Viewport
+The viewport is a virtual rectangle in the 3D world that contains the grid of image pixel locations. If pixels are spaced the same distance horizontally as they are vertically, the viewport that bounds them will have the same aspect ratio as the rendered image. The distance between two adjacent pixels is called the pixel spacing, and square pixels is the standard.  
+We'll initially set the distance between the viewport and the camera center point to be one unit. This distance is often referred to as the focal length.  
+
+We create our three D space with the following conventions:
+- The x-axis points to the right.
+- The y-axis points up.
+- The z-axis points out of the screen, toward the viewer.
+
+Therefore using what is commonly defined as right hand coordinates, the negative z-axis points in the scene through the viewport. 
+
+While our 3D space has the conventions above, this conflicts with our image coordinates which are the ones used in the rendering to a file or to a screen, where we want to have the zeroth pixel in the top-left and work our way down to the last pixel at the bottom right. This means that our image coordinate Y-axis is inverted: Y increases going down the image. 
+
+## Ray-Sphere Intersection
+(If you see this on the github pages unfortunately Jekill doesnt render the math equations so I will have to debug them out later)
+The equation for a sphere of radius r that is centered at the origin is an important mathematical equation: 
+
+$$
+x^2 + y^2 + z^2 = r^2
+$$
+
+If a given point (x,y,z) is inside the sphere, then $x^2 + y^2 + z^2 < r^2$ , and if a given point (x,y,z) is outside the sphere, then $x^2 + y^2 + z^2 > r^2$.
+
+If we want to allow the sphere center to be at an arbitrary point (Cx,Cy,Cz) in 3D, then the equation becomes:  
+
+$$
+(Cx−x)^2 + (Cy−y)^2 + (Cz−z)^2 = r^2
+$$
+
+This formula looks very similar to the definition of a dot product of a vector from point P = (x,y,z) to a center C = (Cx,Cy,Cz) which is (C-P).
+
+The dot product of this vector with itself is:  
+
+$$
+(C−P)⋅(C−P)=(Cx−x)^2+(Cy−y)^2+(Cz−z)^2 = r ^ 2
+$$ 
+
+We can read this as “any point P that satisfies this equation is on the sphere”.  
+
+Remember that on our ray P is a function of t, so we can substitute P = Q + td into the equation and solve for t. (Q is the origin of the ray, and d is the direction of the ray.)
+
+The only unknown is t, and we have a $t^2$, which means that this equation is quadratic. 
+You can solve for a quadratic equation $ax^2+bx+c=0$ by using the quadratic formula:
+
+$$
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$
+
+So solving for t in the ray-sphere intersection equation gives us these values for a, b, and c:
+
+$$
+a=d⋅d
+b=−2d⋅(C−Q)
+c=(C−Q)⋅(C−Q)−r2
+$$
+
+where Q is the origin of the ray, d is the direction of the ray, C is the center of the sphere, and r is the radius of the sphere.
+
+Really we just need to know if the square root also called the discriminant is real and positive. If it is, then the ray intersects the sphere at two points. If it is zero, then the ray is tangent to the sphere. If it is negative, then the ray misses the sphere entirely.
+
+$$
+\sqrt{b^2 - 4ac}
+$$
+
+In code:
+```c
+bool hit_sphere(const t_sphere *s, const t_ray *r) 
+{
+    t_vec3 cq = vec3substr(&(s->center), &(r->orig));
+    double a = dot(&(r->dir), &(r->dir));
+    double b = -2.0 * dot(&(r->dir), &cq);
+    double c = dot(&cq, &cq) - s->radius * s->radius;
+    double discriminant = b*b - 4*a*c;
+    return (discriminant >= 0);
+}
+```
+
+# The Normal Vector and shading
+This is a vector that is perpendicular to the surface at the point of intersection.  
+Normalizing It is an expensive operation involving taking the square root of the sum of the squares of the components of the vector. Still it needs to be done so all normal vectors will be of unit length.  
+
+Ex For a sphere, the outward normal is in the direction of the hit point minus the center:  
+A common trick used for visualizing normals (because it’s easy and somewhat intuitive to assume n is a unit length vector — so each component is between −1 and 1) is to map each component to the interval from 0 to 1, and then map (x,y,z) to (red,green,blue). 
+
+<div style="text-align: center;">
+<img src="assets/after.png" alt="shading" style="width: 45%;display: inline-block;" />
+</div>
+
+## Which side of the sphere are we on?
+We need to choose to determine the side of the surface at the time of geometry intersection or at the time of coloring.  
+For objects that have an inside and an outside, like glass balls, we need to know if the ray is inside or outside the sphere.  
+It can be determined doing the dot product of the ray direction and the outward normal. If the dot product is positive, the ray is inside the sphere. If it is negative, the ray is outside the sphere.   
+
+```c
+bool front_face;
+if (dot(ray_direction, outward_normal) > 0.0) {
+    // ray is inside the sphere
+    normal = -outward_normal;
+    front_face = false;
+} else {
+    // ray is outside the sphere
+    normal = outward_normal;
+    front_face = true;
+}
+```
+
+## The hittable property
+
+The book makes an “abstract class” for anything a ray might hit, and make both a sphere and a list of spheres just something that can be hit. How to do this in C?
+
+##  An array of shapes in C? How!?
+Thanks to this course I discovered that you can have polymorphic behavior in C. 
+It is a bit weird at first but totally doable.  
+
+I have a struct, `t_hittable` that has a function pointer to a hit function.  
+
+To create an array of different shapes (like spheres and cubes) that all implement the [`hittable`]interface or behaviour, I define a struct `t_hittable` that contains a function pointer for the `hit` function:
+
+```c
+typedef struct s_hittable {
+    bool (*hit)(const void* self, const t_ray* r, double t_min, double t_max, t_hit_record* rec);
+} t_hittable;
+```
+
+Then, for each shape (like a sphere or a cube), you create a struct that includes the `t_hittable` struct as its first member:
+
+```c
+typedef struct {
+    t_hittable base;
+    t_point3 center;
+    double radius;
+} sphere;
+
+typedef struct {
+    t_hittable base;
+    t_point3 min;
+    t_point3 max;
+} cube;
+```
+**This is very important: the `hittable` struct must be the first member of the shape structs.**  
+This is because the C standard guarantees that the address of the first member of a struct is the same as the address of the struct itself. This allows you to cast a pointer to a `sphere` or `cube` to a `hittable` pointer and back without any issues.
+
+You can then define the `hit` functions for each shape:
+
+```c
+bool hit_sphere(const void* self, const t_ray* r, double t_min, double t_max, t_hit_record* rec) {
+    // implementation...
+}
+
+bool hit_cube(const void* self, const t_ray* r, double t_min, double t_max, t_hit_record* rec) {
+    // implementation...
+}
+```
+
+The functions all take a `const void* self` parameter, which is a pointer to the shape struct. This allows you to cast the pointer to the appropriate shape struct inside the function.
+
+When you create a new shape, you set the `hit` function pointer in the `hittable` struct to the appropriate function:
+
+
+```c
+t_sphere new_sphere(t_point3 center, double radius) {
+	sphere s;
+	s.base.hit = hit_sphere;
+	s.center = center;
+	s.radius = radius;
+	return s;
+}
+```
+Then in the main function, you can create a list of `t_hittable` pointers and add your shapes to it:
+
+```c
+t_hittable *list[2];
+t_sphere s1 = sphere(vec3(0, 0, -1), 0.5);
+t_sphere s2 = sphere(vec3(0, -100.5, -1), 100);
+list[0] = (t_hittable*)(&s1);
+list[1] = (t_hittable*)(&s2);
+const t_hittablelist world = hittablelist(list, 2);
+```
+
+This already works and I get the second sphere creating a nice background.
+
+To check if a ray hits any of the shapes, you can loop over the array and call the `hit` function through the function pointer:
+
+```c
+for (int i = 0; i < 10; i++) {
+    if (shapes[i]->hit(shapes[i], r, t_min, t_max, &rec)) {
+        // hit
+    }
+}
+```
+This would be quite cool but turns out that we will use an extra struct to keep track of the world. Since c++ has vectors which are a kind of dynamic array in C, I created a t_hittablelist struct that contains an array of hittable pointers and a size. Knowing the size is important. For now that's it, later I will add some more functions to add elements etc.
+
+```c
+
+typedef struct 	s_hittablelist {
+	t_hittable 	**list;
+	int 		size;
+	bool 		(*hit)(const void* self, const t_ray* r, double ray_tmin, double ray_tmax, t_hit_record* rec);
+} 				t_hittablelist;
+```
+
+And so we have a hit function on world that will loop through the list of hittables and call their hit functions.
+
+```c
+bool hit(const void *self, const t_ray* r, double ray_tmin, double ray_tmax, t_hit_record* rec)
+{
+	 	t_hittablelist *hittablelist = (t_hittablelist *)self;
+		t_hit_record temp_rec;
+		bool hit_anything = false;
+		double closest_so_far = ray_tmax;
+		int i = 0;
+
+		while (i < hittablelist->size)
+		{
+			if (hittablelist->list[i]->hit(hittablelist->list[i], r, ray_tmin, closest_so_far, &temp_rec))
+			{
+				hit_anything = true;
+				closest_so_far = temp_rec.t;
+				*rec = temp_rec;
+			}
+			i++;
+		} 
+	return (hit_anything);
+}
+
+t_hittablelist hittablelist(t_hittable **list, int size)
+{
+	t_hittablelist hittablelist;
+
+	hittablelist.list = list;
+	hittablelist.size = size;
+	hittablelist.hit = hit;
+	return (hittablelist);
+}
+```
+
+## Useful to have - An Interval type
+
+In C++ it is a class, in C it will be a struct. The interval type is useful to keep track of the t_min and t_max values. 
+```c
+typedef struct {
+	double t_min;
+	double t_max;
+} t_interval;
+```
+
+## The Camera
+In C we do not have classes of course but we will still refactor the code in its own file with its struct and functions.
+The camera is responsible for two important jobs:
+
+    - Construct and dispatch rays into the world.
+    - Use the results of these rays to construct the rendered image.
+
+After main creates a camera and sets default values, it will call the render() method.  
+The render() method will prepare the camera for rendering and then execute the render loop.
+
+## Passing by value or by reference?
+In C++ we have references which are variables that can be passed around without copying. In C we have pointers. But pointers bring a problem. 
+If I declare the sum like
+```c
+t_vec3 add(t_vec3 *a, t_vec3 *b)
+{
+	t_vec3 sum;
+	sum.x = a->x + b->x;
+	sum.y = a->y + b->y;
+	sum.z = a->z + b->z;
+	return (sum);
+}
+```
+Then if using the add functions for two vectors I have to pass pointers then I cannot use the add function with the result of another add function. Like this is working but I have to create a temp extra var c:
+```c
+t_vec3 a = vec3(1, 2, 3);
+t_vec3 b = vec3(4, 5, 6);
+t_vec3 c = add(&a, &b);
+t_vec3 d = add(&c, &c);
+```
+This will not work because the add function expects pointers and I cannot in C take the pointer of a rvalue return value . So I will have to use the add function like this:
+```c
+t_vec3 a = vec3(1, 2, 3);
+t_vec3 b = vec3(4, 5, 6);
+t_vec3 c = vec3(&add(&a, &b), &add(&a, &b));
+```
+
+With small structs there is a very small performance hit when passing by value. So I will pass by value and this allows to chain functions and have better readable code.
+```c
+t_vec3 add(t_vec3 a, t_vec3 b)
+{
+	t_vec3 sum;
+	sum.x = a.x + b.x;
+	sum.y = a.y + b.y;
+	sum.z = a.z + b.z;
+	return (sum);
+}
+```
+now:
+```c
+t_vec3 a = vec3(1, 2, 3);	
+t_vec3 b = vec3(4, 5, 6);
+t_vec3 d = add(add(a, b), add(a, b));
+```
+It is much nicer.
+
+
+## Antialiasing
+If we look at our zoomed image created until now we see that the edges are jagged like pixels on a staircase. To fix this we will take multiple samples per pixel and average the color. This is called antialiasing. In the book also there is an interesting note about the human eye and how it perceives color.
+> With a single ray through the center of each pixel, we are performing what is commonly called point sampling. The problem with point sampling can be illustrated by rendering a small checkerboard far away. If this checkerboard consists of an 8×8 grid of black and white tiles, but only four rays hit it, then all four rays might intersect only white tiles, or only black, or some odd combination. In the real world, when we perceive a checkerboard far away with our eyes, we perceive it as a gray color, instead of sharp points of black and white.
+
+We need to sample the light falling around the pixel, and integrate the changes.
+
+To do so we will create a random number generator to sample the colors around the pixel in a random way. 
+
+Here the C random number generator has been apparently superiour to the c++ one for quite some time. Interesting.
+<div style="text-align: center;">
+<img src="assets/before_antialias.png" alt="First Image" style="width: 45%;display: inline-block;" /> 
+<img src="assets/after.png" alt="Second Image" style="width: 45%;display: inline-block;" />
+</div>
+
+## Extras - the compile_commands.json file
+If using nvim the LSP will ask for a compile_commands.json file. This file is can be generated by the compiledb tool. 
+```
+make clean && make > build.log
+compiledb -n < build.log      
+```
+
+## Diffuse materials
+
+Diffuse objects that don’t emit their own light merely take on the color of their surroundings, but they do modulate that with their own intrinsic color. Light that reflects off a diffuse surface has its direction randomized.  
+We will add the ability to generate arbitrary random vectors to our t_vec3 type. This will be useful for generating random directions for diffuse materials. 
+In c++ they are both called random but I cannot use the same name in C. I will call them random_vec3 and random_vec3_min_max.
+```c
+t_vec3 random_vec3() 
+{
+    return vec3(random_d(), random_d(), random_d());
+}
+
+t_vec3 random_vec3_min_max(double min, double max) 
+{
+    return vec3(random_double(min,max), random_double(min,max), random_double(min,max));
+}
+```
+Then we need to figure out how to manipulate a random vector so that we only get results that are on the surface of a hemisphere, the side where we have our normal.  
+The book explains that we can generate a random vector in the unit cube and then check if it is inside the unit sphere. If it is not we discard it. This is called rejection sampling.
+
+## Shadow acne
+Do to floating points errors we ignore hits that are very close to the calculated intersection point. Due to these errors we can calculate a hit point that is just a bit below the surface of the object. This is called shadow acne. 
+To fix this we will add a small epsilon value to the t_min value in my ray_color function.
+```c
+if ((world)->hit(world, r, interval(0.001, INFINITY), &rec))
+	{
+		t_vec3 direction = random_on_hemisphere(rec.normal);
+		t_ray scattered = ray(rec.p, direction);
+		return vec3multscalar(ray_color(&scattered, depth - 1, world), 0.5);
+	}
+```
+
+This is why we have intervals :)  
+
+The result is now gray and it takes quite a while to generate due to the recursive method in our ray_color function.  
+
+
+## Lambertian reflection
+A reflected ray is most likely to scatter in a direction near the surface normal.
+This makes very much sense but I refer to the book for the explanation!
+It is a small change in the ray_color function. 
+```c
+// from 
+	t_vec3 direction = random_on_hemisphere(rec.normal);
+// to	
+	t_vec3 direction = vec3add(rec.normal, random_unit_vector());
+```
+It is not terribly visible but the image is a bit more realistic.
+
+
+
+## Gamma correction
+The book explains that the human eye does not perceive light linearly. The eye is more sensitive to changes in darker colors than in lighter colors. This is why we need to apply gamma correction to our image.  
+We need to go from linear space to gamma space, which means taking the inverse of “gamma 2", which means an exponent of 1/gamma, which is just the square-root. 
+
+Not bad. The image is muc brighter now for .5 grey.
+
+
+## Metal
+The material needs to do two things:
+
+	- Produce a scattered ray (or say it absorbed the incident ray).
+    - If scattered, say how much the ray should be attenuated.
+
+In C++ it is an abstract class. In C I will use a struct with a function pointer to a hit function. 
+
+```c
+typedef struct s_material {
+	bool (*scatter)(const void* self, const t_ray* r_in, const t_hit_record* rec, t_vec3* attenuation, t_ray* scattered);
+} t_material;
+```
+We are going to put a pointer to a material in our hit record.  
+Also, hit_record needs to be told the material that is assigned to the sphere.  Our sphere struct will have a material pointer.  
+ 
+
+## Albedo
+The term albedo (Latin for “whiteness”) is used to describe the fraction of incident light that is reflected by a surface. It is used to define some form of fractional reflectance. Albedo will vary with material color.  
+We will implement Lambertian (diffuse) reflectance first. This is the simplest form of reflection.  
+
+How to implement this in C where in C++ we would have a virtual function?
+Objects like my sphere will have pointers to a `t_material` struct and this `t_material` struct is also included in the `t_hit_record`:
+
+- I will define a `material` struct with a function pointer for the `scatter` function. This function determines how materials interact with rays.
+
+- In `hit_record` include a pointer to the `material` of the object hit.
+
+- Objects (e.g., spheres) include a pointer to the `t_material` struct, 
+
+- Implement functions for different materials. These functions should match the signature of the `scatter` function pointer in the `material` struct.
+
+- When creating objects, assign a material to them by setting the material pointer to point to an instance of a `material` struct configured with the appropriate scatter function.
+
+- When a ray hits an object, the `t_hit_record` will be populated with information about the hit, including the material of the object. The ray tracing logic can then use the `scatter` function through the `t_hit_record`'s material pointer to determine the color and direction of the scattered ray.
+
+But since I have different materials with different properties I will create a struct for each material with their unique properties. Ex the lambertian material has albedo. The Base in the struct is the material pointer and then I have the specific properties. I can pass this struct to the scatter function since it expects a material pointer and I have this in the base struct. 
+
+ex:
+```c
+// Example of creating a lambertian material
+t_lambertian lambertian_material;
+
+// Function to initialize a Lambertian material
+void lambertian_init(t_lambertian *lambertian_material, t_color albedo) 
+{
+    lambertian_material->base.scatter = lambertian_scatter; // Assign the scatter function
+    lambertian_material->albedo = albedo; // Set the albedo
+}
+
+bool lambertian_scatter(void* self, const t_ray *r_in, const t_hit_record *rec, t_color *attenuation, t_ray *scattered) 
+{
+	(void)r_in;
+	t_lambertian *lamb = (t_lambertian *)self;
+	t_vec3 scatter_direction = vec3add(rec->normal, random_unit_vector());
+    *scattered = ray(rec->p, scatter_direction);
+    *attenuation = lamb->albedo;
+        return true;
+    return true; 
+}
+```
+
+Lambertian surfaces scatter all incoming light uniformly in all directions, but the amount of light scattered is proportional to the surface's albedo.
+
+In the `scatter` function of the `lambertian` class, the `albedo` is used to set the `attenuation` of the scattered ray. The `attenuation` represents how much the ray's intensity is reduced upon scattering. For a Lambertian material, this attenuation is simply the albedo of the material, indicating that the color of the scattered light is influenced by the color of the material itself.
+
+Here's a breakdown of the process:  
+
+- Scatter Direction:  new direction for the scattered ray is calculated by adding a random unit vector to the hit normal. This simulates diffuse reflection, where light is scattered in many directions.
+- Attenuation: The `attenuation` parameter is set to the material's `albedo`. This means the scattered light's color is influenced by the material's color, simulating how real-world surfaces absorb some wavelengths of light more than others, thereby coloring the light that is reflected.
+- Scattered Ray: The `scattered` ray is created with its origin at the point of intersection (`rec.p`) and its direction set to the calculated scatter direction. This ray represents the path of the light after it has interacted with the material.
+
+## Metals
+For polished metals the ray won’t be randomly scattered. 
+Follow the "Raytracing in a weekend" tutorial for the math explanation but for metals and polished surface we need to calculate the reflection of the ray.
+The reflection of a ray is calculated by reflecting the ray direction across the surface normal. This is done by subtracting the ray direction from the normal twice. 
+```c
+inline t_vec3	vec3reflect(const t_vec3 v, const t_vec3 n) 
+{
+    return vec3substr(v, vec3multscalar(n, dot(v, n) * 2));
+}
+```
+
+
+## Fuzziness
+We can also randomize the reflected direction by using a small sphere and choosing a new endpoint for the ray. We'll use a random point from the surface of a sphere centered on the original endpoint, scaled by the fuzz factor. The bigger the fuzz sphere, the fuzzier the reflections will be. This suggests adding a fuzziness parameter that is just the radius of the sphere (so zero is no perturbation). Also, we need to normalize the reflected ray. 
+
+## Positionable Camera
+### field of view fov
+It is typically expressed as an angle (in degrees or radians) and determines how wide or narrow the view captured by the camera is. A larger FOV allows the camera to capture a wider area of the scene, making objects appear smaller and further apart.  In the book we will use vertical field of view by convension since the horizontal fov will be determined by the aspect ratio of the image.
+Now I can express the viewport in function of the vertical field of view and the focal_length.
+```c
+double theta = degrees_to_radians(c.vfov);
+double h = tan(theta/2);
+double viewport_height = 2 * h * focal_length;
+double viewport_width = viewport_height * ((double)c.image_width/c.image_height);
+```
+
+## Positionable Camera
+We can rotate the camera around its normal axis. We need a way to specify the up. and the look from and look at. 
+The tutorial uses the common convention of naming this the “view up” (vup) vector.
+We will make the viewport height dependent from the vertical field of view and the aspect ratio. 
+```c
+cam.vfov = 90;
+cam.lookfrom = point3(-2,2,1);   // Point camera is looking from
+cam.lookat   = point3(0,0,-1);  // Point camera is looking at
+cam.vup      = vec3(0,1,0);     // Camera-relative "up" direction
+
+double theta = degrees_to_radians(cam.vfov);
+double h = tan(theta/2);
+double viewport_height = 2 * h * focal_length;
+double viewport_width = viewport_height * ((double)cam.image_width/cam.image_height);
+...
+```
+
+
 ## Links
 
 The Graphical library allowed for this project are either the Minilibx or the MLX42 Codam. We used the second one:  
