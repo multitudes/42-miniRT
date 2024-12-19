@@ -52,6 +52,9 @@ Makefile: Includes rules for all, clean, fclean, re, and bonus. Compilation with
 Error Handling: Must exit properly with "Error\n" and an explicit message on encountering any misconfiguration in the scene file.  
 File Structure: Accepts scene description files in a specific format, handling elements like Ambient light, Camera, Light, Sphere, Plane, and Cylinder with precise properties.  
 
+We are not meant to use libraries like OpenGL or Vulkan, but to create our own implementation in C. 
+
+
 ### Features
 - Scene Description: Reads scenes from a file with .rt extension and renders the image as described.  
 - Basic Objects: Supports rendering of planes, spheres, and cylinders.
@@ -62,19 +65,15 @@ File Structure: Accepts scene description files in a specific format, handling e
 ## Team
 It is a group project. The team is composed of two students.
 
-## Problems encountered
-This project for 42 is a first introduction to raytracing.  
-We are not meant to use libraries like OpenGL or Vulkan, but to create our own implementation in C. 
-
-### optimisations
+### Optimisations
 Multithreading is allowed when doing the bonus part. 
 
 ## A ray 
 A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same.  
-considering a Point A and a Direction b the line is a typical stepping function.
+considering a Point A and a Direction b the line is a typical stepping function.  
 $$  
 P(t) = A + tb  
-$$    
+$$  
 Where:
 t is a scalar param tipically representing time.  So I have on my line a point A and a direction b, I can move along the line by changing the value of t and get P.
 If A and P are points in 3D space, then I have automatially a 3D line which can also be expressed like this:  
@@ -88,8 +87,6 @@ We'll initially set the distance between the viewport and the camera center poin
 While our 3D space has the conventions above, this conflicts with our image coordinates, where we want to have the zeroth pixel in the top-left and work our way down to the last pixel at the bottom right. This means that our image coordinate Y-axis is inverted: Y increases going down the image. 
  We'll also have the y-axis go up, the x-axis to the right, and the negative z-axis pointing in the viewing direction. (This is commonly referred to as right-handed coordinates.)
 
-
-### viewports are virtual
 Really the size of the viewport is arbitrary. It will have the same aspect ratio of the image we want to render.  
 the idea is that we know the amount of pixel to render which is in the image width and height. Taking a camera "eye" at a certain point and looking at a certain direction, we can imagine the viewport as a window in front of the camera. The center of the viewport is a point and viewport is orthogonal to the ray from the camera center to the middle of the viewport. 
 There are two ways to create the viewport:
@@ -99,13 +96,13 @@ There are two ways to create the viewport:
 The viewport size doesnt matter unless you want to use the focal length to calculate the depth of field and what will be in focus.  The viewport can be very close to the eyw and so very small, still we will send a ray per pixel out and going through the viewport. 
 
 
-## right hand vs left hand coordinate system
+## Right hand vs left hand coordinate system
 In a right-handed coordinate system, the x-axis points to the right, the y-axis points up, and the z-axis points out of the screen towards the viewer. The book and tutorials raytracing in one weekend and the next week use a right-handed coordinate system while the raytracer challenge uses a left-handed coordinate system. As does pixar for instance. There is no right or wrong. it is just a convention. We will use the right-handed coordinate system in this project. 
 
 On your right hand, the thumb is the x-axis, the index is the y-axis and the middle finger is the z-axis pointing to you. This is the right-handed coordinate system.
 
-## what are radians
-One radian is the angle subtended at the center of a circle by an arc that is equal in length to the radius of the circle. So a full circle is $2π$ radians.
+## What are radians
+One radian is the angle subtended at the center of a circle by an arc that is equal in length to the radius of the circle. So a full circle is $2π$ radians.  
 $$
 radians(deg) = deg/180 * \pi
 $$
@@ -114,7 +111,6 @@ Since our input is in degrees and the `cos` and `sin` functions in C use radians
 $$
 degrees(radians) = radians * 180 / \pi
 $$
-
 
 ## Which side of the plane is the normal
 In the literature there are two versions. When we calculate the normal for a sphere (and each geometrical obj will have its own formula for the normal...) we have two possible interpretations.  
@@ -152,74 +148,61 @@ A shiny metallic surface will have a high specular component and a very low diff
 ## Links
 
 The Graphical library allowed for this project are either the Minilibx or the MLX42 Codam. We used the second one:  
-https://github.com/codam-coding-college/MLX42  
+- [https://github.com/codam-coding-college/MLX42](https://github.com/codam-coding-college/MLX42)    
 
 I used the following resources:  
 - [Raytracing in one weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)  
 - [Raytracing the next week](https://raytracing.github.io/books/RayTracingTheNextWeek.html)  
 - [Raytracing the rest of your life](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html)  
-- https://www.desmos.com/3d
+- [https://www.desmos.com/3d](https://www.desmos.com/3d)
 - stb_image.h, a header-only image library available on GitHub at https://github.com/nothings/stb.
 - [https://gabrielgambetta.com/computer-graphics-from-scratch/](https://gabrielgambetta.com/computer-graphics-from-scratch/)  
 - A raytracer on the back of a business card. [https://fabiensanglard.net/rayTracing_back_of_business_card/](https://fabiensanglard.net/rayTracing_back_of_business_card/)
 
-Here are a few really good resources by [Fabien Sanglard](https://fabiensanglard.net/about/index.html):
+Here are a few more really good links by [Fabien Sanglard](https://fabiensanglard.net/about/index.html):
 - scratchapixel.com : Great raytracer lessons written by professionals that have worked on Toy Story, Avatar, Lord of the Rings, Harry Potter, Pirates of the Caribbean and many other movies.  
 - An Introduction to Ray Tracing : An old book but a Classic.  
 - Physically Based Rendering : Heavy on maths but really good and well explained.  
 - http://cosinekitty.com/raytrace/raytrace_us.pdf
   
-- More References:
-https://graphicscodex.com/app/app.html  
-- Nice visualizing website:  
-https://www.desmos.com/calculator  
+More References:
+- [https://graphicscodex.com/app/app.html](https://graphicscodex.com/app/app.html)  
 - Bump map  
 https://assetsvfx.gumroad.com/l/uHyhPT?layout=profile  
 - Get the outlines black and white - edge detection  
 https://en.wikipedia.org/wiki/Sobel_operator  
-- a great youtube series: [https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl](https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl)
-- a guide to git commits: [https://www.conventionalcommits.org/en/v1.0.0](https://www.conventionalcommits.org/en/v1.0.0)
-- cross product: [https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg](https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg)
-	- and also [https://www.mathsisfun.com/algebra/vectors-cross-product.html](https://www.mathsisfun.com/algebra/vectors-cross-product.html)
-- dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
+- a great youtube series: [https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl](https://www.youtube.com/playlist?list=PLlrATfBNZ98edc5GshdBtREv5asFW3yXl)  
+- a guide to git commits: [https://www.conventionalcommits.org/en/v1.0.0](https://www.conventionalcommits.org/en/v1.0.0)  
+- cross product: [https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg](https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg)  
+- and also [https://www.mathsisfun.com/algebra/vectors-cross-product.html](https://www.mathsisfun.com/algebra/vectors-cross-product.html)  
+- dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)  
 
 ## Some Trivia  
 Phong and Crow (1975) first introduced the idea of interpolating per-vertex shading normals to give the appearance of smooth surfaces from polygonal meshes.   
 
 ## courses  
 http://graphics.cs.cmu.edu/courses/15-463/  
-The following textbooks can also be useful references in general. All of them are available online from the CMU library:
+The following textbooks are also useful references in general. 
+- Computer Vision: Algorithms and Applications, by Richard Szeliski.  
+- Computational Imaging Book, by Ayush Bansai, Achuta Kadambi, and Ramesh Raskar.  
+- Multiple View Geometry in Computer Vision, by Richard Hartley and Andrew Zisserman.  
+- Computer Vision: A Modern Approach, by David Forsyth and Jean Ponce.  
+- Foundations of 3D Computer Graphics, by Steven Gortler.  
+- Digital Image Processing, by Rafael Gonzalez and Richard Woods.  
+- Photography, by Barbara London and John Upton.  
+- https://www.realtimerendering.com/raytracinggems/  
+- https://github.com/Apress/ray-tracing-gems  
+- https://github.com/Apress/Ray-Tracing-Gems-II  
+- https://link.springer.com/book/10.1007/978-1-4842-7185-8  
+- https://youtu.be/gBPNO6ruevk?si=Qtmk42NVdP9aJgRN  
+- https://alain.xyz/blog/ray-tracing-denoising  
+- https://planetpixelemporium.com/earth8081.html  
+- https://www.solarsystemscope.com/textures/
 
-    Computer Vision: Algorithms and Applications, by Richard Szeliski.
-    Computational Imaging Book, by Ayush Bansai, Achuta Kadambi, and Ramesh Raskar.
-    Multiple View Geometry in Computer Vision, by Richard Hartley and Andrew Zisserman.
-    Computer Vision: A Modern Approach, by David Forsyth and Jean Ponce.
-    Foundations of 3D Computer Graphics, by Steven Gortler.
-    Digital Image Processing, by Rafael Gonzalez and Richard Woods.
-    Photography, by Barbara London and John Upton.
+## Inspiration and credits
+Even if my code and approach are completely different, for some scenes I got inspired by some of the following projects:  
+- [https://github.com/ricardoreves/42-minirt](https://github.com/ricardoreves/42-minirt), the atom scene, mindblowing!  Nice to see the implementation of the obj files which we did not do.
+- [https://github.com/tdameros](https://github.com/tdameros) 
+For denoising tips...  [https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction](https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction)  
+I looked into the Sobel Operator but I did not implement it in the end: [https://en.wikipedia.org/wiki/Sobel_operator](https://en.wikipedia.org/wiki/Sobel_operator)    
 
-https://www.realtimerendering.com/raytracinggems/  
-https://github.com/Apress/ray-tracing-gems  
-
-https://github.com/Apress/Ray-Tracing-Gems-II  
-https://link.springer.com/book/10.1007/978-1-4842-7185-8  
-https://youtu.be/gBPNO6ruevk?si=Qtmk42NVdP9aJgRN  
-
-https://alain.xyz/blog/ray-tracing-denoising  
-
-https://planetpixelemporium.com/earth8081.html  
-https://www.solarsystemscope.com/textures/
-
-## inspiration and credits
-The code and approach are completely different but I also got inspired by some of the scenes from the following projects:  
-https://github.com/ricardoreves/42-minirt  for the atom scene, mindblowing! 
-Nice to see the implementation of the obj files which we did not do.
-https://github.com/tdameros  
-For denoising... and resources  
-https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction  
-searchig for the cone formula I found this:  
-https://github.com/QuantitativeBytes/qbRayTrace/blob/main/Ep8Code/qbRayTrace/qbPrimatives/cone.cpp  
-also part of a very good youtube video series  
-https://en.wikipedia.org/wiki/Sobel_operator  
-and testing with different random functions
-https://linux.die.net/man/3/rand_r
