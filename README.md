@@ -69,6 +69,9 @@ Multithreading is allowed when doing the bonus part.  You can read more [here](m
 ## The Math behind our mini raytracer
 
 (These are my notes from online resources and what I learned in the process.)
+Our implementation is sometimes called Montecarlo Raytracing because it makes heavily use of probability functions to 
+achieve better photorealism in the scenes. Read more about the probability density functions at the heart of our miniRT [here](pdf.md).  
+
 At its core, a ray tracer sends rays through pixels and computes the color seen in the direction of those rays. 
 
 The involved steps are:
