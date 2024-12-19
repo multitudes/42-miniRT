@@ -64,7 +64,7 @@ We are not meant to use libraries like OpenGL or Vulkan, but to create our own i
  
 It is a group project. The team is composed of two students.
 
-Multithreading is allowed when doing the bonus part. 
+Multithreading is allowed when doing the bonus part.  You can read more [here](multithreading.md).  
 
 ## The Math behind our mini raytracer
 
