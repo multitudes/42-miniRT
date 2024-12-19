@@ -21,6 +21,7 @@ Therefore bonuses can be :
 • One other 2nd degree object: Cone, Hyperboloid, Paraboloid..
 • Handle bump map textures.
 
+You can see a preview of the scenes in this [thread](https://github.com/multitudes/42-miniRT/issues/42)
 
 ## Allowed functions
 
