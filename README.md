@@ -218,10 +218,6 @@ Normalizing It is an expensive operation involving taking the square root of the
 Ex For a sphere, the outward normal is in the direction of the hit point minus the center:  
 A common trick used for visualizing normals (because it’s easy and somewhat intuitive to assume n is a unit length vector — so each component is between −1 and 1) is to map each component to the interval from 0 to 1, and then map (x,y,z) to (red,green,blue). 
 
-<div style="text-align: center;">
-<img src="assets/after.png" alt="shading" style="width: 45%;display: inline-block;" />
-</div>
-
 ## Which side of the sphere are we on?
 We need to choose to determine the side of the surface at the time of geometry intersection or at the time of coloring.  
 For objects that have an inside and an outside, like glass balls, we need to know if the ray is inside or outside the sphere.  
