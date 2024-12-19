@@ -71,12 +71,15 @@ Multithreading is allowed when doing the bonus part.
 ## A ray 
 A ray is a line that starts at a point and goes in a particular direction. The equation for a line in 2D or 3D is essencially the same.  
 considering a Point A and a Direction b the line is a typical stepping function.  
+
 $$  
 P(t) = A + tb  
 $$  
+
 Where:
 t is a scalar param tipically representing time.  So I have on my line a point A and a direction b, I can move along the line by changing the value of t and get P.
 If A and P are points in 3D space, then I have automatially a 3D line which can also be expressed like this:  
+
 $$  
 (x,y,z)=(x0,y0,z0)+t(a,b,c)  
 $$  
@@ -145,6 +148,10 @@ It actually doesnt have a diffuse component if we follow the ray tracing in a we
 We decide to still add some diffuse scattering to the metal material for edge cases. But this is open to discussion. Ex, a metallic ball in space would reflect the light, but would mirror the blackness, so would i be able to see its intrinsic color?  
 A shiny metallic surface will have a high specular component and a very low diffuse component. 
 
+
+## Some Trivia  
+Phong and Crow (1975) first introduced the idea of interpolating per-vertex shading normals to give the appearance of smooth surfaces from polygonal meshes. 
+ 
 ## Links
 
 The Graphical library allowed for this project are either the Minilibx or the MLX42 Codam. We used the second one:  
@@ -175,13 +182,13 @@ https://en.wikipedia.org/wiki/Sobel_operator
 - a guide to git commits: [https://www.conventionalcommits.org/en/v1.0.0](https://www.conventionalcommits.org/en/v1.0.0)  
 - cross product: [https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg](https://en.wikipedia.org/wiki/Cross_product#/media/File:Cross_product_mnemonic.svg)  
 - and also [https://www.mathsisfun.com/algebra/vectors-cross-product.html](https://www.mathsisfun.com/algebra/vectors-cross-product.html)  
-- dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)  
+- dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
+- I looked into the Sobel Operator but I did not implement it in the end: [https://en.wikipedia.org/wiki/Sobel_operator](https://en.wikipedia.org/wiki/Sobel_operator)
 
-## Some Trivia  
-Phong and Crow (1975) first introduced the idea of interpolating per-vertex shading normals to give the appearance of smooth surfaces from polygonal meshes.   
 
-## courses  
+## Some online courses  
 http://graphics.cs.cmu.edu/courses/15-463/  
+
 The following textbooks are also useful references in general. 
 - Computer Vision: Algorithms and Applications, by Richard Szeliski.  
 - Computational Imaging Book, by Ayush Bansai, Achuta Kadambi, and Ramesh Raskar.  
@@ -202,7 +209,7 @@ The following textbooks are also useful references in general.
 ## Inspiration and credits
 Even if my code and approach are completely different, for some scenes I got inspired by some of the following projects:  
 - [https://github.com/ricardoreves/42-minirt](https://github.com/ricardoreves/42-minirt), the atom scene, mindblowing!  Nice to see the implementation of the obj files which we did not do.
-- [https://github.com/tdameros](https://github.com/tdameros) 
+- [https://github.com/tdameros](https://github.com/tdameros)  
 For denoising tips...  [https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction](https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction)  
-I looked into the Sobel Operator but I did not implement it in the end: [https://en.wikipedia.org/wiki/Sobel_operator](https://en.wikipedia.org/wiki/Sobel_operator)    
+
 
