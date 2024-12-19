@@ -682,7 +682,7 @@ The following textbooks are also useful references in general.
 ## Inspiration and credits
 Even if my code and approach are completely different, for some scenes I got inspired by some of the following projects:  
 - [https://github.com/ricardoreves/42-minirt](https://github.com/ricardoreves/42-minirt), the atom scene, mindblowing!  Nice to see the implementation of the obj files which we did not do.
-- [https://github.com/tdameros](https://github.com/tdameros)  
-For denoising tips...  [https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction](https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction)  
+- [https://github.com/tdameros](https://github.com/tdameros)  For a nice implementation!
+- And for denoising tips...  [https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction](https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction)  
 
 
