@@ -6,13 +6,14 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:46:16 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/10 19:27:05 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:40:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-/* Inits the ambient struct inside of t_mrt->t_camera.
+/**
+ * Inits the ambient struct inside of t_mrt->t_camera.
  * usage:
  * "A" [intensity([0.0;1.0])] [rgb color]
  */
@@ -32,7 +33,8 @@ void	get_ambient(t_mrt *data)
 	already_set = 1;
 }
 
-/* Inits the camera struct inside of t_mrt.
+/** 
+ * Inits the camera struct inside of t_mrt.
  * usage:
  * "C" [origin] [view vector (normalized values)] [horiz. fow (double)]
  */
@@ -56,7 +58,8 @@ void	get_camera(t_mrt *data)
 	already_set = 1;
 }
 
-/* Quad light.
+/** 
+ * Quad light.
  * usage:
  * "l" "qd" [origin] [side_vec1] [side_vec2] [rgbcolor] [intensity ([0.0;1.0])]
  */
@@ -110,11 +113,11 @@ static void	sphere_light(t_objects *obj, int set_index)
 	sphere_mat(&obj->lights[set_index].s_body, params);
 }
 
-/* Makes a light object, which is a sphere or a quad with a light texture.
+/** 
+ * Makes a light object, which is a sphere or a quad with a light texture.
  * Adds the sphere from the light struct to the regular hittable list.
  * as well as the light one.
- */
-/*
+ *
  * usage (for default sphere light):
  * "l" [origin] [intensity([0.0;1,0])] [rgbcolor] [optional : diameter]
  *

@@ -6,11 +6,16 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 13:06:58 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 17:09:30 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:39:54 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// done with copilot as test
+/**  
+ * done as a test but the random functions I created were not 
+ * giving better results so I will not use this code which 
+ * has been commented out but will keep it for reference.
+ * 
+ * */ 
 
 #include <pthread.h>
 #include <stdint.h>

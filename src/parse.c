@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 21:22:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/11 12:23:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:43:30 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	update_struct(t_mrt *data)
 		update_struct_pt2(data);
 }
 
-/*
+/**
  * The light struct will always have something in it.
  * If there are no lights in the input, then this "nothing light"
  * will be the only thing passed to the light hittable list.
@@ -101,7 +101,9 @@ static void	parse_line_loop(t_mrt *data)
 	}
 }
 
-/* in case or error, the parser calls exit() */
+/** 
+ * in case or error, the parser calls exit() 
+ */
 void	parse_input(char *filename, t_mrt *data)
 {
 	if (ft_strncmp(&filename[ft_strlen(filename) - 3], ".rt", 3) != 0)

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 10:52:10 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:53:46 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:45:42 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include "libft.h"
 
-/*
+/**
  * @brief: initializer for a sphere
  * @param: center: the center of the sphere
  * @param: diameter: the diameter of the sphere

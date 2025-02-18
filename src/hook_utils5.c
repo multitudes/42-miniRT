@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:31:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 17:10:33 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:36:52 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,15 +101,15 @@ void	render_if_needed(t_mrt *data)
 	}
 }
 
-/*
-This is the callback of
-mlx_resize_hook(params.mlx, &_resize_hook, (void*)&params);
-The prototype of the function is given already.
-I receive the new height and width from the system.
-This works when resizing the window with the handles and also when going in
-fullscreen mode for some reason, even if the full screen mode
-is controlled differently in the background by the system.
-*/
+/**
+ * This is the callback of
+ * mlx_resize_hook(params.mlx, &_resize_hook, (void*)&params);
+ * The prototype of the function is given already.
+ * I receive the new height and width from the system.
+ * This works when resizing the window with the handles and also when 
+ * going in fullscreen mode for some reason, even if the full screen mode
+ * is controlled differently in the background by the system.
+ */
 void	resize_hook(int new_width, int new_height, void *params)
 {
 	t_mrt	*data;

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:57:31 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/07 16:58:09 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:37:46 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include "utils.h"
 #include "vec3.h"
 
-/*
+/**
  * Scatter record init function
  */
 void	init_scatter_record(t_scatter_record *srec)

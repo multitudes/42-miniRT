@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 17:31:01 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 17:13:22 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:37:27 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,9 @@ static int	init_window(t_mrt *data)
 	return (TRUE);
 }
 
-/* loop through the sphere objects and free images if set*/
+/**
+ * @brief loop through the sphere objects and free images if set
+ */
 static void	free_images(t_mrt *data)
 {
 	int			i;

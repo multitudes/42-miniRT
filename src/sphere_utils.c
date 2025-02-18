@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 10:32:50 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/03 11:59:19 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:45:32 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	set_face_normal(t_hit_record *rec, const t_ray *r,
 		rec->normal = vec3negate(outward_normal);
 }
 
-/*
+/**
  * @brief get_sphere_uv
  *
  * @param normal the normal vector

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 17:12:33 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 17:11:06 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:45:18 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <unistd.h>
 #include "libft.h"
 
-/*
+/**
  * @brief Clamp a value to a range and returns it. 
  *
  * This is the int version for the image mapping
@@ -31,7 +31,7 @@ int	clamp_rtw(int x, int low, int high)
 	return (high - 1);
 }
 
-/*
+/**
  * Convert a floating point value in the range [0.0, 1.0]
  * to an unsigned byte value in the range [0, 255].
  */
@@ -44,7 +44,7 @@ uint8_t	float_to_byte(float value)
 	return ((unsigned char)(255.0 * value));
 }
 
-/*
+/**
  * @brief Convert the linear floating point pixel data to bytes,
  *
  * stores the resulting byte data in the `bdata` member.

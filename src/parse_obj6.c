@@ -6,13 +6,14 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 19:24:03 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:29:31 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:42:16 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-/* Quad light.
+/** 
+ * Quad light.
  * usage:
  * "l" "qd" [origin] [side_vec1] [side_vec2] [rgbcolor] [intensity ([0.0;1.0])]
 */

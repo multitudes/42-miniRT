@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 15:20:34 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/14 17:01:32 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:33:57 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * Make a hittable list to pass into hit_objects.
  * The point is that hit_objects is going to call the hit function
  * of cylinder itself and the base.
-*/
+ */
 bool	hit_cone_cap(const void *self, const t_ray *r, t_interval closest, \
 	t_hit_record *rec)
 {
@@ -32,7 +32,7 @@ bool	hit_cone_cap(const void *self, const t_ray *r, t_interval closest, \
 
 /*
  * Calculates the pdf value of a cone
-*/
+ */
 double	obj_cone_pdf_value(const void *self, const t_point3 *orig, \
 	const t_vec3 *dir)
 {

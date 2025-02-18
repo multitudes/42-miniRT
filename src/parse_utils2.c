@@ -6,13 +6,15 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:47:01 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/10 19:21:48 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:43:11 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse.h"
 
-/* Returns a t_rgb struct that contains values from the token */
+/**
+ * Returns a t_rgb struct that contains values from the token 
+ */
 t_rgb	set_rgb(t_objects *obj, int index, char *func_name)
 {
 	char	**rgb_tok;
@@ -36,7 +38,7 @@ t_rgb	set_rgb(t_objects *obj, int index, char *func_name)
 	return (rgb(rgb_val[0], rgb_val[1], rgb_val[2]));
 }
 
-/*
+/**
  * Returns t_vec3 with values from the token.
  *
  * Function is very similar to set_rgb, but sets doubles, checks
@@ -59,7 +61,7 @@ t_vec3	set_vec3(t_objects *obj, int index, char *func_name, int normalized)
 	return (vec3(coord_val[0], coord_val[1], coord_val[2]));
 }
 
-/*
+/**
  * Checks if a string represents a float number.
  * (the string can have just a single dot and digits)
  */
@@ -83,8 +85,10 @@ bool	is_float(char *str)
 	return (true);
 }
 
-/* replaces tabs and newlines, so thta ft_split can split
-on just the space. removes comments as well */
+/** 
+ * replaces tabs and newlines, so thta ft_split can split
+ * on just the space. removes comments as well 
+ */
 void	sanitize_line(char *line)
 {
 	int	i;

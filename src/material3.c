@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:58:17 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/10 19:54:13 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:37:55 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include "utils.h"
 #include "vec3.h"
 
-/*
+/**
  * scatter function for a lambertian material
  */
 double	lambertian_scattering_pdf(void *self, const t_ray *r_in,

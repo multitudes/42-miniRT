@@ -4,10 +4,10 @@ echo "Running multiple miniRT sessions in parallel..."
 echo "This is the mandatory part wuth ambbient light scenes."
 
 # Run each miniRT command in the background and store the PIDs
-./miniRT scenes/deep_space1.rt &
+./miniRT ../scenes/deep_space1.rt &
 pid1=$!
 
-./miniRT scenes/deep_space4.rt &
+./miniRT ../scenes/deep_space4.rt &
 pid3=$!
 
 

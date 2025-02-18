@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:23:23 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/04 14:51:14 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:34:55 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@
 /*
  * This function is just for a single ray.
  *
-
-	* Loops through all objects and checks if the ray hits any object from the world
+ * Loops through all objects and checks if the ray hits any object from the world
  * hittable list. The ray might hit multiple objects, but we keep track of the
  * closest value on the ray, which is populated into the hit record rec.
  */
@@ -53,7 +52,9 @@ bool	hit_objects(const void *self, const t_ray *r, t_interval ray_t,
 	return (closest_so_far != ray_t.max);
 }
 
-/* Init function for a hittable list. */
+/**
+ * @brief Initialize a hittable list object 
+ */
 t_hittablelist	hittablelist(t_hittable **list, int size)
 {
 	t_hittablelist	hittablelist;

@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 17:36:46 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/07 12:31:39 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:42:08 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	cone_7_tokens(t_objects *obj, int set_index, char **tokens, \
 	cone_mat(&obj->cones[set_index], params);
 }
 
-/*
+/**
  * usage:
  * default - co [apex] [axis] [diam] [height] [color]
  * metalic - co [apex] [axis] [diam] [height] [color] [fuzz]
@@ -66,7 +66,7 @@ static void	cone_u_7_tokens(t_objects *obj, int set_index, char **tokens, \
 	cone_uncap_mat(&obj->cones_u[set_index], params);
 }
 
-/*
+/**
  * The UNCAPPED cone
  * usage:
  * default - co_u [apex] [axis] [diam] [height] [color]

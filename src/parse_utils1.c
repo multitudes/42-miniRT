@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils1.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 16:43:06 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/03 16:43:08 by ralgaran         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:42:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,9 @@ void	free_split(char **split)
 	free(split);
 }
 
-/* program will exit if there is an error */
+/** 
+ * program will exit if there is an error 
+ */
 int	call_error(char *msg, char *prefix, t_objects *obj)
 {
 	write(2, "Error\n", 6);
@@ -77,7 +79,9 @@ static void	ft_atod_loop(char *str, double *result, int *exponent)
 		*exponent = i - *exponent;
 }
 
-/* converts a string to a double */
+/** 
+ * converts a string to a double 
+ */
 double	ft_atod(char *str)
 {
 	int			is_negative;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_obj3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ralgaran <ralgaran@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:46:06 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/04 16:46:14 by ralgaran         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:41:43 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static void	cylinder_7_tokens(t_objects *obj, int set_index, char **tokens, \
 	cylinder_mat_capped(&obj->cylinders[set_index], params);
 }
 
-/*
+/**
  * usage:
  * default, capped cylinder:
  *	"cy" [origin] [axis normal] [diameter] [height] [rgb color]
@@ -65,7 +65,7 @@ static void	cylinder_u_7_tokens(t_objects *obj, int set_index, char **tokens, \
 	cylinder_mat_uncapped(&obj->cylinders_u[set_index], params);
 }
 
-/*
+/**
  * usage:
  * default, uncapped cylinder:
  * 	"cyu" [origin] [axis normal] [diameter] [height] [rgb color]
@@ -99,7 +99,7 @@ void	get_cylinder_u(t_objects *obj)
 	set_index++;
 }
 
-/*
+/**
  * usage:
  * default quad:
  * 	"qd" [origin] [side_vector1] [side_vector2] [color]

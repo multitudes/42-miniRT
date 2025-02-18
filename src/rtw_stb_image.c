@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 15:17:08 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 17:11:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:45:00 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 #include <string.h>
 #include "libft.h"
 
-// need to include only once and not in the header file
+/** 
+ * need to include only once and not in the header file
+ */ 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION

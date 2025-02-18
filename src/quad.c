@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:13:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:41:15 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:44:10 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 #include "libft.h"
 
 /**
- * @brief Initialize a quad object with a given position q,
-	and two vectors u and v.
+ * @brief Initialize a quad object with a given 
+ * position q, and two vectors u and v.
  */
 void	quad_rgb(t_quad *qd, t_init_params params)
 {

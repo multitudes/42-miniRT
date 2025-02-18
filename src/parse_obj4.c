@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 16:57:36 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/11 16:31:57 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:41:56 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	disk_6_tokens(t_objects *obj, int set_index, char **tokens, \
 	disk_mat(&obj->disks[set_index], params);
 }
 
-/*
+/**
  * usage:
  * default:
  *	"dsk" [origin] [surface normal] [diameter] [rgb color]
@@ -63,7 +63,7 @@ static void	triangle_6_tokens(t_objects *obj, int set_index, char **tokens, \
 	triangle_mat(&obj->triangles[set_index], params);
 }
 
-/*
+/**
  * usage:
  * default -	"tr" [vertice1] [vertice2] [vertice3] [rbg color]
  * metalic -	"tr" [vertice1] [vertice2] [vertice3] [rbg color] [fuzz(double)]
@@ -95,7 +95,7 @@ void	get_triangle(t_objects *obj)
 	set_index++;
 }
 
-/*
+/**
  * usage:
  * default - "box" [origin] [diagonal point] [color]
  * metalic - "box" [origin] [diagonal point] [color] [fuzz(double)]

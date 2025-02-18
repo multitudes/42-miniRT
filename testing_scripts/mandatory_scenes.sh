@@ -4,37 +4,37 @@ echo "Running multiple miniRT sessions in parallel..."
 echo "This is the mandatory part wuth ambient light scenes."
 
 # Run each miniRT command in the background and store the PIDs
-./miniRT scenes/deep_space_ambient0.rt &
+./miniRT ../scenes/deep_space_ambient0.rt &
 pid1=$!
 
-./miniRT scenes/deep_space_ambient0fulllight.rt &
+./miniRT ../scenes/deep_space_ambient0fulllight.rt &
 pid2=$!
 
-./miniRT scenes/deep_space_ambient0blue.rt &
+./miniRT ../scenes/deep_space_ambient0blue.rt &
 pid3=$!
 
-./miniRT scenes/deep_space_ambient0green.rt &
+./miniRT ../scenes/deep_space_ambient0green.rt &
 pid4=$!
 
-./miniRT scenes/deep_space_ambient0red.rt &
+./miniRT ../scenes/deep_space_ambient0red.rt &
 pid5=$!
 
-./miniRT scenes/deep_space_ambient1.rt &
+./miniRT ../scenes/deep_space_ambient1.rt &
 pid6=$!
 
-./miniRT scenes/deep_space_ambient2.rt &
+./miniRT ../scenes/deep_space_ambient2.rt &
 pid7=$!
 
-./miniRT scenes/deep_space_ambient3.rt &
+./miniRT ../scenes/deep_space_ambient3.rt &
 pid8=$!
 
-./miniRT scenes/ambient_light_test.rt &
+./miniRT ../scenes/ambient_light_test.rt &
 pid9=$!
 
-./miniRT scenes/deep_space1.rt &
+./miniRT ../scenes/deep_space1.rt &
 pid10=$!
 
-./miniRT scenes/deep_space4.rt &
+./miniRT ../scenes/deep_space4.rt &
 pid11=$!
 
 # Wait for all background processes to finish

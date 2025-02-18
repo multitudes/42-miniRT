@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 17:07:38 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:40:00 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:33:13 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,11 @@ uint32_t	color_gamma_corrected(t_color col)
 	return (rgb_to_uint(color_to_rgb(clamp_color(corrected))));
 }
 
-/*
-this is my draw pixel function. I write directly to the buffer
-and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib.
-*/
+/**
+ * 
+ * this is my draw pixel function. I write directly to the buffer 
+ * and the color is RGBA or 4 bytes. Code inspired from the MLX42 lib.
+ */
 void	write_color(t_mrt *data, int x, int y, t_color colorvector)
 {
 	uint32_t	color;

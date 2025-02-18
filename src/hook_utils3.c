@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:52:07 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:03:01 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:35:49 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 #include "minirt.h"
 #include "utils.h"
 
-// Function to rotate the camera around the x-axis (pitch)
+/**
+ * @brief Function to rotate the camera around the x-axis (pitch)
+ */
 void	rotate_camera_pitch(t_camera *cam, double angle)
 {
 	double	rotation_matrix[3][3];
@@ -31,7 +33,9 @@ void	rotate_camera_pitch(t_camera *cam, double angle)
 	update_cam_orientation(cam);
 }
 
-// Function to rotate the camera around the z-axis (roll)
+/**
+ * @brief Function to rotate the camera around the z-axis (roll)
+ */
 void	rotate_camera_roll(t_camera *cam, double angle)
 {
 	double	rotation_matrix[3][3];

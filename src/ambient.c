@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 11:53:45 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:39:51 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:28:09 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 #include <stdio.h>
 #include "libft.h"
 
+/**
+ * @brief Initializes the ambient light struct
+ */
 void	ambient(t_ambient *result, double ratio, t_rgb rgb)
 {
 	result->ratio = ratio;

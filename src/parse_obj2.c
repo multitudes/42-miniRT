@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 17:32:22 by ralgaran          #+#    #+#             */
-/*   Updated: 2024/10/13 13:18:17 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:41:15 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ static void	sphere_4_tokens(t_objects *obj, int set_index, char **tokens, \
 	}
 }
 
-/*
+/**
  * usage:
  * default sphere -		"sp" [origin] [diameter] [rgb color]
  * checker texture -	"sp" [origin] [diameter] [rgb color1] [rgb color2]
  * image (earthmap) -	"sp" [origin] [diameter] "img:"[path to .jpg]
  * metal sphere -		"sp" [origin] [diameter] [rgb color] [fuzz value(double)]
-*/
+ */
 void	get_sphere(t_objects *obj)
 {
 	static int	set_index;
@@ -110,7 +110,7 @@ static void	plane_5_tokens(t_objects *obj, int set_index, char **tokens, \
 	}
 }
 
-/*
+/**
  * usage:
  * regular plane -	"pl" [origin] [surface normal] [rgb color]
  * metal plane -	"pl" [origin] [surface normal] [rgb color] [fuzz(double)]

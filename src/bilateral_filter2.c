@@ -6,7 +6,7 @@
 /*   By: lbrusa <lbrusa@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 16:29:16 by lbrusa            #+#    #+#             */
-/*   Updated: 2024/10/14 16:05:27 by lbrusa           ###   ########.fr       */
+/*   Updated: 2025/02/18 18:30:23 by lbrusa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 #include "debug.h"
 #include "libft.h"
 
+/**
+ * @brief get the bilateral filter weight of the pixel
+ * 
+ * @param image the mlx image pointer
+ * @param xy the x and y coordinates of the pixel
+ * @param sigmas the sigmas are passed to the struct as a substruct
+ * 
+ * Write the data to the filtered pixel at the given coordinates.
+ */
 void	write_filtered_px(t_mrt *data, uint32_t xy[2], t_sigmas sigmas)
 {
 	uint32_t	filt_px;
