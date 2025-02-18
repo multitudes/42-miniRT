@@ -3,7 +3,7 @@
 # 42-miniRT
 > May your pixels never be little squares. - GH
 
-![miniRT](../assets/6.png)
+![miniRT](images/6.png)
 
 This project is an introduction to the beautiful world of Raytracing.  
 The goal is to create a simple raytracer that can render basic objects like spheres, planes, and cylinders.  
@@ -632,27 +632,27 @@ The sphere is a common primitive in raytracing. It is our starting point. After 
 Other primitives are of course the triangles, quads, and cubes which are 6 quads put together in a group. The cone has been one of the most difficult together with the cylinder. We also used soe texture as you can see in the images of the planets and the earth and moon.  
 
 <div>
-<img src="../assets/1.png" alt="sphere" width="400">
-<img src="../assets/2.png" alt="sphere" width="400">
-<img src="../assets/3.png" alt="sphere" width="400">
-<img src="../assets/4.png" alt="sphere" width="400">
-<img src="../assets/5.png" alt="sphere" width="400">
-<img src="../assets/7.png" alt="sphere" width="400">
-<img src="../assets/8.png" alt="sphere" width="400">
-<img src="../assets/10.png" alt="sphere" width="400">
-<img src="../assets/11.png" alt="sphere" width="400">
-<img src="../assets/12.png" alt="sphere" width="400">
-<img src="../assets/9.png" alt="sphere" width="800">
-<img src="../assets/13.png" alt="sphere" width="800">
-<img src="../assets/14.png" alt="sphere" width="400">
-<img src="../assets/15.png" alt="sphere" width="400">
-<img src="../assets/16.png" alt="sphere" width="400">
-<img src="../assets/17.png" alt="sphere" width="400">
-<img src="../assets/18.png" alt="sphere" width="400">
-<img src="../assets/19.png" alt="sphere" width="400">
-<img src="../assets/20.png" alt="sphere" width="400">
-<img src="../assets/21.png" alt="sphere" width="400">
-<img src="../assets/22.png" alt="sphere" width="400">
+<img src="images/1.png" alt="sphere" width="400">
+<img src="images/2.png" alt="sphere" width="400">
+<img src="images/3.png" alt="sphere" width="400">
+<img src="images/4.png" alt="sphere" width="400">
+<img src="images/5.png" alt="sphere" width="400">
+<img src="images/7.png" alt="sphere" width="400">
+<img src="images/8.png" alt="sphere" width="400">
+<img src="images/10.png" alt="sphere" width="400">
+<img src="images/11.png" alt="sphere" width="400">
+<img src="images/12.png" alt="sphere" width="400">
+<img src="images/9.png" alt="sphere" width="800">
+<img src="images/13.png" alt="sphere" width="800">
+<img src="images/14.png" alt="sphere" width="400">
+<img src="images/15.png" alt="sphere" width="400">
+<img src="images/16.png" alt="sphere" width="400">
+<img src="images/17.png" alt="sphere" width="400">
+<img src="images/18.png" alt="sphere" width="400">
+<img src="images/19.png" alt="sphere" width="400">
+<img src="images/20.png" alt="sphere" width="400">
+<img src="images/21.png" alt="sphere" width="400">
+<img src="images/22.png" alt="sphere" width="400">
 </div>
 
 ## Links

@@ -3,6 +3,8 @@
 # 42-miniRT
 > May your pixels never be little squares. - GH
 
+![miniRT](docs/images/6.png)
+
 This project is an introduction to the beautiful world of Raytracing.  
 The goal is to create a simple raytracer that can render basic objects like spheres, planes, and cylinders.  
 *This 42 project is written in C and in accordance to the 42 school norm.*
