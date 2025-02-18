@@ -5,6 +5,8 @@
 
 ![miniRT](docs/images/6.png)
 
+You cn see the documentation page here: [https://multitudes.github.io/42-miniRT/](https://multitudes.github.io/42-miniRT/)
+
 This project is an introduction to the beautiful world of Raytracing.  
 The goal is to create a simple raytracer that can render basic objects like spheres, planes, and cylinders.  
 *This 42 project is written in C and in accordance to the 42 school norm.*
@@ -625,6 +627,36 @@ double viewport_height = 2 * h * focal_length;
 double viewport_width = viewport_height * ((double)cam.image_width/cam.image_height);
 ...
 ```
+
+
+## Some examples
+
+The sphere is a common primitive in raytracing. It is our starting point. After implementing lights of different colors we could see how the sphere reflects the light. Also we tried some different materials like metal with polished and rough surface.  
+Other primitives are of course the triangles, quads, and cubes which are 6 quads put together in a group. The cone has been one of the most difficult together with the cylinder. We also used soe texture as you can see in the images of the planets and the earth and moon.  
+
+<div>
+<img src="docs/images/1.png" alt="sphere" width="800">
+<img src="docs/images/2.png" alt="sphere" width="800">
+<img src="docs/images/3.png" alt="sphere" width="800">
+<img src="docs/images/4.png" alt="sphere" width="800">
+<img src="docs/images/5.png" alt="sphere" width="800">
+<img src="docs/images/7.png" alt="sphere" width="800">
+<img src="docs/images/8.png" alt="sphere" width="800">
+<img src="docs/images/10.png" alt="sphere" width="800">
+<img src="docs/images/11.png" alt="sphere" width="800">
+<img src="docs/images/12.png" alt="sphere" width="800">
+<img src="docs/images/9.png" alt="sphere" width="800">
+<img src="docs/images/13.png" alt="sphere" width="800">
+<img src="docs/images/14.png" alt="sphere" width="800">
+<img src="docs/images/15.png" alt="sphere" width="800">
+<img src="docs/images/16.png" alt="sphere" width="800">
+<img src="docs/images/17.png" alt="sphere" width="800">
+<img src="docs/images/18.png" alt="sphere" width="800">
+<img src="docs/images/19.png" alt="sphere" width="800">
+<img src="docs/images/20.png" alt="sphere" width="800">
+<img src="docs/images/21.png" alt="sphere" width="800">
+<img src="docs/images/22.png" alt="sphere" width="800">
+</div>
 
 
 ## Links
