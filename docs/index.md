@@ -5,6 +5,10 @@
 
 ![miniRT](images/6.png)
 
+## What does it do?
+Jump to this section for the [Screenshots](https://multitudes.github.io/42-miniRT/#some-examples)
+
+## Introduction
 This project is an introduction to the beautiful world of Raytracing.  
 The goal is to create a simple raytracer that can render basic objects like spheres, planes, and cylinders.  
 *This 42 project is written in C and in accordance to the 42 school norm.*

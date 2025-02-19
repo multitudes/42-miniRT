@@ -5,8 +5,12 @@
 
 ![miniRT](docs/images/6.png)
 
-You cn see the documentation page here: [https://multitudes.github.io/42-miniRT/](https://multitudes.github.io/42-miniRT/)
+You can see the documentation page here: [https://multitudes.github.io/42-miniRT/](https://multitudes.github.io/42-miniRT/)
 
+## What does it do?
+Jump to this section for the [Screenshots](https://github.com/multitudes/42-miniRT?tab=readme-ov-file#some-examples)
+
+## Introduction
 This project is an introduction to the beautiful world of Raytracing.  
 The goal is to create a simple raytracer that can render basic objects like spheres, planes, and cylinders.  
 *This 42 project is written in C and in accordance to the 42 school norm.*
@@ -25,7 +29,6 @@ Therefore bonuses can be :
 • One other 2nd degree object: Cone, Hyperboloid, Paraboloid..
 • Handle bump map textures.
 
-You can see a preview of the scenes in this [thread](https://github.com/multitudes/42-miniRT/issues/42)
 
 ## Allowed functions
 
