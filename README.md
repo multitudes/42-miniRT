@@ -3,9 +3,9 @@
 # 42-miniRT
 > May your pixels never be little squares. - GH
 
-![miniRT](docs/images/6.png)
-
 You can see the documentation page here: [https://multitudes.github.io/42-miniRT/](https://multitudes.github.io/42-miniRT/)
+
+![miniRT](docs/images/6.png)
 
 ## What does it do?
 Jump to this section for the [Screenshots](https://github.com/multitudes/42-miniRT?tab=readme-ov-file#some-examples)
