@@ -3,6 +3,8 @@
 # 42-miniRT
 > May your pixels never be little squares. - GH
 
+The code is on GitHub: [42-miniRT](https://github.com/multitudes/42-miniRT)
+
 ![miniRT](images/6.png)
 
 ## What does it do?
