@@ -640,8 +640,8 @@ The Graphical library allowed for this project are either the Minilibx or the ML
 
 - [https://github.com/codam-coding-college/MLX42](https://github.com/codam-coding-college/MLX42)  
 
-I used the following resources: 
- 
+I used the following resources:
+
 - [Raytracing in one weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)  
 - [Raytracing the next week](https://raytracing.github.io/books/RayTracingTheNextWeek.html)  
 - [Raytracing the rest of your life](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html)  
@@ -649,6 +649,20 @@ I used the following resources:
 - stb_image.h, a header-only image library available on GitHub at https://github.com/nothings/stb.
 - [https://gabrielgambetta.com/computer-graphics-from-scratch/](https://gabrielgambetta.com/computer-graphics-from-scratch/)  
 - A raytracer on the back of a business card. [https://fabiensanglard.net/rayTracing_back_of_business_card/](https://fabiensanglard.net/rayTracing_back_of_business_card/)
+
+And wrote some code adapting the raytracers tutorials to the C language:
+
+- [https://github.com/multitudes/Ray-Tracing-in-One-Weekend-in-C](https://github.com/multitudes/Ray-Tracing-in-One-Weekend-in-C)
+- [https://github.com/multitudes/Ray-Tracing-The-Next-Week-in-C](https://github.com/multitudes/Ray-Tracing-The-Next-Week-in-C)
+- [https://github.com/multitudes/Ray-Tracing-the-rest-of-your-life--in-C](https://github.com/multitudes/Ray-Tracing-the-rest-of-your-life--in-C)
+
+in Swift:
+
+- [https://github.com/multitudes/Ray-Tracing-in-One-Weekend-in-Swift](https://github.com/multitudes/Ray-Tracing-in-One-Weekend-in-Swift)
+
+With Metal:
+
+- [https://github.com/multitudes/Ray-Tracing-in-one-weekend-with-metal](https://github.com/multitudes/Ray-Tracing-in-one-weekend-with-metal)
 
 Here are a few more really good links by [Fabien Sanglard](https://fabiensanglard.net/about/index.html):
 

@@ -1,6 +1,7 @@
 [![42](https://img.shields.io/badge/-Berlin-blue.svg?logo=data:image/svg%2bxml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOC4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIg0KCSBpZD0iQ2FscXVlXzEiIHNvZGlwb2RpOmRvY25hbWU9IjQyX2xvZ28uc3ZnIiBpbmtzY2FwZTp2ZXJzaW9uPSIwLjQ4LjIgcjk4MTkiIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c29kaXBvZGk9Imh0dHA6Ly9zb2RpcG9kaS5zb3VyY2Vmb3JnZS5uZXQvRFREL3NvZGlwb2RpLTAuZHRkIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIg0KCSB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAtMjAwIDk2MCA5NjAiDQoJIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAtMjAwIDk2MCA5NjAiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHBvbHlnb24gaWQ9InBvbHlnb241IiBwb2ludHM9IjMyLDQxMi42IDM2Mi4xLDQxMi42IDM2Mi4xLDU3OCA1MjYuOCw1NzggNTI2LjgsMjc5LjEgMTk3LjMsMjc5LjEgNTI2LjgsLTUxLjEgMzYyLjEsLTUxLjEgDQoJMzIsMjc5LjEgIi8+DQo8cG9seWdvbiBpZD0icG9seWdvbjciIHBvaW50cz0iNTk3LjksMTE0LjIgNzYyLjcsLTUxLjEgNTk3LjksLTUxLjEgIi8+DQo8cG9seWdvbiBpZD0icG9seWdvbjkiIHBvaW50cz0iNzYyLjcsMTE0LjIgNTk3LjksMjc5LjEgNTk3LjksNDQzLjkgNzYyLjcsNDQzLjkgNzYyLjcsMjc5LjEgOTI4LDExNC4yIDkyOCwtNTEuMSA3NjIuNywtNTEuMSAiLz4NCjxwb2x5Z29uIGlkPSJwb2x5Z29uMTEiIHBvaW50cz0iOTI4LDI3OS4xIDc2Mi43LDQ0My45IDkyOCw0NDMuOSAiLz4NCjwvc3ZnPg0K)](https://42berlin.de) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![Version](https://img.shields.io/badge/version-0.1.1-blue) 
 
 # miniRayTracer
+
 > May your pixels never be little squares. - GH
 
 You can see the documentation page here: [https://multitudes.github.io/42-miniRT/](https://multitudes.github.io/42-miniRT/)
@@ -653,7 +654,8 @@ Other primitives are of course the triangles, quads, and cubes which are 6 quads
 The Graphical library allowed for this project are either the Minilibx or the MLX42 Codam. We used the second one:  
 - [https://github.com/codam-coding-college/MLX42](https://github.com/codam-coding-college/MLX42)    
 
-I used the following resources:  
+I used the following resources:
+
 - [Raytracing in one weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)  
 - [Raytracing the next week](https://raytracing.github.io/books/RayTracingTheNextWeek.html)  
 - [Raytracing the rest of your life](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html)  
@@ -662,13 +664,28 @@ I used the following resources:
 - [https://gabrielgambetta.com/computer-graphics-from-scratch/](https://gabrielgambetta.com/computer-graphics-from-scratch/)  
 - A raytracer on the back of a business card. [https://fabiensanglard.net/rayTracing_back_of_business_card/](https://fabiensanglard.net/rayTracing_back_of_business_card/)
 
+And wrote some code adapting the raytracers tutorials to the C language:
+
+- [https://github.com/multitudes/Ray-Tracing-in-One-Weekend-in-C](https://github.com/multitudes/Ray-Tracing-in-One-Weekend-in-C)
+- [https://github.com/multitudes/Ray-Tracing-The-Next-Week-in-C](https://github.com/multitudes/Ray-Tracing-The-Next-Week-in-C)
+- [https://github.com/multitudes/Ray-Tracing-the-rest-of-your-life--in-C](https://github.com/multitudes/Ray-Tracing-the-rest-of-your-life--in-C)
+
+in Swift:
+
+- [https://github.com/multitudes/Ray-Tracing-in-One-Weekend-in-Swift](https://github.com/multitudes/Ray-Tracing-in-One-Weekend-in-Swift)
+
+With Metal:
+
+- [https://github.com/multitudes/Ray-Tracing-in-one-weekend-with-metal](https://github.com/multitudes/Ray-Tracing-in-one-weekend-with-metal)
 Here are a few more really good links by [Fabien Sanglard](https://fabiensanglard.net/about/index.html):
+
 - scratchapixel.com : Great raytracer lessons written by professionals that have worked on Toy Story, Avatar, Lord of the Rings, Harry Potter, Pirates of the Caribbean and many other movies.  
 - An Introduction to Ray Tracing : An old book but a Classic.  
 - Physically Based Rendering : Heavy on maths but really good and well explained.  
 - http://cosinekitty.com/raytrace/raytrace_us.pdf
   
 More References:
+
 - [https://graphicscodex.com/app/app.html](https://graphicscodex.com/app/app.html)  
 - Bump map  
 https://assetsvfx.gumroad.com/l/uHyhPT?layout=profile  
@@ -681,11 +698,12 @@ https://en.wikipedia.org/wiki/Sobel_operator
 - dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 - I looked into the Sobel Operator but I did not implement it in the end: [https://en.wikipedia.org/wiki/Sobel_operator](https://en.wikipedia.org/wiki/Sobel_operator)
 
+## Some online courses
 
-## Some online courses  
 http://graphics.cs.cmu.edu/courses/15-463/  
 
 The following textbooks are also useful references in general. 
+
 - Computer Vision: Algorithms and Applications, by Richard Szeliski.  
 - Computational Imaging Book, by Ayush Bansai, Achuta Kadambi, and Ramesh Raskar.  
 - Multiple View Geometry in Computer Vision, by Richard Hartley and Andrew Zisserman.  
@@ -707,5 +725,3 @@ Even if my code and approach are completely different, for some scenes I got ins
 - [https://github.com/ricardoreves/42-minirt](https://github.com/ricardoreves/42-minirt), the atom scene, mindblowing!  Nice to see the implementation of the obj files which we did not do.
 - [https://github.com/tdameros](https://github.com/tdameros)  For a nice implementation!
 - And for denoising tips...  [https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction](https://github.com/favreau/awesome-ray-tracing?tab=readme-ov-file#denoising-filtering-and-reconstruction)  
-
-
