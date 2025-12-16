@@ -71,6 +71,7 @@ typedef struct s_vec3 {
 ```
 
 ## The Ray
+
 The ray is essentially a function that takes a param a point in 3D space, and moves this point along the direction vector of the ray. The amount of movement is determined by the time parameter t. Therefore we have a function P(t) = A + tb where A is the origin of the ray and b is the direction of the ray.
 This function gives us a point in 3D space for each value of t.
 
@@ -93,7 +94,8 @@ $$
 blendedValue = (1 - a) \cdot startValue + a \cdot endValue
 $$
 
-with `a` going from zero to one. When we normalize the vector we get a value between -1 and 1. We can then scale it to 0 and 1. 
+with `a` going from zero to one. When we normalize the vector we get a value between -1 and 1. We can then scale it to 0 and 1.
+
 ```c
 t_color ray_color(const t_ray *r)
 	...
@@ -105,10 +107,12 @@ t_color ray_color(const t_ray *r)
 ```
 
 ## The Viewport
+
 The viewport is a virtual rectangle in the 3D world that contains the grid of image pixel locations. If pixels are spaced the same distance horizontally as they are vertically, the viewport that bounds them will have the same aspect ratio as the rendered image. The distance between two adjacent pixels is called the pixel spacing, and square pixels is the standard.  
 We'll initially set the distance between the viewport and the camera center point to be one unit. This distance is often referred to as the focal length.  
 
 We create our 3D space with the following conventions:
+
 - The x-axis points to the right.
 - The y-axis points up.
 - The z-axis points out of the screen, toward the viewer.
@@ -118,6 +122,7 @@ Therefore using what is commonly defined as right hand coordinates, the negative
 While our 3D space has the conventions above, this conflicts with our image coordinates which are the ones used in the rendering to a file or to a screen, where we want to have the zeroth pixel in the top-left and work our way down to the last pixel at the bottom right. This means that our image coordinate Y-axis is inverted: Y increases going down the image. 
 
 ## Ray-Sphere Intersection
+
 (If you see this on the github pages unfortunately Jekyll doesn't render the math equations so I will have to debug them later)
 The equation for a sphere of radius r that is centered at the origin is an important mathematical equation: 
 
@@ -169,6 +174,7 @@ $$
 $$
 
 In code:
+
 ```c
 bool hit_sphere(const t_sphere *s, const t_ray *r) 
 {
@@ -182,6 +188,7 @@ bool hit_sphere(const t_sphere *s, const t_ray *r)
 ```
 
 # The Normal Vector and shading
+
 This is a vector that is perpendicular to the surface at the point of intersection.  
 Normalizing it is an expensive operation involving taking the square root of the sum of the squares of the components of the vector. Still it needs to be done so all normal vectors will be of unit length.  
 
@@ -189,9 +196,10 @@ Ex For a sphere, the outward normal is in the direction of the hit point minus t
 A common trick used for visualizing normals (because it’s easy and somewhat intuitive to assume n is a unit length vector — so each component is between −1 and 1) is to map each component to the interval from 0 to 1, and then map (x,y,z) to (red,green,blue). 
 
 ## Which side of the sphere are we on?
+
 We need to choose to determine the side of the surface at the time of geometry intersection or at the time of coloring.  
 For objects that have an inside and an outside, like glass balls, we need to know if the ray is inside or outside the sphere.  
-It can be determined doing the dot product of the ray direction and the outward normal. If the dot product is positive, the ray is inside the sphere. If it is negative, the ray is outside the sphere.   
+It can be determined doing the dot product of the ray direction and the outward normal. If the dot product is positive, the ray is inside the sphere. If it is negative, the ray is outside the sphere.
 
 ```c
 bool front_face;
@@ -211,6 +219,7 @@ if (dot(ray_direction, outward_normal) > 0.0) {
 The book makes an “abstract class” for anything a ray might hit, and make both a sphere and a list of spheres just something that can be hit. How to do this in C?
 
 ##  An array of shapes in C? How!?
+
 Thanks to this course I discovered that you can have polymorphic behavior in C. 
 It is a bit weird at first but totally doable.  
 
@@ -239,6 +248,7 @@ typedef struct {
 	t_point3 max;
 } cube;
 ```
+
 **This is very important: the `hittable` struct must be the first member of the shape structs.**  
 This is because the C standard guarantees that the address of the first member of a struct is the same as the address of the struct itself. This allows you to cast a pointer to a `sphere` or `cube` to a `hittable` pointer and back without any issues.
 
@@ -257,7 +267,6 @@ bool hit_cube(const void* self, const t_ray* r, double t_min, double t_max, t_hi
 The functions all take a `const void* self` parameter, which is a pointer to the shape struct. This allows you to cast the pointer to the appropriate shape struct inside the function.
 
 When you create a new shape, you set the `hit` function pointer in the `hittable` struct to the appropriate function:
-
 
 ```c
 t_sphere new_sphere(t_point3 center, double radius) {
@@ -564,9 +573,12 @@ inline t_vec3	vec3reflect(const t_vec3 v, const t_vec3 n)
 We can also randomize the reflected direction by using a small sphere and choosing a new endpoint for the ray. We'll use a random point from the surface of a sphere centered on the original endpoint, scaled by the fuzz factor. The bigger the fuzz sphere, the fuzzier the reflections will be. This suggests adding a fuzziness parameter that is just the radius of the sphere (so zero is no perturbation). Also, we need to normalize the reflected ray. 
 
 ## Positionable Camera
+
 ### field of view fov
+
 It is typically expressed as an angle (in degrees or radians) and determines how wide or narrow the view captured by the camera is. A larger FOV allows the camera to capture a wider area of the scene, making objects appear smaller and further apart.  In the book we will use vertical field of view by convention since the horizontal fov will be determined by the aspect ratio of the image.
 Now I can express the viewport in function of the vertical field of view and the focal_length.
+
 ```c
 double theta = degrees_to_radians(c.vfov);
 double h = tan(theta/2);
@@ -575,6 +587,7 @@ double viewport_width = viewport_height * ((double)c.image_width/c.image_height)
 ```
 
 ## Positionable Camera
+
 We can rotate the camera around its normal axis. We need a way to specify the up. and the look from and look at. 
 The tutorial uses the common convention of naming this the “view up” (vup) vector.
 We will make the viewport height dependent from the vertical field of view and the aspect ratio. 
@@ -623,10 +636,12 @@ Other primitives are of course the triangles, quads, and cubes which are 6 quads
 
 ## Links
 
-The Graphical library allowed for this project are either the Minilibx or the MLX42 Codam. We used the second one:  
-- [https://github.com/codam-coding-college/MLX42](https://github.com/codam-coding-college/MLX42)    
+The Graphical library allowed for this project are either the Minilibx or the MLX42 Codam. We used the MLX42 engine:
 
-I used the following resources:  
+- [https://github.com/codam-coding-college/MLX42](https://github.com/codam-coding-college/MLX42)  
+
+I used the following resources: 
+ 
 - [Raytracing in one weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)  
 - [Raytracing the next week](https://raytracing.github.io/books/RayTracingTheNextWeek.html)  
 - [Raytracing the rest of your life](https://raytracing.github.io/books/RayTracingTheRestOfYourLife.html)  
@@ -636,12 +651,14 @@ I used the following resources:
 - A raytracer on the back of a business card. [https://fabiensanglard.net/rayTracing_back_of_business_card/](https://fabiensanglard.net/rayTracing_back_of_business_card/)
 
 Here are a few more really good links by [Fabien Sanglard](https://fabiensanglard.net/about/index.html):
+
 - scratchapixel.com : Great raytracer lessons written by professionals that have worked on Toy Story, Avatar, Lord of the Rings, Harry Potter, Pirates of the Caribbean and many other movies.  
 - An Introduction to Ray Tracing : An old book but a Classic.  
 - Physically Based Rendering : Heavy on maths but really good and well explained.  
 - http://cosinekitty.com/raytrace/raytrace_us.pdf
   
 More References:
+
 - [https://graphicscodex.com/app/app.html](https://graphicscodex.com/app/app.html)  
 - Bump map  
 https://assetsvfx.gumroad.com/l/uHyhPT?layout=profile  
@@ -654,11 +671,12 @@ https://en.wikipedia.org/wiki/Sobel_operator
 - dot product: [https://www.mathsisfun.com/algebra/vectors-dot-product.html](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 - I looked into the Sobel Operator but I did not implement it in the end: [https://en.wikipedia.org/wiki/Sobel_operator](https://en.wikipedia.org/wiki/Sobel_operator)
 
+## Some online courses
 
-## Some online courses  
 http://graphics.cs.cmu.edu/courses/15-463/  
 
-The following textbooks are also useful references in general. 
+The following textbooks are also useful references in general.
+
 - Computer Vision: Algorithms and Applications, by Richard Szeliski.  
 - Computational Imaging Book, by Ayush Bansai, Achuta Kadambi, and Ramesh Raskar.  
 - Multiple View Geometry in Computer Vision, by Richard Hartley and Andrew Zisserman.  
@@ -676,6 +694,7 @@ The following textbooks are also useful references in general.
 - https://www.solarsystemscope.com/textures/
 
 ## Inspiration and credits
+
 Even if my code and approach are completely different, for some scenes I got inspired by some of the following projects:  
 - [https://github.com/ricardoreves/42-minirt](https://github.com/ricardoreves/42-minirt), the atom scene, mindblowing!  Nice to see the implementation of the obj files which we did not do.
 - [https://github.com/tdameros](https://github.com/tdameros)  For a nice implementation!
