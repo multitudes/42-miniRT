@@ -15,6 +15,7 @@ The core principle involves firing imaginary rays from the viewpoint (the virtua
 
 Common Ray Tracing Algorithms
 While all ray tracers share the same foundational concept, they can be broadly categorized based on their approach to simulating global illumination and achieving photorealism:
+
 | Type | Focus/Algorithm | Key Characteristics | Trade-offs |
 | :--- | :--- | :--- | :--- |
 | **Basic Ray Casting / Whitted-Style** | Trajectory of a Single Ray | Faster render times by following the path of a single, primary ray (plus secondary rays for perfect reflection/refraction). | Shadows are often computed strictly (hard edges), and global light transport effects like soft shadows or diffuse reflections are generally excluded. |
@@ -22,73 +23,14 @@ While all ray tracers share the same foundational concept, they can be broadly c
 
 Specifically, this program implements the second variant of ray tracing: Path Tracing using Monte Carlo integration.
 
-## Introduction
-This project is an introduction to the beautiful world of Raytracing.  
-The goal is to create a simple raytracer that can render basic objects like spheres, planes, and cylinders.  
-*This 42 project is written in C and in accordance to the 42 school norm.*
-- All variables have to be declared and defined in separate lines
-- Variable declaration has to be on the top and no more than 5
-- function parameter cannot be more than 4
-- Each function can not have more then 25 lines
-- Projects should be created with allowed std functions otherwise it is cheating
-- etc [link](https://github.com/42School/norminette/blob/master/pdf/en.norm.pdf).  
+## Requirements and Features
 
-Bonuses are encouraged but keeping in mind that to implement a more complex features, it is better to create a more complex project.  
-Therefore bonuses can be :
-- Add specular reflection to have a full Phong reflection model.
-• Color disruption: checkerboard.
-• Colored and multi-spot lights.
-• One other 2nd degree object: Cone, Hyperboloid, Paraboloid..
-• Handle bump map textures.
+See [Requirements and Features](docs/42req.md).
 
-
-## Allowed functions
-
-Here at 42 we are allowed to use the following functions for this project:
-
-| Function | Description |
-| -------- | ----------- |
-|open | open a file|
-|close | close a file|
-|read | read from a file descriptor|
-|write | write to a file descriptor|
-|printf | formatted output conversion|
-|malloc | allocate memory|
-|free | free allocated memory|
-|perror | print an error message|
-|strerror | return string describing error|
-|exit | terminate the calling process|
-|math library | mathematical functions|
-|MinilibX | graphical library|
-
-Also we follow the NORM, a series of rules about linting and formatting of the code. Examples: functions cannot have more than 25 lines; we are not allowed to use "for"-loops, but while loops are allowed; declaring and defining variables in one line is not allowed. etc.
-
-### Requirements
-Programming Language: Must be written in C.  
-Libraries: Utilizes miniLibX or MLX42, math library functions, and standard C libraries (open, close, read, write, printf, malloc, free, perror, strerror, exit)  
-Memory Management: Proper handling and freeing of heap-allocated memory to prevent leaks.  
-Makefile: Includes rules for all, clean, fclean, re, and bonus. Compilation with -Wall, -Wextra, and -Werror flags using cc.  
-Error Handling: Must exit properly with "Error\n" and an explicit message on encountering any misconfiguration in the scene file.  
-File Structure: Accepts scene description files in a specific format, handling elements like Ambient light, Camera, Light, Sphere, Plane, and Cylinder with precise properties.  
-
-We are not meant to use libraries like OpenGL or Vulkan, but to create our own implementation in C. 
-
-
-### Features
-- Scene Description: Reads scenes from a file with .rt extension and renders the image as described.  
-- Basic Objects: Supports rendering of planes, spheres, and cylinders.
-- Transformations: Objects, lights, and cameras can be translated and rotated (except spheres and lights for rotation).  
-- Lighting: Implements ambient and diffuse lighting, including spot brightness and hard shadows.
-- Window Management: Fluid window management with seamless transitions and closures via ESC key or window frame red cross.
- 
-It is a group project. The team is composed of two students.
-
-Multithreading is allowed when doing the bonus part.  You can read more [here](multithreading.md).  
-
-## The Math behind our mini raytracer
+## The Math behind the raytracer
 
 (These are my notes from online resources and what I learned in the process.)
-Our implementation is sometimes called Montecarlo Raytracing because it makes heavily use of probability functions to 
+Our implementation is sometimes called Monte Carlo Raytracing because it makes heavy use of probability functions to 
 achieve better photorealism in the scenes. Read more about the probability density functions at the heart of our miniRT [here](pdf.md).  
 
 At its core, a ray tracer sends rays through pixels and computes the color seen in the direction of those rays. 
@@ -100,15 +42,19 @@ The involved steps are:
 - Compute a color for the closest intersection point.
 
 ## The aspect ratio
+
 A 16∶9 aspect ratio means that the ratio of image width to image height is 16∶9.  
 For a practical example, an image 800 pixels wide by 400 pixels high has a 2∶1 aspect ratio. 
 
 ## The Vec3, Color and Point classes
+
 For simplicity we will use the same struct (in C) for all three. The Vec3 struct will be used for vectors, colors, and points using a typedef and a union because when using a color having access to r g b is more intuitive than x y z. 
  
 ## Using unions in C
-A union is a special data type available in C that allows to store different data types in the same memory location. You can define a union with many members, but only one member can contain a value at any given time. Unions provide an efficient way of using the same memory location for multiple-purpose.
-In my case I have a vector in 3d with x y and z components. Also I have a color type with 3 components too. I can use alias to use the same struct for both. Also I discovered that I can use a union to have access to rgb and xyz at the same time.  In C++ I would use encapsulation and private/public members with getters and setters but in C I dont have this level of abstraction.
+
+A union is a special data type available in C that allows to store different data types in the same memory location. You can define a union with many members, but only one member can contain a value at any given time. Unions provide an efficient way of using the same memory location for multiple purposes.
+In my case I have a vector in 3d with x y and z components. Also I have a color type with 3 components too. I can use alias to use the same struct for both. Also I discovered that I can use a union to have access to rgb and xyz at the same time.  In C++ I would use encapsulation and private/public members with getters and setters but in C I don't have this level of abstraction.
+
 ```c
 typedef struct s_vec3 {
     union {
@@ -123,6 +69,7 @@ typedef struct s_vec3 {
 ```
 
 ## The Ray
+
 The ray is essentially a function that takes a param a point in 3D space, and moves this point along the direction vector of the ray. The amount of movement is determined by the time parameter t. Therefore we have a function P(t) = A + tb where A is the origin of the ray and b is the direction of the ray.
 This function gives us a point in 3D space for each value of t.
 
@@ -145,7 +92,8 @@ $$
 blendedValue = (1 - a) \cdot startValue + a \cdot endValue
 $$
 
-with `a` going from zero to one. When we normalize the vector we get a value between -1 and 1. We can then scale it to 0 and 1. 
+with `a` going from zero to one. When we normalize the vector we get a value between -1 and 1. We can then scale it to 0 and 1.
+
 ```c
 t_color ray_color(const t_ray *r)
 	...
@@ -160,7 +108,8 @@ t_color ray_color(const t_ray *r)
 The viewport is a virtual rectangle in the 3D world that contains the grid of image pixel locations. If pixels are spaced the same distance horizontally as they are vertically, the viewport that bounds them will have the same aspect ratio as the rendered image. The distance between two adjacent pixels is called the pixel spacing, and square pixels is the standard.  
 We'll initially set the distance between the viewport and the camera center point to be one unit. This distance is often referred to as the focal length.  
 
-We create our three D space with the following conventions:
+We create our 3D space with the following conventions:
+
 - The x-axis points to the right.
 - The y-axis points up.
 - The z-axis points out of the screen, toward the viewer.
@@ -170,7 +119,8 @@ Therefore using what is commonly defined as right hand coordinates, the negative
 While our 3D space has the conventions above, this conflicts with our image coordinates which are the ones used in the rendering to a file or to a screen, where we want to have the zeroth pixel in the top-left and work our way down to the last pixel at the bottom right. This means that our image coordinate Y-axis is inverted: Y increases going down the image. 
 
 ## Ray-Sphere Intersection
-(If you see this on the github pages unfortunately Jekill doesnt render the math equations so I will have to debug them out later)
+
+(If you see this on the github pages unfortunately Jekyll doesn't render the math equations so I will have to debug them later)
 The equation for a sphere of radius r that is centered at the origin is an important mathematical equation: 
 
 $$
@@ -221,6 +171,7 @@ $$
 $$
 
 In code:
+
 ```c
 bool hit_sphere(const t_sphere *s, const t_ray *r) 
 {
@@ -234,13 +185,15 @@ bool hit_sphere(const t_sphere *s, const t_ray *r)
 ```
 
 # The Normal Vector and shading
+
 This is a vector that is perpendicular to the surface at the point of intersection.  
-Normalizing It is an expensive operation involving taking the square root of the sum of the squares of the components of the vector. Still it needs to be done so all normal vectors will be of unit length.  
+Normalizing it is an expensive operation involving taking the square root of the sum of the squares of the components of the vector. Still it needs to be done so all normal vectors will be of unit length.  
 
 Ex For a sphere, the outward normal is in the direction of the hit point minus the center:  
 A common trick used for visualizing normals (because it’s easy and somewhat intuitive to assume n is a unit length vector — so each component is between −1 and 1) is to map each component to the interval from 0 to 1, and then map (x,y,z) to (red,green,blue). 
 
 ## Which side of the sphere are we on?
+
 We need to choose to determine the side of the surface at the time of geometry intersection or at the time of coloring.  
 For objects that have an inside and an outside, like glass balls, we need to know if the ray is inside or outside the sphere.  
 It can be determined doing the dot product of the ray direction and the outward normal. If the dot product is positive, the ray is inside the sphere. If it is negative, the ray is outside the sphere.   
@@ -263,12 +216,13 @@ if (dot(ray_direction, outward_normal) > 0.0) {
 The book makes an “abstract class” for anything a ray might hit, and make both a sphere and a list of spheres just something that can be hit. How to do this in C?
 
 ##  An array of shapes in C? How!?
+
 Thanks to this course I discovered that you can have polymorphic behavior in C. 
 It is a bit weird at first but totally doable.  
 
 I have a struct, `t_hittable` that has a function pointer to a hit function.  
 
-To create an array of different shapes (like spheres and cubes) that all implement the [`hittable`]interface or behaviour, I define a struct `t_hittable` that contains a function pointer for the `hit` function:
+To create an array of different shapes (like spheres and cubes) that all implement the [`hittable`] interface or behavior, I define a struct `t_hittable` that contains a function pointer for the `hit` function:
 
 ```c
 typedef struct s_hittable {
@@ -291,6 +245,7 @@ typedef struct {
     t_point3 max;
 } cube;
 ```
+
 **This is very important: the `hittable` struct must be the first member of the shape structs.**  
 This is because the C standard guarantees that the address of the first member of a struct is the same as the address of the struct itself. This allows you to cast a pointer to a `sphere` or `cube` to a `hittable` pointer and back without any issues.
 
@@ -310,7 +265,6 @@ The functions all take a `const void* self` parameter, which is a pointer to the
 
 When you create a new shape, you set the `hit` function pointer in the `hittable` struct to the appropriate function:
 
-
 ```c
 t_sphere new_sphere(t_point3 center, double radius) {
 	sphere s;
@@ -320,6 +274,7 @@ t_sphere new_sphere(t_point3 center, double radius) {
 	return s;
 }
 ```
+
 Then in the main function, you can create a list of `t_hittable` pointers and add your shapes to it:
 
 ```c
@@ -342,7 +297,8 @@ for (int i = 0; i < 10; i++) {
     }
 }
 ```
-This would be quite cool but turns out that we will use an extra struct to keep track of the world. Since c++ has vectors which are a kind of dynamic array in C, I created a t_hittablelist struct that contains an array of hittable pointers and a size. Knowing the size is important. For now that's it, later I will add some more functions to add elements etc.
+
+This would be quite cool but turns out that we will use an extra struct to keep track of the world. Since C++ has vectors which are a kind of dynamic array in C, I created a t_hittablelist struct that contains an array of hittable pointers and a size. Knowing the size is important. For now that's it, later I will add some more functions to add elements etc.
 
 ```c
 
@@ -358,22 +314,22 @@ And so we have a hit function on world that will loop through the list of hittab
 ```c
 bool hit(const void *self, const t_ray* r, double ray_tmin, double ray_tmax, t_hit_record* rec)
 {
-	 	t_hittablelist *hittablelist = (t_hittablelist *)self;
-		t_hit_record temp_rec;
-		bool hit_anything = false;
-		double closest_so_far = ray_tmax;
-		int i = 0;
+	t_hittablelist *hittablelist = (t_hittablelist *)self;
+	t_hit_record temp_rec;
+	bool hit_anything = false;
+	double closest_so_far = ray_tmax;
+	int i = 0;
 
-		while (i < hittablelist->size)
+	while (i < hittablelist->size)
+	{
+		if (hittablelist->list[i]->hit(hittablelist->list[i], r, ray_tmin, closest_so_far, &temp_rec))
 		{
-			if (hittablelist->list[i]->hit(hittablelist->list[i], r, ray_tmin, closest_so_far, &temp_rec))
-			{
-				hit_anything = true;
-				closest_so_far = temp_rec.t;
-				*rec = temp_rec;
-			}
-			i++;
-		} 
+			hit_anything = true;
+			closest_so_far = temp_rec.t;
+			*rec = temp_rec;
+		}
+		i++;
+	}
 	return (hit_anything);
 }
 
@@ -390,7 +346,8 @@ t_hittablelist hittablelist(t_hittable **list, int size)
 
 ## Useful to have - An Interval type
 
-In C++ it is a class, in C it will be a struct. The interval type is useful to keep track of the t_min and t_max values. 
+In C++ it is a class, in C it will be a struct. The interval type is useful to keep track of the t_min and t_max values.
+
 ```c
 typedef struct {
 	double t_min;
@@ -402,15 +359,16 @@ typedef struct {
 In C we do not have classes of course but we will still refactor the code in its own file with its struct and functions.
 The camera is responsible for two important jobs:
 
-    - Construct and dispatch rays into the world.
-    - Use the results of these rays to construct the rendered image.
+- Construct and dispatch rays into the world.
+- Use the results of these rays to construct the rendered image.
 
 After main creates a camera and sets default values, it will call the render() method.  
 The render() method will prepare the camera for rendering and then execute the render loop.
 
 ## Passing by value or by reference?
 In C++ we have references which are variables that can be passed around without copying. In C we have pointers. But pointers bring a problem. 
-If I declare the sum like
+If I declare the sum like:
+
 ```c
 t_vec3 add(t_vec3 *a, t_vec3 *b)
 {
@@ -421,14 +379,18 @@ t_vec3 add(t_vec3 *a, t_vec3 *b)
 	return (sum);
 }
 ```
-Then if using the add functions for two vectors I have to pass pointers then I cannot use the add function with the result of another add function. Like this is working but I have to create a temp extra var c:
+
+Then if using the add function for two vectors I have to pass pointers then I cannot use the add function with the result of another add function. Like this is working but I have to create a temporary extra variable c:
+
 ```c
 t_vec3 a = vec3(1, 2, 3);
 t_vec3 b = vec3(4, 5, 6);
 t_vec3 c = add(&a, &b);
 t_vec3 d = add(&c, &c);
 ```
-This will not work because the add function expects pointers and I cannot in C take the pointer of a rvalue return value . So I will have to use the add function like this:
+
+This will not work because the add function expects pointers and I cannot in C take the pointer of an rvalue. So I will have to use the add function like this:
+
 ```c
 t_vec3 a = vec3(1, 2, 3);
 t_vec3 b = vec3(4, 5, 6);
@@ -436,6 +398,7 @@ t_vec3 c = vec3(&add(&a, &b), &add(&a, &b));
 ```
 
 With small structs there is a very small performance hit when passing by value. So I will pass by value and this allows to chain functions and have better readable code.
+
 ```c
 t_vec3 add(t_vec3 a, t_vec3 b)
 {
@@ -446,16 +409,19 @@ t_vec3 add(t_vec3 a, t_vec3 b)
 	return (sum);
 }
 ```
+
 now:
+
 ```c
 t_vec3 a = vec3(1, 2, 3);	
 t_vec3 b = vec3(4, 5, 6);
 t_vec3 d = add(add(a, b), add(a, b));
 ```
+
 It is much nicer.
 
-
 ## Antialiasing
+
 If we look at our zoomed image created until now we see that the edges are jagged like pixels on a staircase. To fix this we will take multiple samples per pixel and average the color. This is called antialiasing. In the book also there is an interesting note about the human eye and how it perceives color.
 > With a single ray through the center of each pixel, we are performing what is commonly called point sampling. The problem with point sampling can be illustrated by rendering a small checkerboard far away. If this checkerboard consists of an 8×8 grid of black and white tiles, but only four rays hit it, then all four rays might intersect only white tiles, or only black, or some odd combination. In the real world, when we perceive a checkerboard far away with our eyes, we perceive it as a gray color, instead of sharp points of black and white.
 
@@ -463,9 +429,10 @@ We need to sample the light falling around the pixel, and integrate the changes.
 
 To do so we will create a random number generator to sample the colors around the pixel in a random way. 
 
-
 ## Extras - the compile_commands.json file
-If using nvim the LSP will ask for a compile_commands.json file. This file is can be generated by the compiledb tool. 
+
+If using nvim the LSP will ask for a compile_commands.json file. This file is can be generated by the compiledb tool.
+
 ```
 make clean && make > build.log
 compiledb -n < build.log      
@@ -476,6 +443,7 @@ compiledb -n < build.log
 Diffuse objects that don’t emit their own light merely take on the color of their surroundings, but they do modulate that with their own intrinsic color. Light that reflects off a diffuse surface has its direction randomized.  
 We will add the ability to generate arbitrary random vectors to our t_vec3 type. This will be useful for generating random directions for diffuse materials. 
 In c++ they are both called random but I cannot use the same name in C. I will call them random_vec3 and random_vec3_min_max.
+
 ```c
 t_vec3 random_vec3() 
 {
@@ -487,11 +455,13 @@ t_vec3 random_vec3_min_max(double min, double max)
     return vec3(random_double(min,max), random_double(min,max), random_double(min,max));
 }
 ```
+
 Then we need to figure out how to manipulate a random vector so that we only get results that are on the surface of a hemisphere, the side where we have our normal.  
 The book explains that we can generate a random vector in the unit cube and then check if it is inside the unit sphere. If it is not we discard it. This is called rejection sampling.
 
 ## Shadow acne
-Do to floating points errors we ignore hits that are very close to the calculated intersection point. Due to these errors we can calculate a hit point that is just a bit below the surface of the object. This is called shadow acne. 
+
+Due to floating point errors we ignore hits that are very close to the calculated intersection point. Due to these errors we can calculate a hit point that is just a bit below the surface of the object. This is called shadow acne. 
 To fix this we will add a small epsilon value to the t_min value in my ray_color function.
 ```c
 if ((world)->hit(world, r, interval(0.001, INFINITY), &rec))
@@ -506,7 +476,6 @@ This is why we have intervals :)
 
 The result is now gray and it takes quite a while to generate due to the recursive method in our ray_color function.  
 
-
 ## Lambertian reflection
 A reflected ray is most likely to scatter in a direction near the surface normal.
 This makes very much sense but I refer to the book for the explanation!
@@ -519,20 +488,19 @@ It is a small change in the ray_color function.
 ```
 It is not terribly visible but the image is a bit more realistic.
 
-
-
 ## Gamma correction
+
 The book explains that the human eye does not perceive light linearly. The eye is more sensitive to changes in darker colors than in lighter colors. This is why we need to apply gamma correction to our image.  
 We need to go from linear space to gamma space, which means taking the inverse of “gamma 2", which means an exponent of 1/gamma, which is just the square-root. 
 
-Not bad. The image is muc brighter now for .5 grey.
-
+Not bad. The image is much brighter now for .5 grey.
 
 ## Metal
+
 The material needs to do two things:
 
-	- Produce a scattered ray (or say it absorbed the incident ray).
-    - If scattered, say how much the ray should be attenuated.
+- Produce a scattered ray (or say it absorbed the incident ray).
+- If scattered, say how much the ray should be attenuated.
 
 In C++ it is an abstract class. In C I will use a struct with a function pointer to a hit function. 
 
@@ -541,11 +509,12 @@ typedef struct s_material {
 	bool (*scatter)(const void* self, const t_ray* r_in, const t_hit_record* rec, t_vec3* attenuation, t_ray* scattered);
 } t_material;
 ```
+
 We are going to put a pointer to a material in our hit record.  
 Also, hit_record needs to be told the material that is assigned to the sphere.  Our sphere struct will have a material pointer.  
  
-
 ## Albedo
+
 The term albedo (Latin for “whiteness”) is used to describe the fraction of incident light that is reflected by a surface. It is used to define some form of fractional reflectance. Albedo will vary with material color.  
 We will implement Lambertian (diffuse) reflectance first. This is the simplest form of reflection.  
 
@@ -567,6 +536,7 @@ Objects like my sphere will have pointers to a `t_material` struct and this `t_m
 But since I have different materials with different properties I will create a struct for each material with their unique properties. Ex the lambertian material has albedo. The Base in the struct is the material pointer and then I have the specific properties. I can pass this struct to the scatter function since it expects a material pointer and I have this in the base struct. 
 
 ex:
+
 ```c
 // Example of creating a lambertian material
 t_lambertian lambertian_material;
@@ -611,14 +581,17 @@ inline t_vec3	vec3reflect(const t_vec3 v, const t_vec3 n)
 }
 ```
 
-
 ## Fuzziness
+
 We can also randomize the reflected direction by using a small sphere and choosing a new endpoint for the ray. We'll use a random point from the surface of a sphere centered on the original endpoint, scaled by the fuzz factor. The bigger the fuzz sphere, the fuzzier the reflections will be. This suggests adding a fuzziness parameter that is just the radius of the sphere (so zero is no perturbation). Also, we need to normalize the reflected ray. 
 
 ## Positionable Camera
+
 ### field of view fov
-It is typically expressed as an angle (in degrees or radians) and determines how wide or narrow the view captured by the camera is. A larger FOV allows the camera to capture a wider area of the scene, making objects appear smaller and further apart.  In the book we will use vertical field of view by convension since the horizontal fov will be determined by the aspect ratio of the image.
+
+It is typically expressed as an angle (in degrees or radians) and determines how wide or narrow the view captured by the camera is. A larger FOV allows the camera to capture a wider area of the scene, making objects appear smaller and further apart.  In the book we will use vertical field of view by convention since the horizontal fov will be determined by the aspect ratio of the image.
 Now I can express the viewport in function of the vertical field of view and the focal_length.
+
 ```c
 double theta = degrees_to_radians(c.vfov);
 double h = tan(theta/2);
@@ -627,9 +600,11 @@ double viewport_width = viewport_height * ((double)c.image_width/c.image_height)
 ```
 
 ## Positionable Camera
+
 We can rotate the camera around its normal axis. We need a way to specify the up. and the look from and look at. 
 The tutorial uses the common convention of naming this the “view up” (vup) vector.
-We will make the viewport height dependent from the vertical field of view and the aspect ratio. 
+We will make the viewport height dependent from the vertical field of view and the aspect ratio.
+
 ```c
 cam.vfov = 90;
 cam.lookfrom = point3(-2,2,1);   // Point camera is looking from
@@ -643,11 +618,10 @@ double viewport_width = viewport_height * ((double)cam.image_width/cam.image_hei
 ...
 ```
 
-
 ## Some examples
 
 The sphere is a common primitive in raytracing. It is our starting point. After implementing lights of different colors we could see how the sphere reflects the light. Also we tried some different materials like metal with polished and rough surface.  
-Other primitives are of course the triangles, quads, and cubes which are 6 quads put together in a group. The cone has been one of the most difficult together with the cylinder. We also used soe texture as you can see in the images of the planets and the earth and moon.  
+Other primitives are of course the triangles, quads, and cubes which are 6 quads put together in a group. The cone has been one of the most difficult together with the cylinder. We also used some textures as you can see in the images of the planets and the earth and moon.  
 
 <div>
 <img src="docs/images/1.png" alt="sphere" width="800">
