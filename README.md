@@ -1,6 +1,6 @@
 [![42](https://img.shields.io/badge/-Berlin-blue.svg?logo=data:image/svg%2bxml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOC4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIg0KCSBpZD0iQ2FscXVlXzEiIHNvZGlwb2RpOmRvY25hbWU9IjQyX2xvZ28uc3ZnIiBpbmtzY2FwZTp2ZXJzaW9uPSIwLjQ4LjIgcjk4MTkiIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6c29kaXBvZGk9Imh0dHA6Ly9zb2RpcG9kaS5zb3VyY2Vmb3JnZS5uZXQvRFREL3NvZGlwb2RpLTAuZHRkIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIg0KCSB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAtMjAwIDk2MCA5NjAiDQoJIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAtMjAwIDk2MCA5NjAiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHBvbHlnb24gaWQ9InBvbHlnb241IiBwb2ludHM9IjMyLDQxMi42IDM2Mi4xLDQxMi42IDM2Mi4xLDU3OCA1MjYuOCw1NzggNTI2LjgsMjc5LjEgMTk3LjMsMjc5LjEgNTI2LjgsLTUxLjEgMzYyLjEsLTUxLjEgDQoJMzIsMjc5LjEgIi8+DQo8cG9seWdvbiBpZD0icG9seWdvbjciIHBvaW50cz0iNTk3LjksMTE0LjIgNzYyLjcsLTUxLjEgNTk3LjksLTUxLjEgIi8+DQo8cG9seWdvbiBpZD0icG9seWdvbjkiIHBvaW50cz0iNzYyLjcsMTE0LjIgNTk3LjksMjc5LjEgNTk3LjksNDQzLjkgNzYyLjcsNDQzLjkgNzYyLjcsMjc5LjEgOTI4LDExNC4yIDkyOCwtNTEuMSA3NjIuNywtNTEuMSAiLz4NCjxwb2x5Z29uIGlkPSJwb2x5Z29uMTEiIHBvaW50cz0iOTI4LDI3OS4xIDc2Mi43LDQ0My45IDkyOCw0NDMuOSAiLz4NCjwvc3ZnPg0K)](https://42berlin.de) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![Version](https://img.shields.io/badge/version-0.1.1-blue) 
 
-# 42-miniRT
+# miniRayTracer
 > May your pixels never be little squares. - GH
 
 You can see the documentation page here: [https://multitudes.github.io/42-miniRT/](https://multitudes.github.io/42-miniRT/)
@@ -8,7 +8,19 @@ You can see the documentation page here: [https://multitudes.github.io/42-miniRT
 ![miniRT](docs/images/6.png)
 
 ## What does it do?
-Jump to this section for the [Screenshots](https://github.com/multitudes/42-miniRT?tab=readme-ov-file#some-examples)
+
+A ray tracer is a rendering technique used to generate an image by tracing the path of light as pixels in an image plane and simulating the effects of its encounters with virtual objects.
+
+The core principle involves firing imaginary rays from the viewpoint (the virtual camera) into the scene. For every pixel in the final image, the ray tracer determines the color and intensity of light that should be observed by calculating how the corresponding ray interacts with objects, including reflections, refractions, and shadows. This process yields highly realistic images compared to traditional rasterization techniques.
+
+Common Ray Tracing Algorithms
+While all ray tracers share the same foundational concept, they can be broadly categorized based on their approach to simulating global illumination and achieving photorealism:
+| Type | Focus/Algorithm | Key Characteristics | Trade-offs |
+| :--- | :--- | :--- | :--- |
+| **Basic Ray Casting / Whitted-Style** | Trajectory of a Single Ray | Faster render times by following the path of a single, primary ray (plus secondary rays for perfect reflection/refraction). | Shadows are often computed strictly (hard edges), and global light transport effects like soft shadows or diffuse reflections are generally excluded. |
+| **Path Tracing** | Monte Carlo Integration | Uses the **Monte Carlo algorithm** (often known as Monte Carlo Path Tracing) to sample numerous random light paths for each pixel. This statistical approach accurately simulates complex light behaviors. | Significantly **slower to render** due to the high number of rays required to reduce noise (convergence). However, it is the gold standard for **photorealism**. |
+
+Specifically, this program implements the second variant of ray tracing: Path Tracing using Monte Carlo integration.
 
 ## Introduction
 This project is an introduction to the beautiful world of Raytracing.  
