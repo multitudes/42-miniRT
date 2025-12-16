@@ -8,6 +8,7 @@ The code is on GitHub: [42-miniRT](https://github.com/multitudes/42-miniRT)
 ![miniRT](images/6.png)
 
 ## What does it do?
+
 Jump to this section for the [Screenshots](https://multitudes.github.io/42-miniRT/#some-examples)
 
 A ray tracer is a rendering technique used to generate an image by tracing the path of light as pixels in an image plane and simulating the effects of its encounters with virtual objects.
@@ -16,6 +17,7 @@ The core principle involves firing imaginary rays from the viewpoint (the virtua
 
 Common Ray Tracing Algorithms
 While all ray tracers share the same foundational concept, they can be broadly categorized based on their approach to simulating global illumination and achieving photorealism:
+
 | Type | Focus/Algorithm | Key Characteristics | Trade-offs |
 | :--- | :--- | :--- | :--- |
 | **Basic Ray Casting / Whitted-Style** | Trajectory of a Single Ray | Faster render times by following the path of a single, primary ray (plus secondary rays for perfect reflection/refraction). | Shadows are often computed strictly (hard edges), and global light transport effects like soft shadows or diffuse reflections are generally excluded. |
